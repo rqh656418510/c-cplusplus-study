@@ -1,3 +1,8 @@
+/**
+ * 1. 类的声明与类的实现分开写
+ */
+
+
 #include <iostream>
 #include "Teacher.h"
 
