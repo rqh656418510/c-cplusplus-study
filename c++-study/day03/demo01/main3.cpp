@@ -6,57 +6,40 @@
 
 using namespace std;
 
-class Test {
+class Line {
 
 private:
-    int _a;
-    int _b;
+    double length;
 
 public:
 
-    Test() {
-        _a = 1;
-        _b = 1;
-    }
+    // 构造函数声明
+    Line(double len);
 
-    Test(int a) {
-        _a = a;
-        _b = 3;
-    }
-
-    Test(int a, int b) {
-        _a = a;
-        _b = b;
-    }
-
-
-public:
-
-    int getA() const {
-        return _a;
-    }
-
-    int getB() const {
-        return _b;
-    }
+    // 成员函数声明
+    double getLength(void);
+    void setLength(double len);
 };
 
+// 构造函数定义
+Line::Line(double len) {
+    length = len;
+}
+
+// 成员函数定义
+void Line::setLength(double len) {
+    length = len;
+}
+
+double Line::getLength(void) {
+    return length;
+}
+
 int main() {
-    // C++编译器调用无参构造函数
-    Test t0;
-    printf("a = %d, b = %d\n", t0.getA(), t0.getB());
+    Line line(10.0);
+    cout << "Length of line : " << line.getLength() << endl;
 
-    // C++编译器调用有参构造函数(等号法)
-    Test t1 = (1, 2, 3, 4, 5);
-    printf("a = %d, b = %d\n", t1.getA(), t1.getB());
-
-    // C++编译器调用有参构造函数(括号法)
-    Test t2(10, 20);
-    printf("a = %d, b = %d\n", t2.getA(), t2.getB());
-
-    // 手动调用构造函数生成一个对象(直接调用构造函数法)
-    Test t3 = Test(100, 200);
-    printf("a = %d, b = %d\n", t3.getA(), t3.getB());
-
+    line.setLength(6.0);
+    cout << "Length of line : " << line.getLength() << endl;
     return 0;
 }
