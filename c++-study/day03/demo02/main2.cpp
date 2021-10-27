@@ -36,12 +36,12 @@ public:
     }
 };
 
-void functionA(Location l) {
-    cout << l.getX() << "," << l.getY() << endl;
+void functionA(Location b) {
+    cout << b.getX() << "," << b.getY() << endl;
 }
 
 int main() {
-    Location l(1, 2);
-    functionA(l);         // 拷贝构造函数会被调用，这里会使用实参变量初始化形参变量，同时会多创建一个Location对象，所以最后析构函数会被调用两次
+    Location a(1, 2);
+    functionA(a);         // 拷贝构造函数会被调用，这里会使用实参变量（a）初始化形参变量（b），同时会多创建一个Location对象，所以最后析构函数会被调用两次
     return 0;
 }
