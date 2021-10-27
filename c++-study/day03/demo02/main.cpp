@@ -1,5 +1,5 @@
 /**
- * 1. 拷贝构造函数的第一和第二种调用场景
+ * 1. 拷贝构造函数的第一种调用场景
  */
 
 #include <iostream>
@@ -27,7 +27,7 @@ public:
     }
 
     ~Test() {
-
+        cout << "析构函数被调用了" << endl;
     }
 
     int getA() {
@@ -43,15 +43,7 @@ void functionA() {
     cout << "a = " << t2.getA() << endl;
 }
 
-void functionB() {
-    Test t1(3);
-    Test t2(t1);         // 类的初始化操作(括号法)，拷贝构造函数会被调用
-    cout << "a = " << t2.getA() << endl;
-}
-
 int main() {
     functionA();
-    cout << "=====================" << endl;
-    functionB();
     return 0;
 }

@@ -1,26 +1,25 @@
 /**
- * 1. 拷贝构造函数的第四种调用场景
+ * 1. 拷贝构造函数的第三种调用场景
  */
 
-#include <iostream>
+#include "iostream"
 
 using namespace std;
 
 class Location {
-
 private :
-    int x, y;
+    int X, Y;
 
 public:
     Location(int xx = 0, int yy = 0) {
-        x = xx;
-        y = yy;
+        X = xx;
+        Y = yy;
         cout << "有参构造函数被调用了" << endl;
     }
 
     Location(const Location &p) {
-        x = p.x;
-        y = p.y;
+        X = p.X;
+        Y = p.Y;
         cout << "拷贝构造函数被调用了" << endl;
     }
 
@@ -29,27 +28,20 @@ public:
     }
 
     int getX() {
-        return x;
+        return X;
     }
 
     int getY() {
-        return y;
+        return Y;
     }
 };
 
-Location functionA() {
-    Location l(1, 2);
-    return l;
+void functionA(Location b) {
+    cout << b.getX() << "," << b.getY() << endl;
 }
 
 int main() {
-    // 若将函数functionA()返回的匿名对象，赋值给另外一个同类型的对象，那么匿名对象会被析构
-    // 此时有参构造函数和析构函数被调用两次
-    Location A;
-    A = functionA();
-
-    // 若将函数functionA()的匿名对象，初始化给另外一个同类型的对象，那么匿名对象会直接转成新的对象
-    // 此时有参构造函数与析构函数各被调用一次
-    // Location B = functionA();
+    Location a(1, 2);
+    functionA(a);         // 拷贝构造函数会被调用，这里会使用实参变量（a）初始化形参变量（b），同时会多创建一个Location对象（匿名对象），所以最后析构函数会被调用两次
     return 0;
 }
