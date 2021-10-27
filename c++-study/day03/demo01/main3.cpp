@@ -42,19 +42,19 @@ public:
 };
 
 int main() {
+    // 第一种：C++编译器调用有参构造函数(等号法)
+    Test t1 = (1, 2, 3, 4, 5);
+    printf("a = %d, b = %d\n", t1.getA(), t1.getB());
+
+    // 第二种：C++编译器调用有参构造函数(括号法)
+    Test t2(10, 20);
+    printf("a = %d, b = %d\n", t2.getA(), t2.getB());
+
     // C++编译器调用无参构造函数
     Test t0;
     printf("a = %d, b = %d\n", t0.getA(), t0.getB());
 
-    // C++编译器调用有参构造函数(等号法)
-    Test t1 = (1, 2, 3, 4, 5);
-    printf("a = %d, b = %d\n", t1.getA(), t1.getB());
-
-    // C++编译器调用有参构造函数(括号法)
-    Test t2(10, 20);
-    printf("a = %d, b = %d\n", t2.getA(), t2.getB());
-
-    // 手动调用构造函数生成一个对象(直接调用构造函数法)
+    // 第三种：手动调用构造函数生成一个对象(直接调用构造函数法)
     Test t3 = Test(100, 200);
     printf("a = %d, b = %d\n", t3.getA(), t3.getB());
 
