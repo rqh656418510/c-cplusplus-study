@@ -32,9 +32,9 @@ private :
 public:
 
     // 使用构造函数的初始化列表来初始化Teacher类对象
-    // 这里会自动调用Teacher类的有参构造函数，并将30作为构造函数的参数传递过去
-    Student(int age) : teacher(30) {
-        _age = age;
+    // 这里会自动调用Teacher类的有参构造函数，并将age2作为构造函数的参数传递过去
+    Student(int age1, int age2) : teacher(age2) {
+        _age = age1;
     }
 
     int getAge() const {
@@ -48,7 +48,7 @@ public:
 };
 
 int main() {
-    Student s(20);
+    Student s(20, 35);
     cout << "student.age: " << s.getAge() << ", teacher.age: " << s.getTeacher().getAge() << endl;
     return 0;
 }
