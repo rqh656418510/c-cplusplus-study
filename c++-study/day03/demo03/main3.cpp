@@ -1,6 +1,7 @@
 /**
  * 1. 浅拷贝与深拷贝
- * 自定义拷贝构造函数，通过实现深拷贝（申请新的内存空间）来解决C++默认拷贝构造函数的浅拷贝问题
+ * 在以下的代码中，`obj3 = obj1;` 依旧属于浅拷贝（这里不会自动调用拷贝构造函数），最终程序也会异常终止运行
+ * 若希望解决该问题，需要重载 C++ 的 `=` 操作符，这里暂时不展开讨论
  */
 
 #include <iostream>
@@ -53,7 +54,8 @@ public:
 
 int main() {
     Name obj1("Peter");
-    Name obj3 = obj1;       // 自动调用自定义的拷贝构造函数（深拷贝）
+    Name obj3("Tom");
+    obj3 = obj1;       // 浅拷贝，不会自动调用拷贝构造函数
     cout << "obj1.name: " << obj1.getP() << ", obj1.len:  " << obj1.getLen() << endl;
     cout << "obj3.name: " << obj3.getP() << ", obj3.len:  " << obj3.getLen() << endl;
     return 0;
