@@ -7,7 +7,6 @@
 using namespace std;
 
 class A {
-
 private:
     int i;
     int &j;
@@ -15,15 +14,14 @@ private:
 
 public:
 
-    // 构造函数初始化列表
-    A(int x, int y) : c(x), j(y) {
+    A(int x) {
         i = -1;
+        c = 5;    // C++编译不通过，必须通过初始化列表来初始化
+        j = x;    // C++编译不通过，必须通过初始化列表来初始化
     }
-
 };
 
 int main() {
-    int m;
-    A a(5, m);  // C++编译可以通过
+    A a(3);
     return 0;
 }
