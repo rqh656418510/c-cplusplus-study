@@ -3,18 +3,18 @@
 
 using namespace std;
 
-const char *Teacher::getName() const {
+const char *Name::getName() const {
     return this->_name;
 }
 
-void Teacher::setName(char *name) {
+void Name::setName(char *name) {
     this->_name = name;
 }
 
-int Teacher::getAge() const {
+int Name::getAge() const {
     return this->_age;
 }
 
-void Teacher::setAge(int age) {
+void Name::setAge(int age) {
     this->_age = age;
 }

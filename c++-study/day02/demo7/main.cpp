@@ -10,7 +10,7 @@ using namespace std;
 
 int main() {
     char name[32] = "Peter";
-    Teacher teacher;
+    Name teacher;
     teacher.setAge(10);
     teacher.setName(name);
     cout << "age: " << teacher.getAge() << endl;

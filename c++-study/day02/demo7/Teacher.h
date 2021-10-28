@@ -1,7 +1,7 @@
 #ifndef TEACHER_H
 #define TEACHER_H
 
-class Teacher {
+class Name {
 
 private:
     char *_name;

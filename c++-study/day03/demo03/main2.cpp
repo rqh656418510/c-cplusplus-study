@@ -1,7 +1,6 @@
 /**
  * 1. 浅拷贝与深拷贝
- * 由于在下述的代码中，没有自定义拷贝构造函数，使用的是 C++ 编译器提供的默认拷贝构造函数，因此程序无法正常运行
- * 造成程序无法正常运行的根本原因是，C++ 提供的默认拷贝构造函数属于浅拷贝，在调用下面的析构函数时会出现错误（同一块内存空间被释放两次）
+ * 自定义拷贝构造函数，通过实现深拷贝（申请新的内存空间）来解决C++默认拷贝构造函数的浅拷贝问题
  */
 
 #include <iostream>
@@ -25,6 +24,15 @@ public:
         len = length;
     }
 
+    // 深拷贝的实现
+    Name(const Name &name) {
+        cout << "拷贝构造函数被调用了" << endl;
+        int length = name.getLen();
+        p = (char *) malloc(length + 1);
+        strcpy(p, name.getP());
+        len = length;
+    }
+
     ~Name() {
         cout << "析构函数被调用了" << endl;
         if (p != NULL) {
@@ -45,8 +53,8 @@ public:
 
 int main() {
     Name obj1("Peter");
-    Name obj2 = obj1;       // 自动调用C++提供的默认拷贝构造函数，属于浅拷贝
+    Name obj3 = obj1;       // 自动调用自定义的拷贝构造函数
     cout << "obj1.name: " << obj1.getP() << ", obj1.len:  " << obj1.getLen() << endl;
-    cout << "obj2.name: " << obj2.getP() << ", obj2.len:  " << obj2.getLen() << endl;
+    cout << "obj3.name: " << obj3.getP() << ", obj3.len:  " << obj3.getLen() << endl;
     return 0;
 }

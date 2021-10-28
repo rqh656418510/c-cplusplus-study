@@ -12,17 +12,17 @@ struct Teacher {
 };
 
 // const引用让变量(所指内存空间)拥有只读属性
-void printTe(const Teacher &t) {
+void printTe(const Name &t) {
     // t.age = 11;   是错误写法，无法通过编译
 }
 
 // const 修饰指针和指针指向的内容，那么指针指向的内容都不能更改
-void printTe2(const Teacher *const pt) {
+void printTe2(const Name *const pt) {
     // pt->age = 11;  是错误写法，无法通过编译
 }
 
 int main() {
-    Teacher t1;
+    Name t1;
     t1.age = 33;
     printTe(t1);
     printTe2(&t1);

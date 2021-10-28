@@ -13,20 +13,20 @@ struct Teacher {
 };
 
 // 二级指针作函数参数
-int getTe(Teacher **myp) {
-    Teacher *p = (Teacher *) malloc(sizeof(Teacher));
+int getTe(Name **myp) {
+    Name *p = (Name *) malloc(sizeof(Name));
     if (p == NULL) {
         return -1;
     }
-    memset(p, 0, sizeof(Teacher));
+    memset(p, 0, sizeof(Name));
     p->age = 33;
     *myp = p;
     return 0;
 }
 
 // 指针引用作函数参数
-int getTe2(Teacher *&myp) {
-    myp = (Teacher *) malloc(sizeof(Teacher));
+int getTe2(Name *&myp) {
+    myp = (Name *) malloc(sizeof(Name));
     if (myp == NULL) {
         return -1;
     }
@@ -35,11 +35,11 @@ int getTe2(Teacher *&myp) {
 }
 
 int main() {
-    Teacher *p = NULL;
+    Name *p = NULL;
     getTe(&p);
     printf("age:%d \n", p->age);
 
-    Teacher *pp = NULL;
+    Name *pp = NULL;
     getTe2(pp);
     printf("age:%d \n", pp->age);
     return 0;
