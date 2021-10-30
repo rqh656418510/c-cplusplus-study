@@ -29,7 +29,7 @@ public:
     }
 };
 
-// C语言分配基础
+// C语言分配基础类型
 void functionA() {
     int *p = (int *) malloc(sizeof(int));
     *p = 3;
@@ -37,7 +37,7 @@ void functionA() {
     free(p);
 }
 
-// C++分配基础
+// C++分配基础类型
 void functionB() {
     int *a = new int;
     *a = 3;
@@ -49,7 +49,7 @@ void functionB() {
     delete b;
 }
 
-// C语言分配数组
+// C语言分配数组类型
 void functionC() {
     char *p = (char *) malloc(sizeof(char) * 3);
     p[0] = 'a';
@@ -59,7 +59,7 @@ void functionC() {
     free(p);
 }
 
-// C++分配数组
+// C++分配数组类型
 void functionD() {
     char *p = new char[3];
     p[0] = 'e';
