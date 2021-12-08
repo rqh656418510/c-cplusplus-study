@@ -1,7 +1,11 @@
 ## 常用命令
 
-### 编译与运行
+### Linux 编译与运行
 
-```
-$ gcc test-1.c -o test-1.exe && ./test-1.exe
+``` shell
+# 编译（可同时指定多个".c"文件，不需要指定".h"文件）
+$ gcc helloworld.c -o helloworld
+
+# 运行
+./helloworld
 ```

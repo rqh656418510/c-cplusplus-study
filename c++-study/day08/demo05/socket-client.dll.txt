@@ -1,0 +1,38 @@
+==================================================================================================================================================================
+在 VS Studio 的 `Developer Command Prompt` 命令窗口中，使用 `dumpbin /exports socket-client.dll` 命令，查看得到 `socket-client.dll` 动态库文件的详细信息如下：
+==================================================================================================================================================================
+
+Microsoft (R) COFF/PE Dumper Version 14.29.30136.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+Dump of file socket-client.dll
+
+File Type: DLL
+
+  Section contains the following exports for socket-client.dll
+
+    00000000 characteristics
+    FFFFFFFF time date stamp
+        0.00 version
+           1 ordinal base
+           4 number of functions
+           4 number of names
+
+    ordinal hint RVA      name
+
+          1    0 000111D1 socketclient_destory = @ILT+460(_socketclient_destory)
+          2    1 000112E4 socketclient_init = @ILT+735(_socketclient_init)
+          3    2 00011212 socketclient_recv = @ILT+525(_socketclient_recv)
+          4    3 0001121C socketclient_send = @ILT+535(_socketclient_send)
+
+  Summary
+
+        1000 .00cfg
+        1000 .data
+        1000 .idata
+        1000 .msvcjmc
+        3000 .rdata
+        1000 .reloc
+        1000 .rsrc
+        6000 .text
+       10000 .textbss
