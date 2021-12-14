@@ -2,7 +2,7 @@
 #include <math.h>
 #include <curses.h>
 
-// gcc work-2.c -lm  -l curses -o work-2.exe && ./work-2.exe
+// gcc homework-2.c -lm  -l curses -o homework-2.exe && ./homework-2.exe
 
 /**
 问题:输出以下图形

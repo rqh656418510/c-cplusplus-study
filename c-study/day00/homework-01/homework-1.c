@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
-// gcc work-1.c -lm -o work-1.exe && ./work-1.exe
+// gcc homework-1.c -lm -o homework-1.exe && ./homework-1.exe
 
 /**
  * 题目：输入三个小写字母，输出其ASCII码和对应的大写字母
