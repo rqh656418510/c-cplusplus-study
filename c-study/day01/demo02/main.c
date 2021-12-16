@@ -1,5 +1,5 @@
 /**
- * 1. system 函数
+ * 1. system()函数的使用
  */
 
 #include <stdio.h>

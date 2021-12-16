@@ -12,9 +12,9 @@ add_executable(day00-demo-03-program-desgin day00/demo03/program-desgin.c)
 add_executable(day00-demo-04-branch-struct day00/demo04/branch-struct.c)
 add_executable(day00-demo-05-branch-struct day00/demo05/loop-struct.c)
 add_executable(day00-demo-06-array day00/demo06/array.c)
-add_executable(day00-homework-01 day00/homework01/homework-1.c)
-add_executable(day00-homework-02 day00/homework02/homework-2.c)
+add_executable(day00-homework-01 day00/homework01/homework.c)
+add_executable(day00-homework-02 day00/homework02/homework.c)
 
 # day02
-add_executable(day01-demo-01 day01/demo01/demo.c)
-add_executable(day01-demo-02 day01/demo02/demo.c)
+add_executable(day01-demo-01 day01/demo01/main.c)
+add_executable(day01-demo-02 day01/demo02/main.c)

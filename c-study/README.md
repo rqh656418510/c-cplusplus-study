@@ -11,7 +11,8 @@
 │   ├── homework-01
 │   └── homework-02
 ├── day01
-    ├── demo01
+    ├── demo01          第一个C语言程序
+    ├── demo02          system()函数的使用          
 ```
 
 ## 常用命令
