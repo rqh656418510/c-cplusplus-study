@@ -18,3 +18,4 @@ add_executable(day00-homework-02 day00/homework02/homework.c)
 # day02
 add_executable(day01-demo-01 day01/demo01/main.c)
 add_executable(day01-demo-02 day01/demo02/main.c)
+add_executable(day01-demo-03 day01/demo03/main.c)

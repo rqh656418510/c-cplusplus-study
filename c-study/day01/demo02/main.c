@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    system("ls");      // Linux ƽ̨
-    // system("calc");          // Windows ƽ̨
+    system("ls -al");      // Linux ƽ̨
+    // system("calc");              // Windows ƽ̨
     return 0;
 }
