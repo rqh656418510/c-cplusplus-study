@@ -12,25 +12,25 @@ struct Teacher {
 };
 
 // pT是指向t1的指针，这里相当于修改了t1
-void printfT(Name *pT) {
+void printfT(Teacher *pT) {
     cout << pT->age << endl;
     pT->age = 23;
 }
 
 // pT是t1的别名，这里相当于修改了t1
-void printfT2(Name & pT) {
+void printfT2(Teacher & pT) {
     cout << pT.age << endl;
     pT.age = 33;
 }
 
 // pT和t1的是两个不同的变量，这里只会修改pT变量，不会修改t1变量
-void printfT3(Name pT) {
+void printfT3(Teacher pT) {
     cout << pT.age << endl;
     pT.age = 43;
 }
 
 int main() {
-    Name t1;
+    Teacher t1;
     t1.age = 35;
 
     // pT是指向t1的指针

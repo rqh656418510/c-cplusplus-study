@@ -23,6 +23,6 @@ public:
 };
 
 int main() {
-    Name teacher;
+    Teacher teacher;
     return 0;
 }
