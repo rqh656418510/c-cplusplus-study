@@ -33,9 +33,11 @@ tmp/*
 /nbdist/
 /.nb-gradle/
 
+### Visual Studio ###
+.vs
+*.obj
+Debug
+
 ### VS Code ###
 .vscode/
 
-### VS Studio ###
-*.obj
-Debug
