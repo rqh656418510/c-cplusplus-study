@@ -45,3 +45,11 @@ add_executable(day03-demo06 day03/demo06/main.cpp)
 add_executable(day03-demo06-2 day03/demo06/main2.cpp)
 add_executable(day03-demo06-3 day03/demo06/main3.cpp)
 add_executable(day03-demo07 day03/demo07/main.cpp)
+
+# ...
+
+add_executable(day11-demo01-1 day11/demo01/main.cpp)
+add_executable(day11-demo01-2 day11/demo01/main2.cpp)
+add_executable(day11-demo01-3 day11/demo01/main3.cpp)
+add_executable(day11-demo01-4 day11/demo01/main4.cpp)
+add_executable(day11-demo01-5 day11/demo01/main5.cpp)
