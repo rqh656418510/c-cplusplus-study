@@ -48,6 +48,8 @@ add_executable(day03-demo07 day03/demo07/main.cpp)
 
 # ...
 
+add_executable(day03-demo08 day10/demo08/main.cpp day10/demo08/file.cpp)
+
 add_executable(day11-demo01-1 day11/demo01/main.cpp)
 add_executable(day11-demo01-2 day11/demo01/main2.cpp)
 add_executable(day11-demo01-3 day11/demo01/main3.cpp)
