@@ -1,16 +1,27 @@
 #include "datetime.h"
+#include "strUtil.h"
 #include <iostream>
 
 using namespace std;
 
-int main() {
+void stringTest() {
     // 分割字符串
-    vector<string> strResult = DateUtil::split("Hello,World,!", '-');
+    vector<string> strResult = StringUtil::split("Hello,World,!", ',');
     for (auto it = strResult.begin(); it != strResult.end(); it++) {
         cout << *it << " ";
     }
     cout << endl;
 
+    // 判断字符串是否为空
+    string str1 = "";
+    string str2 = " ";
+    string str3 = " a ";
+    cout << (StringUtil::empty(str1) ? "true" : "false") << endl;
+    cout << (StringUtil::empty(str2) ? "true" : "false") << endl;
+    cout << (StringUtil::empty(str3) ? "true" : "false") << endl;
+}
+
+void dateTimeTest() {
     // 根据给定的日期，计算它是星期几
     cout << DateUtil::dayOfWeek("2022-01-07") << " ";
     cout << DateUtil::dayOfWeek("2022-01-08") << " ";
@@ -66,5 +77,11 @@ int main() {
 
     bool result2 = DateUtil::checkTradingTime(currentTime, timeArea, true);
     cout << "result2 = " << (result2 ? "true" : "false") << endl;
+}
+
+int main() {
+    stringTest();
+    cout << endl;
+    dateTimeTest();
     return 0;
 }

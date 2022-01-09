@@ -6,6 +6,7 @@
 #include <sstream>
 #include <cstring>
 #include <vector>
+#include "strUtil.h"
 
 using namespace std;
 
@@ -14,33 +15,33 @@ class DateUtil {
 
 public:
 
-	// 格式化当前时间
-	// 默认格式是: 2020-06-07 23:46:53
-	static string formatCurrentTime() {
-		time_t rawtime;
-		struct tm* info;
-		char buffer[80];
+    // 格式化当前时间
+    // 默认格式是: 2020-06-07 23:46:53
+    static string formatCurrentTime() {
+        time_t rawtime;
+        struct tm* info;
+        char buffer[80];
 
-		time(&rawtime);
-		info = localtime(&rawtime);
-		strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", info);
-		string str(buffer);
-		return str;
-	}
+        time(&rawtime);
+        info = localtime(&rawtime);
+        strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", info);
+        string str(buffer);
+        return str;
+    }
 
-	// 格式化当前时间
-	// format: 格式字符串，例如 %Y-%m-%d %H:%M:%S
-	static string formatCurrentTime(string format) {
-		time_t rawtime;
-		struct tm* info;
-		char buffer[80];
+    // 格式化当前时间
+    // format: 格式字符串，例如 %Y-%m-%d %H:%M:%S
+    static string formatCurrentTime(string format) {
+        time_t rawtime;
+        struct tm* info;
+        char buffer[80];
 
-		time(&rawtime);
-		info = localtime(&rawtime);
-		strftime(buffer, 80, format.c_str(), info);
-		string str(buffer);
-		return str;
-	}
+        time(&rawtime);
+        info = localtime(&rawtime);
+        strftime(buffer, 80, format.c_str(), info);
+        string str(buffer);
+        return str;
+    }
 
     // 根据给定的日期，计算它是星期几
     // date: 日期字符串，格式是: 20211201
@@ -65,39 +66,39 @@ public:
     }
 
     // 判断一个年份是否为闰年
-	static bool isLeap(int year) {
-		return (year % 4 == 0 || year % 400 == 0) && (year % 100 != 0);
-	}
+    static bool isLeap(int year) {
+        return (year % 4 == 0 || year % 400 == 0) && (year % 100 != 0);
+    }
 
-	// 计算特定年份的天数
-	static int daysOfYear(int year) {
-		return isLeap(year) ? 366 : 365;
-	}
+    // 计算特定年份的天数
+    static int daysOfYear(int year) {
+        return isLeap(year) ? 366 : 365;
+    }
 
-	// 根据给定的日期，计算它在该年的第几天
-	static int dayOfYear(int year, int month, int day) {
-		int DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		if (isLeap(year)) {
-			DAY[1] = 29;
-		}
-		for (int i = 0; i < month - 1; ++i) {
-			day += DAY[i];
-		}
-		return day;
-	}
+    // 根据给定的日期，计算它在该年的第几天
+    static int dayOfYear(int year, int month, int day) {
+        int DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        if (isLeap(year)) {
+            DAY[1] = 29;
+        }
+        for (int i = 0; i < month - 1; ++i) {
+            day += DAY[i];
+        }
+        return day;
+    }
 
-	// 判断日期字符串是否合法，并分别取出日期中的年月日
-	// date: 日期字符串，格式是: 20211201
-	static bool stringToDate(string date, int& year, int& month, int& day) {
-		year = atoi(date.substr(0, 4).c_str());
-		month = atoi(date.substr(4, 2).c_str());
-		day = atoi(date.substr(6, 2).c_str());
-		int DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		if (isLeap(year)) {
-			DAY[1] = 29;
-		}
-		return year >= 0 && month <= 12 && month > 0 && day <= DAY[month - 1] && day > 0;
-	}
+    // 判断日期字符串是否合法，并分别取出日期中的年月日
+    // date: 日期字符串，格式是: 20211201
+    static bool stringToDate(string date, int& year, int& month, int& day) {
+        year = atoi(date.substr(0, 4).c_str());
+        month = atoi(date.substr(4, 2).c_str());
+        day = atoi(date.substr(6, 2).c_str());
+        int DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        if (isLeap(year)) {
+            DAY[1] = 29;
+        }
+        return year >= 0 && month <= 12 && month > 0 && day <= DAY[month - 1] && day > 0;
+    }
 
     // 获取时间戳（秒数）
     // dateTime: 日期时间字符串，格式：2021-01-08 21:27:00
@@ -110,44 +111,44 @@ public:
     }
 
     // 计算两个日期之间的天数
-	// date1: 日期字符串，格式是: 20211201
-	// date2: 日期字符串，格式是: 20211201
-	// 当返回值为 -1 时，说明日期的格式不正确
-	static int daysBetween2Date(string date1, string date2) {
-		int year1, month1, day1;
-		int year2, month2, day2;
-		if (!stringToDate(date1, year1, month1, day1) || !stringToDate(date2, year2, month2, day2)) {
-			cout << "输入的日期格式不正确";
-			return -1;
-		}
-		if (year1 == year2 && month1 == month2) {
-			return day1 > day2 ? day1 - day2 : day2 - day1;
-		}
-		else if (year1 == year2) {
-			int d1, d2;
-			d1 = dayOfYear(year1, month1, day1);
-			d2 = dayOfYear(year2, month2, day2);
-			return d1 > d2 ? d1 - d2 : d2 - d1;
-		}
-		else {
-			// 确保year1年份比year2早
-			if (year1 > year2) {
-				swap(year1, year2);
-				swap(month1, month2);
-				swap(day1, day2);
-			}
-			// 计算第一个日期在该年还剩多少天
-			int d1, d2, d3;
-			if (isLeap(year1)) {
-				d1 = 366 - dayOfYear(year1, month1, day1);
-			}
-			else {
-				d1 = 365 - dayOfYear(year1, month1, day1);
-			}
-			// 计算第二日期在当年中的第几天
-			d2 = dayOfYear(year2, month2, day2);
-			// 计算两个年份相隔的天数
-			d3 = 0;
+    // date1: 日期字符串，格式是: 20211201
+    // date2: 日期字符串，格式是: 20211201
+    // 当返回值为 -1 时，说明日期的格式不正确
+    static int daysBetween2Date(string date1, string date2) {
+        int year1, month1, day1;
+        int year2, month2, day2;
+        if (!stringToDate(date1, year1, month1, day1) || !stringToDate(date2, year2, month2, day2)) {
+            cout << "输入的日期格式不正确";
+            return -1;
+        }
+        if (year1 == year2 && month1 == month2) {
+            return day1 > day2 ? day1 - day2 : day2 - day1;
+        }
+        else if (year1 == year2) {
+            int d1, d2;
+            d1 = dayOfYear(year1, month1, day1);
+            d2 = dayOfYear(year2, month2, day2);
+            return d1 > d2 ? d1 - d2 : d2 - d1;
+        }
+        else {
+            // 确保year1年份比year2早
+            if (year1 > year2) {
+                swap(year1, year2);
+                swap(month1, month2);
+                swap(day1, day2);
+            }
+            // 计算第一个日期在该年还剩多少天
+            int d1, d2, d3;
+            if (isLeap(year1)) {
+                d1 = 366 - dayOfYear(year1, month1, day1);
+            }
+            else {
+                d1 = 365 - dayOfYear(year1, month1, day1);
+            }
+            // 计算第二日期在当年中的第几天
+            d2 = dayOfYear(year2, month2, day2);
+            // 计算两个年份相隔的天数
+            d3 = 0;
             for (int year = year1 + 1; year < year2; year++) {
                 if (isLeap(year)) {
                     d3 += 366;
@@ -155,43 +156,28 @@ public:
                     d3 += 365;
                 }
             }
-			return d1 + d2 + d3;
-		}
-	}
-
-	// 计算期权合约的剩余时间（单位年）
-	// expireDate: 到期日期，格式是: 20211201
-	// 当返回值为 -1 时，说明期权合约已到期
-	// 当返回值为 0 时，说明今天是期权合约有效的最后一天
-	static double contractRemainingTime(string expireDate) {
-		string currentDate = formatCurrentTime("%Y%m%d");
-		if (strcmp(currentDate.c_str(), expireDate.c_str()) > 0) {
-			return -1;
-		}
-		int days = daysBetween2Date(currentDate, expireDate);
-		return days / 365.0;
-	}
-
-    // 分割字符串
-    // str: 要分割的字符串
-    // delim: 分割字符
-    static vector<string> split(const string &str, const char &delim = ' ') {
-        vector<string> tokens;
-        size_t lastPos = str.find_first_not_of(delim, 0);
-        size_t pos = str.find(delim, lastPos);
-        while (lastPos != string::npos) {
-            tokens.emplace_back(str.substr(lastPos, pos - lastPos));
-            lastPos = str.find_first_not_of(delim, pos);
-            pos = str.find(delim, lastPos);
+            return d1 + d2 + d3;
         }
-        return tokens;
     }
 
-    // 判断给定的当天时间是否允许交易
+    // 计算期权合约的剩余时间（单位年）
+    // expireDate: 到期日期，格式是: 20211201
+    // 当返回值为 -1 时，说明期权合约已到期
+    // 当返回值为 0 时，说明今天是期权合约有效的最后一天
+    static double contractRemainingTime(string expireDate) {
+        string currentDate = formatCurrentTime("%Y%m%d");
+        if (strcmp(currentDate.c_str(), expireDate.c_str()) > 0) {
+            return -1;
+        }
+        int days = daysBetween2Date(currentDate, expireDate);
+        return days / 365.0;
+    }
+
+    // 判断给定的当天时间是否允许进行交易
     // currentTime: 当天时间，格式：09:00:00
     // timeAreaStr：允许交易的时间范围，格式：09:00:00-10:15:00,13:30:00-15:00:00,21:00:00-02:30:00，24h表示允许24小时进行交易
     // weekendDays：周末是否允许交易
-    static bool checkTradingTime(const string currentTime, const string &timeAreaStr, bool weekendDays) {
+    static bool checkTradingTime(const string &currentTime, const string &timeAreaStr, bool weekendDays) {
         // 当前日期
         string currentDate = formatCurrentTime("%Y-%m-%d");
 
@@ -206,9 +192,9 @@ public:
         }
 
         // 解析时间范围字符串，判断当天时间是否在指定的时间范围内
-        vector<string> timeAreaVector = split(timeAreaStr, ',');
+        vector<string> timeAreaVector = StringUtil::split(timeAreaStr, ',');
         for (auto timeArea = timeAreaVector.begin(); timeArea != timeAreaVector.end(); timeArea++) {
-            vector<string> timeVector = split(*timeArea, '-');
+            vector<string> timeVector = StringUtil::split(*timeArea, '-');
 
             // 开始时间
             string startTime = timeVector.at(0);
