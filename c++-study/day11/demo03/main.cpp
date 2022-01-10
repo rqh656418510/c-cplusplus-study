@@ -75,7 +75,7 @@ void dateTimeTest() {
     // timeArea = "00:00:05-00:00:00";
     // currentTime = "00:00:02";
 
-    bool result2 = DateUtil::checkTradingTime(currentTime, timeArea, true);
+    bool result2 = DateUtil::checkTradingTime(currentTime, timeArea, false);
     cout << "result2 = " << (result2 ? "true" : "false") << endl;
 }
 
