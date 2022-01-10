@@ -21,6 +21,7 @@ public:
     // 判断字符串是否为空
     // "" -> true
     // " " -> true
+    // "a" -> false
     // " a " -> false
     static bool empty(const string &str) {
         if (str.empty()) {
