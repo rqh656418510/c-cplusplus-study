@@ -19,6 +19,13 @@ void stringTest() {
     cout << (StringUtil::empty(str1) ? "true" : "false") << endl;
     cout << (StringUtil::empty(str2) ? "true" : "false") << endl;
     cout << (StringUtil::empty(str3) ? "true" : "false") << endl;
+
+    // 去除字符串两边的空格
+    string str4 = " a b ";
+    StringUtil::trim(str4);
+    cout << "str4=" << str4 << endl;
+    string str5 = str4 + "c";
+    cout << "str5=" << str5 << endl;
 }
 
 void dateTimeTest() {
