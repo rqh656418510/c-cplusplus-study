@@ -44,7 +44,7 @@ public:
     }
 
     // 根据给定的日期，计算它是星期几
-    // date: 日期字符串，格式是: 20211201
+    // date: 日期字符串，格式是: 2021-12-01
     // 返回值：1, 2, 3, 4, 5, 6, 0, 其中 0 表示星期日
     static int dayOfWeek(const string &date) {
         char c;
@@ -56,7 +56,7 @@ public:
     }
 
     // 根据给定的日期，判断是否为周末
-    // date: 日期字符串，格式是: 20211201
+    // date: 日期字符串，格式是: 2021-12-01
     static bool isWeekendDays(const string &date) {
         int wday = dayOfWeek(date);
         if (wday == 6 || wday == 0) {
@@ -182,7 +182,7 @@ public:
         string currentDate = formatCurrentTime("%Y-%m-%d");
 
         // 判断当天是否为周末
-        if (!weekendDays && isWeekendDays(formatCurrentTime("%Y%m%d"))) {
+        if (!weekendDays && isWeekendDays(currentDate)) {
             return false;
         }
 
