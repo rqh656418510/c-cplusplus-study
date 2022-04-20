@@ -1,5 +1,5 @@
 /**
- * 1. ¶ÔÏóµÄ¶¯Ì¬½¨Á¢ºÍÊÍ·Å
+ * 1. å¯¹è±¡çš„åŠ¨æ€å»ºç«‹å’Œé‡Šæ”¾
  */
 
 #include <iostream>
@@ -13,11 +13,11 @@ private:
 public:
     Teacher(int age) {
         this->_age = age;
-        cout << "¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
+        cout << "æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
     }
 
     ~Teacher() {
-        cout << "Îö¹¹º¯Êı±»µ÷ÓÃ" << endl;
+        cout << "ææ„å‡½æ•°è¢«è°ƒç”¨" << endl;
     }
 
     void setAget(int age) {
@@ -29,7 +29,7 @@ public:
     }
 };
 
-// CÓïÑÔ·ÖÅä»ù´¡ÀàĞÍ
+// Cè¯­è¨€åˆ†é…åŸºç¡€ç±»å‹
 void functionA() {
     int *p = (int *) malloc(sizeof(int));
     *p = 3;
@@ -37,7 +37,7 @@ void functionA() {
     free(p);
 }
 
-// C++·ÖÅä»ù´¡ÀàĞÍ
+// C++åˆ†é…åŸºç¡€ç±»å‹
 void functionB() {
     int *a = new int;
     *a = 3;
@@ -49,7 +49,7 @@ void functionB() {
     delete b;
 }
 
-// CÓïÑÔ·ÖÅäÊı×éÀàĞÍ
+// Cè¯­è¨€åˆ†é…æ•°ç»„ç±»å‹
 void functionC() {
     char *p = (char *) malloc(sizeof(char) * 3);
     p[0] = 'a';
@@ -59,7 +59,7 @@ void functionC() {
     free(p);
 }
 
-// C++·ÖÅäÊı×éÀàĞÍ
+// C++åˆ†é…æ•°ç»„ç±»å‹
 void functionD() {
     char *p = new char[3];
     p[0] = 'e';
@@ -69,18 +69,18 @@ void functionD() {
     delete []p;
 }
 
-// CÓïÑÔ·ÖÅä¶ÔÏó
+// Cè¯­è¨€åˆ†é…å¯¹è±¡
 void functionE() {
-    // ÕâÀï²»»á×Ô¶¯µ÷ÓÃÀàµÄ¹¹Ôìº¯ÊıºÍÎö¹¹º¯Êı
+    // è¿™é‡Œä¸ä¼šè‡ªåŠ¨è°ƒç”¨ç±»çš„æ„é€ å‡½æ•°å’Œææ„å‡½æ•°
     Teacher *p = (Teacher *) malloc(sizeof(Teacher));
     p->setAget(33);
     cout << "functionE -> age = " << p->getAge() << endl;
     free(p);
 }
 
-// C++·ÖÅä¶ÔÏó
+// C++åˆ†é…å¯¹è±¡
 void functionF() {
-    // newºÍdelete»á·Ö±ğ×Ô¶¯µ÷ÓÃÀàµÄ¹¹Ôìº¯ÊıºÍÎö¹¹º¯Êı
+    // newå’Œdeleteä¼šåˆ†åˆ«è‡ªåŠ¨è°ƒç”¨ç±»çš„æ„é€ å‡½æ•°å’Œææ„å‡½æ•°
     Teacher *p = new Teacher(35);
     cout << "functionF -> age = " << p->getAge() << endl;
     delete p;

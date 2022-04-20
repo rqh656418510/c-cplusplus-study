@@ -1,7 +1,7 @@
 #include "Array.h"
 
 Array::Array(int length) {
-	cout << "ÓÐ²Î¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+	cout << "æœ‰å‚æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	if (length < 0) {
 		length = 0;
 	}
@@ -10,8 +10,8 @@ Array::Array(int length) {
 }
 
 Array::Array(const Array& array) {
-	cout << "¿½±´¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
-	// Éî¿½±´£¬µ¥¶À·ÖÅäÄÚ´æ¿Õ¼ä
+	cout << "æ‹·è´æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
+	// æ·±æ‹·è´ï¼Œå•ç‹¬åˆ†é…å†…å­˜ç©ºé—´
 	this->m_length = array.m_length;
 	this->m_space = new int[array.m_length];
 	for (int i = 0; i < array.m_length; i++) {
@@ -20,7 +20,7 @@ Array::Array(const Array& array) {
 }
 
 Array::~Array() {
-	cout << "Îö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+	cout << "æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;

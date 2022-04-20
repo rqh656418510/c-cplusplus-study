@@ -4,8 +4,8 @@
 
 using namespace std;
 
-// ¸ñÊ½»¯µ±Ç°Ê±¼ä
-// Ä¬ÈÏ¸ñÊ½ÊÇ: 2020-06-07 23:46:53
+// æ ¼å¼åŒ–å½“å‰æ—¶é—´
+// é»˜è®¤æ ¼å¼æ˜¯: 2020-06-07 23:46:53
 string formatCurrentTime() {
 	time_t rawtime;
 	struct tm* info;
@@ -18,8 +18,8 @@ string formatCurrentTime() {
 	return str;
 }
 
-// ¸ñÊ½»¯µ±Ç°Ê±¼ä
-// format: ¸ñÊ½×Ö·û´®£¬ÀıÈç %Y-%m-%d %H:%M:%S
+// æ ¼å¼åŒ–å½“å‰æ—¶é—´
+// format: æ ¼å¼å­—ç¬¦ä¸²ï¼Œä¾‹å¦‚ %Y-%m-%d %H:%M:%S
 string formatCurrentTime(string format) {
 	time_t rawtime;
 	struct tm* info;
@@ -32,17 +32,17 @@ string formatCurrentTime(string format) {
 	return str;
 }
 
-// ÅĞ¶ÏÒ»¸öÄê·İÊÇ·ñÎªÈòÄê
+// åˆ¤æ–­ä¸€ä¸ªå¹´ä»½æ˜¯å¦ä¸ºé—°å¹´
 bool isLeap(int year) {
 	return (year % 4 == 0 || year % 400 == 0) && (year % 100 != 0);
 }
 
-// ¼ÆËãÌØ¶¨Äê·İµÄÌìÊı
+// è®¡ç®—ç‰¹å®šå¹´ä»½çš„å¤©æ•°
 int daysOfYear(int year) {
 	return isLeap(year) ? 366 : 365;
 }
 
-// ¸ù¾İ¸ø¶¨µÄÈÕÆÚ£¬¼ÆËãËüÔÚ¸ÃÄêµÄµÚ¼¸Ìì
+// æ ¹æ®ç»™å®šçš„æ—¥æœŸï¼Œè®¡ç®—å®ƒåœ¨è¯¥å¹´çš„ç¬¬å‡ å¤©
 int dayInYear(int year, int month, int day) {
 	int DAY[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	if (isLeap(year)) {
@@ -54,8 +54,8 @@ int dayInYear(int year, int month, int day) {
 	return day;
 }
 
-// ÅĞ¶ÏÈÕÆÚ×Ö·û´®ÊÇ·ñºÏ·¨£¬²¢·Ö±ğÈ¡³öÈÕÆÚÖĞµÄÄêÔÂÈÕ
-// date: ÈÕÆÚ×Ö·û´®£¬¸ñÊ½ÊÇ: 20211201
+// åˆ¤æ–­æ—¥æœŸå­—ç¬¦ä¸²æ˜¯å¦åˆæ³•ï¼Œå¹¶åˆ†åˆ«å–å‡ºæ—¥æœŸä¸­çš„å¹´æœˆæ—¥
+// date: æ—¥æœŸå­—ç¬¦ä¸²ï¼Œæ ¼å¼æ˜¯: 20211201
 bool stringToDate(string date, int& year, int& month, int& day) {
 	year = atoi(date.substr(0, 4).c_str());
 	month = atoi(date.substr(4, 2).c_str());
@@ -67,15 +67,15 @@ bool stringToDate(string date, int& year, int& month, int& day) {
 	return year >= 0 && month <= 12 && month > 0 && day <= DAY[month - 1] && day > 0;
 }
 
-// ¼ÆËãÁ½¸öÈÕÆÚÖ®¼äµÄÌìÊı
-// date1: ÈÕÆÚ×Ö·û´®£¬¸ñÊ½ÊÇ: 20211201
-// date2: ÈÕÆÚ×Ö·û´®£¬¸ñÊ½ÊÇ: 20211201
-// µ±·µ»ØÖµÎª -1 Ê±£¬ËµÃ÷ÈÕÆÚµÄ¸ñÊ½²»ÕıÈ·
+// è®¡ç®—ä¸¤ä¸ªæ—¥æœŸä¹‹é—´çš„å¤©æ•°
+// date1: æ—¥æœŸå­—ç¬¦ä¸²ï¼Œæ ¼å¼æ˜¯: 20211201
+// date2: æ—¥æœŸå­—ç¬¦ä¸²ï¼Œæ ¼å¼æ˜¯: 20211201
+// å½“è¿”å›å€¼ä¸º -1 æ—¶ï¼Œè¯´æ˜æ—¥æœŸçš„æ ¼å¼ä¸æ­£ç¡®
 int daysBetween2Date(string date1, string date2) {
 	int year1, month1, day1;
 	int year2, month2, day2;
 	if (!stringToDate(date1, year1, month1, day1) || !stringToDate(date2, year2, month2, day2)) {
-		cout << "ÊäÈëµÄÈÕÆÚ¸ñÊ½²»ÕıÈ·";
+		cout << "è¾“å…¥çš„æ—¥æœŸæ ¼å¼ä¸æ­£ç¡®";
 		return -1;
 	}
 	if (year1 == year2 && month1 == month2) {
@@ -88,13 +88,13 @@ int daysBetween2Date(string date1, string date2) {
 		return d1 > d2 ? d1 - d2 : d2 - d1;
 	}
 	else {
-		// È·±£year1Äê·İ±Èyear2Ôç
+		// ç¡®ä¿year1å¹´ä»½æ¯”year2æ—©
 		if (year1 > year2) {
 			swap(year1, year2);
 			swap(month1, month2);
 			swap(day1, day2);
 		}
-		// ¼ÆËãµÚÒ»¸öÈÕÆÚÔÚ¸ÃÄê»¹Ê£¶àÉÙÌì
+		// è®¡ç®—ç¬¬ä¸€ä¸ªæ—¥æœŸåœ¨è¯¥å¹´è¿˜å‰©å¤šå°‘å¤©
 		int d1, d2, d3;
 		if (isLeap(year1)) {
 			d1 = 366 - dayInYear(year1, month1, day1);
@@ -102,9 +102,9 @@ int daysBetween2Date(string date1, string date2) {
 		else {
 			d1 = 365 - dayInYear(year1, month1, day1);
 		}
-		// ¼ÆËãµÚ¶şÈÕÆÚÔÚµ±ÄêÖĞµÄµÚ¼¸Ìì
+		// è®¡ç®—ç¬¬äºŒæ—¥æœŸåœ¨å½“å¹´ä¸­çš„ç¬¬å‡ å¤©
 		d2 = dayInYear(year2, month2, day2);
-		// ¼ÆËãÁ½¸öÄê·İÏà¸ôµÄÌìÊı
+		// è®¡ç®—ä¸¤ä¸ªå¹´ä»½ç›¸éš”çš„å¤©æ•°
 		d3 = 0;
 		for (int year = year1 + 1; year < year2; year++) {
 			if (isLeap(year))
@@ -116,10 +116,10 @@ int daysBetween2Date(string date1, string date2) {
 	}
 }
 
-// ¼ÆËãÆÚÈ¨ºÏÔ¼µÄÊ£ÓàÊ±¼ä£¨µ¥Î»Äê£©
-// expireDate: µ½ÆÚÈÕÆÚ£¬¸ñÊ½ÊÇ: 20211201
-// µ±·µ»ØÖµÎª -1 Ê±£¬ËµÃ÷ÆÚÈ¨ºÏÔ¼ÒÑµ½ÆÚ
-// µ±·µ»ØÖµÎª 0 Ê±£¬ËµÃ÷½ñÌìÊÇÆÚÈ¨ºÏÔ¼ÓĞĞ§µÄ×îºóÒ»Ìì
+// è®¡ç®—æœŸæƒåˆçº¦çš„å‰©ä½™æ—¶é—´ï¼ˆå•ä½å¹´ï¼‰
+// expireDate: åˆ°æœŸæ—¥æœŸï¼Œæ ¼å¼æ˜¯: 20211201
+// å½“è¿”å›å€¼ä¸º -1 æ—¶ï¼Œè¯´æ˜æœŸæƒåˆçº¦å·²åˆ°æœŸ
+// å½“è¿”å›å€¼ä¸º 0 æ—¶ï¼Œè¯´æ˜ä»Šå¤©æ˜¯æœŸæƒåˆçº¦æœ‰æ•ˆçš„æœ€åä¸€å¤©
 double contractRemainingTime(string expireDate) {
 	string currentDate = formatCurrentTime("%Y%m%d");
 	if (strcmp(currentDate.c_str(), expireDate.c_str()) > 0) {

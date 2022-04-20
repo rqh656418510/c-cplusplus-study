@@ -1,5 +1,5 @@
 /*
- * 1. atomic²»ÄÜÓëstirngÀàĞÍÒ»ÆğÊ¹ÓÃ
+ * 1. atomicä¸èƒ½ä¸stirngç±»å‹ä¸€èµ·ä½¿ç”¨
 */
 
 #include <iostream>
@@ -7,6 +7,6 @@
 using namespace std;
 
 int main() {
-	// C++ ±àÒëÆ÷»á³öÏÖ±àÒë´íÎó£¬ÒòÎª "string" ²»ÊÇ¿É¼òµ¥¸´ÖÆµÄÀàĞÍ£¨TriviallyCopyable£©
+	// C++ ç¼–è¯‘å™¨ä¼šå‡ºç°ç¼–è¯‘é”™è¯¯ï¼Œå› ä¸º "string" ä¸æ˜¯å¯ç®€å•å¤åˆ¶çš„ç±»å‹ï¼ˆTriviallyCopyableï¼‰
 	atomic<string> str{ "Hello" };
 }

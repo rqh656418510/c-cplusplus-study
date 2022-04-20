@@ -53,7 +53,7 @@ int Operation::SckSendAndRec_EncDec(unsigned char* in, int inlen, unsigned char*
 		goto End;
 	}
 
-	// ·¢ËÍÊı¾İÖ®Ç°¶ÔÊı¾İ¼ÓÃÜ
+	// å‘é€æ•°æ®ä¹‹å‰å¯¹æ•°æ®åŠ å¯†
 	ret = this->ed->EncData(in, inlen, data, &datalen);
 	if (ret != 0)
 	{
@@ -66,7 +66,7 @@ int Operation::SckSendAndRec_EncDec(unsigned char* in, int inlen, unsigned char*
 		goto End;
 	}
 
-	// ÊÕµ½µÄÊı¾İÊÇÃÜÎÄ,ĞèÒª½øĞĞ½âÃÜ
+	// æ”¶åˆ°çš„æ•°æ®æ˜¯å¯†æ–‡,éœ€è¦è¿›è¡Œè§£å¯†
 	ret = sp->cltSocketRev(data, &datalen);
 	if (ret != 0)
 	{
@@ -96,7 +96,7 @@ int Operation::SckSendAndRec_EncDec(CSocketProtocol* sp, CEncDesProtocol* ed, un
 		goto End;
 	}
 
-	// ·¢ËÍÊı¾İÖ®Ç°¶ÔÊı¾İ¼ÓÃÜ
+	// å‘é€æ•°æ®ä¹‹å‰å¯¹æ•°æ®åŠ å¯†
 	ret = ed->EncData(in, inlen, data, &datalen);
 	if (ret != 0)
 	{
@@ -115,7 +115,7 @@ int Operation::SckSendAndRec_EncDec(CSocketProtocol* sp, CEncDesProtocol* ed, un
 		goto End;
 	}
 
-	// ÊÕµ½µÄÊı¾İÊÇÃÜÎÄ,ĞèÒª½øĞĞ½âÃÜ
+	// æ”¶åˆ°çš„æ•°æ®æ˜¯å¯†æ–‡,éœ€è¦è¿›è¡Œè§£å¯†
 	ret = ed->DecData(data, datalen, out, outlen);
 	if (ret != 0)
 	{

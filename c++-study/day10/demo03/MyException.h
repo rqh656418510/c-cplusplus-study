@@ -4,11 +4,11 @@
 
 using namespace std;
 
-// Òì³£³éÏóÀà
+// å¼‚å¸¸æŠ½è±¡ç±»
 class SizeException {
 
 public:
-    // ´¿Ðéº¯Êý
+    // çº¯è™šå‡½æ•°
     virtual void printErr() = 0;
 
 public:
@@ -28,7 +28,7 @@ public:
     }
 
     void printErr() {
-        cout << "Êý×é´óÐ¡²»ÄÜÐ¡ÓÚÁã, µ±Ç°´óÐ¡Îª " << this->size << endl;
+        cout << "æ•°ç»„å¤§å°ä¸èƒ½å°äºŽé›¶, å½“å‰å¤§å°ä¸º " << this->size << endl;
     }
 
 };
@@ -41,7 +41,7 @@ public:
     }
 
     void printErr() {
-        cout << "Êý×é´óÐ¡Ì«´ó, µ±Ç°´óÐ¡Îª " << this->size << endl;
+        cout << "æ•°ç»„å¤§å°å¤ªå¤§, å½“å‰å¤§å°ä¸º " << this->size << endl;
     }
 
 };
@@ -54,6 +54,6 @@ public:
     }
 
     void printErr() {
-        cout << "Êý×é´óÐ¡²»ÔÊÐíÎªÁã" << endl;
+        cout << "æ•°ç»„å¤§å°ä¸å…è®¸ä¸ºé›¶" << endl;
     }
 };

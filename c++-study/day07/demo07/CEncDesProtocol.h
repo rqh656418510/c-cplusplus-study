@@ -2,7 +2,7 @@
 
 #include "define.h"
 
-// ³éÏóÀà£¨½Ó¿ÚÀà£©
+// æŠ½è±¡ç±»ï¼ˆæ¥å£ç±»ï¼‰
 class CEncDesProtocol {
 
 public:
@@ -11,15 +11,15 @@ public:
 
 	}
 
-	// ĞéÎö¹¹º¯Êı
+	// è™šææ„å‡½æ•°
 	virtual ~CEncDesProtocol() {
 
 	}
 
-	// ±àÂëÊı¾İ
+	// ç¼–ç æ•°æ®
 	virtual int EncData(unsigned char* plain, int plainlen, unsigned char* cryptdata, int* cryptlen) = 0;
 
-	// ½âÂëÊı¾İ
+	// è§£ç æ•°æ®
 	virtual int DecData(unsigned char* cryptdata, int cryptlen, unsigned char* plain, int* plainlen) = 0;
 
 };

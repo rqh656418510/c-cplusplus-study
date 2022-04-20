@@ -1,5 +1,5 @@
 /**
- * 1. Ç¿»¯ÑµÁ·Ê¹ÓÃÊı×éÀà¡¢ÀàµÄ·â×°
+ * 1. å¼ºåŒ–è®­ç»ƒä½¿ç”¨æ•°ç»„ç±»ã€ç±»çš„å°è£…
  */
 
 #include <iostream>
@@ -9,23 +9,23 @@ using namespace std;
 
 int main() {
 
-	// ×Ô¶¯µ÷ÓÃ¹¹Ôìº¯Êı³õÊ¼»¯Êı×é
+	// è‡ªåŠ¨è°ƒç”¨æ„é€ å‡½æ•°åˆå§‹åŒ–æ•°ç»„
 	Array array1(5);
 
-	// Êı×é¸³Öµ
+	// æ•°ç»„èµ‹å€¼
 	for (int i = 0; i < array1.length(); i++) {
 		array1.setData(i, i);
 	}
 
-	// ´òÓ¡Êı×é
+	// æ‰“å°æ•°ç»„
 	for (int i = 0; i < array1.length(); i++) {
 		cout << "array1[" << i << "] = " << array1.getData(i) << endl;
 	}
 
-	// ×Ô¶¯µ÷ÓÃ¿½±´¹¹Ôìº¯Êı³õÊ¼»¯Êı×é
+	// è‡ªåŠ¨è°ƒç”¨æ‹·è´æ„é€ å‡½æ•°åˆå§‹åŒ–æ•°ç»„
 	Array array2 = array1;
 
-	// ´òÓ¡Êı×é
+	// æ‰“å°æ•°ç»„
 	for (int i = 0; i < array2.length(); i++) {
 		cout << "array2[" << i << "] = " << array2.getData(i) << endl;
 	}

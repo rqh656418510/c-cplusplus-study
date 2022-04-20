@@ -2,21 +2,21 @@
 
 #include "CSocketProtocol.h"
 
-// ÊµÏÖÀà¶ş
+// å®ç°ç±»äºŒ
 class  CSckFactoryImp2 : public CSocketProtocol
 {
 public:
 
-	// ¿Í»§¶Ë³õÊ¼»¯
+	// å®¢æˆ·ç«¯åˆå§‹åŒ–
 	virtual int cltSocketInit( /*out*/);
 
-	// ¿Í»§¶Ë·¢±¨ÎÄ
+	// å®¢æˆ·ç«¯å‘æŠ¥æ–‡
 	virtual int cltSocketSend(unsigned char* buf /*in*/, int buflen /*in*/);
 
-	// ¿Í»§¶ËÊÕ±¨ÎÄ
+	// å®¢æˆ·ç«¯æ”¶æŠ¥æ–‡
 	virtual int cltSocketRev(unsigned char* buf /*in*/, int* buflen /*in out*/);
 
-	// ¿Í»§¶ËÊÍ·Å×ÊÔ´
+	// å®¢æˆ·ç«¯é‡Šæ”¾èµ„æº
 	virtual int cltSocketDestory();
 
 private:

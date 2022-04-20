@@ -46,7 +46,7 @@ add_executable(day03-demo06-2 day03/demo06/main2.cpp)
 add_executable(day03-demo06-3 day03/demo06/main3.cpp)
 add_executable(day03-demo07 day03/demo07/main.cpp)
 
-# ...
+# ...(省略)
 
 add_executable(day03-demo08 day10/demo08/main.cpp day10/demo08/file.cpp)
 

@@ -1,6 +1,6 @@
 /**
- * 1. Ê¹ÓÃ³ÉÔ±º¯ÊýºÍÓÑÔªº¯ÊýÊµÏÖÒ»Ôª²Ù×÷·ûµÄÖØÔØ
- * 2. ³ýÁËÊ¹ÓÃÓÑÔªº¯ÊýÍâ£¬»¹¿ÉÒÔÊ¹ÓÃÈ«¾Öº¯Êý£¨ÆÕÍ¨º¯Êý£©À´ÊµÏÖ²Ù×÷·ûµÄÖØÔØ£¬²»Í¬µÄÊÇÊ¹ÓÃÓÑÔªº¯Êý¸ü·½±ã£¬¿ÉÒÔÖ±½Ó·ÃÎÊÀàµÄËùÓÐË½ÓÐ£¨private£©³ÉÔ±ºÍ±£»¤£¨protected£©³ÉÔ±
+ * 1. ä½¿ç”¨æˆå‘˜å‡½æ•°å’Œå‹å…ƒå‡½æ•°å®žçŽ°ä¸€å…ƒæ“ä½œç¬¦çš„é‡è½½
+ * 2. é™¤äº†ä½¿ç”¨å‹å…ƒå‡½æ•°å¤–ï¼Œè¿˜å¯ä»¥ä½¿ç”¨å…¨å±€å‡½æ•°ï¼ˆæ™®é€šå‡½æ•°ï¼‰æ¥å®žçŽ°æ“ä½œç¬¦çš„é‡è½½ï¼Œä¸åŒçš„æ˜¯ä½¿ç”¨å‹å…ƒå‡½æ•°æ›´æ–¹ä¾¿ï¼Œå¯ä»¥ç›´æŽ¥è®¿é—®ç±»çš„æ‰€æœ‰ç§æœ‰ï¼ˆprivateï¼‰æˆå‘˜å’Œä¿æŠ¤ï¼ˆprotectedï¼‰æˆå‘˜
  */
 
 #include <iostream>
@@ -23,15 +23,15 @@ public:
 	}
 
 public:
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊýÍê³É "Ç°ÖÃ--" ²Ù×÷·ûµÄÖØÔØ
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°å®Œæˆ "å‰ç½®--" æ“ä½œç¬¦çš„é‡è½½
 	Complex& operator--() {
 		this->a--;
 		this->b--;
 		return *this;
 	}
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊýÍê³É "ºóÖÃ--" ²Ù×÷·ûµÄÖØÔØ
-	// Ê¹ÓÃÕ¼Î»²ÎÊý½øÐÐº¯ÊýÖØÔØ£¬ÊÇÎªÁË½â¾öÓë "Ç°ÖÃ--" Àà³ÉÔ±º¯Êý³åÍ»µÄÎÊÌâ
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°å®Œæˆ "åŽç½®--" æ“ä½œç¬¦çš„é‡è½½
+	// ä½¿ç”¨å ä½å‚æ•°è¿›è¡Œå‡½æ•°é‡è½½ï¼Œæ˜¯ä¸ºäº†è§£å†³ä¸Ž "å‰ç½®--" ç±»æˆå‘˜å‡½æ•°å†²çªçš„é—®é¢˜
 	Complex operator--(int) {
 		Complex tmp(this->a, this->b);
 		this->a--;
@@ -39,15 +39,15 @@ public:
 		return tmp;
 	}
 
-	// ÉùÃ÷ÓÃÓÚ "Ç°ÖÃ++" ²Ù×÷·ûÖØÔØµÄÓÑÔªº¯Êý
+	// å£°æ˜Žç”¨äºŽ "å‰ç½®++" æ“ä½œç¬¦é‡è½½çš„å‹å…ƒå‡½æ•°
 	friend Complex& operator++(Complex& c1);
 
-	// ÉùÃ÷ÓÃÓÚ "ºóÖÃ++" ²Ù×÷·ûÖØÔØµÄÓÑÔªº¯Êý
-	// Ê¹ÓÃÕ¼Î»²ÎÊý½øÐÐº¯ÊýÖØÔØ£¬ÊÇÎªÁË½â¾öÓë "Ç°ÖÃ++" ÓÑÔªº¯Êý³åÍ»µÄÎÊÌâ
+	// å£°æ˜Žç”¨äºŽ "åŽç½®++" æ“ä½œç¬¦é‡è½½çš„å‹å…ƒå‡½æ•°
+	// ä½¿ç”¨å ä½å‚æ•°è¿›è¡Œå‡½æ•°é‡è½½ï¼Œæ˜¯ä¸ºäº†è§£å†³ä¸Ž "å‰ç½®++" å‹å…ƒå‡½æ•°å†²çªçš„é—®é¢˜
 	friend Complex operator++(Complex& c1, int);
 };
 
-// ¶¨ÒåÓÑÔªº¯ÊýÍê³É "Ç°ÖÃ++" ²Ù×÷·ûµÄÖØÔØ
+// å®šä¹‰å‹å…ƒå‡½æ•°å®Œæˆ "å‰ç½®++" æ“ä½œç¬¦çš„é‡è½½
 Complex& operator++(Complex& c1)
 {
 	c1.a++;
@@ -55,7 +55,7 @@ Complex& operator++(Complex& c1)
 	return c1;
 }
 
-// ¶¨ÒåÓÑÔªº¯ÊýÍê³É "ºóÖÃ++" ²Ù×÷·ûµÄÖØÔØ
+// å®šä¹‰å‹å…ƒå‡½æ•°å®Œæˆ "åŽç½®++" æ“ä½œç¬¦çš„é‡è½½
 Complex operator++(Complex& c1, int) {
 	Complex tmp(c1.a, c1.b);
 	c1.a++;
@@ -66,20 +66,20 @@ Complex operator++(Complex& c1, int) {
 int main() {
 	Complex c1(1, 2), c2(8, 9), c3(15, 16), c4(24, 25);
 
-	// Ê¹ÓÃÓÑÔªº¯ÊýÍê³É "Ç°ÖÃ++" ²Ù×÷·ûµÄÖØÔØ
+	// ä½¿ç”¨å‹å…ƒå‡½æ•°å®Œæˆ "å‰ç½®++" æ“ä½œç¬¦çš„é‡è½½
 	++c1;
 	c1.print();
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊýÍê³É "Ç°ÖÃ--" ²Ù×÷·ûµÄÖØÔØ
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°å®Œæˆ "å‰ç½®--" æ“ä½œç¬¦çš„é‡è½½
 	--c2;
 	c2.print();
 
-	// Ê¹ÓÃÓÑÔªº¯ÊýÍê³É "ºóÖÃ++" ²Ù×÷·ûµÄÖØÔØ
+	// ä½¿ç”¨å‹å…ƒå‡½æ•°å®Œæˆ "åŽç½®++" æ“ä½œç¬¦çš„é‡è½½
 	Complex c5 = c3++;
 	c3.print();
 	c5.print();
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊýÍê³É "ºóÖÃ--" ²Ù×÷·ûµÄÖØÔØ
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°å®Œæˆ "åŽç½®--" æ“ä½œç¬¦çš„é‡è½½
 	Complex c6 = c4--;
 	c4.print();
 	c6.print();

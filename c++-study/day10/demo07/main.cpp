@@ -1,6 +1,6 @@
 /*
- * 1. C++ нд╪Ч I/O аВ╣д╪Р╣╔й╧сц
- * a) ртфум╗╣д╥╫й╫╤ап╢нд╪Ч
+ * 1. C++ Ф√┤Д╩╤ I/O Ф╣│Г └Г╝─Е█∙Д╫©Г■╗
+ * a) Д╩╔Ф≥╝И─ Г └Ф√╧Е╪▐Х╞╩Е├≥Ф√┤Д╩╤
 */
 
 #include <iostream>
@@ -9,7 +9,7 @@
 using namespace std;
 
 void writeFile() {
-	// ╢Р©╙нд╪Ч
+	// Ф┴⌠Е╪─Ф√┤Д╩╤
 	char* fname = "D:/file.txt";
 	ofstream fout(fname);
 	if (fout) {
@@ -20,7 +20,7 @@ void writeFile() {
 }
 
 void readFile() {
-	// ╤ах║нд╪Ч
+	// Х╞╩Е▐√Ф√┤Д╩╤
 	char ch;
 	char* fname = "D:/file.txt";
 	ifstream fin(fname);
@@ -33,7 +33,7 @@ void readFile() {
 }
 
 void writeFileApp() {
-	// ртв╥╪с╣д╥╫й╫╢Р©╙нд╪Ч
+	// Д╩╔Х©╫Е┼═Г └Ф√╧Е╪▐Ф┴⌠Е╪─Ф√┤Д╩╤
 	char* fname = "D:/file.txt";
 	ofstream fout(fname, ios::app);
 	if (fout) {

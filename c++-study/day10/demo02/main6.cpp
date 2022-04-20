@@ -1,6 +1,6 @@
 /*
- * 1. Òì³£´¦Àí»úÖÆ
- * a) Òì³£ÀàĞÍºÍÒì³£±äÁ¿µÄÉúÃüÖÜÆÚ
+ * 1. å¼‚å¸¸å¤„ç†æœºåˆ¶
+ * a) å¼‚å¸¸ç±»å‹å’Œå¼‚å¸¸å˜é‡çš„ç”Ÿå‘½å‘¨æœŸ
 */
 
 #include <iostream>
@@ -16,16 +16,16 @@ class BadDestType {
 class BadProcessType {
 public:
     BadProcessType() {
-        cout << "BadProcessTypeµÄ¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
+        cout << "BadProcessTypeçš„æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
     }
 
 
     BadProcessType(const BadProcessType& obj) {
-        cout << "BadProcessTypeµÄ¿½±´¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
+        cout << "BadProcessTypeçš„æ‹·è´æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
     }
 
     ~BadProcessType() {
-        cout << "BadProcessTypeµÄÎö¹¹º¯Êı±»µ÷ÓÃ" << endl;
+        cout << "BadProcessTypeçš„ææ„å‡½æ•°è¢«è°ƒç”¨" << endl;
     }
 
 };
@@ -42,7 +42,7 @@ void myStrcpy(char* to, char* from) {
         throw BadProcessType();
     }
     if (*from == 'b') {
-        // ²»½¨ÒéÊ¹ÓÃÕâÖÖĞ´·¨
+        // ä¸å»ºè®®ä½¿ç”¨è¿™ç§å†™æ³•
         throw& (BadProcessType());
     }
     if (*from == 'c') {
@@ -66,36 +66,36 @@ int main() {
         myStrcpy(buf2, buf1);
     }
     catch (BadSrcType e) {
-        cout << " BadSrcType ÀàĞÍÒì³£" << endl;
+        cout << " BadSrcType ç±»å‹å¼‚å¸¸" << endl;
     }
     catch (BadDestType e) {
-        cout << " BadDestType ÀàĞÍÒì³£" << endl;
+        cout << " BadDestType ç±»å‹å¼‚å¸¸" << endl;
     }
     /*
-    // ½áÂÛ1: Èç¹û½ÓÊÕÒì³£µÄÊ±ºò£¬Ê¹ÓÃÒ»¸öÒì³£±äÁ¿£¬Ôò¿½±´¹¹Ôì¸ÃÒì³£±äÁ¿
+    // ç»“è®º1: å¦‚æœæ¥æ”¶å¼‚å¸¸çš„æ—¶å€™ï¼Œä½¿ç”¨ä¸€ä¸ªå¼‚å¸¸å˜é‡ï¼Œåˆ™æ‹·è´æ„é€ è¯¥å¼‚å¸¸å˜é‡
     catch (BadProcessType e)
     {
-        cout << " BadProcessType ÀàĞÍÒì³£" << endl;
+        cout << " BadProcessType ç±»å‹å¼‚å¸¸" << endl;
     }
 
-    // ½áÂÛ2: Èç¹û½ÓÊÕÒì³£µÄÊ±ºò£¬Ê¹ÓÃÁËÒıÓÃ£¬Ôò»áÊ¹ÓÃthrowÊ±ºòµÄÄÇ¸ö¶ÔÏó
+    // ç»“è®º2: å¦‚æœæ¥æ”¶å¼‚å¸¸çš„æ—¶å€™ï¼Œä½¿ç”¨äº†å¼•ç”¨ï¼Œåˆ™ä¼šä½¿ç”¨throwæ—¶å€™çš„é‚£ä¸ªå¯¹è±¡
     catch (BadProcessType& e)
     {
-        cout << " BadProcessType ÀàĞÍÒì³£" << endl;
+        cout << " BadProcessType ç±»å‹å¼‚å¸¸" << endl;
     }
 
-    // ½áÂÛ3: ½ÓÊÕÒì³£µÄÊ±ºò£¬Ö¸Õë¿ÉÒÔºÍÒıÓÃ/ÔªËØÍ¬Ê±³öÏÖ£¬µ«ÊÇÒıÓÃÓëÔªËØ²»ÄÜÍ¬Ê±³öÏÖ
+    // ç»“è®º3: æ¥æ”¶å¼‚å¸¸çš„æ—¶å€™ï¼ŒæŒ‡é’ˆå¯ä»¥å’Œå¼•ç”¨/å…ƒç´ åŒæ—¶å‡ºç°ï¼Œä½†æ˜¯å¼•ç”¨ä¸å…ƒç´ ä¸èƒ½åŒæ—¶å‡ºç°
     catch (BadProcessType* e)
     {
-        cout << " BadProcessType ÀàĞÍÒì³£" << endl;
+        cout << " BadProcessType ç±»å‹å¼‚å¸¸" << endl;
         delete e;
     }
 
-    // ½áÂÛ4: Èç¹ûÅ×³öµÄÊÇÀà¶ÔÏóÀàĞÍµÄÒì³££¬ÔòÊ¹ÓÃÒıÓÃ½øĞĞÒì³£²¶»ñ±È½ÏºÏÊÊ
+    // ç»“è®º4: å¦‚æœæŠ›å‡ºçš„æ˜¯ç±»å¯¹è±¡ç±»å‹çš„å¼‚å¸¸ï¼Œåˆ™ä½¿ç”¨å¼•ç”¨è¿›è¡Œå¼‚å¸¸æ•è·æ¯”è¾ƒåˆé€‚
 
     */
     catch (...) {
-        cout << "Î´Öª ÀàĞÍÒì³£" << endl;
+        cout << "æœªçŸ¥ ç±»å‹å¼‚å¸¸" << endl;
     }
     return 0;
 }

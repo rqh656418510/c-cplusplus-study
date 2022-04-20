@@ -1,5 +1,5 @@
 /**
- * 1. C++ÖĞµÄÒıÓÃÖ®Ö¸ÕëÒıÓÃ
+ * 1. C++ä¸­çš„å¼•ç”¨ä¹‹æŒ‡é’ˆå¼•ç”¨
  */
 
 #include <iostream>
@@ -12,7 +12,7 @@ struct Teacher {
     int age;
 };
 
-// ¶ş¼¶Ö¸Õë×÷º¯Êı²ÎÊı
+// äºŒçº§æŒ‡é’ˆä½œå‡½æ•°å‚æ•°
 int getTe(Teacher **myp) {
     Teacher *p = (Teacher *) malloc(sizeof(Teacher));
     if (p == NULL) {
@@ -24,7 +24,7 @@ int getTe(Teacher **myp) {
     return 0;
 }
 
-// Ö¸ÕëÒıÓÃ×÷º¯Êı²ÎÊı
+// æŒ‡é’ˆå¼•ç”¨ä½œå‡½æ•°å‚æ•°
 int getTe2(Teacher *&myp) {
     myp = (Teacher *) malloc(sizeof(Teacher));
     if (myp == NULL) {

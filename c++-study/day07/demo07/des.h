@@ -1,6 +1,6 @@
 /*********************************************************
  *  des.h
- *  ÓÃ»§Ê¹ÓÃdesËã·¨µÄÍ·ÎÄ¼ş
+ *  ç”¨æˆ·ä½¿ç”¨desç®—æ³•çš„å¤´æ–‡ä»¶
  *
  *********************************************************/
 #ifndef _OPENDESS_H_
@@ -10,14 +10,14 @@
 extern "C" {
 #endif
 
-	//ÓÃ»§Ê¹ÓÃµÄ¼ÓÃÜº¯Êı
+	//ç”¨æˆ·ä½¿ç”¨çš„åŠ å¯†å‡½æ•°
 	int DesEnc(
 		unsigned char* pInData,
 		int            nInDataLen,
 		unsigned char* pOutData,
 		int* pOutDataLen);
 
-	//ÓÃ»§Ê¹ÓÃµÄ½âÃÜº¯Êı
+	//ç”¨æˆ·ä½¿ç”¨çš„è§£å¯†å‡½æ•°
 	int DesDec(
 		unsigned char* pInData,
 		int            nInDataLen,

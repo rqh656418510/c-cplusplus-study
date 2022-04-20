@@ -1,13 +1,13 @@
 /**
- * 1. ´¿Ğéº¯ÊıºÍ³éÏóÀàÔÚ¶à¼Ì³ĞÖĞµÄÓ¦ÓÃ°¸Àı
- * a) C++ ÖĞÃ»ÓĞ Java ÖĞµÄ½Ó¿Ú¸ÅÄî£¬µ«¿ÉÒÔÍ¨¹ı´¿Ğéº¯ÊıºÍ³éÏóÀàÄ£Äâ Java ÖĞµÄ½Ó¿Ú
+ * 1. çº¯è™šå‡½æ•°å’ŒæŠ½è±¡ç±»åœ¨å¤šç»§æ‰¿ä¸­çš„åº”ç”¨æ¡ˆä¾‹
+ * a) C++ ä¸­æ²¡æœ‰ Java ä¸­çš„æ¥å£æ¦‚å¿µï¼Œä½†å¯ä»¥é€šè¿‡çº¯è™šå‡½æ•°å’ŒæŠ½è±¡ç±»æ¨¡æ‹Ÿ Java ä¸­çš„æ¥å£
  */
 
 #include <iostream>
 
 using namespace std;
 
-// ¶¨Òå½Ó¿ÚÀàÒ»
+// å®šä¹‰æ¥å£ç±»ä¸€
 class Interface1 {
 
 public:
@@ -15,7 +15,7 @@ public:
 	virtual void print() = 0;
 };
 
-// ¶¨Òå½Ó¿ÚÀà¶ş
+// å®šä¹‰æ¥å£ç±»äºŒ
 class Interface2 {
 
 public:
@@ -23,7 +23,7 @@ public:
 	virtual void print() = 0;
 };
 
-// ¶¨Òå¸¸Àà
+// å®šä¹‰çˆ¶ç±»
 class Parent {
 
 public:
@@ -43,7 +43,7 @@ private:
 	int a;
 };
 
-// ¶¨Òå×ÓÀà£¬Ê×ÏÈ¼Ì³Ğ¸¸Àà£¬È»ºó¼Ì³Ğ¶à¸ö½Ó¿ÚÀà
+// å®šä¹‰å­ç±»ï¼Œé¦–å…ˆç»§æ‰¿çˆ¶ç±»ï¼Œç„¶åç»§æ‰¿å¤šä¸ªæ¥å£ç±»
 class Child : public Parent, public Interface1, public Interface2 {
 
 public:
@@ -56,7 +56,7 @@ public:
 	}
 
 	void print() {
-		cout << "Child::print() º¯Êı±»Ö´ĞĞ" << endl;
+		cout << "Child::print() å‡½æ•°è¢«æ‰§è¡Œ" << endl;
 	}
 
 };

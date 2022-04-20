@@ -1,7 +1,7 @@
 /**
- * 1. Ç³¿½±´ÓëÉî¿½±´
- * ÓÉÓÚÔÚÏÂÊöµÄ´úÂëÖÐ£¬Ã»ÓÐ×Ô¶¨Òå¿½±´¹¹Ôìº¯Êý£¬Ê¹ÓÃµÄÊÇ C++ ±àÒëÆ÷Ìá¹©µÄÄ¬ÈÏ¿½±´¹¹Ôìº¯Êý£¬Òò´Ë³ÌÐòÎÞ·¨Õý³£ÔËÐÐ
- * Ôì³É³ÌÐòÎÞ·¨Õý³£ÔËÐÐµÄ¸ù±¾Ô­ÒòÊÇ£¬C++ Ìá¹©µÄÄ¬ÈÏ¿½±´¹¹Ôìº¯ÊýÊôÓÚÇ³¿½±´£¬ÔÚµ÷ÓÃÏÂÃæµÄÎö¹¹º¯ÊýÊ±»á³öÏÖ´íÎó£¨Í¬Ò»¿éÄÚ´æ¿Õ¼ä±»ÊÍ·ÅÁ½´Î£©
+ * 1. æµ…æ‹·è´ä¸Žæ·±æ‹·è´
+ * ç”±äºŽåœ¨ä¸‹è¿°çš„ä»£ç ä¸­ï¼Œæ²¡æœ‰è‡ªå®šä¹‰æ‹·è´æž„é€ å‡½æ•°ï¼Œä½¿ç”¨çš„æ˜¯ C++ ç¼–è¯‘å™¨æä¾›çš„é»˜è®¤æ‹·è´æž„é€ å‡½æ•°ï¼Œå› æ­¤ç¨‹åºæ— æ³•æ­£å¸¸è¿è¡Œ
+ * é€ æˆç¨‹åºæ— æ³•æ­£å¸¸è¿è¡Œçš„æ ¹æœ¬åŽŸå› æ˜¯ï¼ŒC++ æä¾›çš„é»˜è®¤æ‹·è´æž„é€ å‡½æ•°å±žäºŽæµ…æ‹·è´ï¼Œåœ¨è°ƒç”¨ä¸‹é¢çš„æžæž„å‡½æ•°æ—¶ä¼šå‡ºçŽ°é”™è¯¯ï¼ˆåŒä¸€å—å†…å­˜ç©ºé—´è¢«é‡Šæ”¾ä¸¤æ¬¡ï¼‰
  */
 
 #include <iostream>
@@ -18,7 +18,7 @@ private:
 public:
 
     Name(const char *name) {
-        cout << "ÓÐ²Î¹¹Ôìº¯Êý±»µ÷ÓÃÁË" << endl;
+        cout << "æœ‰å‚æž„é€ å‡½æ•°è¢«è°ƒç”¨äº†" << endl;
         int length = strlen(name);
         p = (char *) malloc(length + 1);
         strcpy(p, name);
@@ -26,7 +26,7 @@ public:
     }
 
     ~Name() {
-        cout << "Îö¹¹º¯Êý±»µ÷ÓÃÁË" << endl;
+        cout << "æžæž„å‡½æ•°è¢«è°ƒç”¨äº†" << endl;
         if (p != NULL) {
             free(p);
             p = NULL;
@@ -45,7 +45,7 @@ public:
 
 int main() {
     Name obj1("Peter");
-    Name obj2 = obj1;       // ×Ô¶¯µ÷ÓÃC++Ìá¹©µÄÄ¬ÈÏ¿½±´¹¹Ôìº¯Êý£¬ÊôÓÚÇ³¿½±´
+    Name obj2 = obj1;       // è‡ªåŠ¨è°ƒç”¨C++æä¾›çš„é»˜è®¤æ‹·è´æž„é€ å‡½æ•°ï¼Œå±žäºŽæµ…æ‹·è´
     cout << "obj1.name: " << obj1.getP() << ", obj1.len:  " << obj1.getLen() << endl;
     cout << "obj2.name: " << obj2.getP() << ", obj2.len:  " << obj2.getLen() << endl;
     return 0;

@@ -8,9 +8,9 @@ using namespace std;
 class MyArray {
 
 public:
-    // ¹¹Ôìº¯Êı
+    // æ„é€ å‡½æ•°
     MyArray(int size) {
-        // Êı×é³õÊ¼»¯´óĞ¡¼ì²é£¬´óĞ¡²»ºÏ·¨ÔòÅ×³öÒì³£
+        // æ•°ç»„åˆå§‹åŒ–å¤§å°æ£€æŸ¥ï¼Œå¤§å°ä¸åˆæ³•åˆ™æŠ›å‡ºå¼‚å¸¸
         if (size < 0) {
             throw NegativeException(size);
         }
@@ -24,9 +24,9 @@ public:
         this->m_space = new int[size];
     }
 
-    // ¿½±´¹¹Ôìº¯Êı
+    // æ‹·è´æ„é€ å‡½æ•°
     MyArray(const MyArray& obj) {
-        // Éî¿½±´
+        // æ·±æ‹·è´
         this->m_size = obj.m_size;
         this->m_space = new int[obj.m_size];
         for (int i = 0; i < obj.m_size; i++) {
@@ -34,7 +34,7 @@ public:
         }
     }
 
-    // Îö¹¹º¯Êı
+    // ææ„å‡½æ•°
     ~MyArray() {
         if (this->m_space) {
             delete[] this->m_space;
@@ -44,20 +44,20 @@ public:
     }
 
 public:
-    // Ê¹ÓÃÀà³ÉÔ±º¯Êı£¬ÖØÔØÔËËã·û "[]"
+    // ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "[]"
     int& operator[](int index) {
         return this->m_space[index];
     }
 
-    // Ê¹ÓÃÀà³ÉÔ±º¯Êı£¬ÖØÔØÔËËã·û "="
+    // ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "="
     MyArray& operator=(const MyArray& obj) {
-        // ÊÍ·ÅÔ­±¾µÄÄÚ´æ¿Õ¼ä
+        // é‡Šæ”¾åŸæœ¬çš„å†…å­˜ç©ºé—´
         if (this->m_space) {
             delete[] this->m_space;
             this->m_space = NULL;
             this->m_size = 0;
         }
-        // Éî¿½±´
+        // æ·±æ‹·è´
         this->m_size = obj.m_size;
         this->m_space = new int[obj.m_size];
         for (int i = 0; i < obj.m_size; i++) {
@@ -66,7 +66,7 @@ public:
         return *this;
     }
 
-    // Ê¹ÓÃÓÑÔªº¯Êı£¬ÖØÔØÔËËã·û "<<"
+    // ä½¿ç”¨å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
     friend ostream& operator<<(ostream& out, const MyArray& obj);
 
 public:
@@ -80,7 +80,7 @@ private:
     int m_max_size = 1000;
 };
 
-// Ê¹ÓÃÓÑÔªº¯Êı£¬ÖØÔØÔËËã·û "<<"
+// ä½¿ç”¨å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
 ostream& operator<<(ostream& out, const MyArray& obj) {
     for (int i = 0; i < obj.m_size; i++) {
         out << obj.m_space[i] << ", ";

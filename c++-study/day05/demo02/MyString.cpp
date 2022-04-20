@@ -1,28 +1,28 @@
 #include "MyString.h"
 
-// ÎŞ²Î¹¹Ôìº¯Êı
+// æ— å‚æ„é€ å‡½æ•°
 MyString::MyString() {
-	// ³õÊ¼»¯Îª¿Õ×Ö·û´®
+	// åˆå§‹åŒ–ä¸ºç©ºå­—ç¬¦ä¸²
 	this->m_length = 0;
 	this->m_space = new char[this->m_length + 1];
 	strcpy(this->m_space, "");
 }
 
-// ÓĞ²Î¹¹Ôìº¯Êı
+// æœ‰å‚æ„é€ å‡½æ•°
 MyString::MyString(int len) {
 	if (len < 0) {
 		len = 0;
 	}
-	// ³õÊ¼»¯Îª¿Õ×Ö·û´®
+	// åˆå§‹åŒ–ä¸ºç©ºå­—ç¬¦ä¸²
 	this->m_length = len;
 	this->m_space = new char[this->m_length + 1];
 	strcpy(this->m_space, "");
 }
 
-// ÓĞ²Î¹¹Ôìº¯Êı
+// æœ‰å‚æ„é€ å‡½æ•°
 MyString::MyString(const char* p) {
 	if (p == NULL) {
-		// ³õÊ¼»¯Îª¿Õ×Ö·û´®
+		// åˆå§‹åŒ–ä¸ºç©ºå­—ç¬¦ä¸²
 		this->m_length = 0;
 		this->m_space = new char[this->m_length + 1];
 		strcpy(this->m_space, "");
@@ -34,17 +34,17 @@ MyString::MyString(const char* p) {
 	}
 }
 
-// ¿½±´¹¹Ôìº¯Êı
+// æ‹·è´æ„é€ å‡½æ•°
 MyString::MyString(const MyString& str) {
-	// Éî¿½±´£¬ÖØĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+	// æ·±æ‹·è´ï¼Œé‡æ–°åˆ†é…å†…å­˜ç©ºé—´
 	this->m_length = str.m_length;
 	this->m_space = new char[this->m_length + 1];
 	strcpy(this->m_space, str.m_space);
 }
 
-// Îö¹¹º¯Êı
+// ææ„å‡½æ•°
 MyString::~MyString() {
-	// ÊÍ·ÅÄÚ´æ¿Õ¼ä
+	// é‡Šæ”¾å†…å­˜ç©ºé—´
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;
@@ -52,22 +52,22 @@ MyString::~MyString() {
 	}
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "[]" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "[]" è¿ç®—ç¬¦
 char& MyString::operator[](int index) {
 	return this->m_space[index];
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "=" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "=" è¿ç®—ç¬¦
 MyString& MyString::operator=(const char* p) {
-	// ÊÍ·ÅÄÚ´æ¿Õ¼ä
+	// é‡Šæ”¾å†…å­˜ç©ºé—´
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;
 		this->m_length = 0;
 	}
-	// Éî¿½±´£¬ÖØĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+	// æ·±æ‹·è´ï¼Œé‡æ–°åˆ†é…å†…å­˜ç©ºé—´
 	if (p == NULL) {
-		// ³õÊ¼»¯Îª¿Õ×Ö·û´®
+		// åˆå§‹åŒ–ä¸ºç©ºå­—ç¬¦ä¸²
 		this->m_length = 0;
 		this->m_space = new char[this->m_length + 1];
 		strcpy(this->m_space, "");
@@ -80,22 +80,22 @@ MyString& MyString::operator=(const char* p) {
 	return *this;
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "=" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "=" è¿ç®—ç¬¦
 MyString& MyString::operator=(const MyString& str) {
-	// ÊÍ·ÅÄÚ´æ¿Õ¼ä
+	// é‡Šæ”¾å†…å­˜ç©ºé—´
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;
 		this->m_length = 0;
 	}
-	// Éî¿½±´£¬ÖØĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+	// æ·±æ‹·è´ï¼Œé‡æ–°åˆ†é…å†…å­˜ç©ºé—´
 	this->m_length = str.m_length;
 	this->m_space = new char[this->m_length + 1];
 	strcpy(this->m_space, str.m_space);
 	return *this;
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "==" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "==" è¿ç®—ç¬¦
 bool MyString::operator==(const char* p) const {
 	if (p == NULL) {
 		if (this->m_length == 0) {
@@ -116,7 +116,7 @@ bool MyString::operator==(const MyString str) const {
 	return !strcmp(this->m_space, str.m_space);
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "!=" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "!=" è¿ç®—ç¬¦
 bool MyString::operator!=(const char* p) const {
 	return !(*this == p);
 }
@@ -125,7 +125,7 @@ bool MyString::operator!=(const MyString str) const {
 	return !(*this == str);
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ ">" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ ">" è¿ç®—ç¬¦
 bool MyString::operator>(const char* p) const {
 	return strcmp(p, this->m_space) < 0;
 }
@@ -134,7 +134,7 @@ bool MyString::operator>(const MyString str) const {
 	return strcmp(str.m_space, this->m_space) < 0;
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "<" ÔËËã·û
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "<" è¿ç®—ç¬¦
 bool MyString::operator<(const char* p) const {
 	return strcmp(this->m_space, p) < 0;
 }
@@ -143,13 +143,13 @@ bool MyString::operator<(const MyString str) const {
 	return strcmp(this->m_space, str.m_space) < 0;
 }
 
-// Ê¹ÓÃÓÑÔªº¯ÊıÖØÔØ "<<" ÔËËã·û
+// ä½¿ç”¨å‹å…ƒå‡½æ•°é‡è½½ "<<" è¿ç®—ç¬¦
 ostream& operator<<(ostream& out, MyString& str) {
 	out << str.m_space;
 	return out;
 }
 
-// Ê¹ÓÃÓÑÔªº¯ÊıÖØÔØ ">>" ÔËËã·û
+// ä½¿ç”¨å‹å…ƒå‡½æ•°é‡è½½ ">>" è¿ç®—ç¬¦
 iostream& operator>>(iostream& in, MyString& str)
 {
 	in >> str.m_space;

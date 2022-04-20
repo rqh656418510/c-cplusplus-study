@@ -1,7 +1,7 @@
 /**
- * 1. ÐéÎö¹¹º¯ÊýµÄ¼òµ¥Ó¦ÓÃ
- * a) ÐéÎö¹¹º¯ÊýµÄ×÷ÓÃ£ºÎªÁË±ÜÃâÄÚ´æÐ¹Â©£¬Í¨¹ý¸¸ÀàµÄÖ¸Õë£¬¿ÉÒÔ½«ËùÓÐ×ÓÀà¶ÔÏóµÄÎö¹¹º¯Êý¶¼Ö´ÐÐÒ»±é£¨ÊÍ·ÅËùÓÐµÄ×ÓÀà×ÊÔ´£©
- * b) ¼´ÐéÎö¹¹º¯ÊýÊ¹µÃÔÚÉ¾³ýÖ¸Ïò×ÓÀà¶ÔÏóµÄ¸¸ÀàÖ¸ÕëÊ±£¬¿ÉÒÔµ÷ÓÃ×ÓÀàµÄÎö¹¹º¯ÊýÀ´ÊµÏÖÊÍ·Å×ÓÀàÖÐ¶ÑÄÚ´æµÄÄ¿µÄ£¬´Ó¶ø·ÀÖ¹ÄÚ´æÐ¹Â©
+ * 1. è™šæžæž„å‡½æ•°çš„ç®€å•åº”ç”¨
+ * a) è™šæžæž„å‡½æ•°çš„ä½œç”¨ï¼šä¸ºäº†é¿å…å†…å­˜æ³„æ¼ï¼Œé€šè¿‡çˆ¶ç±»çš„æŒ‡é’ˆï¼Œå¯ä»¥å°†æ‰€æœ‰å­ç±»å¯¹è±¡çš„æžæž„å‡½æ•°éƒ½æ‰§è¡Œä¸€éï¼ˆé‡Šæ”¾æ‰€æœ‰çš„å­ç±»èµ„æºï¼‰
+ * b) å³è™šæžæž„å‡½æ•°ä½¿å¾—åœ¨åˆ é™¤æŒ‡å‘å­ç±»å¯¹è±¡çš„çˆ¶ç±»æŒ‡é’ˆæ—¶ï¼Œå¯ä»¥è°ƒç”¨å­ç±»çš„æžæž„å‡½æ•°æ¥å®žçŽ°é‡Šæ”¾å­ç±»ä¸­å †å†…å­˜çš„ç›®çš„ï¼Œä»Žè€Œé˜²æ­¢å†…å­˜æ³„æ¼
  */
 
 #include <iostream>
@@ -14,12 +14,12 @@ public:
 	A() {
 		this->p = new char[20];
 		strcpy(p, "Hello A");
-		cout << "A ÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "A ç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	virtual ~A() {
 		delete[] this->p;
-		cout << "A ÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "A ç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 private:
@@ -33,12 +33,12 @@ public:
 	B() {
 		this->p = new char[20];
 		strcpy(p, "Hello B");
-		cout << "B ÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "B ç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~B() {
 		delete[] this->p;
-		cout << "B ÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "B ç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 private:
@@ -46,14 +46,14 @@ private:
 };
 
 int main() {
-	// ´ËÐ´·¨£¬Èç¹ûÉÏÃæ²»Ê¹ÓÃ "virtual" ÐÞÊÎAÀà£¨»ùÀà£©µÄÎö¹¹º¯Êý£¬ÅÉÉúÀàÓëËùÓÐ»ùÀàµÄÎö¹¹º¯ÊýÒÀÈ»¶¼»á±»×Ô¶¯µ÷ÓÃÒ»´Î
+	// æ­¤å†™æ³•ï¼Œå¦‚æžœä¸Šé¢ä¸ä½¿ç”¨ "virtual" ä¿®é¥°Aç±»ï¼ˆåŸºç±»ï¼‰çš„æžæž„å‡½æ•°ï¼Œæ´¾ç”Ÿç±»ä¸Žæ‰€æœ‰åŸºç±»çš„æžæž„å‡½æ•°ä¾ç„¶éƒ½ä¼šè¢«è‡ªåŠ¨è°ƒç”¨ä¸€æ¬¡
 	B* b = new B();
 	delete b;
 
 	cout << endl;
 
-	// ´ËÐ´·¨£¬Èç¹ûÉÏÃæ²»Ê¹ÓÃ "virtual" ÐÞÊÎAÀà£¨»ùÀà£©µÄÎö¹¹º¯Êý£¬ÄÇÃ´Ö»ÓÐAÀà£¨»ùÀà£©µÄÎö¹¹º¯Êý»á±»µ÷ÓÃÒ»´Î£¬BÀà£¨ÅÉÉúÀà£©µÄÎö¹¹º¯Êý²»»á±»µ÷ÓÃ£¬ÕâÑù¾Í»áÔì³ÉÄÚ´æÐ¹Â©
-	// ÐéÎö¹¹º¯ÊýµÄ×÷ÓÃÊÇ£¬Í¨¹ý¸¸ÀàµÄÖ¸Õë£¬¿ÉÒÔ½«ËùÓÐ×ÓÀà¶ÔÏóµÄÎö¹¹º¯Êý¶¼Ö´ÐÐÒ»±é£¨ÊÍ·ÅËùÓÐµÄ×ÓÀà×ÊÔ´£©¡£
+	// æ­¤å†™æ³•ï¼Œå¦‚æžœä¸Šé¢ä¸ä½¿ç”¨ "virtual" ä¿®é¥°Aç±»ï¼ˆåŸºç±»ï¼‰çš„æžæž„å‡½æ•°ï¼Œé‚£ä¹ˆåªæœ‰Aç±»ï¼ˆåŸºç±»ï¼‰çš„æžæž„å‡½æ•°ä¼šè¢«è°ƒç”¨ä¸€æ¬¡ï¼ŒBç±»ï¼ˆæ´¾ç”Ÿç±»ï¼‰çš„æžæž„å‡½æ•°ä¸ä¼šè¢«è°ƒç”¨ï¼Œè¿™æ ·å°±ä¼šé€ æˆå†…å­˜æ³„æ¼
+	// è™šæžæž„å‡½æ•°çš„ä½œç”¨æ˜¯ï¼Œé€šè¿‡çˆ¶ç±»çš„æŒ‡é’ˆï¼Œå¯ä»¥å°†æ‰€æœ‰å­ç±»å¯¹è±¡çš„æžæž„å‡½æ•°éƒ½æ‰§è¡Œä¸€éï¼ˆé‡Šæ”¾æ‰€æœ‰çš„å­ç±»èµ„æºï¼‰ã€‚
 	A* a = new B();
 	delete a;
 	return 0;

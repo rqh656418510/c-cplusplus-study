@@ -1,15 +1,15 @@
 /*
- * 1. º¯ÊıÄ£°åµÄÊ¹ÓÃ
+ * 1. å‡½æ•°æ¨¡æ¿çš„ä½¿ç”¨
 */
 
 #include <iostream>
 
 using namespace std;
 
-// Ä£°åÉùÃ÷
+// æ¨¡æ¿å£°æ˜
 template <typename T>
 
-// º¯Êı¶¨Òå
+// å‡½æ•°å®šä¹‰
 void myswap(T& a, T& b) {
 	T temp;
 	temp = a;
@@ -19,17 +19,17 @@ void myswap(T& a, T& b) {
 
 int main() {
 
-	// ×Ô¶¯Êı¾İÀàĞÍÍÆµ¼
+	// è‡ªåŠ¨æ•°æ®ç±»å‹æ¨å¯¼
 	int x = 1, y = 2;
 	myswap(x, y);
 	printf("x = %d, y = %d\n", x, y);
 
-	// ×Ô¶¯Êı¾İÀàĞÍÍÆµ¼
+	// è‡ªåŠ¨æ•°æ®ç±»å‹æ¨å¯¼
 	double n = 0.5, m = 0.8;
 	myswap(n, m);
 	printf("n = %f, m = %f\n", n, m);
 
-	// ÏÔÊ¾ÀàĞÍµ÷ÓÃ£¨ÍÆ¼ö£©
+	// æ˜¾ç¤ºç±»å‹è°ƒç”¨ï¼ˆæ¨èï¼‰
 	char i = 'h', j = 'e';
 	myswap<char>(i, j);
 	printf("n = %c, m = %c\n", i, j);

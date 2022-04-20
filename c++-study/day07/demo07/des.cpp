@@ -435,15 +435,15 @@ void desfunc(register unsigned long* block, register unsigned long* keys)
 }
 
 /*****************************************************************
-	OPENCOMM_DesExpandEncKey	: Expand Des Enc Key À©Õ¹des¼ÓÃÜÃÜÔ¿
+	OPENCOMM_DesExpandEncKey	: Expand Des Enc Key æ‰©å±•desåŠ å¯†å¯†é’¥
 	Return value:
 		0         : Success
 		other     : failed
 	Parameters:
-		pbDesKey        : À©Õ¹Ç°µÄDESÃÜÔ¿(8×Ö½Ú)       input
-		ulDesKeyLen     : À©Õ¹Ç°µÄDESÃÜÔ¿³¤¶È          input
-		pbDesEncKey     : À©Õ¹ºóµÄDES¼ÓÃÜÃÜÔ¿(128×Ö½Ú)  output
-		*ulDesEncKeyLen : À©Õ¹ºóµÄDES¼ÓÃÜÃÜÔ¿³¤¶È       output
+		pbDesKey        : æ‰©å±•å‰çš„DESå¯†é’¥(8å­—èŠ‚)       input
+		ulDesKeyLen     : æ‰©å±•å‰çš„DESå¯†é’¥é•¿åº¦          input
+		pbDesEncKey     : æ‰©å±•åçš„DESåŠ å¯†å¯†é’¥(128å­—èŠ‚)  output
+		*ulDesEncKeyLen : æ‰©å±•åçš„DESåŠ å¯†å¯†é’¥é•¿åº¦       output
 *****************************************************************/
 unsigned long OPENCOMM_DesExpandEncKey(
 	unsigned char* pbDesKey,
@@ -465,15 +465,15 @@ unsigned long OPENCOMM_DesExpandEncKey(
 }
 
 /*****************************************************************
-	OPENCOMM_DesExpandDecKey	: Expand Des Dec Key À©Õ¹des½âÃÜÃÜÔ¿
+	OPENCOMM_DesExpandDecKey	: Expand Des Dec Key æ‰©å±•desè§£å¯†å¯†é’¥
 	Return value:
 		0       : Success
 		other   : failed
 	Parameters:
-		pbDesKey        : À©Õ¹Ç°µÄDESÃÜÔ¿(8×Ö½Ú)      input
-		ulDesKeyLen     : À©Õ¹Ç°µÄDESÃÜÔ¿³¤¶È         input
-		pbDesDecKey     : À©Õ¹ºóµÄDES½âÃÜÃÜÔ¿(128×Ö½Ú) output
-		*ulDesDecKeyLen : À©Õ¹ºóµÄDES½âÃÜÃÜÔ¿³¤¶È      output
+		pbDesKey        : æ‰©å±•å‰çš„DESå¯†é’¥(8å­—èŠ‚)      input
+		ulDesKeyLen     : æ‰©å±•å‰çš„DESå¯†é’¥é•¿åº¦         input
+		pbDesDecKey     : æ‰©å±•åçš„DESè§£å¯†å¯†é’¥(128å­—èŠ‚) output
+		*ulDesDecKeyLen : æ‰©å±•åçš„DESè§£å¯†å¯†é’¥é•¿åº¦      output
 *****************************************************************/
 unsigned long OPENCOMM_DesExpandDecKey(
 	unsigned char* pbDesKey,
@@ -495,17 +495,17 @@ unsigned long OPENCOMM_DesExpandDecKey(
 }
 
 /****************************************************************
-	OPENCOMM_DesEncRaw		: DesËã·¨¼ÓÃÜĞ¡Õû¿éÃ÷ÎÄ8×Ö½Ú
+	OPENCOMM_DesEncRaw		: Desç®—æ³•åŠ å¯†å°æ•´å—æ˜æ–‡8å­—èŠ‚
 	Return value:
 		0       : Success
 		other   : failed
 	Parameters:
-		pbDesEncKey    : DES¼ÓÃÜÃÜÔ¿    input
-		ulDesEncKeyLen : DES¼ÓÃÜÃÜÔ¿³¤¶È input
-		pbInData       : ´ı¼ÓÃÜµÄÃ÷ÎÄ    input
-		ulInDataLen    : ´ı¼ÓÃÜµÄÃ÷ÎÄ³¤¶È input
-		pbOutData      : ¼ÓÃÜºóµÄÃÜÎÄ    output
-		*ulOutDataLen  : ¼ÓÃÜºóµÄÃÜÎÄ³¤¶È output
+		pbDesEncKey    : DESåŠ å¯†å¯†é’¥    input
+		ulDesEncKeyLen : DESåŠ å¯†å¯†é’¥é•¿åº¦ input
+		pbInData       : å¾…åŠ å¯†çš„æ˜æ–‡    input
+		ulInDataLen    : å¾…åŠ å¯†çš„æ˜æ–‡é•¿åº¦ input
+		pbOutData      : åŠ å¯†åçš„å¯†æ–‡    output
+		*ulOutDataLen  : åŠ å¯†åçš„å¯†æ–‡é•¿åº¦ output
 *****************************************************************/
 unsigned long OPENCOMM_DesEncRaw(
 	unsigned char* pbDesEncKey,
@@ -536,17 +536,17 @@ unsigned long OPENCOMM_DesEncRaw(
 }
 
 /*****************************************************************
-	OPENCOMM_DesDecRaw : DesËã·¨½âÃÜĞ¡Õû¿éÃÜÎÄ8×Ö½Ú
+	OPENCOMM_DesDecRaw : Desç®—æ³•è§£å¯†å°æ•´å—å¯†æ–‡8å­—èŠ‚
 	Return value:
 		0     : Success
 		other : failed
 	Parameters:
-		pbDesDecKey    : DES½âÃÜÃÜÔ¿     input
-		ulDesDecKeyLen : DES½âÃÜÃÜÔ¿³¤¶È  input
-		pbInData       : ´ı½âÃÜµÄÃÜÎÄ     input
-		ulInDataLen    : ´ı½âÃÜµÄÃÜÎÄ³¤¶È  input
-		pbOutData      : ½âÃÜºóµÄÃ÷ÎÄ     output
-		*ulOutDataLen  : ½âÃÜºóµÄÃ÷ÎÄ³¤¶È  output
+		pbDesDecKey    : DESè§£å¯†å¯†é’¥     input
+		ulDesDecKeyLen : DESè§£å¯†å¯†é’¥é•¿åº¦  input
+		pbInData       : å¾…è§£å¯†çš„å¯†æ–‡     input
+		ulInDataLen    : å¾…è§£å¯†çš„å¯†æ–‡é•¿åº¦  input
+		pbOutData      : è§£å¯†åçš„æ˜æ–‡     output
+		*ulOutDataLen  : è§£å¯†åçš„æ˜æ–‡é•¿åº¦  output
 *****************************************************************/
 unsigned long OPENCOMM_DesDecRaw(
 	unsigned char* pbDesDecKey,
@@ -658,7 +658,7 @@ int myic_DESDecrypt(
 }
 
 
-//¶Ô³ÆÃ÷ÎÄÊı¾İ´òpading
+//å¯¹ç§°æ˜æ–‡æ•°æ®æ‰“pading
 void  CW_dataPadAdd(int tag, unsigned char* date, unsigned int dateLen,
 	unsigned char** padDate, unsigned int* padDateLen)
 {
@@ -699,7 +699,7 @@ void  CW_dataPadAdd(int tag, unsigned char* date, unsigned int dateLen,
 #define  USER_PASSWORD_KEY "abcd1234"
 
 
-//Êı¾İ¼ÓÃÜ
+//æ•°æ®åŠ å¯†
 int DesEnc(
 	unsigned char* pInData,
 	int            nInDataLen,
@@ -731,7 +731,7 @@ int DesEnc(
 }
 
 
-//Êı¾İ¼ÓÃÜ
+//æ•°æ®åŠ å¯†
 int DesEnc_raw(
 	unsigned char* pInData,
 	int            nInDataLen,
@@ -751,13 +751,13 @@ int DesEnc_raw(
 	return 0;
 }
 
-//½âÃÜ·ÖÅäÄÚ´æ´íÎó
+//è§£å¯†åˆ†é…å†…å­˜é”™è¯¯
 #define  ERR_MALLOC 20
-//ÃÜÂë³¤¶È²»ÊÇ8µÄÕûÊı±¶, ²»ºÏ·¨
+//å¯†ç é•¿åº¦ä¸æ˜¯8çš„æ•´æ•°å€, ä¸åˆæ³•
 #define  ERR_FILECONT 20
 
 
-//ÓÃ»§Ê¹ÓÃº¯Êıdes½âÃÜ
+//ç”¨æˆ·ä½¿ç”¨å‡½æ•°desè§£å¯†
 int DesDec(
 	unsigned char* pInData,
 	int            nInDataLen,
@@ -775,7 +775,7 @@ int DesDec(
 	}
 	memset(tmpPlain, 0, nInDataLen + 24);
 
-	//½âÃÜ
+	//è§£å¯†
 	rv = myic_DESDecrypt((unsigned char*)USER_PASSWORD_KEY, strlen(USER_PASSWORD_KEY),
 		pInData, nInDataLen, tmpPlain, pOutDataLen);
 	if (rv != 0)
@@ -784,9 +784,9 @@ int DesDec(
 		return rv;
 	}
 
-	//È¥pading
+	//å»pading
 	padChar = tmpPlain[*pOutDataLen - 1];
-	if ((int)padChar <= 0 || (int)padChar > 8) //Òì³£´¦Àí
+	if ((int)padChar <= 0 || (int)padChar > 8) //å¼‚å¸¸å¤„ç†
 	{
 		if (tmpPlain) free(tmpPlain);
 		return ERR_FILECONT;
@@ -800,7 +800,7 @@ int DesDec(
 }
 
 
-//ÓÃ»§Ê¹ÓÃº¯Êıdes½âÃÜ
+//ç”¨æˆ·ä½¿ç”¨å‡½æ•°desè§£å¯†
 int DesDec_raw(
 	unsigned char* pInData,
 	int            nInDataLen,
@@ -820,7 +820,7 @@ int DesDec_raw(
 	memset(tmpPlain, 0, nInDataLen+24);
 	*/
 
-	//½âÃÜ
+	//è§£å¯†
 	rv = myic_DESDecrypt((unsigned char*)USER_PASSWORD_KEY, strlen(USER_PASSWORD_KEY),
 		pInData, nInDataLen, pOutData, pOutDataLen);
 	if (rv != 0)
@@ -829,9 +829,9 @@ int DesDec_raw(
 		return rv;
 	}
 	/*
-	//È¥pading
+	//å»pading
 	padChar = tmpPlain[*pOutDataLen - 1];
-	if ( (int)padChar<=0 || (int)padChar>8) //Òì³£´¦Àí
+	if ( (int)padChar<=0 || (int)padChar>8) //å¼‚å¸¸å¤„ç†
 	{
 		if (tmpPlain) free(tmpPlain);
 		return ERR_FILECONT;

@@ -1,6 +1,6 @@
 /*
- * 1. C++ ÎÄ¼ş I/O Á÷µÄ¼òµ¥Ê¹ÓÃ
- * a) ÒÔ¶ş½øÖÆµÄ·½Ê½¶ÁĞ´ÎÄ¼ş
+ * 1. C++ æ–‡ä»¶ I/O æµçš„ç®€å•ä½¿ç”¨
+ * a) ä»¥äºŒè¿›åˆ¶çš„æ–¹å¼è¯»å†™æ–‡ä»¶
 */
 
 #include <iostream>
@@ -37,11 +37,11 @@ int main() {
 	char* fname = "D:/file.dat";
 	ofstream fout(fname, ios::binary);
 	if (!fout) {
-		cout << "´ò¿ªÎÄ¼şÊ§°Ü" << endl;
+		cout << "æ‰“å¼€æ–‡ä»¶å¤±è´¥" << endl;
 		return 0;
 	}
 
-	// ½«Àà¶ÔÏóĞ´Èë¶ş½øÖÆÎÄ¼ş£¨ĞòÁĞ»¯£©
+	// å°†ç±»å¯¹è±¡å†™å…¥äºŒè¿›åˆ¶æ–‡ä»¶ï¼ˆåºåˆ—åŒ–ï¼‰
 	Teacher t1(23, "Jim");
 	Teacher t2(26, "Tom");
 	fout.write((char*)&t1, sizeof(Teacher));
@@ -51,11 +51,11 @@ int main() {
 
 	ifstream fin(fname);
 	if (!fin) {
-		cout << "´ò¿ªÎÄ¼şÊ§°Ü" << endl;
+		cout << "æ‰“å¼€æ–‡ä»¶å¤±è´¥" << endl;
 		return 0;
 	}
 
-	// ´Ó¶ş½øÖÆÎÄ¼ş¶ÁÈ¡Àà¶ÔÏó£¨·´ĞòÁĞ»¯£©
+	// ä»äºŒè¿›åˆ¶æ–‡ä»¶è¯»å–ç±»å¯¹è±¡ï¼ˆååºåˆ—åŒ–ï¼‰
 	Teacher tmp;
 	fin.read((char*)&tmp, sizeof(Teacher));
 	tmp.print();

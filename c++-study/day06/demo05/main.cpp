@@ -1,5 +1,5 @@
 /**
- * 1. ¼Ì³ÐÖÐµÄÍ¬Ãû³ÉÔ±µÄ´¦Àí·½Ê½
+ * 1. ç»§æ‰¿ä¸­çš„åŒåæˆå‘˜çš„å¤„ç†æ–¹å¼
  */
 
 #include <iostream>
@@ -44,17 +44,17 @@ public:
 int main() {
 	Child child(1, 2);
 
-	// ×ÓÀà·ÃÎÊ×ÔÉíµÄÍ¬Ãû³ÉÔ±º¯Êý
+	// å­ç±»è®¿é—®è‡ªèº«çš„åŒåæˆå‘˜å‡½æ•°
 	child.print();
 
-	// ×ÓÀà·ÃÎÊ×ÔÉíµÄÍ¬Ãû³ÉÔ±±äÁ¿
+	// å­ç±»è®¿é—®è‡ªèº«çš„åŒåæˆå‘˜å˜é‡
 	cout << "child's a = " << child.a << endl;
 	cout << "child's b = " << child.b << endl;
 
-	// ×ÓÀà·ÃÎÊ¸¸ÀàµÄÍ¬Ãû³ÉÔ±º¯Êý
+	// å­ç±»è®¿é—®çˆ¶ç±»çš„åŒåæˆå‘˜å‡½æ•°
 	child.Parent::print();
 
-	// ×ÓÀà·ÃÎÊ¸¸ÀàµÄÍ¬Ãû³ÉÔ±±äÁ¿
+	// å­ç±»è®¿é—®çˆ¶ç±»çš„åŒåæˆå‘˜å˜é‡
 	cout << "parent's a = " << child.Parent::a << endl;
 	cout << "parent's b = " << child.Parent::b << endl;
 

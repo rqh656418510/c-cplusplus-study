@@ -1,6 +1,6 @@
 /*
- * 1. ÀàÄ£°åµÄÊ¹ÓÃ
- * a) ËùÓÐµÄÀàÄ£°åº¯ÊýÐ´ÔÚÀàµÄÄÚ²¿
+ * 1. ç±»æ¨¡æ¿çš„ä½¿ç”¨
+ * a) æ‰€æœ‰çš„ç±»æ¨¡æ¿å‡½æ•°å†™åœ¨ç±»çš„å†…éƒ¨
 */
 
 #include <iostream>
@@ -13,30 +13,30 @@ class Complex {
 
 public:
 
-	// ¹¹Ôìº¯Êý
+	// æž„é€ å‡½æ•°
 	Complex(T a, T b) {
 		this->a = a;
 		this->b = b;
 	}
 
-	// Àà³ÉÔ±º¯Êý
+	// ç±»æˆå‘˜å‡½æ•°
 	void print() {
 		cout << "a = " << this->a << ", b = " << this->b << endl;
 	}
 
-	// Àà³ÉÔ±º¯Êý£¬ÖØÔØÔËËã·û "+"
+	// ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "+"
 	Complex operator+(Complex& c2) {
 		Complex tmp(this->a + c2.a, this->b + c2.b);
 		return tmp;
 	}
 
-	// ÓÑÔªº¯Êý£¬ÖØÔØÔËËã·û "<<"
+	// å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
 	friend ostream& operator<<(ostream& out, Complex& c1) {
 		cout << "a = " << c1.a << ", b = " << c1.b;
 		return out;
 	}
 
-	// ÓÑÔªº¯Êý
+	// å‹å…ƒå‡½æ•°
 	friend Complex sub(Complex& c1, Complex& c2) {
 		Complex tmp(c1.a - c2.a, c1.b - c2.b);
 		return tmp;

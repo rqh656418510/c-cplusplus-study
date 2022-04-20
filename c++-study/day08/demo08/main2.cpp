@@ -1,6 +1,6 @@
 /*
- * 1. atomicÔ­×Ó²Ù×÷
- * a) ²»¼ÓËøÊ¹ÓÃ Atomic
+ * 1. atomicåŸå­æ“ä½œ
+ * a) ä¸åŠ é”ä½¿ç”¨ Atomic
 */
 
 #include <iostream>
@@ -24,7 +24,7 @@ int main(void)
 {
 	clock_t start_time = clock();
 
-	// Æô¶¯¶à¸öÏß³Ì
+	// å¯åŠ¨å¤šä¸ªçº¿ç¨‹
 	vector<thread> threads;
 	for (int i = 0; i < 10; i++) {
 		threads.push_back(thread(threadFun));
@@ -33,11 +33,11 @@ int main(void)
 		thad.join();
 	}
 
-	// ¼ì²âtotalÊÇ·ñÕıÈ· 10000*10 = 100000
+	// æ£€æµ‹totalæ˜¯å¦æ­£ç¡® 10000*10 = 100000
 	cout << "total number:" << total << endl;
 
 	clock_t end_time = clock();
-	cout << "ºÄÊ±£º" << end_time - start_time << "ms" << endl;
+	cout << "è€—æ—¶ï¼š" << end_time - start_time << "ms" << endl;
 
 	return 0;
 }

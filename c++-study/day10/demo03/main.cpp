@@ -1,27 +1,27 @@
 /*
- * 1. Òì³£´¦Àí»úÖÆ
- * a) Òì³£ÔÚ¼Ì³ĞÖĞµÄÊ¹ÓÃ
+ * 1. å¼‚å¸¸å¤„ç†æœºåˆ¶
+ * a) å¼‚å¸¸åœ¨ç»§æ‰¿ä¸­çš„ä½¿ç”¨
 */
 
 #include "MyArray.h"
 
 int main() {
     try {
-        // µ÷ÓÃ¹¹Ôìº¯Êı
+        // è°ƒç”¨æ„é€ å‡½æ•°
         MyArray array1(-6);
         // MyArray array1(5);
         // MyArray array1(0);
         // MyArray array1(2000);
 
-        // ÖØÔØÔËËã·û "[]"
+        // é‡è½½è¿ç®—ç¬¦ "[]"
         for (int i = 0; i < array1.getsize(); i++) {
             array1[i] = 20 + i;
         }
 
-        // ÖØÔØÔËËã·û "<<"
+        // é‡è½½è¿ç®—ç¬¦ "<<"
         cout << array1 << endl;
 
-        // µ÷ÓÃ¿½±´¹¹Ôìº¯Êı
+        // è°ƒç”¨æ‹·è´æ„é€ å‡½æ•°
         MyArray array2 = array1;
         cout << array2 << endl;
 
@@ -31,17 +31,17 @@ int main() {
         array3[2] = 79;
         cout << array3 << endl;
 
-        // ÖØÔØÔËËã·û "="
+        // é‡è½½è¿ç®—ç¬¦ "="
         array3 = array2;
         cout << array3 << endl;
 
     }
-    // Ê¹ÓÃÒıÓÃ²¶»ñÒì³££¨¶àÌ¬£©
+    // ä½¿ç”¨å¼•ç”¨æ•è·å¼‚å¸¸ï¼ˆå¤šæ€ï¼‰
     catch (SizeException& e) {
         e.printErr();
     }
     catch (...) {
-        cout << "·¢ÉúÎ´ÖªÒì³£" << endl;
+        cout << "å‘ç”ŸæœªçŸ¥å¼‚å¸¸" << endl;
     }
     return 0;
 }

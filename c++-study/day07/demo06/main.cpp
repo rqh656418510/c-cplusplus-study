@@ -1,7 +1,7 @@
 /*
- * 1. ±àĞ´Ò»¸öC++³ÌĞò, ¼ÆËã³ÌĞòÔ±( programmer )¹¤×Ê
- * b)ÒªÇóÄÜ¼ÆËã³ö³õ¼¶³ÌĞòÔ±( junior_programmer ) ÖĞ¼¶³ÌĞòÔ± ( mid_programmer )¸ß¼¶³ÌĞòÔ±( adv_programmer)µÄ¹¤×Ê
- * a)ÒªÇóÀûÓÃ³éÏóÀàÍ³Ò»½çÃæ,·½±ã³ÌĞòµÄÀ©Õ¹, ±ÈÈç:ĞÂÔö, ¼ÆËã ¼Ü¹¹Ê¦ (architect ) µÄ¹¤×Ê
+ * 1. ç¼–å†™ä¸€ä¸ªC++ç¨‹åº, è®¡ç®—ç¨‹åºå‘˜( programmer )å·¥èµ„
+ * b)è¦æ±‚èƒ½è®¡ç®—å‡ºåˆçº§ç¨‹åºå‘˜( junior_programmer ) ä¸­çº§ç¨‹åºå‘˜ ( mid_programmer )é«˜çº§ç¨‹åºå‘˜( adv_programmer)çš„å·¥èµ„
+ * a)è¦æ±‚åˆ©ç”¨æŠ½è±¡ç±»ç»Ÿä¸€ç•Œé¢,æ–¹ä¾¿ç¨‹åºçš„æ‰©å±•, æ¯”å¦‚:æ–°å¢, è®¡ç®— æ¶æ„å¸ˆ (architect ) çš„å·¥èµ„
 */
 
 #include <iostream>
@@ -14,7 +14,7 @@ public:
 	virtual void getSal() = 0;
 };
 
-// ³õ¼¶³ÌĞòÔ±
+// åˆçº§ç¨‹åºå‘˜
 class junior_programmer : public programmer
 {
 public:
@@ -34,7 +34,7 @@ private:
 	int sal;
 };
 
-// ÖĞ¼¶³ÌĞòÔ±
+// ä¸­çº§ç¨‹åºå‘˜
 class mid_programmer : public programmer
 {
 public:
@@ -54,7 +54,7 @@ private:
 	int sal;
 };
 
-// ¸ß¼¶³ÌĞòÔ±
+// é«˜çº§ç¨‹åºå‘˜
 class adv_programmer : public programmer
 {
 public:
@@ -74,7 +74,7 @@ private:
 	int sal;
 };
 
-// ¼Ü¹¹Ê¦
+// æ¶æ„å¸ˆ
 class architect : public programmer
 {
 public:
@@ -94,7 +94,7 @@ private:
 	int sal;
 };
 
-//¼ÆËãº¯Êı£¬¼òµ¥µÄ¿ò¼Ü
+//è®¡ç®—å‡½æ•°ï¼Œç®€å•çš„æ¡†æ¶
 void CalProgSal(programmer* base)
 {
 	base->getSal();
@@ -102,10 +102,10 @@ void CalProgSal(programmer* base)
 
 void main()
 {
-	junior_programmer jp("Ğ¡Íõ", "³õ¼¶", 4000);
-	mid_programmer mp("Ğ¡ÕÅ", "ÖĞ¼¶", 8600);
-	adv_programmer ap("Ğ¡Àî", "¸ß¼¶", 15000);
-	architect ar("´«ÖÇ¸ßË®Æ½Ñ§Ô±", "¼Ü¹¹Ê¦", 24000);
+	junior_programmer jp("å°ç‹", "åˆçº§", 4000);
+	mid_programmer mp("å°å¼ ", "ä¸­çº§", 8600);
+	adv_programmer ap("å°æ", "é«˜çº§", 15000);
+	architect ar("ä¼ æ™ºé«˜æ°´å¹³å­¦å‘˜", "æ¶æ„å¸ˆ", 24000);
 
 	CalProgSal(&jp);
 	CalProgSal(&mp);

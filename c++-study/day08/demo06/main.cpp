@@ -1,5 +1,5 @@
 /*
- * 1. unique_ptr ¶ÔÏó£¨ÖÇÄÜÖ¸Õë£©µÄÊ¹ÓÃ
+ * 1. unique_ptr å¯¹è±¡ï¼ˆæ™ºèƒ½æŒ‡é’ˆï¼‰çš„ä½¿ç”¨
 */
 
 #include <iostream>
@@ -11,11 +11,11 @@ class Task {
 public:
 	Task(int id) {
 		this->id = id;
-		cout << "¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
+		cout << "æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Task() {
-		cout << "Îö¹¹º¯Êı±»µ÷ÓÃ" << endl;
+		cout << "ææ„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	int getId() {
@@ -28,27 +28,27 @@ private:
 };
 
 
-// Ê¹ÓÃÔ­Ê¼Ö¸Õë´´½¨ unique_ptr ¶ÔÏó
+// ä½¿ç”¨åŸå§‹æŒ‡é’ˆåˆ›å»º unique_ptr å¯¹è±¡
 void create() {
 	unique_ptr<Task> taskPtr(new Task(22));
 	cout << "id = " << taskPtr->getId() << endl;
 }
 
 
-// ×ªÒÆ unique_ptr ¶ÔÏóµÄËùÓĞÈ¨
+// è½¬ç§» unique_ptr å¯¹è±¡çš„æ‰€æœ‰æƒ
 void move() {
-	// Í¨¹ıÔ­Ê¼Ö¸Õë´´½¨taskPtr1
+	// é€šè¿‡åŸå§‹æŒ‡é’ˆåˆ›å»ºtaskPtr1
 	unique_ptr<Task> taskPtr1(new Task(55));
 
-	// °ÑtaskPtr1ÖĞ¹ØÁªÖ¸ÕëµÄËùÓĞÈ¨×ªÒÆ¸øtaskPtr2
+	// æŠŠtaskPtr1ä¸­å…³è”æŒ‡é’ˆçš„æ‰€æœ‰æƒè½¬ç§»ç»™taskPtr2
 	unique_ptr<Task> taskPtr2 = move(taskPtr1);
 
-	// taskPtr1¹ØÁªÖ¸ÕëµÄËùÓĞÈ¨ÏÖÔÚ×ªÒÆµ½ÁËtaskPtr2ÖĞ£¬ÏÖÔÚtaskPtr1¹ØÁªµÄÖ¸ÕëÎª¿Õ
+	// taskPtr1å…³è”æŒ‡é’ˆçš„æ‰€æœ‰æƒç°åœ¨è½¬ç§»åˆ°äº†taskPtr2ä¸­ï¼Œç°åœ¨taskPtr1å…³è”çš„æŒ‡é’ˆä¸ºç©º
 	if (taskPtr1 == nullptr) {
 		cout << "taskPtr1 is empty" << endl;
 	}
 
-	// taskPtr1¹ØÁªÖ¸ÕëµÄËùÓĞÈ¨ÏÖÔÚ×ªÒÆµ½ÁËtaskPtr2ÖĞ£¬ÏÖÔÚtaskPtr2¹ØÁªµÄÖ¸Õë²»Îª¿Õ
+	// taskPtr1å…³è”æŒ‡é’ˆçš„æ‰€æœ‰æƒç°åœ¨è½¬ç§»åˆ°äº†taskPtr2ä¸­ï¼Œç°åœ¨taskPtr2å…³è”çš„æŒ‡é’ˆä¸ä¸ºç©º
 	if (taskPtr2 != nullptr) {
 		cout << "taskPtr2 is not empty" << endl;
 	}
@@ -57,7 +57,7 @@ void move() {
 }
 
 
-// ÊÍ·Å unique_ptr ¶ÔÏó¹ØÁªµÄÔ­Ê¼Ö¸Õë
+// é‡Šæ”¾ unique_ptr å¯¹è±¡å…³è”çš„åŸå§‹æŒ‡é’ˆ
 void release() {
 	unique_ptr<Task> taskPtr1(new Task(55));
 
@@ -65,7 +65,7 @@ void release() {
 		cout << "taskPtr1 is not empty" << endl;
 	}
 
-	// ÊÍ·Å¹ØÁªÖ¸ÕëµÄËùÓĞÈ¨
+	// é‡Šæ”¾å…³è”æŒ‡é’ˆçš„æ‰€æœ‰æƒ
 	Task* ptr = taskPtr1.release();
 
 	if (taskPtr1 == nullptr) {
@@ -75,7 +75,7 @@ void release() {
 	cout << "id = " << ptr->getId() << endl;
 }
 
-// ¼ì²é unique_ptr ¶ÔÏóÊÇ·ñÎª¿Õ
+// æ£€æŸ¥ unique_ptr å¯¹è±¡æ˜¯å¦ä¸ºç©º
 void empty() {
 	unique_ptr<Task> taskPtr1;
 

@@ -1,25 +1,25 @@
 /**
- * 1. ×Ô¶¨Òå MyString Àà£¬²¢ÊµÏÖ¸÷ÖÖ²Ù×÷·ûµÄÖØÔØ
+ * 1. è‡ªå®šä¹‰ MyString ç±»ï¼Œå¹¶å®ç°å„ç§æ“ä½œç¬¦çš„é‡è½½
  */
 
 #include "MyString.h"
 
 int main() {
 
-	// ×Ô¶¯µ÷ÓÃÓĞ²Î¹¹Ôìº¯Êı
+	// è‡ªåŠ¨è°ƒç”¨æœ‰å‚æ„é€ å‡½æ•°
 	MyString str1("Tom");
 	MyString str2(NULL);
 	MyString str3("Peter");
 
-	// ×Ô¶¯µ÷ÓÃ¿½±´¹¹Ôìº¯Êı
+	// è‡ªåŠ¨è°ƒç”¨æ‹·è´æ„é€ å‡½æ•°
 	MyString str4 = str1;
 
-	// ÖØÔØ "<<" ÔËËã·û
+	// é‡è½½ "<<" è¿ç®—ç¬¦
 	cout << "str2 = " << str2 << endl;
 	cout << "str4 = " << str4 << endl;
 	cout << endl;
 
-	// ÖØÔØ "=" ÔËËã·û£¬ÊôÓÚÉî¿½±´
+	// é‡è½½ "=" è¿ç®—ç¬¦ï¼Œå±äºæ·±æ‹·è´
 	str4 = str3;
 	cout << "str4 = " << str4 << endl;
 	str4 = "Jim";
@@ -28,44 +28,44 @@ int main() {
 	cout << "str4 = " << str4 << endl;
 	cout << endl;
 
-	// ÖØÔØ "[]" ÔËËã·û
+	// é‡è½½ "[]" è¿ç®—ç¬¦
 	MyString str5("David");
 	str5[0] = 'F';
 	cout << "str5[0] = " << str5[0] << endl;
 	cout << "str5 = " << str5 << endl;
 	cout << endl;
 
-	// ÖØÔØ "==" ÔËËã·û
+	// é‡è½½ "==" è¿ç®—ç¬¦
 	MyString str6("Aaron");
 	MyString str7 = str6;
 	cout << str6 << (str6 == str7 ? " = " : " != ") << str7 << endl;
 
-	// ÖØÔØ "!=" ÔËËã·û
+	// é‡è½½ "!=" è¿ç®—ç¬¦
 	cout << str6 << (str6 != NULL ? " != " : " = ") << " NULL" << endl;
 	cout << endl;
 
-	// ÖØÔØ "<" ÔËËã·û
+	// é‡è½½ "<" è¿ç®—ç¬¦
 	MyString str8("AAAA");
 	MyString str9("BBBB");
 	cout << str8 << (str8 < str9 ? " < " : " > ") << str9 << endl;
 	cout << str8 << (str8 < "CCCC" ? " < " : " > ") << "CCCC" << endl;
 
-	// ÖØÔØ ">" ÔËËã·û
+	// é‡è½½ ">" è¿ç®—ç¬¦
 	cout << str9 << (str9 > str8 ? " > " : " < ") << str8 << endl;
 	cout << str9 << (str9 > "DDDD" ? " > " : " < ") << "DDDD" << endl;
 	cout << endl;
 
-	// ÖØÔØ ">>" ÔËËã·û
+	// é‡è½½ ">>" è¿ç®—ç¬¦
 	MyString str11(5);
-	cout << "ÇëÊäÈë³¤¶ÈÎª 5 µÄ×Ö·û´®£º" << endl;
+	cout << "è¯·è¾“å…¥é•¿åº¦ä¸º 5 çš„å­—ç¬¦ä¸²ï¼š" << endl;
 	cin >> str11.c_str();
 	cout << "str11 = " << str11 << endl;
 
-	// MyString str4 = NULL;   ´ËĞ´·¨£¬»á×Ô¶¯µ÷ÓÃÓĞ²Î¹¹Ôìº¯Êı `MyString(const char* p);`
+	// MyString str4 = NULL;   æ­¤å†™æ³•ï¼Œä¼šè‡ªåŠ¨è°ƒç”¨æœ‰å‚æ„é€ å‡½æ•° `MyString(const char* p);`
 
 	// MyString str1("AB");
 	// MyString str2 = str1;
-	// str2 = NULL:    ´ËĞ´·¨£¬»á×Ô¶¯µ÷ÓÃ "=" ÔËËã·ûÖØÔØµÄº¯Êı `bool operator==(const char* p) const;`
+	// str2 = NULL:    æ­¤å†™æ³•ï¼Œä¼šè‡ªåŠ¨è°ƒç”¨ "=" è¿ç®—ç¬¦é‡è½½çš„å‡½æ•° `bool operator==(const char* p) const;`
 
 	return 0;
 }

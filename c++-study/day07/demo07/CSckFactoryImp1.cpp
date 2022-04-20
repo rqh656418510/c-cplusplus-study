@@ -2,7 +2,7 @@
 
 #include "CSckFactoryImp1.h"
 
-// ¿Í»§¶Ë³õÊ¼»¯
+// å®¢æˆ·ç«¯åˆå§‹åŒ–
 int CSckFactoryImp1::cltSocketInit( /*out*/)
 {
 	p = NULL;
@@ -10,7 +10,7 @@ int CSckFactoryImp1::cltSocketInit( /*out*/)
 	return 0;
 }
 
-// ¿Í»§¶Ë·¢±¨ÎÄ
+// å®¢æˆ·ç«¯å‘æŠ¥æ–‡
 int CSckFactoryImp1::cltSocketSend(unsigned char* buf /*in*/, int buflen /*in*/)
 {
 	p = (unsigned char*)malloc(sizeof(unsigned char) * buflen);
@@ -23,7 +23,7 @@ int CSckFactoryImp1::cltSocketSend(unsigned char* buf /*in*/, int buflen /*in*/)
 	return 0;
 }
 
-// ¿Í»§¶ËÊÕ±¨ÎÄ
+// å®¢æˆ·ç«¯æ”¶æŠ¥æ–‡
 int CSckFactoryImp1::cltSocketRev(unsigned char* buf /*in*/, int* buflen /*in out*/)
 {
 	if (buf == NULL || buflen == NULL)
@@ -36,7 +36,7 @@ int CSckFactoryImp1::cltSocketRev(unsigned char* buf /*in*/, int* buflen /*in ou
 	return 0;
 }
 
-// ¿Í»§¶ËÊÍ·Å×ÊÔ´
+// å®¢æˆ·ç«¯é‡Šæ”¾èµ„æº
 int CSckFactoryImp1::cltSocketDestory()
 {
 	if (p != NULL)

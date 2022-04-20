@@ -1,9 +1,9 @@
 /*
- * 1. ÀàÄ£°åµÄÊ¹ÓÃ
- * a) ËùÓÐµÄÀàÄ£°åº¯ÊýÐ´ÔÚÀàµÄÍâ²¿£¨ÔÚ²»Í¬µÄ .h ºÍ .cpp ÖÐ£©
+ * 1. ç±»æ¨¡æ¿çš„ä½¿ç”¨
+ * a) æ‰€æœ‰çš„ç±»æ¨¡æ¿å‡½æ•°å†™åœ¨ç±»çš„å¤–éƒ¨ï¼ˆåœ¨ä¸åŒçš„ .h å’Œ .cpp ä¸­ï¼‰
 */
 
-#include "complex.hpp"  // ÕâÀïÒýÈëµÄÊÇ `.hpp` ÎÄ¼þ£¬¶ø²»ÊÇ `.h` Í·ÎÄ¼þ£¬·ñÔò C++ ±àÒëÆ÷»á±àÒëÊ§°Ü
+#include "complex.hpp"  // è¿™é‡Œå¼•å…¥çš„æ˜¯ `.hpp` æ–‡ä»¶ï¼Œè€Œä¸æ˜¯ `.h` å¤´æ–‡ä»¶ï¼Œå¦åˆ™ C++ ç¼–è¯‘å™¨ä¼šç¼–è¯‘å¤±è´¥
 
 int main() {
 	Complex<int> c1(6, 13);

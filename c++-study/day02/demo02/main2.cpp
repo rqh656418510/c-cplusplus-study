@@ -1,5 +1,5 @@
 /**
- * 1. C++�е�����֮�����ã�ʹ�ñ�����ʼ�� const ���ã�
+ * 1. C++中的引用之常引用（使用变量初始化 const 引用）
  */
 
 #include <iostream>
@@ -11,14 +11,14 @@ struct Teacher {
     int age;
 };
 
-// const�����ñ���(��ָ�ڴ�ռ�)ӵ��ֻ������
+// const引用让变量(所指内存空间)拥有只读属性
 void printTe(const Name &t) {
-    // t.age = 11;   �Ǵ���д�����޷�ͨ������
+    // t.age = 11;   是错误写法，无法通过编译
 }
 
-// const ����ָ���ָ��ָ������ݣ���ôָ��ָ������ݶ����ܸ���
+// const 修饰指针和指针指向的内容，那么指针指向的内容都不能更改
 void printTe2(const Name *const pt) {
-    // pt->age = 11;  �Ǵ���д�����޷�ͨ������
+    // pt->age = 11;  是错误写法，无法通过编译
 }
 
 int main() {

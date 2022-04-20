@@ -1,5 +1,5 @@
 /**
- * 1. Ö¤Ã÷Ðéº¯Êý±íÖ¸Õë VPTR µÄ´æÔÚ
+ * 1. è¯æ˜Žè™šå‡½æ•°è¡¨æŒ‡é’ˆ VPTR çš„å­˜åœ¨
  */
 
 #include <iostream>
@@ -12,7 +12,7 @@ public:
 		this->a = a;
 	}
 
-	// ²»ÉùÃ÷Ðéº¯Êý
+	// ä¸å£°æ˜Žè™šå‡½æ•°
 	void print() {
 		cout << "I'm parent1" << endl;
 	}
@@ -27,7 +27,7 @@ public:
 		this->a = a;
 	}
 
-	// ÉùÃ÷Ðéº¯Êý
+	// å£°æ˜Žè™šå‡½æ•°
 	virtual void print() {
 		cout << "I'm parent2" << endl;
 	}
@@ -37,7 +37,7 @@ private:
 };
 
 int main() {
-	// ÓÉÓÚÖ¸ÕëÒ²ÊÇÒ»ÖÖÊý¾ÝÀàÐÍ£¬ÓÉÓÚÔÚParent2ÀàÖÐÉùÃ÷ÁËÐéº¯Êý£¬ÈôParent2ÀàÀï´æÔÚVPTRÖ¸Õë£¬ÄÇÃ´ÏÂÃæÁ½¸öÀàµÄ´óÐ¡Ó¦¸ÃÊÇ²»Ò»ÑùµÄ
+	// ç”±äºŽæŒ‡é’ˆä¹Ÿæ˜¯ä¸€ç§æ•°æ®ç±»åž‹ï¼Œç”±äºŽåœ¨Parent2ç±»ä¸­å£°æ˜Žäº†è™šå‡½æ•°ï¼Œè‹¥Parent2ç±»é‡Œå­˜åœ¨VPTRæŒ‡é’ˆï¼Œé‚£ä¹ˆä¸‹é¢ä¸¤ä¸ªç±»çš„å¤§å°åº”è¯¥æ˜¯ä¸ä¸€æ ·çš„
 	cout << "sizeof(Parent1): " << sizeof(Parent1) << endl;
 	cout << "sizeof(Parent2): " << sizeof(Parent2) << endl;
 	return 0;

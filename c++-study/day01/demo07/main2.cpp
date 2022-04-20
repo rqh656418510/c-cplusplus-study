@@ -1,5 +1,5 @@
 /**
- * 1. C++ÖĞµÄÒıÓÃÖ®ÒıÓÃ×÷º¯Êı²ÎÊı
+ * 1. C++ä¸­çš„å¼•ç”¨ä¹‹å¼•ç”¨ä½œå‡½æ•°å‚æ•°
  */
 
 #include <iostream>
@@ -11,19 +11,19 @@ struct Teacher {
     int age;
 };
 
-// pTÊÇÖ¸Ïòt1µÄÖ¸Õë£¬ÕâÀïÏàµ±ÓÚĞŞ¸ÄÁËt1
+// pTæ˜¯æŒ‡å‘t1çš„æŒ‡é’ˆï¼Œè¿™é‡Œç›¸å½“äºä¿®æ”¹äº†t1
 void printfT(Teacher *pT) {
     cout << pT->age << endl;
     pT->age = 23;
 }
 
-// pTÊÇt1µÄ±ğÃû£¬ÕâÀïÏàµ±ÓÚĞŞ¸ÄÁËt1
+// pTæ˜¯t1çš„åˆ«åï¼Œè¿™é‡Œç›¸å½“äºä¿®æ”¹äº†t1
 void printfT2(Teacher & pT) {
     cout << pT.age << endl;
     pT.age = 33;
 }
 
-// pTºÍt1µÄÊÇÁ½¸ö²»Í¬µÄ±äÁ¿£¬ÕâÀïÖ»»áĞŞ¸ÄpT±äÁ¿£¬²»»áĞŞ¸Ät1±äÁ¿
+// pTå’Œt1çš„æ˜¯ä¸¤ä¸ªä¸åŒçš„å˜é‡ï¼Œè¿™é‡Œåªä¼šä¿®æ”¹pTå˜é‡ï¼Œä¸ä¼šä¿®æ”¹t1å˜é‡
 void printfT3(Teacher pT) {
     cout << pT.age << endl;
     pT.age = 43;
@@ -33,15 +33,15 @@ int main() {
     Teacher t1;
     t1.age = 35;
 
-    // pTÊÇÖ¸Ïòt1µÄÖ¸Õë
+    // pTæ˜¯æŒ‡å‘t1çš„æŒ‡é’ˆ
     printfT(&t1);
     printf("t1.age:%d \n", t1.age);
 
-    // pTÊÇt1µÄ±ğÃû
+    // pTæ˜¯t1çš„åˆ«å
     printfT2(t1);
     printf("t1.age:%d \n", t1.age);
 
-    // pTÊÇĞÎ²Î£¬Ïàµ±ÓÚt1¸´ÖÆÒ»·İÊı¾İ¸øpT ---> pT = t1
+    // pTæ˜¯å½¢å‚ï¼Œç›¸å½“äºt1å¤åˆ¶ä¸€ä»½æ•°æ®ç»™pT ---> pT = t1
     printfT3(t1);
     printf("t1.age:%d \n", t1.age);
     return 0;

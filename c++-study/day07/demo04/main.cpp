@@ -1,17 +1,17 @@
 /**
- * 1. ´¿Ğéº¯ÊıÓë³éÏóÀàµÄ»ù±¾Óï·¨
- * a) ¶¨ÒåÒ»¸öÍ¼ĞÎ³éÏóÀà Figure£¬²¢ÉùÃ÷ÁË¸ºÔğ¼ÆËãÍ¼ĞÎÃæ»ıµÄ´¿Ğéº¯Êı getArea()£¬È»ºóÔÙ¶¨Òå Circle¡¢Triangle¡¢Squre ÅÉÉúÀà£¬²¢¸÷×ÔÊµÏÖÁË´¿Ğéº¯Êı getArea() À´¼ÆËã²»Í¬Í¼ĞÎµÄÃæ»ı
+ * 1. çº¯è™šå‡½æ•°ä¸æŠ½è±¡ç±»çš„åŸºæœ¬è¯­æ³•
+ * a) å®šä¹‰ä¸€ä¸ªå›¾å½¢æŠ½è±¡ç±» Figureï¼Œå¹¶å£°æ˜äº†è´Ÿè´£è®¡ç®—å›¾å½¢é¢ç§¯çš„çº¯è™šå‡½æ•° getArea()ï¼Œç„¶åå†å®šä¹‰ Circleã€Triangleã€Squre æ´¾ç”Ÿç±»ï¼Œå¹¶å„è‡ªå®ç°äº†çº¯è™šå‡½æ•° getArea() æ¥è®¡ç®—ä¸åŒå›¾å½¢çš„é¢ç§¯
  */
 
 #include <iostream>
 
 using namespace std;
 
-// ³éÏóÀà
+// æŠ½è±¡ç±»
 class Figure {
 
 public:
-	// ÉùÃ÷´¿Ğéº¯Êı£¬¼ÆËãÃæ»ı
+	// å£°æ˜çº¯è™šå‡½æ•°ï¼Œè®¡ç®—é¢ç§¯
 	virtual double getArea() = 0;
 };
 
@@ -23,10 +23,10 @@ public:
 		this->r = r;
 	}
 
-	// ¼ÆËãÔ²µÄÃæ»ı
+	// è®¡ç®—åœ†çš„é¢ç§¯
 	virtual double getArea() {
 		double area = 3.14 * r * r;
-		cout << "Ô²µÄÃæ»ı: " << area << endl;
+		cout << "åœ†çš„é¢ç§¯: " << area << endl;
 		return area;
 	}
 
@@ -42,10 +42,10 @@ public:
 		this->b = b;
 	}
 
-	// ¼ÆËãÈı½ÇĞÎµÄÃæ»ı
+	// è®¡ç®—ä¸‰è§’å½¢çš„é¢ç§¯
 	virtual double getArea() {
 		double area = a * b / 2;
-		cout << "Èı½ÇĞÎµÄÃæ»ı: " << area << endl;
+		cout << "ä¸‰è§’å½¢çš„é¢ç§¯: " << area << endl;
 		return area;
 	}
 
@@ -62,10 +62,10 @@ public:
 		this->b = b;
 	}
 
-	// ¼ÆËãËÄ±ßĞÎµÄÃæ»ı
+	// è®¡ç®—å››è¾¹å½¢çš„é¢ç§¯
 	virtual double getArea() {
 		double area = a * b;
-		cout << "ËÄ±ßĞÎµÄÃæ»ı: " << area << endl;
+		cout << "å››è¾¹å½¢çš„é¢ç§¯: " << area << endl;
 		return area;
 	}
 
@@ -79,17 +79,17 @@ void printArea(Figure* base) {
 }
 
 int main() {
-	// Figure f;		// ´íÎóĞ´·¨£¬³éÏóÀà²»ÄÜÊµÀı»¯
+	// Figure f;		// é”™è¯¯å†™æ³•ï¼ŒæŠ½è±¡ç±»ä¸èƒ½å®ä¾‹åŒ–
 
 	Triangle Triangle(20, 30);
 	Circle circle(6.8);
 	Square square(50, 60);
 
-	// ¿ÉÒÔÉùÃ÷³éÏóÀàµÄÖ¸Õë
+	// å¯ä»¥å£°æ˜æŠ½è±¡ç±»çš„æŒ‡é’ˆ
 	Figure* pBase = new Circle(5.3);
 	pBase->getArea();
 
-	// ¿ÉÒÔÉùÃ÷³éÏóÀàµÄÒıÓÃ
+	// å¯ä»¥å£°æ˜æŠ½è±¡ç±»çš„å¼•ç”¨
 	Figure& base = square;
 	base.getArea();
 

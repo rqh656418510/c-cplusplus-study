@@ -1,6 +1,6 @@
 /**
- * 1. ���ͼ���ԭ�����Ϻ�����дʱ���ֵ�����
- * a) �����ͼ���ԭ�����Ϻ�����д��ִ�����´����������������󣬼������õ���Զ�Ǹ���ĺ���
+ * 1. 类型兼容原则遇上函数重写时出现的现象
+ * a) 当类型兼容原则遇上函数重写，执行以下代码后会出现意外的现象，即被调用的永远是父类的函数
  */
 
 #include <iostream>
@@ -29,7 +29,7 @@ public:
 		this->c = c;
 	}
 
-	// ������д�����еĺ���
+	// 子类重写父类中的函数
 	void print() {
 		cout << "I'm child, c = " << c << endl;
 	}
@@ -43,11 +43,11 @@ int main() {
 	Parent parent(6);
 	Child child(5);
 
-	// ִ�и���ĺ���
+	// 执行父类的函数
 	p = &parent;
 	p->print();
 
-	// ִ�и���ĺ���
+	// 执行父类的函数
 	p = &child;
 	p->print();
 

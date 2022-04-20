@@ -1,5 +1,5 @@
 /*
- * 1. ÀàÄ£°åÖĞµÄ static ¹Ø¼ü×Ö
+ * 1. ç±»æ¨¡æ¿ä¸­çš„ static å…³é”®å­—
 */
 
 #include <iostream>
@@ -32,7 +32,7 @@ public:
 		return pi * this->m_radius * this->m_radius;
 	}
 
-	// ÀàÄ£°åµÄ¾²Ì¬³ÉÔ±º¯Êı
+	// ç±»æ¨¡æ¿çš„é™æ€æˆå‘˜å‡½æ•°
 	static int getTotal() {
 		return m_total;
 	}
@@ -40,16 +40,16 @@ public:
 private:
 	T m_radius;
 
-	// ÀàÄ£°åµÄ¾²Ì¬Êı¾İ³ÉÔ±
+	// ç±»æ¨¡æ¿çš„é™æ€æ•°æ®æˆå‘˜
 	static int m_total;
 
 };
 
-// ³õÊ¼»¯ÀàÄ£°åµÄ¾²Ì¬Êı¾İ³ÉÔ±
+// åˆå§‹åŒ–ç±»æ¨¡æ¿çš„é™æ€æ•°æ®æˆå‘˜
 template <typename T> int Circle<T>::m_total = 0;
 
 int main() {
-	// Ã¿ÖÖÊı¾İÀàĞÍµÄÄ£°åÀà¶¼ÓĞ×Ô¼ºµ¥¶ÀÒ»·İµÄÀàÄ£°åµÄ static Êı¾İ³ÉÔ±¸±±¾
+	// æ¯ç§æ•°æ®ç±»å‹çš„æ¨¡æ¿ç±»éƒ½æœ‰è‡ªå·±å•ç‹¬ä¸€ä»½çš„ç±»æ¨¡æ¿çš„ static æ•°æ®æˆå‘˜å‰¯æœ¬
 
 	Circle<int> c1(4), c2(6);
 	cout << "m_total = " << Circle<int>::getTotal() << endl;

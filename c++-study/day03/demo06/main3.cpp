@@ -1,5 +1,5 @@
 /**
- * 1. ¾²Ì¬³ÉÔ±º¯ÊıµÄÊ¹ÓÃ
+ * 1. é™æ€æˆå‘˜å‡½æ•°çš„ä½¿ç”¨
  */
 
 #include <iostream>
@@ -11,13 +11,13 @@ private:
     int num;
 
 public:
-    // ÉùÃ÷¾²Ì¬³ÉÔ±º¯Êı
+    // å£°æ˜é™æ€æˆå‘˜å‡½æ•°
     static int getNum(Counter *p);
 
     static void setNum(int i, Counter *p);
 };
 
-// ¶¨Òå¾²Ì¬³ÉÔ±º¯Êı
+// å®šä¹‰é™æ€æˆå‘˜å‡½æ•°
 int Counter::getNum(Counter *p) {
     return p->num;
 }
@@ -29,11 +29,11 @@ void Counter::setNum(int i, Counter *p) {
 int main() {
     Counter obj;
 
-    // ·ÃÎÊ¾²Ì¬³ÉÔ±º¯ÊıµÄ·½·¨1£¨Í¨¹ıÀàÃûÖ±½Ó·ÃÎÊ£©
+    // è®¿é—®é™æ€æˆå‘˜å‡½æ•°çš„æ–¹æ³•1ï¼ˆé€šè¿‡ç±»åç›´æ¥è®¿é—®ï¼‰
     Counter::setNum(1, &obj);
     cout << "num = " << Counter::getNum(&obj) << endl;
 
-    // ·ÃÎÊ¾²Ì¬³ÉÔ±º¯ÊıµÄ·½·¨2£¨Í¨¹ı¶ÔÏó·ÃÎÊ£©
+    // è®¿é—®é™æ€æˆå‘˜å‡½æ•°çš„æ–¹æ³•2ï¼ˆé€šè¿‡å¯¹è±¡è®¿é—®ï¼‰
     obj.setNum(3, &obj);
     cout << "num = " << obj.getNum(&obj) << endl;
     return 0;

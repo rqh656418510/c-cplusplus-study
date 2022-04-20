@@ -1,6 +1,6 @@
 /**
- * 1. CÓïÑÔÇ¶Ì×»ã±à´úÂë
- * a) ÓÉÓÚÏÂÊö´úÂëÊ¹ÓÃÁË `eax` ¼Ä´æÆ÷£¬Òò´Ë³ÌÐò±ØÐëÐèÒªÔÚ 32Î»£¨x86£©µÄÆ½Ì¨
+ * 1. Cè¯­è¨€åµŒå¥—æ±‡ç¼–ä»£ç 
+ * a) ç”±äºŽä¸‹è¿°ä»£ç ä½¿ç”¨äº† `eax` å¯„å­˜å™¨ï¼Œå› æ­¤ç¨‹åºå¿…é¡»éœ€è¦åœ¨ 32ä½ï¼ˆx86ï¼‰çš„å¹³å°
  */
 
 #include <stdio.h>
@@ -12,11 +12,11 @@ int main() {
 
     __asm
     {
-        mov a, 3        // 3µÄÖµ·ÅÔÚa¶ÔÓ¦ÄÚ´æµÄÎ»ÖÃ
-        mov b, 4        // 4µÄÖµ·ÅÔÚa¶ÔÓ¦ÄÚ´æµÄÎ»ÖÃ
-        mov eax, a      // °ÑaÄÚ´æµÄÖµ·ÅÔÚeax¼Ä´æÆ÷
-        add eax, b      // eaxºÍbÏà¼Ó£¬½á¹û·ÅÔÚeax
-        mov c, eax      // eaxµÄÖµ·ÅÔÚcÖÐ
+        mov a, 3        // 3çš„å€¼æ”¾åœ¨aå¯¹åº”å†…å­˜çš„ä½ç½®
+        mov b, 4        // 4çš„å€¼æ”¾åœ¨aå¯¹åº”å†…å­˜çš„ä½ç½®
+        mov eax, a      // æŠŠaå†…å­˜çš„å€¼æ”¾åœ¨eaxå¯„å­˜å™¨
+        add eax, b      // eaxå’Œbç›¸åŠ ï¼Œç»“æžœæ”¾åœ¨eax
+        mov c, eax      // eaxçš„å€¼æ”¾åœ¨cä¸­
     }
 
     printf("c = %d\n", c);

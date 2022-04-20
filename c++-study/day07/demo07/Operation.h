@@ -3,7 +3,7 @@
 #include "CSocketProtocol.h"
 #include "CEncDesProtocol.h"
 
-// 主操作类
+// 涓绘搷浣滅被
 class Operation {
 
 public:

@@ -1,12 +1,12 @@
 /**
- * 1. system()º¯ÊıµÄÊ¹ÓÃ
+ * 1. system()å‡½æ•°çš„ä½¿ç”¨
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    system("ls -al");      // Linux Æ½Ì¨
-    // system("calc");              // Windows Æ½Ì¨
+    system("ls -al");      // Linux å¹³å°
+    // system("calc");              // Windows å¹³å°
     return 0;
 }

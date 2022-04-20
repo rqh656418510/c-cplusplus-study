@@ -1,5 +1,5 @@
 /*
- * 1. ÀàĞÍ×ª»»
+ * 1. ç±»å‹è½¬æ¢
 */
 
 #include <iostream>
@@ -45,7 +45,7 @@ public:
 
 void playAnimal(Animal* animal) {
     animal->cry();
-    // ¶¯Ì¬ÀàĞÍ×ª»»£¬½«¸¸Àà×ª»»Îª×ÓÀà£¬ÔËĞĞÊ±»á×öÀàĞÍ¼ì²é
+    // åŠ¨æ€ç±»å‹è½¬æ¢ï¼Œå°†çˆ¶ç±»è½¬æ¢ä¸ºå­ç±»ï¼Œè¿è¡Œæ—¶ä¼šåšç±»å‹æ£€æŸ¥
     Dog* dog = dynamic_cast<Dog*>(animal);
     if (dog != NULL) {
         dog->watchHome();
@@ -57,7 +57,7 @@ void playAnimal(Animal* animal) {
 }
 
 void printBuf(const char* buf) {
-    // const_cast È¥³ı±äÁ¿µÄ const Ö»¶ÁÊôĞÔ
+    // const_cast å»é™¤å˜é‡çš„ const åªè¯»å±æ€§
     char* m_buf = const_cast<char*>(buf);
     m_buf[0] = 'b';
     cout << buf << endl;
@@ -65,11 +65,11 @@ void printBuf(const char* buf) {
 }
 
 void printBuf2() {
-    // ¶¨ÒåÖ¸ÕëÖ¸ÏòÒ»¸ö³£Á¿£¬ÕâÀïµÄ³£Á¿µÄÄÚ´æ¿Õ¼ä²»¿ÉÒÔ¸ü¸Ä
+    // å®šä¹‰æŒ‡é’ˆæŒ‡å‘ä¸€ä¸ªå¸¸é‡ï¼Œè¿™é‡Œçš„å¸¸é‡çš„å†…å­˜ç©ºé—´ä¸å¯ä»¥æ›´æ”¹
     char* buf = "aaaaa";
-    // const_cast È¥³ı±äÁ¿µÄ const Ö»¶ÁÊôĞÔ
+    // const_cast å»é™¤å˜é‡çš„ const åªè¯»å±æ€§
     char* m_buf = const_cast<char*>(buf);
-    // ´ËÊ±Èô¸ü¸ÄÖ¸ÕëËùÖ¸ÏòµÄÄÚ´æ¿Õ¼ä£¬»á´øÀ´ÔÖÄÑĞÔµÄºó¹û
+    // æ­¤æ—¶è‹¥æ›´æ”¹æŒ‡é’ˆæ‰€æŒ‡å‘çš„å†…å­˜ç©ºé—´ï¼Œä¼šå¸¦æ¥ç¾éš¾æ€§çš„åæœ
     m_buf[0] = 'b';
     cout << buf << endl;
     cout << m_buf << endl;
@@ -79,39 +79,39 @@ int main() {
     char* p1 = "hello";
     double pi = 3.1415926;
 
-    // ¾²Ì¬ÀàĞÍ×ª»»£¬±àÒëµÄÊ±ºò C++ ±àÒëÆ÷»á×öÀàĞÍ¼ì²é
+    // é™æ€ç±»å‹è½¬æ¢ï¼Œç¼–è¯‘çš„æ—¶å€™ C++ ç¼–è¯‘å™¨ä¼šåšç±»å‹æ£€æŸ¥
     int num1 = static_cast<int>(pi);
     cout << "num1 = " << num1 << endl;
 
-    // ¾²Ì¬ÀàĞÍ×ª»»£¬»ù±¾ÀàĞÍ¶¼ÄÜ×ª»»£¬µ«ÊÇ²»ÄÜ×ª»»Ö¸ÕëÀàĞÍ£¨¶àÌ¬³ıÍâ£©
-    // int* p2 = static_cast<int*>(p1);  // ´íÎóĞ´·¨£¬C++ ±àÒëÆ÷±àÒëÊ§°Ü
+    // é™æ€ç±»å‹è½¬æ¢ï¼ŒåŸºæœ¬ç±»å‹éƒ½èƒ½è½¬æ¢ï¼Œä½†æ˜¯ä¸èƒ½è½¬æ¢æŒ‡é’ˆç±»å‹ï¼ˆå¤šæ€é™¤å¤–ï¼‰
+    // int* p2 = static_cast<int*>(p1);  // é”™è¯¯å†™æ³•ï¼ŒC++ ç¼–è¯‘å™¨ç¼–è¯‘å¤±è´¥
 
-    // ÖØĞÂ½âÊÍÀàĞÍ£¬²»Í¬ÀàĞÍÖ®¼ä»á½øĞĞÇ¿ÖÆÀàĞÍ×ª»»£¬°üÀ¨×ª»»Ö¸ÕëÀàĞÍ
+    // é‡æ–°è§£é‡Šç±»å‹ï¼Œä¸åŒç±»å‹ä¹‹é—´ä¼šè¿›è¡Œå¼ºåˆ¶ç±»å‹è½¬æ¢ï¼ŒåŒ…æ‹¬è½¬æ¢æŒ‡é’ˆç±»å‹
     int* p2 = reinterpret_cast<int*>(p1);
     cout << "p2 = " << p2 << endl;
 
-    // È¥³ı±äÁ¿µÄ const Ö»¶ÁÊôĞÔ
+    // å»é™¤å˜é‡çš„ const åªè¯»å±æ€§
     char buf[] = "aaaaa";
     printBuf(buf);
     // printBuf2();
 
-    // ¶¯Ì¬ÀàĞÍ×ª»»£¬»ùÀàºÍÅÉÉúÀàÖ®¼ä×ª»»£¬ÔËĞĞÊ±»á×öÀàĞÍ¼ì²é
+    // åŠ¨æ€ç±»å‹è½¬æ¢ï¼ŒåŸºç±»å’Œæ´¾ç”Ÿç±»ä¹‹é—´è½¬æ¢ï¼Œè¿è¡Œæ—¶ä¼šåšç±»å‹æ£€æŸ¥
     Dog dog;
     Cat cat;
     playAnimal(&dog);
     playAnimal(&cat);
 
-    // ¶àÌ¬µÄÆäËûÊ¹ÓÃ³¡¾°
+    // å¤šæ€çš„å…¶ä»–ä½¿ç”¨åœºæ™¯
     Animal* pAnimal = NULL;
     pAnimal = &dog;
-    pAnimal = static_cast<Animal*>(&dog); // ±àÒëÍ¨¹ı
+    pAnimal = static_cast<Animal*>(&dog); // ç¼–è¯‘é€šè¿‡
     pAnimal->cry();
-    pAnimal = reinterpret_cast<Animal*>(&dog); // ±àÒëÍ¨¹ı
+    pAnimal = reinterpret_cast<Animal*>(&dog); // ç¼–è¯‘é€šè¿‡
     pAnimal->cry();
 
     Tree tree;
-    // pAnimal = static_cast<Animal*>(&tree); // ´íÎóĞ´·¨£¬C++ ±àÒëÆ÷±àÒëÊ§°Ü
-    pAnimal = reinterpret_cast<Animal*>(&tree); // ±àÒëÍ¨¹ı
+    // pAnimal = static_cast<Animal*>(&tree); // é”™è¯¯å†™æ³•ï¼ŒC++ ç¼–è¯‘å™¨ç¼–è¯‘å¤±è´¥
+    pAnimal = reinterpret_cast<Animal*>(&tree); // ç¼–è¯‘é€šè¿‡
 
     return 0;
 }

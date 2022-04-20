@@ -1,5 +1,5 @@
 /**
- * 1. ¾²Ì¬³ÉÔ±±äÁ¿µÄÊ¹ÓÃ
+ * 1. é™æ€æˆå‘˜å˜é‡çš„ä½¿ç”¨
  */
 
 #include <iostream>
@@ -8,8 +8,8 @@ using namespace std;
 
 class Counter {
 public:
-    int mem;             // ¹«ÓĞ³ÉÔ±±äÁ¿
-    static int smem;     // ¹«ÓĞ¾²Ì¬³ÉÔ±±äÁ¿
+    int mem;             // å…¬æœ‰æˆå‘˜å˜é‡
+    static int smem;     // å…¬æœ‰é™æ€æˆå‘˜å˜é‡
 
 public :
     Counter(int num) {
@@ -17,18 +17,18 @@ public :
     }
 };
 
-// ¶¨Òå¾²Ì¬³ÉÔ±±äÁ¿
+// å®šä¹‰é™æ€æˆå‘˜å˜é‡
 int  Counter::smem = 0;
 
 int main() {
     Counter c(5);
     for (int i = 0; i < 5; i++) {
-        // ·ÃÎÊ¾²Ì¬³ÉÔ±±äÁ¿µÄ·½·¨1£¨Í¨¹ıÀàÃûÖ±½Ó·ÃÎÊ£©
+        // è®¿é—®é™æ€æˆå‘˜å˜é‡çš„æ–¹æ³•1ï¼ˆé€šè¿‡ç±»åç›´æ¥è®¿é—®ï¼‰
         Counter::smem += i;
         cout << "Counter::smem = "<< Counter::smem << endl;
     }
 
-    // ·ÃÎÊ¾²Ì¬³ÉÔ±±äÁ¿µÄ·½·¨2£¨Í¨¹ı¶ÔÏó·ÃÎÊ£©
+    // è®¿é—®é™æ€æˆå‘˜å˜é‡çš„æ–¹æ³•2ï¼ˆé€šè¿‡å¯¹è±¡è®¿é—®ï¼‰
     cout << "c.smem = " << c.smem << endl;
     return 0;
 }

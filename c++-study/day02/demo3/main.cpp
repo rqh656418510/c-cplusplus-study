@@ -1,26 +1,26 @@
 /**
- * 1. C++ÖĞµÄÄÚÁªº¯Êı
+ * 1. C++ä¸­çš„å†…è”å‡½æ•°
  */
 
 #include <iostream>
 
 using namespace std;
 
-// ºê¶¨Òåº¯ÊıµÄÉùÃ÷
+// å®å®šä¹‰å‡½æ•°çš„å£°æ˜
 #define MAXFUNC(x, y) (x > y) ? x : y
 
-// ÄÚÁªº¯ÊıµÄÉùÃ÷
+// å†…è”å‡½æ•°çš„å£°æ˜
 inline int Max(int x, int y) {
     return (x > y) ? x : y;
 }
 
 int main() {
-    // ÄÚÁªº¯ÊıµÄµ÷ÓÃ
+    // å†…è”å‡½æ•°çš„è°ƒç”¨
     cout << "Max (20,10): " << Max(20, 10) << endl;
     cout << "Max (0,200): " << Max(0, 200) << endl;
     cout << "Max (100,1010): " << Max(100, 1010) << endl;
 
-    // ºê¶¨Òåº¯ÊıµÄµ÷ÓÃ
+    // å®å®šä¹‰å‡½æ•°çš„è°ƒç”¨
     printf("Max (10,30): %d\n", MAXFUNC(10, 30));
     return 0;
 }

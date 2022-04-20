@@ -1,5 +1,5 @@
 /*
- * 1. ÈİÆ÷³õÊ¶£¨ÈİÆ÷Ö®¼äµÄÇ¶Ì×Ê¹ÓÃ£©
+ * 1. å®¹å™¨åˆè¯†ï¼ˆå®¹å™¨ä¹‹é—´çš„åµŒå¥—ä½¿ç”¨ï¼‰
 */
 
 #include <iostream>
@@ -8,13 +8,13 @@
 using namespace std;
 
 int main() {
-    // ¶¨ÒåÈİÆ÷
+    // å®šä¹‰å®¹å™¨
     vector<int> v1;
     vector<int> v2;
     vector<int> v3;
     vector<vector<int>> v;
 
-    // ²åÈëÊı¾İ
+    // æ’å…¥æ•°æ®
     for (int i = 0; i < 5; i++) {
         v1.push_back(i + 1);
         v2.push_back(i + 6);
@@ -24,7 +24,7 @@ int main() {
     v.push_back(v2);
     v.push_back(v3);
 
-    // ±éÀúÈİÆ÷
+    // éå†å®¹å™¨
     for (vector<vector<int>>::iterator it1 = v.begin(); it1 != v.end(); it1++) {
         for (vector<int>::iterator it2 = (*it1).begin(); it2 != (*it1).end(); it2++) {
             cout << *it2 << " ";

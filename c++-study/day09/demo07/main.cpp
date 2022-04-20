@@ -1,5 +1,5 @@
 /*
- * 1. ÀàÄ£°åµÄÊµÕ½°¸Àı£¨±àĞ´Êı×éÄ£°åÀà£©
+ * 1. ç±»æ¨¡æ¿çš„å®æˆ˜æ¡ˆä¾‹ï¼ˆç¼–å†™æ•°ç»„æ¨¡æ¿ç±»ï¼‰
 */
 
 #include "Teacher.cpp"
@@ -7,27 +7,27 @@
 
 int main() {
 
-	// ×Ô¶¯µ÷ÓÃ¹¹Ôìº¯Êı
+	// è‡ªåŠ¨è°ƒç”¨æ„é€ å‡½æ•°
 	MyVector<int> v(5);
 
-	// ÖØÔØÔËËã·û "[]"
+	// é‡è½½è¿ç®—ç¬¦ "[]"
 	for (int i = 0; i < v.getSize(); i++) {
 		v[i] = i + 1;
 	}
 
-	// ÖØÔØÔËËã·û "<<"
+	// é‡è½½è¿ç®—ç¬¦ "<<"
 	cout << v << endl;
 
-	// ×Ô¶¯µ÷ÓÃ¿½±´¹¹Ôìº¯Êı
+	// è‡ªåŠ¨è°ƒç”¨æ‹·è´æ„é€ å‡½æ•°
 	MyVector<int> v2 = v;
 	cout << v2 << endl;
 
-	// ÖØÔØÔËËã·û "="
+	// é‡è½½è¿ç®—ç¬¦ "="
 	MyVector<int> v3(2);
 	v3 = v2;
 	cout << v3 << endl;
 
-	// ÈİÆ÷´æ·ÅÀà¶ÔÏó
+	// å®¹å™¨å­˜æ”¾ç±»å¯¹è±¡
 	MyVector<Teacher> teachers(3);
 	for (int i = 0; i < teachers.getSize(); i++) {
 		Teacher t(i + 20, "Jim");
@@ -35,7 +35,7 @@ int main() {
 	}
 	cout << teachers << endl;
 
-	// ÈİÆ÷´æ·ÅÖ¸Õë
+	// å®¹å™¨å­˜æ”¾æŒ‡é’ˆ
 	MyVector<Teacher*> points(4);
 	for (int i = 0; i < points.getSize(); i++) {
 		points[i] = new Teacher(25 + i, "Tom");

@@ -1,8 +1,8 @@
 /**
- * 1. �������е� static �ؼ���ʹ��
- * a) ���ඨ��ľ�̬��Ա���������������๲��
- * b) ���ݾ�̬��Ա�����ķ������Ժ�������ļ̳з�ʽ����������ϵ�о��в�ͬ�ķ������ʣ������������Ա���ʼ�����Ƶ�ԭ��
- * c) ���������з��ʻ���ľ�̬��Ա��Ҫ�����µ���ʽ��ʽ˵����`���� :: ��Ա` ����ͨ��������ʣ�`������ . ��Ա`
+ * 1. 派生类中的 static 关键字使用
+ * a) 基类定义的静态成员，将被所有派生类共享
+ * b) 根据静态成员自身的访问特性和派生类的继承方式，在类层次体系中具有不同的访问性质（遵守派生类成员访问级别控制的原则）
+ * c) 在派生类中访问基类的静态成员，要用以下的形式显式说明：`类名 :: 成员` 或者通过对象访问：`对象名 . 成员`
  */
 
 #include <iostream>
@@ -12,50 +12,50 @@ using namespace std;
 class Parent {
 
 public:
-	// �������еľ�̬��Ա����
+	// 声明公有的静态成员函数
 	static void print() {
 		cout << "a = " << a << ", b = " << b << endl;
 	}
 
 public:
-	// �������еľ�̬��Ա����
+	// 声明公有的静态成员变量
 	static int a;
 
 private:
-	// ����˽�еľ�̬��Ա����
+	// 声明私有的静态成员变量
 	static int b;
 };
 
-// ����˽�еľ�̬��Ա����
+// 定义私有的静态成员变量
 int Parent::b = 50;
 
-// ���幫�еľ�̬��Ա���������ﲻ�Ǽ򵥵ı�����ֵ������Ҫ���Ǹ���C++������������̬��Ա���������ڴ�, ���������������õ��ñ����ͻᱨ��
+// 定义公有的静态成员变量，这里不是简单的变量赋值，更重要的是告诉C++编译器，给静态成员变量分配内存, 否则在派生类中用到该变量就会报错
 int Parent::a = 30;
 
 class Child : public Parent {
 
 public:
 	int getA() {
-		// ���ʴӻ���̳еõ��ľ�̬��Ա����
+		// 访问从基类继承得到的静态成员变量
 		return this->a;
 	}
 
 	int getA2() {
-		// ���ʻ���ľ�̬��Ա����
+		// 访问基类的静态成员变量
 		return Parent::a;
 	}
 
 	int getB() {
-		// return b;  ����д���������о�̬��Ա�����ķ�����������������ķ��ʼ������ԭ��������ﲻ�ܷ��ʻ�����˽�еľ�̬��Ա����b
+		// return b;  错误写法，基类中静态成员自身的访问特性遵守派生类的访问级别控制原则，因此这里不能访问基类中私有的静态成员变量b
 		return 0;
 	}
 
-	// ���ôӻ���̳еõ��ľ�̬��Ա����
+	// 调用从基类继承得到的静态成员函数
 	void print2() {
 		this->print();
 	}
 
-	// ���û���ľ�̬��Ա����
+	// 调用基类的静态成员函数
 	void print1() {
 		Parent::print();
 	}
@@ -63,12 +63,12 @@ public:
 
 int main() {
 	
-	// ��������ʻ���ľ�̬��Ա�����;�̬��Ա����
+	// 在类外访问基类的静态成员变量和静态成员函数
 	Parent::a++;
 	Parent::print();
 	cout << endl;
 
-	// ���������������ľ�̬��Ա�����;�̬��Ա����
+	// 在类外访问派生类的静态成员变量和静态成员函数
 	cout << "a = " << Child::a << endl;
 	Child::print();
 	cout << endl;

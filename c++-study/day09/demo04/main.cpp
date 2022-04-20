@@ -1,17 +1,17 @@
 /*
- * 1. ÀàÄ£°åµÄÊ¹ÓÃ
- * a) µ¥¸öÀàÄ£°åµÄÊ¹ÓÃ
- * b) ÀàÄ£°å×öº¯Êý²ÎÊý
+ * 1. ç±»æ¨¡æ¿çš„ä½¿ç”¨
+ * a) å•ä¸ªç±»æ¨¡æ¿çš„ä½¿ç”¨
+ * b) ç±»æ¨¡æ¿åšå‡½æ•°å‚æ•°
 */
 
 #include <iostream>
 
 using namespace std;
 
-// Ä£°åÉùÃ÷
+// æ¨¡æ¿å£°æ˜Ž
 template <typename T>
 
-// Àà¶¨Òå
+// ç±»å®šä¹‰
 class A {
 
 public:
@@ -29,13 +29,13 @@ private:
 
 };
 
-// ÀàÄ£°å×öº¯Êý²ÎÊý
+// ç±»æ¨¡æ¿åšå‡½æ•°å‚æ•°
 void printA(A<int>& a) {
 	cout << a.getT() << endl;
 }
 
 int main() {
-	A<int> a(100);	// Ä£°åÀàÊÇ³éÏóµÄ£¬ÐèÒªÉùÃ÷¾ßÌåµÄÀàÐÍ£¨Ä£°å²ÎÊýÁÐ±í£©£¬ÕâÀïµÄ <int> ²»ÄÜÊ¡ÂÔ
+	A<int> a(100);	// æ¨¡æ¿ç±»æ˜¯æŠ½è±¡çš„ï¼Œéœ€è¦å£°æ˜Žå…·ä½“çš„ç±»åž‹ï¼ˆæ¨¡æ¿å‚æ•°åˆ—è¡¨ï¼‰ï¼Œè¿™é‡Œçš„ <int> ä¸èƒ½çœç•¥
 	cout << a.getT() << endl;
 
 	A<int> a2(50);

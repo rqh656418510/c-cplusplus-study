@@ -1,6 +1,6 @@
 /*
- * 1. Òì³£´¦Àí»úÖÆ
- * a) C++ ±ê×¼ÊäÈëÁ÷µÄ¼òµ¥Ê¹ÓÃ
+ * 1. å¼‚å¸¸å¤„ç†æœºåˆ¶
+ * a) C++ æ ‡å‡†è¾“å…¥æµçš„ç®€å•ä½¿ç”¨
 */
 
 #include <iostream>
@@ -9,23 +9,23 @@ using namespace std;
 
 void input1() {
 	int number;
-	cout << "ÇëÊäÈëÒ»¸öÊı×Ö: ";
+	cout << "è¯·è¾“å…¥ä¸€ä¸ªæ•°å­—: ";
 	cin >> number;
-	cout << "ÊäÈëµÄÊı×ÖÊÇ: " << number << endl;
+	cout << "è¾“å…¥çš„æ•°å­—æ˜¯: " << number << endl;
 }
 
 void input2() {
 	char buf[1024];
-	cout << "ÇëÊäÈë×Ö·û´®: ";
-	cin >> buf;		// µ±Óöµ½¿Õ¸ñ·ûÊ±£¬»áÍ£Ö¹½ÓÊÕÊı¾İÊäÈë
-	cout << "ÊäÈëµÄ×Ö·û´®: ";
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²: ";
+	cin >> buf;		// å½“é‡åˆ°ç©ºæ ¼ç¬¦æ—¶ï¼Œä¼šåœæ­¢æ¥æ”¶æ•°æ®è¾“å…¥
+	cout << "è¾“å…¥çš„å­—ç¬¦ä¸²: ";
 	cout << buf << endl;
 }
 
 void input3() {
 	char ch;
-	cout << "ÇëÊäÈë×Ö·û´®: ";
-	while ((ch = cin.get()) != EOF)		// Èç¹û»º³åÇøÃ»ÓĞÊı¾İ£¬Ôò³ÌĞò»á×èÈû
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²: ";
+	while ((ch = cin.get()) != EOF)		// å¦‚æœç¼“å†²åŒºæ²¡æœ‰æ•°æ®ï¼Œåˆ™ç¨‹åºä¼šé˜»å¡
 	{
 		cout << ch << " ";
 	}
@@ -33,8 +33,8 @@ void input3() {
 
 void input4() {
 	char a, b, c;
-	cout << "ÇëÊäÈë×Ö·û´®: ";
-	cin.get(a);		// Èç¹û»º³åÇøÃ»ÓĞÊı¾İ£¬Ôò³ÌĞò»á×èÈû
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²: ";
+	cin.get(a);		// å¦‚æœç¼“å†²åŒºæ²¡æœ‰æ•°æ®ï¼Œåˆ™ç¨‹åºä¼šé˜»å¡
 	cin.get(b);
 	cin.get(c);
 	cout << a << b << c;
@@ -42,17 +42,17 @@ void input4() {
 
 void input5() {
 	char buf[256];
-	cout << "ÇëÊäÈë×Ö·û´®: ";
-	cin.getline(buf, 256);		// µ±Óöµ½¿Õ¸ñ·ûÊ±£¬²»»áÍ£Ö¹½ÓÊÕÊı¾İÊäÈë
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²: ";
+	cin.getline(buf, 256);		// å½“é‡åˆ°ç©ºæ ¼ç¬¦æ—¶ï¼Œä¸ä¼šåœæ­¢æ¥æ”¶æ•°æ®è¾“å…¥
 	cout << buf << endl;
 }
 
 void input6() {
 	char buf1[256];
 	char buf2[256];
-	cout << "ÇëÊäÈë×Ö·û´®:";  // ÀıÈçÊäÈë£ºabc  efghi
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²:";  // ä¾‹å¦‚è¾“å…¥ï¼šabc  efghi
 	cin >> buf1;
-	cin.ignore(2);		// ºöÂÔ»º³åÇøµÄÊı¾İ
+	cin.ignore(2);		// å¿½ç•¥ç¼“å†²åŒºçš„æ•°æ®
 	cin.getline(buf2, 256);
 	cout << buf1 << endl;
 	cout << buf2 << endl;
@@ -61,10 +61,10 @@ void input6() {
 void input7() {
 	char buf1[256];
 	char buf2[256];
-	cout << "ÇëÊäÈë×Ö·û´®:";  // ÀıÈçÊäÈë£ºabc  efghi
+	cout << "è¯·è¾“å…¥å­—ç¬¦ä¸²:";  // ä¾‹å¦‚è¾“å…¥ï¼šabc  efghi
 	cin >> buf1;
 	cin.ignore(2);
-	int num = cin.peek();	// ²é¿´»º³åÇøÊÇ·ñÓĞÊı¾İ
+	int num = cin.peek();	// æŸ¥çœ‹ç¼“å†²åŒºæ˜¯å¦æœ‰æ•°æ®
 	cout << num << endl;
 	cin.getline(buf2, 256);
 	cout << buf1 << endl;
@@ -72,21 +72,21 @@ void input7() {
 }
 
 void input8() {
-	// ·Ö¿ª´¦ÀíÊäÈëµÄÕûÊıºÍ×Ö·û
+	// åˆ†å¼€å¤„ç†è¾“å…¥çš„æ•´æ•°å’Œå­—ç¬¦
 	cout << "Please, enter a number or a word: ";
 	char c = std::cin.get();
 
 	if ((c >= '0') && (c <= '9'))
 	{
 		int n;
-		cin.putback(c);		// ½«Êı¾İ·Å»Ø»º³åÇø
+		cin.putback(c);		// å°†æ•°æ®æ”¾å›ç¼“å†²åŒº
 		cin >> n;
 		cout << "You entered a number: " << n << '\n';
 	}
 	else
 	{
 		char ch;
-		cin.putback(c);		// ½«Êı¾İ·Å»Ø»º³åÇø
+		cin.putback(c);		// å°†æ•°æ®æ”¾å›ç¼“å†²åŒº
 		cin.get(ch);
 		cout << "You entered a character: " << ch << '\n';
 	}

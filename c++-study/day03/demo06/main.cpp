@@ -1,5 +1,5 @@
 /**
- * 1. ¾²Ì¬³ÉÔ±±äÁ¿µÄÊ¹ÓÃ
+ * 1. é™æ€æˆå‘˜å˜é‡çš„ä½¿ç”¨
  */
 
 #include <iostream>
@@ -8,12 +8,12 @@ using namespace std;
 
 class Counter {
 private:
-    // ÉùÃ÷¾²Ì¬³ÉÔ±±äÁ¿
+    // å£°æ˜é™æ€æˆå‘˜å˜é‡
     static int num;
 
 public :
 
-    // ³ÉÔ±º¯Êı·ÃÎÊ¾²Ì¬³ÉÔ±±äÁ¿
+    // æˆå‘˜å‡½æ•°è®¿é—®é™æ€æˆå‘˜å˜é‡
     void setNum(int i) {
         num = i;
     }
@@ -23,7 +23,7 @@ public :
     }
 };
 
-// ¶¨Òå¾²Ì¬³ÉÔ±±äÁ¿
+// å®šä¹‰é™æ€æˆå‘˜å˜é‡
 int Counter::num = 0;
 
 int main() {

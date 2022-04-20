@@ -1,5 +1,5 @@
 /**
- * 1. º¯ÊýÖØÐ´µÄÓ¦ÓÃ
+ * 1. å‡½æ•°é‡å†™çš„åº”ç”¨
  */
 
 #include <iostream>
@@ -28,7 +28,7 @@ public:
 		this->c = c;
 	}
 
-	// ×ÓÀàÖØÐ´¸¸ÀàÖÐµÄº¯Êý
+	// å­ç±»é‡å†™çˆ¶ç±»ä¸­çš„å‡½æ•°
 	void print() {
 		cout << "I'm child, c = " << c << endl;
 	}
@@ -40,10 +40,10 @@ private:
 int main() {
 	Child child(3, 7);
 
-	// Ö´ÐÐ×ÓÀàµÄº¯Êý£¬Ä¬ÈÏÇé¿öÏÂ×ÓÀàÖÐÖØÐ´µÄº¯Êý½«Òþ²Ø¸¸ÀàÖÐµÄº¯Êý
+	// æ‰§è¡Œå­ç±»çš„å‡½æ•°ï¼Œé»˜è®¤æƒ…å†µä¸‹å­ç±»ä¸­é‡å†™çš„å‡½æ•°å°†éšè—çˆ¶ç±»ä¸­çš„å‡½æ•°
 	child.print();
 
-	// Ö´ÐÐ¸¸ÀàµÄº¯Êý£¬Í¨¹ý×÷ÓÃÓò·Ö±æ·û"::"¿ÉÒÔ·ÃÎÊµ½¸¸ÀàÖÐ±»Òþ²ØµÄº¯Êý
+	// æ‰§è¡Œçˆ¶ç±»çš„å‡½æ•°ï¼Œé€šè¿‡ä½œç”¨åŸŸåˆ†è¾¨ç¬¦"::"å¯ä»¥è®¿é—®åˆ°çˆ¶ç±»ä¸­è¢«éšè—çš„å‡½æ•°
 	child.Parent::print();
 
 	return 0;

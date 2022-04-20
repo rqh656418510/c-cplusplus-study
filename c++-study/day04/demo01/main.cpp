@@ -1,5 +1,5 @@
 /**
- * 1. È«¾Öº¯ÊıÓë³ÉÔ±º¯ÊıµÄÊ¹ÓÃ
+ * 1. å…¨å±€å‡½æ•°ä¸æˆå‘˜å‡½æ•°çš„ä½¿ç”¨
  */
 
 #include <iostream>
@@ -36,17 +36,17 @@ public:
 	}
 
 	//t1.testAdd2(t2);
-	//·µ»ØÒ»¸öÒıÓÃ£¬Ïàµ±ÓÚ·µ»Ø×ÔÉí
-	//·µ»Øt1Õâ¸öÔªËØ£¬this¾ÍÊÇ&t1
+	//è¿”å›ä¸€ä¸ªå¼•ç”¨ï¼Œç›¸å½“äºè¿”å›è‡ªèº«
+	//è¿”å›t1è¿™ä¸ªå…ƒç´ ï¼Œthiså°±æ˜¯&t1
 	Test& testAdd2(Test& t2)
 	{
 		this->a = this->a + t2.a;
 		this->b = this->b + t2.b;
-		return *this; //°Ñ *(&t1) ÓÖ»Øµ½ÁË t1ÔªËØ
+		return *this; //æŠŠ *(&t1) åˆå›åˆ°äº† t1å…ƒç´ 
 	}
 };
 
-// È«¾Öº¯Êı
+// å…¨å±€å‡½æ•°
 Test testAdd(Test& t1, Test& t2)
 {
 	Test tmp;
@@ -55,7 +55,7 @@ Test testAdd(Test& t1, Test& t2)
 	return tmp;
 }
 
-// È«¾Öº¯Êı
+// å…¨å±€å‡½æ•°
 void printT(Test* pT)
 {
 	cout << "a:" << pT->a << " b: " << pT->b << endl;
@@ -66,20 +66,20 @@ int main()
 	Test t1(1, 2);
 	Test t2(3, 4);
 
-	// µ÷ÓÃÈ«¾Öº¯Êı
+	// è°ƒç”¨å…¨å±€å‡½æ•°
 	Test t3;
 	t3 = testAdd(t1, t2);
 	printT(&t3);
 
-	// µ÷ÓÃ³ÉÔ±º¯Êı
-	Test t4 = t1.testAdd(t2); // ½«ÄäÃû¶ÔÏóÖ±½Ó×ª»¯³Ét4
+	// è°ƒç”¨æˆå‘˜å‡½æ•°
+	Test t4 = t1.testAdd(t2); // å°†åŒ¿åå¯¹è±¡ç›´æ¥è½¬åŒ–æˆt4
 	t4.printT();
 
 	Test t5;
-	t5 = t1.testAdd(t2); // ½«ÄäÃû¶ÔÏó¸´ÖÆ¸øt5
+	t5 = t1.testAdd(t2); // å°†åŒ¿åå¯¹è±¡å¤åˆ¶ç»™t5
 	t5.printT();
 
-	t1.testAdd2(t2); // º¯ÊıÄÚ²¿Ê¹ÓÃÁËthisÖ¸Õë
+	t1.testAdd2(t2); // å‡½æ•°å†…éƒ¨ä½¿ç”¨äº†thisæŒ‡é’ˆ
 	t1.printT();
 
 	return 0;

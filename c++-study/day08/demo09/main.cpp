@@ -1,7 +1,7 @@
 /*
- * 1. ÈÕÆÚ´¦Àí
- * a) ¸ñÊ½»¯µ±Ç°ÈÕÆÚ
- * b) ¼ÆËãÁ½¸öÈÕÆÚÖ®¼äµÄÌìÊý
+ * 1. æ—¥æœŸå¤„ç†
+ * a) æ ¼å¼åŒ–å½“å‰æ—¥æœŸ
+ * b) è®¡ç®—ä¸¤ä¸ªæ—¥æœŸä¹‹é—´çš„å¤©æ•°
 */
 
 #include <iostream>
@@ -11,12 +11,12 @@ using namespace std;
 
 int main() {
 
-	// ÈÕÆÚ¸ñÊ½»¯
+	// æ—¥æœŸæ ¼å¼åŒ–
 	cout << formatCurrentTime() << endl;
 	cout << formatCurrentTime("%Y%m%d") << endl;
 	cout << formatCurrentTime("%Y-%m-%d") << endl;
 
-	// ÅÐ¶ÏÈÕÆÚ×Ö·û´®ÊÇ·ñºÏ·¨£¬²¢·Ö±ðÈ¡³öÈÕÆÚÖÐµÄÄêÔÂÈÕ
+	// åˆ¤æ–­æ—¥æœŸå­—ç¬¦ä¸²æ˜¯å¦åˆæ³•ï¼Œå¹¶åˆ†åˆ«å–å‡ºæ—¥æœŸä¸­çš„å¹´æœˆæ—¥
 	int year, month, day;
 	string str = "20211202";
 	// string str = "20211231";
@@ -28,15 +28,15 @@ int main() {
 	cout << "date = " << str << endl;
 	printf("year = %d, month = %d, day = %d\n", year, month, day);
 
-	// ¼ÆËãÁ½¸öÈÕÆÚÖ®¼äµÄÌìÊý
+	// è®¡ç®—ä¸¤ä¸ªæ—¥æœŸä¹‹é—´çš„å¤©æ•°
 	int days = daysBetween2Date("20101111", "20111111");
-	cout << "Ïà²î " << days << "Ìì" << endl;
+	cout << "ç›¸å·® " << days << "å¤©" << endl;
 
 	int days2 = daysBetween2Date("20200202", "20200131");
-	cout << "Ïà²î " << days2 << "Ìì" << endl;
+	cout << "ç›¸å·® " << days2 << "å¤©" << endl;
 
 	int days3 = daysBetween2Date("20230712", "20050619");
-	cout << "Ïà²î " << days3 << "Ìì" << endl;
+	cout << "ç›¸å·® " << days3 << "å¤©" << endl;
 
 	// double times = contractRemainingTime("20211203");
 	double times = contractRemainingTime("20211202");

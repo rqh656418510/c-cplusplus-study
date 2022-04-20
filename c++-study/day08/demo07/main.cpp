@@ -1,5 +1,5 @@
 /*
- * 1. Map¼¯ºÏµÄÊ¹ÓÃ
+ * 1. Mapé›†åˆçš„ä½¿ç”¨
 */
 
 #include <iostream>
@@ -8,55 +8,55 @@
 using namespace std;
 
 int main() {
-	// ¶¨ÒåMap¼¯ºÏ±äÁ¿
+	// å®šä¹‰Mapé›†åˆå˜é‡
 	map<int, int> m;
 
-	// µÚÒ»ÖÖÊı¾İ²åÈë·½Ê½
+	// ç¬¬ä¸€ç§æ•°æ®æ’å…¥æ–¹å¼
 	m.insert(pair<int, int>(1, 2));
-	// µÚ¶şÖÖÊı¾İ²åÈë·½Ê½£¨ÍÆ¼ö£©
+	// ç¬¬äºŒç§æ•°æ®æ’å…¥æ–¹å¼ï¼ˆæ¨èï¼‰
 	m.insert(make_pair(3, 4));
-	// µÚÈıÖÖÊı¾İ²åÈë·½Ê½
+	// ç¬¬ä¸‰ç§æ•°æ®æ’å…¥æ–¹å¼
 	m.insert(map<int, int>::value_type(5, 6));
-	// µÚËÄÖÖÊı¾İ²åÈë·½Ê½
+	// ç¬¬å››ç§æ•°æ®æ’å…¥æ–¹å¼
 	m[7] = 8;
 
-	// µÚÒ»ÖÖ·½Ê½±éÀúMap¼¯ºÏ
+	// ç¬¬ä¸€ç§æ–¹å¼éå†Mapé›†åˆ
 	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++) {
 		cout << "key = " << it->first << " , " << it->second << endl;
 	}
 
 	cout << endl;
 
-	// µÚ¶şÖÖ·½Ê½±éÀúMap¼¯ºÏ
+	// ç¬¬äºŒç§æ–¹å¼éå†Mapé›†åˆ
 	for (auto it = m.begin(); it != m.end(); it++) {
 		cout << "key = " << it->first << " , value = " << it->second << endl;
 	}
 
 	cout << endl;
 
-	// »ñÈ¡Ö¸¶¨µÄKey
+	// è·å–æŒ‡å®šçš„Key
 	map<int, int>::iterator item = m.find(5);
 	cout << "key = " << item->first << " , value = " << item->second << endl;
 
 	cout << endl;
 
-	// µÚÒ»ÖÖ·½Ê½ÅĞ¶ÏKeyÊÇ·ñ´æÔÚ
-	// Èç¹ûKey´æÔÚ£¬find()º¯Êı»á·µ»ØKey¶ÔÓ¦µÄµü´úÆ÷£¬Èç¹ûKey²»´æÔÚ£¬find()º¯Êı»á·µ»ØÎ²ºóµü´úÆ÷end()
+	// ç¬¬ä¸€ç§æ–¹å¼åˆ¤æ–­Keyæ˜¯å¦å­˜åœ¨
+	// å¦‚æœKeyå­˜åœ¨ï¼Œfind()å‡½æ•°ä¼šè¿”å›Keyå¯¹åº”çš„è¿­ä»£å™¨ï¼Œå¦‚æœKeyä¸å­˜åœ¨ï¼Œfind()å‡½æ•°ä¼šè¿”å›å°¾åè¿­ä»£å™¨end()
 	if (m.find(100) == m.end()) {
 		cout << "key " << 100 << " not exist" << endl;
 	}
 
 	cout << endl;
 
-	// µÚ¶şÖÖ·½Ê½ÅĞ¶ÏKeyÊÇ·ñ´æÔÚ
-	// count()º¯ÊıÓÃÓÚÍ³¼ÆKeyÖµÔÚMapÖĞ³öÏÖµÄ´ÎÊı£¬MapµÄKeyÊÇ²»ÔÊĞíÖØ¸´µÄ£¬Òò´ËÈç¹ûKey´æÔÚ»á·µ»Ø1£¬²»´æÔÚ»á·µ»Ø0
+	// ç¬¬äºŒç§æ–¹å¼åˆ¤æ–­Keyæ˜¯å¦å­˜åœ¨
+	// count()å‡½æ•°ç”¨äºç»Ÿè®¡Keyå€¼åœ¨Mapä¸­å‡ºç°çš„æ¬¡æ•°ï¼ŒMapçš„Keyæ˜¯ä¸å…è®¸é‡å¤çš„ï¼Œå› æ­¤å¦‚æœKeyå­˜åœ¨ä¼šè¿”å›1ï¼Œä¸å­˜åœ¨ä¼šè¿”å›0
 	if (m.count(5) == 1) {
 		cout << "key " << 5 << " existed" << endl;
 	}
 
 	cout << endl;
 
-	// É¾³ıÖ¸¶¨µÄKey
+	// åˆ é™¤æŒ‡å®šçš„Key
 	m.erase(7);
 	for (auto it = m.begin(); it != m.end(); it++) {
 		cout << "key = " << it->first << " , value = " << it->second << endl;

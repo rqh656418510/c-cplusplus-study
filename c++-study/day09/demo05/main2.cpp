@@ -1,34 +1,34 @@
 /*
- * 1. ÀàÄ£°åµÄÊ¹ÓÃ
- * a) ËùÓĞµÄÀàÄ£°åº¯ÊıĞ´ÔÚÀàµÄÍâ²¿£¨Í¬Ò»¸ö.cppÎÄ¼ş£©
+ * 1. ç±»æ¨¡æ¿çš„ä½¿ç”¨
+ * a) æ‰€æœ‰çš„ç±»æ¨¡æ¿å‡½æ•°å†™åœ¨ç±»çš„å¤–éƒ¨ï¼ˆåŒä¸€ä¸ª.cppæ–‡ä»¶ï¼‰
 */
 
 #include <iostream>
 
 using namespace std;
 
-/********** START ½â¾öÀàÄ£°åÓëÓÑÔªº¯ÊıÀÄÓÃ£¨·ÇÖØÔØ×óÒÆÓëÓÒÒÆÔËËã·û£©Ê±³öÏÖµÄ±àÒëÎÊÌâ *********/
+/********** START è§£å†³ç±»æ¨¡æ¿ä¸å‹å…ƒå‡½æ•°æ»¥ç”¨ï¼ˆéé‡è½½å·¦ç§»ä¸å³ç§»è¿ç®—ç¬¦ï¼‰æ—¶å‡ºç°çš„ç¼–è¯‘é—®é¢˜ *********/
 
 template <typename T> class Complex;
 
 template <typename T> Complex<T> sub(Complex<T>& c1, Complex<T>& c2);
 
-/********** END ½â¾öÀàÄ£°åÓëÓÑÔªº¯ÊıÀÄÓÃ£¨·ÇÖØÔØ×óÒÆÓëÓÒÒÆÔËËã·û£©Ê±³öÏÖµÄ±àÒëÎÊÌâ *********/
+/********** END è§£å†³ç±»æ¨¡æ¿ä¸å‹å…ƒå‡½æ•°æ»¥ç”¨ï¼ˆéé‡è½½å·¦ç§»ä¸å³ç§»è¿ç®—ç¬¦ï¼‰æ—¶å‡ºç°çš„ç¼–è¯‘é—®é¢˜ *********/
 
 template <typename T>
 class Complex {
 
 public:
 public:
-	// ¹¹Ôìº¯Êı
+	// æ„é€ å‡½æ•°
 	Complex(T a, T b);
-	// Àà³ÉÔ±º¯Êı
+	// ç±»æˆå‘˜å‡½æ•°
 	void print();
-	// Àà³ÉÔ±º¯Êı£¬ÖØÔØÔËËã·û "+"
+	// ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "+"
 	Complex operator+(Complex& c2);
-	// ÓÑÔªº¯Êı£¨ÀÄÓÃÓÑÔªº¯Êı£©
+	// å‹å…ƒå‡½æ•°ï¼ˆæ»¥ç”¨å‹å…ƒå‡½æ•°ï¼‰
 	friend Complex sub<T>(Complex& c1, Complex& c2);
-	// ÓÑÔªº¯Êı£¬ÖØÔØÔËËã·û "<<"
+	// å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
 	friend ostream& operator<< <T>(ostream& out, Complex& c1);
 
 private:
@@ -37,34 +37,34 @@ private:
 
 };
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 template <typename T>
 Complex<T>::Complex(T a, T b) {
 	this->a = a;
 	this->b = b;
 }
 
-// Àà³ÉÔ±º¯Êı
+// ç±»æˆå‘˜å‡½æ•°
 template <typename T>
 void Complex<T>::print() {
 	cout << "a = " << this->a << ", b = " << this->b << endl;
 }
 
-// Àà³ÉÔ±º¯Êı£¬ÖØÔØÔËËã·û "+"
+// ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "+"
 template <typename T>
 Complex<T> Complex<T>::operator+(Complex<T>& c2) {
 	Complex<T> tmp(this->a + c2.a, this->b + c2.b);
 	return tmp;
 }
 
-// ÓÑÔªº¯Êı£¬ÖØÔØÔËËã·û "<<"
+// å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
 template <typename T>
 ostream& operator<<(ostream& out, Complex<T>& c1) {
 	cout << "a = " << c1.a << ", b = " << c1.b;
 	return out;
 }
 
-// ÓÑÔªº¯Êı£¨ÀÄÓÃÓÑÔªº¯Êı£©
+// å‹å…ƒå‡½æ•°ï¼ˆæ»¥ç”¨å‹å…ƒå‡½æ•°ï¼‰
 template <typename T>
 Complex<T> sub(Complex<T>& c1, Complex<T>& c2) {
 	Complex<T> tmp(c1.a - c2.a, c1.b - c2.b);

@@ -1,5 +1,5 @@
 /*
- * 1. stringÈÝÆ÷µÄAPI
+ * 1. stringå®¹å™¨çš„API
 */
 
 #include <iostream>
@@ -7,17 +7,17 @@
 using namespace std;
 
 int main() {
-    // ´æ´¢×Ö·û
+    // å­˜å‚¨å­—ç¬¦
     string str1 = "abcde";
     for (int i = 0; i < str1.size(); i++) {
-        // µÚÒ»ÖÖ·½Ê½
+        // ç¬¬ä¸€ç§æ–¹å¼
         cout << str1[i] << " ";
-        // µÚ¶þÖÖ·½Ê½
+        // ç¬¬äºŒç§æ–¹å¼
         // cout << str1.at(i) << " ";
     }
     cout << endl;
 
-    // ×Ö·û´®Æ´½Ó
+    // å­—ç¬¦ä¸²æ‹¼æŽ¥
     string str2 = "hello ";
     string str3 = "world ";
     str2 += str3;
@@ -25,14 +25,14 @@ int main() {
     cout << "str2 = " << str2 << endl;
     cout << "str3 = " << str3 << endl;
 
-    // ×Ö·û´®²éÕÒ
+    // å­—ç¬¦ä¸²æŸ¥æ‰¾
     string str4 = "My name is Peter";
     int index1 = str4.find("name");
     cout << "index1 = " << index1 << endl;
     int index2 = str4.rfind("e");
     cout << "index2 = " << index2 << endl;
 
-    // ×Ö·û´®Ìæ»»
+    // å­—ç¬¦ä¸²æ›¿æ¢
     string str5 = "abc123";
     str5.replace(3, 3, "def");
     cout << "str5 = " << str5 << endl;
@@ -41,38 +41,38 @@ int main() {
     str6.swap(str7);
     cout << "str6 = " << str6 << endl;
 
-    // ×Ö·û´®±È½Ï
+    // å­—ç¬¦ä¸²æ¯”è¾ƒ
     string str8 = "ABC";
     string str9 = "abc";
-    int result = str8.compare(str9);    // ·µ»ØÖµÐ¡ÓÚµÈÓÚ-1
+    int result = str8.compare(str9);    // è¿”å›žå€¼å°äºŽç­‰äºŽ-1
     cout << "result = " << result << endl;
 
-    // ½ØÈ¡×Ó×Ö·û´®
+    // æˆªå–å­å­—ç¬¦ä¸²
     string str10 = "124abc";
     string str11 = str10.substr(1, 3);
     cout << "str11 = " << str11 << endl;
 
-    // ×Ö·û´®µÄÇø¼ä²åÈë
+    // å­—ç¬¦ä¸²çš„åŒºé—´æ’å…¥
     string str12 = "abcdef";
     str12.insert(2, "123");
     cout << "str12 = " << str12 << endl;
 
-    // ×Ö·û´®µÄÇø¼äÉ¾³ý
+    // å­—ç¬¦ä¸²çš„åŒºé—´åˆ é™¤
     string str13 = "123456";
     str13.erase(2, 2);
     cout << "str13 = " << str13 << endl;
 
-    // ´Ó×Ö·û´®È¡µÃ char *
+    // ä»Žå­—ç¬¦ä¸²å–å¾— char *
     string str14 = "hijkl";
     const char *p1 = str14.c_str();
     cout << "p1 = " << p1 << endl;
 
-    // char * ÒþÊ½ÀàÐÍ×ª»»Îª string
+    // char * éšå¼ç±»åž‹è½¬æ¢ä¸º string
     char *p2 = "abc123";
     string str15 = p2;
     cout << "str15 = " << str15 << endl;
 
-    // ½« string ¿½±´µ½ char* Ö¸ÏòµÄÄÚ´æ¿Õ¼ä
+    // å°† string æ‹·è´åˆ° char* æŒ‡å‘çš„å†…å­˜ç©ºé—´
     char *p3 = new char[3];
     string str16 = "hello jim";
     int number = str16.copy(p3, 3, 2);

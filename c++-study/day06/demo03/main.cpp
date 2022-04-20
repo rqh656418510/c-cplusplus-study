@@ -1,9 +1,9 @@
 /**
- * 1. ¼Ì³ÐÖÐµÄ¹¹Ôìº¯ÊýÓëÎö¹¹º¯ÊýµÄµ÷ÓÃÔ­Ôò
- * a) ×ÓÀà¶ÔÏóÔÚ´´½¨Ê±£¬»áÊ×ÏÈµ÷ÓÃ¸¸ÀàµÄ¹¹Ôìº¯Êý
- * b) ¸¸Àà¹¹Ôìº¯ÊýÖ´ÐÐ½áÊøºó£¬ÔÙÖ´ÐÐ×ÓÀàµÄ¹¹Ôìº¯Êý
- * c) µ±¸¸ÀàÖ»´æÔÚÓÐ²Î¹¹Ôìº¯ÊýÊ±£¬±ØÐëÔÚ×ÓÀàµÄ³õÊ¼»¯ÁÐ±íÖÐÏÔÊ¾µ÷ÓÃ¸¸ÀàµÄ¹¹Ôìº¯Êý
- * d) Îö¹¹º¯Êýµ÷ÓÃµÄÏÈºóË³ÐòÓë¹¹Ôìº¯ÊýÏà·´£¬¼´ÏÈµ÷ÓÃ×ÓÀàµÄÎö¹¹º¯Êý£¬ÔÙµ÷ÓÃ¸¸ÀàµÄÎö¹¹º¯Êý
+ * 1. ç»§æ‰¿ä¸­çš„æž„é€ å‡½æ•°ä¸Žæžæž„å‡½æ•°çš„è°ƒç”¨åŽŸåˆ™
+ * a) å­ç±»å¯¹è±¡åœ¨åˆ›å»ºæ—¶ï¼Œä¼šé¦–å…ˆè°ƒç”¨çˆ¶ç±»çš„æž„é€ å‡½æ•°
+ * b) çˆ¶ç±»æž„é€ å‡½æ•°æ‰§è¡Œç»“æŸåŽï¼Œå†æ‰§è¡Œå­ç±»çš„æž„é€ å‡½æ•°
+ * c) å½“çˆ¶ç±»åªå­˜åœ¨æœ‰å‚æž„é€ å‡½æ•°æ—¶ï¼Œå¿…é¡»åœ¨å­ç±»çš„åˆå§‹åŒ–åˆ—è¡¨ä¸­æ˜¾ç¤ºè°ƒç”¨çˆ¶ç±»çš„æž„é€ å‡½æ•°
+ * d) æžæž„å‡½æ•°è°ƒç”¨çš„å…ˆåŽé¡ºåºä¸Žæž„é€ å‡½æ•°ç›¸åï¼Œå³å…ˆè°ƒç”¨å­ç±»çš„æžæž„å‡½æ•°ï¼Œå†è°ƒç”¨çˆ¶ç±»çš„æžæž„å‡½æ•°
  */
 
 #include <iostream>
@@ -17,11 +17,11 @@ public:
 	Parent(int a, int b) {
 		this->a = a;
 		this->b = b;
-		cout << "¸¸ÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "çˆ¶ç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Parent() {
-		cout << "¸¸ÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "çˆ¶ç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	void printParent() {
@@ -37,14 +37,14 @@ class Child : public Parent {
 
 public:
 
-	// µ±¸¸ÀàÖ»´æÔÚÓÐ²Î¹¹Ôìº¯ÊýÊ±£¬±ØÐëÔÚ×ÓÀàµÄ³õÊ¼»¯ÁÐ±íÖÐÏÔÊ¾µ÷ÓÃ
+	// å½“çˆ¶ç±»åªå­˜åœ¨æœ‰å‚æž„é€ å‡½æ•°æ—¶ï¼Œå¿…é¡»åœ¨å­ç±»çš„åˆå§‹åŒ–åˆ—è¡¨ä¸­æ˜¾ç¤ºè°ƒç”¨
 	Child(int a, int b, int c) : Parent(a, b) {
 		this->c = c;
-		cout << "×ÓÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "å­ç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Child() {
-		cout << "×ÓÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "å­ç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	void printChild() {

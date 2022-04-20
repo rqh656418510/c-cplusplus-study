@@ -1,5 +1,5 @@
 /*
- * 1. stringÈİÆ÷µÄ¹¹ÔìÓë¸³Öµ
+ * 1. stringå®¹å™¨çš„æ„é€ ä¸èµ‹å€¼
 */
 
 #include <iostream>
@@ -7,21 +7,21 @@
 using namespace std;
 
 int main() {
-    // Ä¬ÈÏ¹¹Ôìº¯Êı
+    // é»˜è®¤æ„é€ å‡½æ•°
     string str1;
 
-    // ¿½±´¹¹Ôìº¯Êı
+    // æ‹·è´æ„é€ å‡½æ•°
     string str2 = str1;
 
-    // ÓĞ²Î¹¹Ôìº¯Êı
+    // æœ‰å‚æ„é€ å‡½æ•°
     string str3("abced");
     string str4(5, 'f');
 
-    // »ù±¾¸³Öµ
+    // åŸºæœ¬èµ‹å€¼
     str1 = "123456";
     str2 = str3;
     str3.assign("mnopq", 3);
-    str4.assign("45678", 1, 3);     // ´Ó0¿ªÊ¼Ë÷Òı£¬1±íÊ¾µÚ2¸ö×Ö·û
+    str4.assign("45678", 1, 3);     // ä»0å¼€å§‹ç´¢å¼•ï¼Œ1è¡¨ç¤ºç¬¬2ä¸ªå­—ç¬¦
     cout << "str1 = " << str1 << endl;
     cout << "str2 = " << str2 << endl;
     cout << "str3 = " << str3 << endl;

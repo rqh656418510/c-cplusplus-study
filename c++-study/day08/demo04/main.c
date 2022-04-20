@@ -1,7 +1,7 @@
 /*
- * 1. º¯ÊýÖ¸Õë×öº¯Êý²ÎÊý
- * a) ½« ¡°º¯ÊýµÄµ÷ÓÃ¡± ºÍ ¡°º¯ÊýµÄÊµÏÖ¡± ½âñî
- * b) ¿ÉÒÔÄ£Äâ C++ µÄ¶àÌ¬»úÖÆ£¨ÌáÇ°²¼¾Ö VPTR Ö¸ÕëºÍÐéº¯Êý±í£¬ÕÒÐéº¯ÊýÈë¿ÚµØÖ·À´ÊµÏÖº¯Êýµ÷ÓÃ£©
+ * 1. å‡½æ•°æŒ‡é’ˆåšå‡½æ•°å‚æ•°
+ * a) å°† â€œå‡½æ•°çš„è°ƒç”¨â€ å’Œ â€œå‡½æ•°çš„å®žçŽ°â€ è§£è€¦
+ * b) å¯ä»¥æ¨¡æ‹Ÿ C++ çš„å¤šæ€æœºåˆ¶ï¼ˆæå‰å¸ƒå±€ VPTR æŒ‡é’ˆå’Œè™šå‡½æ•°è¡¨ï¼Œæ‰¾è™šå‡½æ•°å…¥å£åœ°å€æ¥å®žçŽ°å‡½æ•°è°ƒç”¨ï¼‰
 */
 
 #include <stdio.h>
@@ -14,13 +14,13 @@ int mult(int a, int b) {
 	return a * b;
 }
 
-// º¯ÊýÖ¸Õë×öº¯Êý²ÎÊý
+// å‡½æ•°æŒ‡é’ˆåšå‡½æ•°å‚æ•°
 int callbackFunc(int (*MyFunc)(int a, int b)) {
 	return MyFunc(3, 4);
 }
 
 int main() {
-	// ¶¨Òåº¯ÊýÖ¸Õë±äÁ¿
+	// å®šä¹‰å‡½æ•°æŒ‡é’ˆå˜é‡
 	int (*myFuncVar)(int a, int b);
 
 	myFuncVar = add;

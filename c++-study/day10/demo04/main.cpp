@@ -1,6 +1,6 @@
 /*
- * 1. Òì³£´¦Àí»úÖÆ
- * a) C++ ±ê×¼Òì³£¿âµÄÊ¹ÓÃ
+ * 1. å¼‚å¸¸å¤„ç†æœºåˆ¶
+ * a) C++ æ ‡å‡†å¼‚å¸¸åº“çš„ä½¿ç”¨
 */
 
 #include <iostream>
@@ -11,8 +11,8 @@ class Teacher {
 public:
     Teacher(int age) {
         if (age > 100) {
-            // Å×³ö±ê×¼¿âÄÚµÄÒì³£
-            throw out_of_range("ÄêÁäÌ«´ó");
+            // æŠ›å‡ºæ ‡å‡†åº“å†…çš„å¼‚å¸¸
+            throw out_of_range("å¹´é¾„å¤ªå¤§");
         }
         this->age = age;
     }
@@ -22,7 +22,7 @@ private:
 
 };
 
-// ¼Ì³Ğ±ê×¼¿âÄÚµÄÒì³£
+// ç»§æ‰¿æ ‡å‡†åº“å†…çš„å¼‚å¸¸
 class MyException : public exception {
 public:
     MyException(const char* p) {
@@ -30,7 +30,7 @@ public:
     }
 
     virtual const char* what() {
-        cout << "MyException ÀàĞÍµÄÒì³£ : " << m_p << endl;
+        cout << "MyException ç±»å‹çš„å¼‚å¸¸ : " << m_p << endl;
         return m_p;
     }
 
@@ -41,16 +41,16 @@ private:
 int main() {
     try {
         // Teacher teacher(105);
-        throw MyException("·¢Éú×Ô¶¨ÒåÒì³£!");
+        throw MyException("å‘ç”Ÿè‡ªå®šä¹‰å¼‚å¸¸!");
     }
     catch (out_of_range e) {
-        cout << "out_of_range ÀàĞÍµÄÒì³£ : " << e.what() << endl;
+        cout << "out_of_range ç±»å‹çš„å¼‚å¸¸ : " << e.what() << endl;
     }
     catch (MyException& e) {
         e.what();
     }
     catch (...) {
-        cout << "·¢ÉúÎ´ÖªÀàĞÍµÄÒì³£!" << endl;
+        cout << "å‘ç”ŸæœªçŸ¥ç±»å‹çš„å¼‚å¸¸!" << endl;
     }
     return 0;
 }

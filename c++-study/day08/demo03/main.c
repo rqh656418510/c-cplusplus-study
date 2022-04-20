@@ -1,10 +1,10 @@
 /*
- * 1. º¯ÊıÀàĞÍ×öº¯Êı²ÎÊı
+ * 1. å‡½æ•°ç±»å‹åšå‡½æ•°å‚æ•°
 */
 
 #include <stdio.h>
 
-// ¶¨Òåº¯ÊıÀàĞÍ
+// å®šä¹‰å‡½æ•°ç±»å‹
 typedef int (MyFuncType)(int a, int b);
 
 int add(int a, int b) {
@@ -15,13 +15,13 @@ int mult(int a, int b) {
 	return a * b;
 }
 
-// º¯ÊıÀàĞÍ×÷Îªº¯Êı²ÎÊı
+// å‡½æ•°ç±»å‹ä½œä¸ºå‡½æ•°å‚æ•°
 int callbackFunc(MyFuncType func) {
 	return func(3, 6);
 }
 
 int main() {
-	// Í¨¹ıº¯ÊıÀàĞÍ¶¨Òåº¯ÊıÖ¸ÕëÀàĞÍ
+	// é€šè¿‡å‡½æ•°ç±»å‹å®šä¹‰å‡½æ•°æŒ‡é’ˆç±»å‹
 	MyFuncType* myFuncType = NULL;
 
 	myFuncType = add;

@@ -22,6 +22,6 @@ public:
 	friend ostream& operator<< <T>(ostream& out, MyVector& obj);
 
 private:
-	T* m_space; // Ö¸ÏòÊı×éµÄÖ¸Õë
+	T* m_space; // æŒ‡å‘æ•°ç»„çš„æŒ‡é’ˆ
 	int m_size;
 };

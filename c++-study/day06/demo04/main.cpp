@@ -1,7 +1,7 @@
 /**
- * 1. ¼Ì³ÐÓë×éºÏ¶ÔÏó»ì´îÊ¹ÓÃµÄÇé¿öÏÂ£¬¹¹Ôìº¯ÊýºÍÎö¹¹º¯ÊýµÄµ÷ÓÃÔ­Ôò
- * a) `¹¹Ôìº¯ÊýµÄµ÷ÓÃ`£ºÏÈ¹¹Ôì¸¸Àà£¬ÔÙ¹¹Ôì³ÉÔ±±äÁ¿£¬×îºó¹¹Ôì×ÔÉí
- * b) `Îö¹¹º¯ÊýµÄµ÷ÓÃ`£ºÏÈÎö¹¹×ÔÉí£¬ÔÙÎö¹¹³ÉÔ±±äÁ¿£¬×îºóÎö¹¹¸¸Àà
+ * 1. ç»§æ‰¿ä¸Žç»„åˆå¯¹è±¡æ··æ­ä½¿ç”¨çš„æƒ…å†µä¸‹ï¼Œæž„é€ å‡½æ•°å’Œæžæž„å‡½æ•°çš„è°ƒç”¨åŽŸåˆ™
+ * a) `æž„é€ å‡½æ•°çš„è°ƒç”¨`ï¼šå…ˆæž„é€ çˆ¶ç±»ï¼Œå†æž„é€ æˆå‘˜å˜é‡ï¼Œæœ€åŽæž„é€ è‡ªèº«
+ * b) `æžæž„å‡½æ•°çš„è°ƒç”¨`ï¼šå…ˆæžæž„è‡ªèº«ï¼Œå†æžæž„æˆå‘˜å˜é‡ï¼Œæœ€åŽæžæž„çˆ¶ç±»
  */
 
 #include <iostream>
@@ -14,11 +14,11 @@ public:
 	Object(int a, int b) {
 		this->a = a;
 		this->b = b;
-		cout << "ObjectÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Objectç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Object() {
-		cout << "ObjectÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Objectç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	void printObject() {
@@ -34,14 +34,14 @@ class Parent : public Object {
 
 public:
 
-	// Í¨¹ý³õÊ¼»¯ÁÐ±í£¬µ÷ÓÃ¸¸ÀàµÄ¹¹Ôìº¯Êý
+	// é€šè¿‡åˆå§‹åŒ–åˆ—è¡¨ï¼Œè°ƒç”¨çˆ¶ç±»çš„æž„é€ å‡½æ•°
 	Parent(char* p) : Object(1, 2) {
 		this->p = p;
-		cout << "ParentÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Parentç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Parent() {
-		cout << "ParentÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Parentç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	void printParent() {
@@ -56,14 +56,14 @@ class Child : public Parent {
 
 public:
 
-	// Í¨¹ý³õÊ¼»¯ÁÐ±í£¬µ÷ÓÃ×éºÏ¶ÔÏóÓë¸¸ÀàµÄ¹¹Ôìº¯Êý
+	// é€šè¿‡åˆå§‹åŒ–åˆ—è¡¨ï¼Œè°ƒç”¨ç»„åˆå¯¹è±¡ä¸Žçˆ¶ç±»çš„æž„é€ å‡½æ•°
 	Child(char* c) : obj1(3, 4), obj2(5, 6), Parent(c) {
 		this->c = c;
-		cout << "ChildÀàµÄ¹¹Ôìº¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Childç±»çš„æž„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	~Child() {
-		cout << "ChildÀàµÄÎö¹¹º¯Êý±»µ÷ÓÃ" << endl;
+		cout << "Childç±»çš„æžæž„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	}
 
 	void printChild() {
@@ -73,7 +73,7 @@ public:
 protected:
 	char* c;
 
-	// ×éºÏ¶ÔÏó
+	// ç»„åˆå¯¹è±¡
 	Object obj1;
 	Object obj2;
 };

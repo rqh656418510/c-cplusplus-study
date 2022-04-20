@@ -1,15 +1,15 @@
 /*
- * 1. Òì³£´¦Àí»úÖÆ
- * a) ÉèÖÃÄ¬ÈÏµÄÒì³£´¦ÀíÆ÷
+ * 1. å¼‚å¸¸å¤„ç†æœºåˆ¶
+ * a) è®¾ç½®é»˜è®¤çš„å¼‚å¸¸å¤„ç†å™¨
 */
 
 #include <iostream>
 
 using namespace std;
 
-// ×Ô¶¨Òå terminate() º¯Êı
+// è‡ªå®šä¹‰ terminate() å‡½æ•°
 void myTerminate() {
-    cout << "º¯Êı myTerminate() ±» terminate() µ÷ÓÃ!" << endl;
+    cout << "å‡½æ•° myTerminate() è¢« terminate() è°ƒç”¨!" << endl;
     exit(-1);
 }
 
@@ -18,23 +18,23 @@ int divide(int x, int y) {
 }
 
 int main() {
-    // ÉèÖÃÄ¬ÈÏµÄÒì³£´¦ÀíÆ÷
+    // è®¾ç½®é»˜è®¤çš„å¼‚å¸¸å¤„ç†å™¨
     set_terminate(myTerminate);
 
     int x = 10, y = 0, result;
     try {
         if (y == 0) {
-            throw "±»³ıÊıÎªÁã!";   //Å×³öÒì³££¬ÓÉ terminate() º¯Êı²¶»ñ
+            throw "è¢«é™¤æ•°ä¸ºé›¶!";   //æŠ›å‡ºå¼‚å¸¸ï¼Œç”± terminate() å‡½æ•°æ•è·
         }
         else {
             result = x / y;
         }
     }
-    // ²»»á±»ÕûĞÍÒì³£²¶»ñ
+    // ä¸ä¼šè¢«æ•´å‹å¼‚å¸¸æ•è·
     catch (int e) {
-        cout << "²¶»ñµ½ÕûĞÍÒì³£!" << endl;
+        cout << "æ•è·åˆ°æ•´å‹å¼‚å¸¸!" << endl;
     }
 
-    cout << "³ÌĞòÕı³£½áÊøÔËĞĞ!" << endl;
+    cout << "ç¨‹åºæ­£å¸¸ç»“æŸè¿è¡Œ!" << endl;
     return 0;
 }

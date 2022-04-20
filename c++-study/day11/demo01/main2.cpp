@@ -1,5 +1,5 @@
 /*
- * 1. ÈİÆ÷³õÊ¶£¨´æ·Å»ù´¡Êı¾İÀàĞÍ£©
+ * 1. å®¹å™¨åˆè¯†ï¼ˆå­˜æ”¾åŸºç¡€æ•°æ®ç±»å‹ï¼‰
 */
 
 #include <iostream>
@@ -13,17 +13,17 @@ void m_print(const int num) {
 }
 
 int main() {
-    // ¶¨ÒåÈİÆ÷
+    // å®šä¹‰å®¹å™¨
     vector<int> v;
 
-    // ²åÈëÊı¾İ
+    // æ’å…¥æ•°æ®
     v.push_back(11);
     v.push_back(12);
     v.push_back(13);
     v.push_back(14);
     v.push_back(15);
 
-    // µÚÒ»ÖÖ·½Ê½£º±éÀúÈİÆ÷
+    // ç¬¬ä¸€ç§æ–¹å¼ï¼šéå†å®¹å™¨
     vector<int>::iterator itBegin = v.begin();
     vector<int>::iterator itEnd = v.end();
     while (itBegin != itEnd) {
@@ -31,13 +31,13 @@ int main() {
     }
     cout << endl;
 
-    // µÚ¶şÖÖ·½Ê½£º±éÀúÈİÆ÷
+    // ç¬¬äºŒç§æ–¹å¼ï¼šéå†å®¹å™¨
     for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
         cout << *it << " ";
     }
     cout << endl;
 
-    // µÚÈıÖÖ·½Ê½£º±éÀúÈİÆ÷
+    // ç¬¬ä¸‰ç§æ–¹å¼ï¼šéå†å®¹å™¨
     for_each(v.begin(), v.end(), m_print);
 
     return 0;

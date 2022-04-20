@@ -1,5 +1,5 @@
 /*
- * 1. º¯ÊıÀàĞÍÓëº¯ÊıÖ¸ÕëÀàĞÍµÄÓ¦ÓÃ
+ * 1. å‡½æ•°ç±»å‹ä¸å‡½æ•°æŒ‡é’ˆç±»å‹çš„åº”ç”¨
 */
 
 #include <stdio.h>
@@ -10,25 +10,25 @@ int add(int a, int b) {
 
 int main() {
 
-	// 1. ¶¨Òåº¯ÊıÀàĞÍ
+	// 1. å®šä¹‰å‡½æ•°ç±»å‹
 	typedef int (MyFuncType)(int a, int b);
 
-	// Í¨¹ıº¯ÊıÀàĞÍ¶¨Òåº¯ÊıÖ¸ÕëÀàĞÍ
+	// é€šè¿‡å‡½æ•°ç±»å‹å®šä¹‰å‡½æ•°æŒ‡é’ˆç±»å‹
 	MyFuncType* myFuncType = add;
 	int result = myFuncType(1, 3);
 	printf("%d + %d = %d\n", 1, 3, result);
 
-	// 2. ¶¨ÒåÒ»¸öº¯ÊıÖ¸ÕëÀàĞÍ£¨²»»á·ÖÅäÄÚ´æ¿Õ¼ä£©
+	// 2. å®šä¹‰ä¸€ä¸ªå‡½æ•°æŒ‡é’ˆç±»å‹ï¼ˆä¸ä¼šåˆ†é…å†…å­˜ç©ºé—´ï¼‰
 	typedef int (*MyFuncPointType)(int a, int b);
 
-	// ¼Ó²»¼ÓÉÏ"&"·ûºÅ¶¼ÊÇ¿ÉÒÔµÄ£¬Èç¹û¼ÓÉÏÁË"&"·ûºÅ£¬¿ÉÒÔ½â¾öCÓïÑÔ°æ±¾µÄ¼æÈİÎÊÌâ
+	// åŠ ä¸åŠ ä¸Š"&"ç¬¦å·éƒ½æ˜¯å¯ä»¥çš„ï¼Œå¦‚æœåŠ ä¸Šäº†"&"ç¬¦å·ï¼Œå¯ä»¥è§£å†³Cè¯­è¨€ç‰ˆæœ¬çš„å…¼å®¹é—®é¢˜
 	// MyFuncPointType myFuncPointType = &add;
 
 	MyFuncPointType myFuncPointType = add;
 	int result2 = myFuncPointType(4, 5);
 	printf("%d + %d = %d\n", 4, 5, result2);
 
-	// 3. ¶¨Òåº¯ÊıÖ¸Õë±äÁ¿£¨»á·ÖÅäÄÚ´æ¿Õ¼ä£©
+	// 3. å®šä¹‰å‡½æ•°æŒ‡é’ˆå˜é‡ï¼ˆä¼šåˆ†é…å†…å­˜ç©ºé—´ï¼‰
 	int (*MyFuncPointVar)(int a, int b);
 	MyFuncPointVar = add;
 	int result3 = MyFuncPointVar(7, 9);

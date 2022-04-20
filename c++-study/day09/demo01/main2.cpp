@@ -1,12 +1,12 @@
 /*
- * 1. º¯ÊıÄ£°åµÄµ±º¯Êı²ÎÊı
+ * 1. å‡½æ•°æ¨¡æ¿çš„å½“å‡½æ•°å‚æ•°
 */
 
 #include <iostream>
 
 using namespace std;
 
-// Ê¹ÓÃº¯ÊıÄ£°å£¬ÊµÏÖÊı×éÅÅĞò
+// ä½¿ç”¨å‡½æ•°æ¨¡æ¿ï¼Œå®ç°æ•°ç»„æ’åº
 template <typename T1>
 
 void arraySort(T1* array, int size, bool asc = true) {
@@ -17,7 +17,7 @@ void arraySort(T1* array, int size, bool asc = true) {
     T1 tmp;
     for (int i = 0; i < size; i++) {
         for (int j = i + 1; j < size; j++) {
-            // ÉıĞòÅÅĞò£¨´ÓĞ¡µ½´ó£©
+            // å‡åºæ’åºï¼ˆä»å°åˆ°å¤§ï¼‰
             if (asc) {
                 if (array[i] > array[j]) {
                     tmp = array[i];
@@ -25,7 +25,7 @@ void arraySort(T1* array, int size, bool asc = true) {
                     array[j] = tmp;
                 }
             }
-            // ½µĞòÅÅĞò£¨´Ó´óµ½Ğ¡£©
+            // é™åºæ’åºï¼ˆä»å¤§åˆ°å°ï¼‰
             else {
                 if (array[i] < array[j]) {
                     tmp = array[i];
@@ -37,7 +37,7 @@ void arraySort(T1* array, int size, bool asc = true) {
     }
 }
 
-// Ê¹ÓÃº¯ÊıÄ£°å£¬´òÓ¡Êı×é
+// ä½¿ç”¨å‡½æ•°æ¨¡æ¿ï¼Œæ‰“å°æ•°ç»„
 template <typename T2>
 
 void printArray(T2* array, int size) {
@@ -51,12 +51,12 @@ int main() {
     int array[] = { 32, 16, 29, 9, 43, 53, 23 };
     int size = sizeof(array) / sizeof(*array);
 
-    cout << "ÅÅĞòÖ®Ç°: ";
+    cout << "æ’åºä¹‹å‰: ";
     printArray<int>(array, size);
 
     arraySort<int>(array, size, false);
 
-    cout << "ÅÅĞòÖ®ºó: ";
+    cout << "æ’åºä¹‹å: ";
     printArray<int>(array, size);
 
     cout << "------------------------------" << endl;
@@ -64,12 +64,12 @@ int main() {
     char array2[] = { 'c', 'z', 'h', 'i', 'q', 'm' };
     int size2 = sizeof(array2) / sizeof(*array2);
 
-    cout << "ÅÅĞòÖ®Ç°: ";
+    cout << "æ’åºä¹‹å‰: ";
     printArray<char>(array2, size2);
 
     arraySort<char>(array2, size2);
 
-    cout << "ÅÅĞòÖ®ºó: ";
+    cout << "æ’åºä¹‹å: ";
     printArray<char>(array2, size2);
 
     return 0;

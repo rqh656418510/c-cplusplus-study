@@ -1,6 +1,6 @@
 /*
- * 1. �쳣��������
- * a) �쳣�ӿڵ�����
+ * 1. 异常处理机制
+ * a) 异常接口的声明
 */
 
 #include <iostream>
@@ -13,17 +13,17 @@ class C {};
 class D {};
 class F {};
 
-// �ܹ���ֻ���׳����� A��B��C��D ���������͵��쳣
+// 能够且只能抛出类型 A、B、C、D 及其子类型的异常
 void funcA() throw (A, B, C, D) {
 	throw A();
 }
 
-// �����׳��κ����͵��쳣
+// 不能抛出任何类型的异常
 void funcB() throw() {
 
 }
 
-// �����׳��κ����͵��쳣
+// 可以抛出任何类型的异常
 void funcC() {
 	throw B();
 }
@@ -33,7 +33,7 @@ int main() {
 		funcA();
 	}
 	catch (...) {
-		cout << "�����쳣 ..." << endl;
+		cout << "发生异常 ..." << endl;
 	}
 	return 0;
 }

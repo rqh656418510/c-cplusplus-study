@@ -2,7 +2,7 @@
 
 #include "define.h"
 
-// ³éÏóÀà£¨½Ó¿ÚÀà£©
+// æŠ½è±¡ç±»ï¼ˆæ¥å£ç±»ï¼‰
 class CSocketProtocol {
 
 public:
@@ -11,21 +11,21 @@ public:
 
 	}
 
-	// ĞéÎö¹¹º¯Êı
+	// è™šææ„å‡½æ•°
 	virtual ~CSocketProtocol() {
 
 	}
 
-	// ¿Í»§¶Ë³õÊ¼»¯
+	// å®¢æˆ·ç«¯åˆå§‹åŒ–
 	virtual int cltSocketInit( /*out*/) = 0;
 
-	// ¿Í»§¶Ë·¢±¨ÎÄ
+	// å®¢æˆ·ç«¯å‘æŠ¥æ–‡
 	virtual int cltSocketSend(unsigned char* buf /*in*/, int buflen /*in*/) = 0;
 
-	// ¿Í»§¶ËÊÕ±¨ÎÄ
+	// å®¢æˆ·ç«¯æ”¶æŠ¥æ–‡
 	virtual int cltSocketRev(unsigned char* buf /*in*/, int* buflen /*in out*/) = 0;
 
-	// ¿Í»§¶ËÊÍ·Å×ÊÔ´
+	// å®¢æˆ·ç«¯é‡Šæ”¾èµ„æº
 	virtual int cltSocketDestory() = 0;
 
 };

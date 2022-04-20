@@ -17,33 +17,33 @@ public:
 	~MyString();
 
 public:
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "[]" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "[]" è¿ç®—ç¬¦
 	char& operator[](int index);
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "=" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "=" è¿ç®—ç¬¦
 	MyString& operator=(const char* p);
 	MyString& operator=(const MyString& str);
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "==" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "==" è¿ç®—ç¬¦
 	bool operator==(const char* p) const;
 	bool operator==(const MyString str) const;
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "!=" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "!=" è¿ç®—ç¬¦
 	bool operator!=(const char* p) const;
 	bool operator!=(const MyString str) const;
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ ">" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ ">" è¿ç®—ç¬¦
 	bool operator>(const char* p) const;
 	bool operator>(const MyString str) const;
 
-	// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "<" ÔËËã·û
+	// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "<" è¿ç®—ç¬¦
 	bool operator<(const char* p) const;
 	bool operator<(const MyString str) const;
 
-	// Ê¹ÓÃÓÑÔªº¯ÊıÖØÔØ "<<" ÔËËã·û
+	// ä½¿ç”¨å‹å…ƒå‡½æ•°é‡è½½ "<<" è¿ç®—ç¬¦
 	friend ostream& operator<<(ostream& out, MyString& str);
 
-	// Ê¹ÓÃÓÑÔªº¯ÊıÖØÔØ ">>" ÔËËã·û
+	// ä½¿ç”¨å‹å…ƒå‡½æ•°é‡è½½ ">>" è¿ç®—ç¬¦
 	friend iostream& operator>>(iostream& in, MyString& str);
 
 public:

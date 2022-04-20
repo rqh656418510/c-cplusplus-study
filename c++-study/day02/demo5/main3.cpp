@@ -1,5 +1,5 @@
 /**
- * 1. C++ÖÐµÄº¯ÊýÖØÔØÓëº¯ÊýÖ¸Õë
+ * 1. C++ä¸­çš„å‡½æ•°é‡è½½ä¸Žå‡½æ•°æŒ‡é’ˆ
  */
 
 #include <iostream>
@@ -19,19 +19,19 @@ int func(const char *s) {
     return strlen(s);
 }
 
-// µÚÒ»ÖÖÐ´·¨£ºÉùÃ÷º¯ÊýÀàÐÍ
+// ç¬¬ä¸€ç§å†™æ³•ï¼šå£°æ˜Žå‡½æ•°ç±»åž‹
 typedef int (FUNC)(int a);
 
-// µÚ¶þÖÖÐ´·¨£ºÉùÃ÷º¯ÊýÖ¸ÕëÀàÐÍ
+// ç¬¬äºŒç§å†™æ³•ï¼šå£°æ˜Žå‡½æ•°æŒ‡é’ˆç±»åž‹
 typedef int(*PFUNC)(int a, int b);
 
 int main() {
-    // ¸ù¾ÝÉÏÃæµÄµÚÒ»ÖÖÐ´·¨£¬¶¨Òåº¯ÊýÖ¸ÕëÀàÐÍµÄ±äÁ¿
+    // æ ¹æ®ä¸Šé¢çš„ç¬¬ä¸€ç§å†™æ³•ï¼Œå®šä¹‰å‡½æ•°æŒ‡é’ˆç±»åž‹çš„å˜é‡
     FUNC *FUNC = func;
     int c = FUNC(1);
     printf("c = %d\n", c);
 
-    // ¸ù¾ÝÉÏÃæµÄµÚ¶þÖÖÐ´·¨£¬¶¨Òåº¯ÊýÖ¸ÕëÀàÐÍµÄ±äÁ¿
+    // æ ¹æ®ä¸Šé¢çš„ç¬¬äºŒç§å†™æ³•ï¼Œå®šä¹‰å‡½æ•°æŒ‡é’ˆç±»åž‹çš„å˜é‡
     PFUNC p = func;
     int d = p(3, 4);
     printf("d = %d\n", d);

@@ -1,11 +1,11 @@
 /*
- * 1. Í¨¹ıº¯ÊıÖ¸ÕëÀàĞÍ£¬¶¯Ì¬µ÷ÓÃDLLÀïµÄAPIº¯Êı£¨¶¯Ì¬¼ÓÔØDLL£©
+ * 1. é€šè¿‡å‡½æ•°æŒ‡é’ˆç±»å‹ï¼ŒåŠ¨æ€è°ƒç”¨DLLé‡Œçš„APIå‡½æ•°ï¼ˆåŠ¨æ€åŠ è½½DLLï¼‰
 */
 
 #include <stdio.h>
 #include <windows.h>
 
-// ¶¨Òåº¯ÊıÖ¸ÕëÀàĞÍ
+// å®šä¹‰å‡½æ•°æŒ‡é’ˆç±»å‹
 typedef int (*SocketInit)(void** handle);
 typedef int (*SocketSend)(void* handle, unsigned char* buf, int buflen);
 typedef int (*SocketRev)(void* handle, unsigned char* buf, int* buflen);
@@ -15,15 +15,15 @@ int main() {
 
 	HINSTANCE hInstance;
 
-	// ¼ÓÔØDLL¶¯Ì¬Á´½Ó¿â
+	// åŠ è½½DLLåŠ¨æ€é“¾æ¥åº“
 	hInstance = LoadLibrary("./socket-client.dll");
 	if (hInstance == NULL)
 	{
-		printf("LoadLibrary() µ÷ÓÃÊ§°Ü, ErrorCode: %d", GetLastError());
+		printf("LoadLibrary() è°ƒç”¨å¤±è´¥, ErrorCode: %d", GetLastError());
 		return -1;
 	}
 
-	// µ÷ÓÃDLL¶¯Ì¬Á´½Ó¿â
+	// è°ƒç”¨DLLåŠ¨æ€é“¾æ¥åº“
 	SocketInit socketInit = (SocketInit)GetProcAddress(hInstance, "socketclient_init");
 	SocketSend socketSend = (SocketSend)GetProcAddress(hInstance, "socketclient_send");
 	SocketRev socketRev = (SocketRev)GetProcAddress(hInstance, "socketclient_recv");
@@ -50,7 +50,7 @@ int main() {
 	printf("revResult = %d\n", revResult);
 	printf("destoryResult = %d\n", destoryResult);
 
-	// ÊÍ·ÅDLL¶¯Ì¬Á´½Ó¿â
+	// é‡Šæ”¾DLLåŠ¨æ€é“¾æ¥åº“
 	if (hInstance != NULL) {
 		FreeLibrary(hInstance);
 	}

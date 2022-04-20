@@ -1,6 +1,6 @@
 #include "Teacher.h"
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 Teacher::Teacher() {
 	this->m_age = 0;
 	this->m_name = (char*)malloc(1);
@@ -9,7 +9,7 @@ Teacher::Teacher() {
 	}
 }
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 Teacher::Teacher(int age, const char* name) {
 	this->m_age = age;
 	this->m_name = (char*)malloc(strlen(name) + 1);
@@ -18,9 +18,9 @@ Teacher::Teacher(int age, const char* name) {
 	}
 }
 
-// ¿½±´¹¹Ôìº¯Êı
+// æ‹·è´æ„é€ å‡½æ•°
 Teacher::Teacher(const Teacher& obj) {
-	// Éî¿½±´
+	// æ·±æ‹·è´
 	this->m_age = obj.m_age;
 	this->m_name = (char*)malloc(strlen(obj.m_name) + 1);
 	if (this->m_name) {
@@ -28,21 +28,21 @@ Teacher::Teacher(const Teacher& obj) {
 	}
 }
 
-// Îö¹¹º¯Êı
+// ææ„å‡½æ•°
 Teacher::~Teacher() {
 	if (this->m_name) {
 		free(this->m_name);
 	}
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯Êı£¬ÖØÔØÔËËã·û "="
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "="
 Teacher& Teacher::operator=(const Teacher& obj) {
-	// ÊÍ·ÅÔ­±¾µÄÄÚ´æ¿Õ¼ä
+	// é‡Šæ”¾åŸæœ¬çš„å†…å­˜ç©ºé—´
 	if (this->m_name) {
 		free(this->m_name);
 		this->m_name = NULL;
 	}
-	// Éî¿½±´
+	// æ·±æ‹·è´
 	this->m_age = obj.m_age;
 	this->m_name = (char*)malloc(strlen(obj.m_name) + 1);
 	if (this->m_name) {
@@ -51,7 +51,7 @@ Teacher& Teacher::operator=(const Teacher& obj) {
 	return *this;
 }
 
-// Ê¹ÓÃÓÑÔªº¯Êı£¬ÖØÔØÔËËã·û "<<"
+// ä½¿ç”¨å‹å…ƒå‡½æ•°ï¼Œé‡è½½è¿ç®—ç¬¦ "<<"
 ostream& operator<<(ostream& out, Teacher& obj) {
 	cout << "age = " << obj.m_age << " name = " << obj.m_name;
 	return out;
@@ -70,12 +70,12 @@ void Teacher::setAge(int age) {
 }
 
 void Teacher::setName(const char* name) {
-	// ÊÍ·ÅÔ­±¾µÄÄÚ´æ¿Õ¼ä
+	// é‡Šæ”¾åŸæœ¬çš„å†…å­˜ç©ºé—´
 	if (this->m_name) {
 		free(this->m_name);
 		this->m_name = NULL;
 	}
-	// Éî¿½±´
+	// æ·±æ‹·è´
 	this->m_name = (char*)malloc(strlen(name) + 1);
 	if (this->m_name) {
 		strcpy(this->m_name, name);

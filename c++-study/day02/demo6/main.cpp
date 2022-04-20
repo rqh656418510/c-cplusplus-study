@@ -1,5 +1,5 @@
 /**
- * 1. C++ÖĞµÄÀàµÄ·â×°
+ * 1. C++ä¸­çš„ç±»çš„å°è£…
  */
 
 #include <iostream>
@@ -9,8 +9,8 @@ using namespace std;
 class Circle {
 
 private:
-    double m_r; // Ô²ĞÎµÄ°ë¾¶
-    double m_s; // Ô²ĞÎµÄÃæ»ı
+    double m_r; // åœ†å½¢çš„åŠå¾„
+    double m_s; // åœ†å½¢çš„é¢ç§¯
 
 public:
     void setR(double r) {
@@ -30,11 +30,11 @@ public:
 
 int main() {
     double r;
-    cout << "ÇëÊäÈëÔ²ĞÎµÄ°ë¾¶£º";
+    cout << "è¯·è¾“å…¥åœ†å½¢çš„åŠå¾„ï¼š";
     cin >> r;
 
     Circle circle;
     circle.setR(r);
-    cout << "Ô²ĞÎµÄÃæ»ıÊÇ£º" << circle.getS() << endl;
+    cout << "åœ†å½¢çš„é¢ç§¯æ˜¯ï¼š" << circle.getS() << endl;
     return 0;
 }

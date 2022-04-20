@@ -1,16 +1,16 @@
 /*
- * 1. ÀàÄ£°åÓëÅÉÉúÀà
- * a) ÆÕÍ¨Àà¼Ì³ÐÀàÄ£°å
+ * 1. ç±»æ¨¡æ¿ä¸Žæ´¾ç”Ÿç±»
+ * a) æ™®é€šç±»ç»§æ‰¿ç±»æ¨¡æ¿
 */
 
 #include <iostream>
 
 using namespace std;
 
-// Ä£°åÉùÃ÷
+// æ¨¡æ¿å£°æ˜Ž
 template <typename T>
 
-// Àà¶¨Òå
+// ç±»å®šä¹‰
 class A {
 
 public:
@@ -28,7 +28,7 @@ public:
 
 };
 
-// ÆÕÍ¨Àà¼Ì³ÐÀàÄ£°å£¬ÐèÒªÉùÃ÷¾ßÌåµÄÀàÐÍ£¨Ä£°å²ÎÊýÁÐ±í£©£¬ÕâÀïµÄ <int> ²»ÄÜÊ¡ÂÔ
+// æ™®é€šç±»ç»§æ‰¿ç±»æ¨¡æ¿ï¼Œéœ€è¦å£°æ˜Žå…·ä½“çš„ç±»åž‹ï¼ˆæ¨¡æ¿å‚æ•°åˆ—è¡¨ï¼‰ï¼Œè¿™é‡Œçš„ <int> ä¸èƒ½çœç•¥
 class B : public A<int> {
 
 public:

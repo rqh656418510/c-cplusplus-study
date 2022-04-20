@@ -1,5 +1,5 @@
 /*
- * 1. ÈİÆ÷³õÊ¶£¨´æ·Å×Ô¶¨ÒåÊı¾İÀàĞÍµÄÖ¸Õë£©
+ * 1. å®¹å™¨åˆè¯†ï¼ˆå­˜æ”¾è‡ªå®šä¹‰æ•°æ®ç±»å‹çš„æŒ‡é’ˆï¼‰
 */
 
 #include <iostream>
@@ -30,18 +30,18 @@ private:
 };
 
 int main() {
-    // ¶¨ÒåÈİÆ÷
+    // å®šä¹‰å®¹å™¨
     vector<Person *> v;
 
-    // ²åÈëÊı¾İ
+    // æ’å…¥æ•°æ®
     v.push_back(new Person(23, "Jim"));
     v.push_back(new Person(26, "Tom"));
     v.push_back(new Person(29, "Peter"));
 
-    // ±éÀúÈİÆ÷
+    // éå†å®¹å™¨
     for (vector<Person *>::iterator it = v.begin(); it != v.end(); it++) {
         cout << "age = " << (*it)->getAge() << ", name = " << (*it)->getName() << endl;
-        // »òÕß
+        // æˆ–è€…
         // cout << "age = " << (**it).getAge() << ", name = " << (**it).getName() << endl;
     }
     return 0;

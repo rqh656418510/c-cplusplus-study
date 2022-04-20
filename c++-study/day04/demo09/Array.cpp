@@ -1,7 +1,7 @@
 #include "Array.h"
 
 Array::Array(int length) {
-	cout << "ÓĞ²Î¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
+	cout << "æœ‰å‚æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
 	if (length < 0) {
 		length = 0;
 	}
@@ -10,8 +10,8 @@ Array::Array(int length) {
 }
 
 Array::Array(const Array& array) {
-	cout << "¿½±´¹¹Ôìº¯Êı±»µ÷ÓÃ" << endl;
-	// Éî¿½±´£¬µ¥¶À·ÖÅäÄÚ´æ¿Õ¼ä
+	cout << "æ‹·è´æ„é€ å‡½æ•°è¢«è°ƒç”¨" << endl;
+	// æ·±æ‹·è´ï¼Œå•ç‹¬åˆ†é…å†…å­˜ç©ºé—´
 	this->m_length = array.m_length;
 	this->m_space = new int[array.m_length];
 	for (int i = 0; i < array.m_length; i++) {
@@ -20,7 +20,7 @@ Array::Array(const Array& array) {
 }
 
 Array::~Array() {
-	cout << "Îö¹¹º¯Êı±»µ÷ÓÃ" << endl;
+	cout << "ææ„å‡½æ•°è¢«è°ƒç”¨" << endl;
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;
@@ -28,19 +28,19 @@ Array::~Array() {
 	}
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "[]" Êı×éÏÂ±êÔËËã·û£¬ÓÃÓÚÊı×éÔªËØµÄ¸³ÖµºÍÈ¡Öµ
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "[]" æ•°ç»„ä¸‹æ ‡è¿ç®—ç¬¦ï¼Œç”¨äºæ•°ç»„å…ƒç´ çš„èµ‹å€¼å’Œå–å€¼
 int& Array::operator[](int index) {
 	return this->m_space[index];
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "=" ÔËËã·û£¬ÓÃÓÚÊı×éÖ®¼äµÄ¸³Öµ
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "=" è¿ç®—ç¬¦ï¼Œç”¨äºæ•°ç»„ä¹‹é—´çš„èµ‹å€¼
 Array& Array::operator=(const Array& array) {
 	if (this->m_space != NULL) {
 		delete[] this->m_space;
 		this->m_space = NULL;
 		this->m_length = 0;
 	}
-	// Éî¿½±´£¬µ¥¶À·ÖÅäÄÚ´æ¿Õ¼ä
+	// æ·±æ‹·è´ï¼Œå•ç‹¬åˆ†é…å†…å­˜ç©ºé—´
 	this->m_length = array.m_length;
 	this->m_space = new int[array.m_length];
 	for (int i = 0; i < array.m_length; i++) {
@@ -49,7 +49,7 @@ Array& Array::operator=(const Array& array) {
 	return *this;
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "==" ÔËËã·û£¬ÅĞ¶ÏÁ½¸öÊı×éÊÇ·ñÏàÍ¬
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "==" è¿ç®—ç¬¦ï¼Œåˆ¤æ–­ä¸¤ä¸ªæ•°ç»„æ˜¯å¦ç›¸åŒ
 bool Array::operator==(const Array& array) {
 	if (this->m_length != array.m_length) {
 		return false;
@@ -62,7 +62,7 @@ bool Array::operator==(const Array& array) {
 	return true;
 }
 
-// Ê¹ÓÃÀà³ÉÔ±º¯ÊıÖØÔØ "!=" ÔËËã·û£¬ÅĞ¶ÏÁ½¸öÊı×éÊÇ·ñ²»ÏàÍ¬
+// ä½¿ç”¨ç±»æˆå‘˜å‡½æ•°é‡è½½ "!=" è¿ç®—ç¬¦ï¼Œåˆ¤æ–­ä¸¤ä¸ªæ•°ç»„æ˜¯å¦ä¸ç›¸åŒ
 bool Array::operator!=(const Array& array) {
 	return !(*this == array);
 }

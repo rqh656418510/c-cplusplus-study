@@ -2,14 +2,14 @@
 
 #include "CEncDesProtocol.h"
 
-// 华为的加密解密实现类
+// 鍗庝负鐨勫姞瀵嗚В瀵嗗疄鐜扮被
 class CHwEncDec : public CEncDesProtocol {
 
 public:
-	// 编码数据
+	// 缂栫爜鏁版嵁
 	virtual int EncData(unsigned char* plain, int plainlen, unsigned char* cryptdata, int* cryptlen);
 
-	// 解码数据
+	// 瑙ｇ爜鏁版嵁
 	virtual int DecData(unsigned char* cryptdata, int cryptlen, unsigned char* plain, int* plainlen);
 
 };
