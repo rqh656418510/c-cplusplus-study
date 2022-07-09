@@ -60,10 +60,5 @@ int main() {
     v8.swap(v7);
     printVector(v8);
 
-    // 初始化匿名对象
-    vector<int>(v9);
-    v9.assign(5, 7);
-    printVector(v9);
-
     return 0;
 }
