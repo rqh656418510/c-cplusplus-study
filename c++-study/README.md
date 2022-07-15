@@ -93,6 +93,7 @@
     ├── demo02          string容器的使用
     ├── demo03          vector容器的使用
     ├── demo04          deque容器的使用
+    ├── demo05          stack容器的使用
 ```
 
 ## 常用命令
