@@ -16,6 +16,10 @@ void printDeque(const deque<int> &d) {
     cout << endl;
 }
 
+bool descCompare(const int a, const int b) {
+    return a > b;
+}
+
 void asc() {
     deque<int> d1;
     d1.push_back(3);
@@ -46,11 +50,12 @@ void desc() {
     printDeque(d1);
 
     // 降序排序，默认从大到小排序
-    sort(d1.rbegin(), d1.rend());
+    sort(d1.begin(), d1.end(), descCompare);
 
     cout << "降序排序后：" << endl;
     printDeque(d1);
 }
+
 
 int main() {
     asc();  // 升序排序
