@@ -2,8 +2,8 @@
  * 1. queue容器的常用操作
 */
 
-#include<iostream>
-#include<queue>
+#include <iostream>
+#include <queue>
 
 using namespace std;
 

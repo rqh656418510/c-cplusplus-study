@@ -2,8 +2,8 @@
  * 1. stack容器的常用操作
 */
 
-#include<iostream>
-#include<stack>
+#include <iostream>
+#include <stack>
 
 using namespace std;
 

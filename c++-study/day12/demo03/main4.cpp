@@ -2,8 +2,8 @@
  * 1. vector 容器预留空间
 */
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
