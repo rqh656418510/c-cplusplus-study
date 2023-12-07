@@ -26,7 +26,7 @@ int main() {
     list<int> myList2(5, 10);
     printList(myList2);
 
-    // 有参构造函数，将 [begin(), end()] 区间中的元素拷贝给本身
+    // 有参构造函数，将 [begin, end) 区间中的元素拷贝给本身
     list<int> myList3(myList2.begin(), myList2.end());
     printList(myList3);
 
@@ -36,7 +36,7 @@ int main() {
 
     cout << "------ list 赋值操作 ------" << endl;
 
-    // 赋值操作，将 [begin(), end()] 区间中的元素拷贝给本身
+    // 赋值操作，将 [begin, end) 区间中的元素拷贝给本身
     list<int> myList5;
     myList5.assign(myList2.begin(), myList2.end());
     printList(myList5);
