@@ -1,5 +1,5 @@
 /*
- * 1. list容器的常用操作
+ * 1. list容器的构造与赋值
 */
 
 #include <iostream>
