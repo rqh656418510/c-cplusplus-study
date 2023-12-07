@@ -16,12 +16,19 @@ public:
         this->age = age;
     }
 
+    // 获取名称
     string getName() {
         return this->name;
     }
 
+    // 获取年龄
     int getAge() {
         return this->age;
+    }
+
+    // 重载 == 双等号操作符
+    bool operator==(const Person &p) {
+        return this->name == p.name && this->age == p.age;
     }
 
 private:
@@ -48,16 +55,25 @@ int main() {
     Person p1("Tom", 17);
     Person p2("Jim", 18);
     Person p3("Peter", 19);
+    Person p4("David", 20);
 
     cout << "------ list 插入操作（自定义数据类型） ------" << endl;
 
     myList.push_back(p1);
     myList.push_back(p2);
     myList.push_back(p3);
+    myList.push_back(p4);
+    printList(myList);
+
+    cout << "------ list 删除操作（自定义数据类型） ------" << endl;
+
+    // 自定义数据类型必须重载 == 双等号操作符，否则 remove() 函数无法移除 list 容器中的元素
+    myList.remove(p3);
     printList(myList);
 
     cout << "------ list 排序操作（自定义数据类型） ------" << endl;
 
+    // 对 list 的自定义类型数据类型进行排序，必须指定排序规则
     myList.sort(myCompare);
     printList(myList);
 
