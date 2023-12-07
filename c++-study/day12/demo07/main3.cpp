@@ -8,6 +8,7 @@
 using namespace std;
 
 void printList(list<int> &L) {
+    // 遍历容器
     for (list<int>::iterator it = L.begin(); it != L.end(); it++) {
         cout << *it << " ";
     }
@@ -15,6 +16,7 @@ void printList(list<int> &L) {
 }
 
 bool myCompare(int v1, int v2) {
+    // 从大到小排序
     return v1 > v2;
 }
 
