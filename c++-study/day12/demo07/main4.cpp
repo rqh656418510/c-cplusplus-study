@@ -67,13 +67,13 @@ int main() {
 
     cout << "------ list 删除操作（自定义数据类型） ------" << endl;
 
-    // 自定义数据类型必须重载 == 双等号操作符，否则 remove() 函数无法移除 list 容器中的元素
+    // 调用 remove() 函数移除 list 容器中的元素时，自定义数据类型必须重载 `==` 双等号操作符，否则移除操作会执行失败
     myList.remove(p3);
     printList(myList);
 
     cout << "------ list 排序操作（自定义数据类型） ------" << endl;
 
-    // 对 list 的自定义类型数据类型进行排序，必须指定排序规则
+    // 对 list 的自定义类型数据类型进行排序时，必须指定排序规则
     myList.sort(myCompare);
     printList(myList);
 
