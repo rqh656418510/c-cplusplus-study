@@ -55,6 +55,32 @@ int main() {
         cout << "note found lower_bound(8) result" << endl;
     }
 
+    // 返回第一个 key > keyElem 元素的迭代器，若不存在，则返回 set.end() 迭代器
+    set<int>::iterator pos3 = s1.upper_bound(8);
+    if (pos3 != s1.end()) {
+        cout << "found upper_bound(8) result is " << *pos3 << endl;
+    }
+    else {
+        cout << "note found upper_bound(8) result" << endl;
+    }
+
+    // 返回容器中 key 与 keyElem 相等的上下限的两个迭代器(即上限是 lower_bound，下限是 upper_bound)，若不存在，则返回 set.end() 迭代器
+    pair<set<int>::iterator, set<int>::iterator> result = s1.equal_range(8);
+    // 获取第一个结果值
+    if (result.first != s1.end()) {
+        cout << "found equal_range(8) first result is " << *result.first << endl;
+    }
+    else {
+        cout << "note found equal_range(8) first result" << endl;
+    }
+    // 获取第二个结果值
+    if (result.second != s1.end()) {
+        cout << "found equal_range(8) second result is " << *result.second << endl;
+    }
+    else {
+        cout << "note found equal_range(8) second result" << endl;
+    }
+
     cout << "------ set 删除操作 ------" << endl;
 
     // 删除迭代器所指的元素，返回下一个元素的迭代器
