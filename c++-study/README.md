@@ -96,6 +96,7 @@
     ├── demo05          stack容器的使用
     ├── demo06          queue容器的使用
     ├── demo07          list容器的使用
+    ├── demo08          set/multiset容器的使用
 ```
 
 ## 常用命令
