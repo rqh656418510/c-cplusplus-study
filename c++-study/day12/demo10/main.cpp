@@ -27,10 +27,13 @@ private:
     string name;
 };
 
+// 仿函数
 class StuFunctor {
 
 public:
+    // 重载
     bool operator()(const CStudent &stu1, const CStudent &stu2) {
+        // 排序规则
         return stu1.getId() > stu2.getId();
     }
 
@@ -44,7 +47,6 @@ void printSet(set<CStudent, StuFunctor> &s) {
 }
 
 int main() {
-    // 往 set 容器插入自定义数据类型，并通过仿函数让 set 容器使用自定义的排序规则
     set<CStudent, StuFunctor> setStu;
     setStu.insert(CStudent(3, "小张"));
     setStu.insert(CStudent(1, "小李"));
