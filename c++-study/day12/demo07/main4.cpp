@@ -17,12 +17,12 @@ public:
     }
 
     // 获取名称
-    string getName() {
+    string getName() const {
         return this->name;
     }
 
     // 获取年龄
-    int getAge() {
+    int getAge() const {
         return this->age;
     }
 
