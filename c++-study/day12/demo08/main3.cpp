@@ -47,6 +47,7 @@ int main() {
     set<int> s1;
 
     pair<set<int>::iterator, bool> result = s1.insert(10);
+    // 判断是否插入成功
     if (result.second) {
         cout << "insert success" << endl;
     } else {
@@ -54,6 +55,7 @@ int main() {
     }
 
     result = s1.insert(10);
+    // 判断是否插入成功
     if (result.second) {
         cout << "insert success" << endl;
     } else {
