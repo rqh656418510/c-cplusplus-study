@@ -11,7 +11,7 @@ using namespace std;
 class myCustomCompare {
 public:
     // 重载
-    bool operator()(int v1, int v2) {
+    bool operator()(const int &v1, const int &v2) {
         // 排序规则
         return v1 > v2;
     }

@@ -98,6 +98,7 @@
     ├── demo07          list 容器的使用
     ├── demo08          set / multiset 容器的使用
     ├── demo09          pair 对组的使用
+    ├── demo010         仿函数（伪函数）的使用
 ```
 
 ## 常用命令

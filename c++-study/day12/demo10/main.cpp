@@ -1,0 +1,55 @@
+/*
+ * 1. 仿函数（伪函数）的使用
+*/
+
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+class CStudent {
+public:
+    CStudent(int id, string name) {
+        this->id = id;
+        this->name = name;
+    }
+
+    int getId() const {
+        return this->id;
+    }
+
+    string getName() const {
+        return this->name;
+    }
+
+private:
+    int id;
+    string name;
+};
+
+class StuFunctor {
+
+public:
+    bool operator()(const CStudent &stu1, const CStudent &stu2) {
+        return stu1.getId() > stu2.getId();
+    }
+
+};
+
+void printSet(set<CStudent, StuFunctor> &s) {
+    // 遍历容器
+    for (set<CStudent, StuFunctor>::iterator it = s.begin(); it != s.end(); it++) {
+        cout << "id: " << it->getId() << ", name: " << it->getName() << endl;
+    }
+}
+
+int main() {
+    // 往 set 容器插入自定义数据类型，并通过仿函数让 set 容器使用自定义的排序规则
+    set<CStudent, StuFunctor> setStu;
+    setStu.insert(CStudent(3, "小张"));
+    setStu.insert(CStudent(1, "小李"));
+    setStu.insert(CStudent(5, "小王"));
+    setStu.insert(CStudent(2, "小刘"));
+    printSet(setStu);
+    return 0;
+}
