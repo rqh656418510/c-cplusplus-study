@@ -2,20 +2,20 @@
 
 ```
 └── day01
-    ├── demo01          第一个C++程序
+    ├── demo01          第一个 C++ 程序
     ├── demo02          计算圆形的面积，采用面向过程的编程方式
     ├── demo03          计算圆形的面积，采用面向对象的编程方式
     ├── demo04          命名空间定义及使用语法
-    ├── demo05          C++对C语言的增强
-    ├── demo06          C++中的const关键字
-    └── demo07          C++中的引用之引用作函数参数
+    ├── demo05          C++ 对 C 语言的增强
+    ├── demo06          C++ 中的 const 关键字
+    └── demo07          C++ 中的引用之引用作函数参数
 └── day02
-    ├── demo01          C++中的引用之指针引用
-    ├── demo02          C++中的引用之常引用
-    ├── demo03          C++中的内联函数
-    ├── demo04          C++中的默认参数
-    ├── demo05          C++中的函数重载
-    ├── demo06          C++中的类的封装
+    ├── demo01          C++ 中的引用之指针引用
+    ├── demo02          C++ 中的引用之常引用
+    ├── demo03          C++ 中的内联函数
+    ├── demo04          C++ 中的默认参数
+    ├── demo05          C++ 中的函数重载
+    ├── demo06          C++ 中的类的封装
     ├── demo07          类的声明与类的实现分开写
 └── day03
     ├── demo01          构造函数与析构函数的使用
@@ -24,7 +24,7 @@
     ├── demo04          构造函数的初始化列表
     ├── demo05          对象的动态建立和释放
     ├── demo06          静态成员变量和静态成员函数
-    ├── demo07          C++面向对象模型初探
+    ├── demo07          C++ 面向对象模型初探
 └── day04
     ├── demo01          全局函数与成员函数的使用
     ├── demo02          强化训练使用数组类、类的封装
@@ -67,8 +67,8 @@
     ├── demo04          函数指针做函数参数
     ├── demo05          通过函数指针类型，动态调用DLL里的API函数（动态加载DLL）
     ├── demo06          unique_ptr 对象（智能指针）的使用
-    ├── demo07          Map集合的使用
-    ├── demo08          atomic原子操作
+    ├── demo07          Map 集合的使用
+    ├── demo08          atomic 原子操作
     ├── demo09          日期处理，包括格式化当前日期、计算两个日期之间的天数
  └── day09
     ├── demo01          函数模板的使用
@@ -90,14 +90,14 @@
     ├── demo01          C++ 常见的日期和字符串处理
 └── day12
     ├── demo01          容器初识
-    ├── demo02          string容器的使用
-    ├── demo03          vector容器的使用
-    ├── demo04          deque容器的使用
-    ├── demo05          stack容器的使用
-    ├── demo06          queue容器的使用
-    ├── demo07          list容器的使用
-    ├── demo08          set/multiset容器的使用
-    ├── demo09          pair对组的使用
+    ├── demo02          string 容器的使用
+    ├── demo03          vector 容器的使用
+    ├── demo04          deque 容器的使用
+    ├── demo05          stack 容器的使用
+    ├── demo06          queue 容器的使用
+    ├── demo07          list 容器的使用
+    ├── demo08          set / multiset 容器的使用
+    ├── demo09          pair 对组的使用
 ```
 
 ## 常用命令
