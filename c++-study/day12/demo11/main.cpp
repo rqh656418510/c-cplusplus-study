@@ -27,7 +27,7 @@ int main() {
 
     // 第一种方式遍历 map 集合
     for (map<int, int>::iterator it = m.begin(); it != m.end(); it++) {
-        cout << "key = " << it->first << " , " << it->second << endl;
+        cout << "key: " << it->first << " , value: " << it->second << endl;
     }
 
     // 第二种方式遍历 map 集合
@@ -67,6 +67,21 @@ int main() {
         cout << "found result for upper_bound(3), key: " << result2->first << ", value: " << result2->second << endl;
     } else {
         cout << "not found result for upper_bound(3)";
+    }
+
+    // 返回容器中 key 与 keyElem 相等的上下限的两个容器
+    pair<map<int, int>::iterator, map<int, int>::iterator> result3 = m.equal_range(3);
+    // 上限的容器
+    if (result3.first != m.end()) {
+        cout << "found lower_bound for equal_range(3), key: " << result3.first->first << ", value: " << result3.first->second << endl;
+    } else {
+        cout << "not found lower_bound for equal_range(3)" << endl;
+    }
+    // 下限的容器
+    if (result3.second != m.end()) {
+        cout << "found upper_bound for equal_range(3), key: " << result3.second->first << ", value: " << result3.second->second << endl;
+    } else {
+        cout << "not found upper_bound for equal_range(3)";
     }
 
     cout << "------ map 删除操作 ------" << endl;
