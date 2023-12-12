@@ -1,5 +1,5 @@
 /*
- * 1. map 容器的使用
+ * 1. map / multimap 容器的使用
 */
 
 #include <iostream>
@@ -25,12 +25,12 @@ int main() {
 
     cout << "------ map 遍历操作 ------" << endl;
 
-    // 第一种方式遍历Map集合
+    // 第一种方式遍历map集合
     for (map<int, int>::iterator it = m.begin(); it != m.end(); it++) {
         cout << "key = " << it->first << " , " << it->second << endl;
     }
 
-    // 第二种方式遍历Map集合
+    // 第二种方式遍历map集合
     for (auto it = m.begin(); it != m.end(); it++) {
         cout << "key = " << it->first << " , value = " << it->second << endl;
     }
