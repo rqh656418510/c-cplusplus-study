@@ -37,25 +37,25 @@ int main() {
 
     cout << "------ map 存取操作 ------" << endl;
 
-    // 获取指定的Key
+    // 获取指定的key
     map<int, int>::iterator item = m.find(5);
     cout << "key = " << item->first << " , value = " << item->second << endl;
 
-    // 第一种方式判断Key是否存在
-    // 如果Key存在，find()函数会返回Key对应的迭代器，如果Key不存在，find()函数会返回尾后迭代器end()
+    // 第一种方式判断key是否存在
+    // 如果key存在，find()函数会返回key对应的迭代器，如果key不存在，find()函数会返回尾后迭代器end()
     if (m.find(100) == m.end()) {
         cout << "key " << 100 << " not exist" << endl;
     }
 
-    // 第二种方式判断Key是否存在
-    // count()函数用于统计Key值在Map中出现的次数，Map的Key是不允许重复的，因此如果Key存在会返回1，不存在会返回0
+    // 第二种方式判断key是否存在
+    // count()函数用于统计key值在map中出现的次数，map的key是不允许重复的，因此如果key存在会返回1，不存在会返回0
     if (m.count(5) == 1) {
         cout << "key " << 5 << " existed" << endl;
     }
 
     cout << "------ map 删除操作 ------" << endl;
 
-    // 删除指定的Key
+    // 删除指定的key
     m.erase(7);
     for (auto it = m.begin(); it != m.end(); it++) {
         cout << "key = " << it->first << " , value = " << it->second << endl;
