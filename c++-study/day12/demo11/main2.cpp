@@ -1,5 +1,5 @@
 /*
- * 1. map / multimap 的排序操作
+ * 1. map 对元素进行排序操作
 */
 
 #include <iostream>
