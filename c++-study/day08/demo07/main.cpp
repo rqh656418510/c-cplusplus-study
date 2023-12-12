@@ -1,65 +1,47 @@
 /*
- * 1. Map集合的使用
+ * 1. atomic原子操作
+ * a) 加锁不使用 Atomic
 */
 
 #include <iostream>
-#include <map>
+#include <ctime>
+#include <mutex>
+#include <vector>
+#include <thread>
 
 using namespace std;
 
-int main() {
-	// 定义Map集合变量
-	map<int, int> m;
+mutex mtx;
+size_t total = 0;
 
-	// 第一种数据插入方式
-	m.insert(pair<int, int>(1, 2));
-	// 第二种数据插入方式（推荐）
-	m.insert(make_pair(3, 4));
-	// 第三种数据插入方式
-	m.insert(map<int, int>::value_type(5, 6));
-	// 第四种数据插入方式
-	m[7] = 8;
+void threadFun()
+{
+	for (int i = 0; i < 1000000; i++)
+	{
+		// 加锁防止多个线程同时访问同一资源
+		unique_lock<mutex> lock(mtx);
+		total++;
+	}
+}
 
-	// 第一种方式遍历Map集合
-	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++) {
-		cout << "key = " << it->first << " , " << it->second << endl;
+int main(void)
+{
+	clock_t start_time = clock();
+
+	// 启动多个线程
+	vector<thread> threads;
+	for (int i = 0; i < 10; i++) {
+		threads.push_back(thread(threadFun));
+	}
+	for (auto& thad : threads) {
+		thad.join();
 	}
 
-	cout << endl;
+	// 检测total是否正确 10000*10 = 100000
+	cout << "total number:" << total << endl;
 
-	// 第二种方式遍历Map集合
-	for (auto it = m.begin(); it != m.end(); it++) {
-		cout << "key = " << it->first << " , value = " << it->second << endl;
-	}
+	clock_t end_time = clock();
+	cout << "耗时：" << end_time - start_time << "ms" << endl;
 
-	cout << endl;
-
-	// 获取指定的Key
-	map<int, int>::iterator item = m.find(5);
-	cout << "key = " << item->first << " , value = " << item->second << endl;
-
-	cout << endl;
-
-	// 第一种方式判断Key是否存在
-	// 如果Key存在，find()函数会返回Key对应的迭代器，如果Key不存在，find()函数会返回尾后迭代器end()
-	if (m.find(100) == m.end()) {
-		cout << "key " << 100 << " not exist" << endl;
-	}
-
-	cout << endl;
-
-	// 第二种方式判断Key是否存在
-	// count()函数用于统计Key值在Map中出现的次数，Map的Key是不允许重复的，因此如果Key存在会返回1，不存在会返回0
-	if (m.count(5) == 1) {
-		cout << "key " << 5 << " existed" << endl;
-	}
-
-	cout << endl;
-
-	// 删除指定的Key
-	m.erase(7);
-	for (auto it = m.begin(); it != m.end(); it++) {
-		cout << "key = " << it->first << " , value = " << it->second << endl;
-	}
-
+	return 0;
 }
