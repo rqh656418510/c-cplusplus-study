@@ -36,13 +36,13 @@ int main() {
     myPrint(2);
 
     // 函数对象调用（使用匿名对象的写法）
-    MyPrint()(2);
+    MyPrint()(3);
 
     // 普通函数调用
-    MyPrint2(3);
+    MyPrint2(4);
 
     // 函数对象作为参数
-    doPrint(myPrint, 4);
+    doPrint(myPrint, 5);
 
     return 0;
 }
