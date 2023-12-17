@@ -1,57 +1,48 @@
 /*
- * 1. 仿函数（伪函数）的使用
+ * 1. 函数对象（仿函数）的简单使用案例
 */
 
 #include <iostream>
-#include <set>
 
 using namespace std;
 
-class CStudent {
-public:
-    CStudent(int id, string name) {
-        this->id = id;
-        this->name = name;
-    }
-
-    int getId() const {
-        return this->id;
-    }
-
-    string getName() const {
-        return this->name;
-    }
-
-private:
-    int id;
-    string name;
-};
-
-// 仿函数
-class StuFunctor {
+// 函数对象
+class MyPrint {
 
 public:
-    // 重载
-    bool operator()(const CStudent &stu1, const CStudent &stu2) {
-        // 排序规则
-        return stu1.getId() > stu2.getId();
+    // 重载 () 操作符
+    void operator()(const int &num) {
+        cout << "num = " << num << endl;
     }
 
 };
 
-void printSet(set<CStudent, StuFunctor> &s) {
-    // 遍历容器
-    for (set<CStudent, StuFunctor>::iterator it = s.begin(); it != s.end(); it++) {
-        cout << "id: " << it->getId() << ", name: " << it->getName() << endl;
-    }
+// 普通函数
+void MyPrint2(int num) {
+    cout << "num2 = " << num << endl;
+}
+
+// 函数对象作为参数
+void doPrint(MyPrint print, int num) {
+    print(num);
 }
 
 int main() {
-    set<CStudent, StuFunctor> setStu;
-    setStu.insert(CStudent(3, "小张"));
-    setStu.insert(CStudent(1, "小李"));
-    setStu.insert(CStudent(5, "小王"));
-    setStu.insert(CStudent(2, "小刘"));
-    printSet(setStu);
+
+    // 初始化函数对象（函数对象是一个类）
+    MyPrint myPrint;
+
+    // 函数对象调用
+    myPrint(2);
+
+    // 函数对象调用（使用匿名对象的写法）
+    MyPrint()(2);
+
+    // 普通函数调用
+    MyPrint2(3);
+
+    // 函数对象作为参数
+    doPrint(myPrint, 4);
+
     return 0;
 }

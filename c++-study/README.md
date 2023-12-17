@@ -97,7 +97,7 @@
     ├── demo07          list 容器的使用
     ├── demo08          set / multiset 容器的使用
     ├── demo09          pair 对组的使用
-    ├── demo10          仿函数（伪函数）的使用
+    ├── demo10          函数对象（仿函数）的使用
     ├── demo11          map / multimap 容器的使用
 ```
 
