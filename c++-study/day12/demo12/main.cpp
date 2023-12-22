@@ -34,6 +34,8 @@ void test01() {
 
     int num = 100;
     for_each(v.begin(), v.end(), bind2nd(MyPrint(), num));
+
+    cout << endl;
 }
 
 // 函数对象
@@ -62,7 +64,6 @@ void test02() {
     } else {
         cout << "not found first number less then five" << endl;
     }
-
 }
 
 int main() {
