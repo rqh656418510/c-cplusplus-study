@@ -32,6 +32,7 @@ void test01() {
         v.push_back(i);
     }
 
+    // 0 ~ 9 加起始值，然后输出计算结果
     int num = 100;
     for_each(v.begin(), v.end(), bind2nd(MyPrint(), num));
 
