@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// 函数对象
+// 函数对象，继承自 binary_function
 class MyPrint : public binary_function<int, int, void> {
 
 public:
@@ -39,7 +39,7 @@ void test01() {
     cout << endl;
 }
 
-// 函数对象
+// 函数对象，继承自 unary_function
 class GreaterThenFive : public unary_function<int, bool> {
 
 public:
