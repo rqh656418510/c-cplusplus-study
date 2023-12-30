@@ -42,6 +42,7 @@ void test02() {
     // 从大到小排序
     sort(v.begin(), v.end(), greate);
 
+    // 遍历打印，使用匿名函数与 Lambda 表达式
     for_each(v.begin(), v.end(), [](int value) { cout << value << " "; });
 }
 

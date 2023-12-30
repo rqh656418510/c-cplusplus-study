@@ -75,8 +75,8 @@ void test02() {
     // 根据自定义规则进行排序
     sort(v.begin(), v.end(), myCompare);
 
-    // 匿名函数，Lambda 表达式
-    for_each(v.begin(), v.end(), [](int val) { cout << val << " "; });
+    // 遍历打印，使用匿名函数与 Lambda 表达式
+    for_each(v.begin(), v.end(), [](int value) { cout << value << " "; });
 
 }
 
