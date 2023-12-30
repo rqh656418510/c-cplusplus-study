@@ -31,20 +31,20 @@ int main() {
         v.push_back(i);
     }
 
-    // 查找第一个小于５的数字（第一种写法）
+    // 查找第一个大于５的数字（第一种写法）
     vector<int>::iterator pos = find_if(v.begin(), v.end(), not1(GreaterThenFive()));
     if (pos != v.end()) {
-        cout << "found first number less then five is " << *pos << endl;
+        cout << "found first number greate then five is " << *pos << endl;
     } else {
-        cout << "not found first number less then five" << endl;
+        cout << "not found first number greate then five" << endl;
     }
 
-    // 查找第一个小于５的数字（第二种写法）
+    // 查找第一个大于５的数字（第二种写法）
     vector<int>::iterator pos2 = find_if(v.begin(), v.end(), not1(bind2nd(greater<int>(), 5)));
     if (pos2 != v.end()) {
-        cout << "found first number less then five is " << *pos2 << endl;
+        cout << "found first number greate then five is " << *pos2 << endl;
     } else {
-        cout << "not found first number less then five" << endl;
+        cout << "not found first number greate then five" << endl;
     }
 
     return 0;
