@@ -1,5 +1,7 @@
 /*
  * 1. 常用的遍历算法 - transform
+ *
+ * transform 算法用于将指定容器区间元素搬运到另一个容器中
 */
 
 #include <iostream>

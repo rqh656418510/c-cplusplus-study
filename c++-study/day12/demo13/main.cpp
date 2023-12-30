@@ -1,5 +1,7 @@
 /*
  * 1. 常用的遍历算法 - for_each
+ *
+ * for_each 算法用于遍历容器元素
 */
 
 #include <iostream>
