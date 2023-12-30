@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// 函数对象，继承自 binary_function
+// 函数对象（仿函数），继承自 binary_function
 class MyPrint : public binary_function<int, int, void> {
 
 public:

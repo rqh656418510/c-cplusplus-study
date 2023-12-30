@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// 函数对象，继承自 unary_function
+// 函数对象（仿函数），继承自 unary_function
 class GreaterThenFive : public unary_function<int, bool> {
 
 public:
