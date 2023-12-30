@@ -60,6 +60,11 @@ int main() {
 
     cout << endl;
 
+    // for_each 使用匿名函数
+    for_each(v.begin(), v.end(), [](int value) { cout << value << " "; });
+
+    cout << endl;
+
     // for_each 使用函数对象
     for_each(v.begin(), v.end(), MyPrint());
 
