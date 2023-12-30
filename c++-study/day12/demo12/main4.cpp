@@ -26,16 +26,51 @@ public:
 
 };
 
-int main() {
+void test01() {
+
+    cout << "----------- 成员函数适配器 mem_fun_ref 的使用 -------------" << endl;
+
     vector<Person> v;
-    v.push_back(Person("Jim", 15));
-    v.push_back(Person("Peter", 18));
-    v.push_back(Person("David", 16));
-    v.push_back(Person("Tom", 20));
+
+    Person p1("Jim", 15);
+    Person p2("Peter", 18);
+    Person p3("David", 16);
+    Person p4("Tom", 20);
+
+    v.push_back(p1);
+    v.push_back(p2);
+    v.push_back(p3);
+    v.push_back(p4);
 
     // 遍历打印数据
     // mem_fun_ref 可以将成员函数适配为函数对象
     for_each(v.begin(), v.end(), mem_fun_ref(&Person::showPerson));
+}
 
+void test02() {
+
+    cout << "----------- 成员函数适配器 mem_fun 的使用 -------------" << endl;
+
+    vector<Person *> v;
+
+    Person p1("Jim", 15);
+    Person p2("Peter", 18);
+    Person p3("David", 16);
+    Person p4("Tom", 20);
+
+    v.push_back(&p1);
+    v.push_back(&p2);
+    v.push_back(&p3);
+    v.push_back(&p4);
+
+
+    // 遍历打印数据
+    // mem_fun 可以将成员函数适配为函数对象
+    for_each(v.begin(), v.end(), mem_fun(&Person::showPerson));
+}
+
+int main() {
+    test01();
+    test02();
     return 0;
 }
