@@ -51,7 +51,34 @@ public:
 
 };
 
-int main() {
+// 普通函数
+bool MyCompare(Person &p) {
+    return p.getName() == "Peter" && p.getAge() == 18;
+}
+
+void test01() {
+    vector<Person> v;
+
+    Person p1("Jim", 15);
+    Person p2("Peter", 18);
+    Person p3("David", 16);
+    Person p4("Tom", 20);
+
+    v.push_back(p1);
+    v.push_back(p2);
+    v.push_back(p3);
+    v.push_back(p4);
+
+    // 根据条件查找（使用普通函数）
+    vector<Person>::iterator pos = find_if(v.begin(), v.end(), MyCompare);
+    if (pos != v.end()) {
+        cout << "found person for " << pos->getName() << ", age is " << pos->getAge() << endl;
+    } else {
+        cout << "not found person" << endl;
+    }
+}
+
+void test02() {
     vector<Person *> v;
 
     Person p1("Jim", 15);
@@ -66,13 +93,17 @@ int main() {
 
     Person *p5 = new Person("David", 16);
 
-    // 根据条件查找
+    // 根据条件查找（使用函数对象）
     vector<Person *>::iterator pos = find_if(v.begin(), v.end(), bind2nd(MyPersonCompare(), p5));
     if (pos != v.end()) {
         cout << "found person for " << (*pos)->getName() << ", age is " << (*pos)->getAge() << endl;
     } else {
         cout << "not found person" << endl;
     }
+}
 
+int main() {
+    test01();
+    test02();
     return 0;
 }
