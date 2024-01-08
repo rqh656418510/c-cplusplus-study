@@ -18,6 +18,7 @@ int main() {
     v.push_back(5);
     v.push_back(6);
 
+    // 统计元素出现次数
     int total = count(v.begin(), v.end(), 5);
     cout << "total: " << total << endl;
 

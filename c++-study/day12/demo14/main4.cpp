@@ -17,6 +17,7 @@ int main() {
         v.push_back(i);
     }
 
+    // 二分法查找元素
     bool result = binary_search(v.begin(), v.end(), 5);
     if (result) {
         cout << "find number for 5" << endl;

@@ -19,7 +19,7 @@ int main() {
     v.push_back(6);
     v.push_back(2);
 
-    // adjacent_find 查找相邻重复元素，返回相邻元素的第一个位置的迭代器
+    // 查找相邻重复元素，返回相邻元素的第一个位置的迭代器
     vector<int>::iterator pos = adjacent_find(v.begin(), v.end());
     if (pos != v.end()) {
         cout << *pos << ", " << *pos++ << endl;
