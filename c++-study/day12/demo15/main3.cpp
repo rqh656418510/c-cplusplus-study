@@ -1,12 +1,11 @@
 /*
  * 1. 常用的排序算法 - random_shuffle
  *
- * <p> 对指定范围内的元素随机调整顺序
+ * <p> 对指定范围内的元素随机调整顺序（洗牌）
 */
 
 #include <iostream>
 #include <algorithm>
-#include <functional>
 
 using namespace std;
 
