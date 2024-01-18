@@ -35,7 +35,6 @@ int main() {
     // 互换两个容器的元素
     swap(v1, v2);
 
-
     cout << endl << "----------- after swap -------------" << endl;
 
     for_each(v1.begin(), v1.end(), [](int value) { cout << value << " "; });
