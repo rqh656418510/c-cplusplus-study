@@ -105,4 +105,4 @@ add_executable(day12-demo16-2 day12/demo16/main2.cpp)
 add_executable(day12-demo16-3 day12/demo16/main3.cpp)
 add_executable(day12-demo16-4 day12/demo16/main4.cpp)
 add_executable(day12-demo17-1 day12/demo17/main.cpp)
-
+add_executable(day12-demo17-2 day12/demo17/main2.cpp)
