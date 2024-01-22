@@ -2,6 +2,7 @@
  * 1. 常用集合算法 - set_intersection
  *
  * <p> 求两个集合的交集
+ * <p> 注意：两个集合必须是有序序列
 */
 
 #include <iostream>
