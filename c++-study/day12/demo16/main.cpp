@@ -26,12 +26,12 @@ int main() {
     // 将容器内指定范围的元素拷贝到另一个容器中
     copy(vOrigin.begin(), vOrigin.end(), vTarget.begin());
 
-    // 第一种方式
+    // 第一种方式打印
     for_each(vTarget.begin(), vTarget.end(), [](int value) { cout << value << " "; });
 
     cout << endl;
 
-    // 第二种方式
+    // 第二种方式打印
     copy(vTarget.begin(), vTarget.end(), ostream_iterator<int>(cout, " "));
 
     return 0;
