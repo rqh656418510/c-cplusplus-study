@@ -64,7 +64,6 @@ void speechDraw(vector<int> &v) {
  * @param v2 进入下一轮比赛的选手编号
  */
 void speechContest(int index, vector<int> &v1, map<int, Speaker> &m, vector<int> &v2) {
-
     int num = 0;
     multimap<int, int, greater<int>> groupMap; // key: 选手的分数，value: 选手的编号
 
