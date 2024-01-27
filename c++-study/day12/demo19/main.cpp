@@ -20,7 +20,7 @@ public:
 
     int code;       // 编号
     string name;    // 姓名
-    int score[3];   // 分数
+    int score[3];   // 分数（三轮比赛）
 
 };
 
