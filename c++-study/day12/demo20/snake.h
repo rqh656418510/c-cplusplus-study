@@ -12,10 +12,10 @@ class Snake
 
 public:
 
-	// ¹¹Ôìº¯Êı
+	// æ„é€ å‡½æ•°
 	Snake(Wall& tempWall, Food& tempFood);
 
-	// ÒÆ¶¯µÄ·½Ïò
+	// ç§»åŠ¨çš„æ–¹å‘
 	enum {
 		TOP = 'w',
 		BOTTOM = 's',
@@ -23,56 +23,56 @@ public:
 		RIGHT = 'd'
 	};
 
-	// ÉßµÄ³õÊ¼³¤¶È
+	// è›‡çš„åˆå§‹é•¿åº¦
 	const int INIT_LENGTH = 3;
 
-	// ½Úµã
+	// èŠ‚ç‚¹
 	struct Point {
 		int x;
 		int y;
 		Point* next;
 	};
 
-	// Í·½Úµã
+	// å¤´èŠ‚ç‚¹
 	Point* pHead;
 
-	// Ç½
+	// å¢™
 	Wall& wall;
 
-	// Ê³Îï
+	// é£Ÿç‰©
 	Food& food;
 
-	// ËÀÍö±êÊ¶
+	// æ­»äº¡æ ‡è¯†
 	bool isDead;
 
-	// Ñ­»·×·Î²
+	// å¾ªç¯è¿½å°¾
 	bool isRool;
 
-	// ³õÊ¼»¯Éß
+	// åˆå§‹åŒ–è›‡
 	void initSnake();
 
-	// Ïú»ÙËùÓĞ½Úµã
+	// é”€æ¯æ‰€æœ‰èŠ‚ç‚¹
 	void destroy();
 
-	// ÒÆ¶¯Éß
+	// ç§»åŠ¨è›‡
 	bool move(char key);
 
-	// Ìí¼Ó½Úµã
+	// æ·»åŠ èŠ‚ç‚¹
 	void addPoint(int x, int y);
 
-	// É¾³ıÎ²½Úµã
+	// åˆ é™¤å°¾èŠ‚ç‚¹
 	void deleteEndPoint();
 
-	// »ñÈ¡ÓÎÏ··ÖÊı
+	// è·å–æ¸¸æˆåˆ†æ•°
 	int getScore();
 
-	// ÏÔÊ¾ÓÎÏ·µÃ·Ö
+	// æ˜¾ç¤ºæ¸¸æˆå¾—åˆ†
 	void showScore();
 
-	// »ñÈ¡ÉßµÄ³¤¶È
+	// è·å–è›‡çš„é•¿åº¦
 	int getLength();
 
-	// »ñÈ¡µÈ´ıµÄÊ±¼ä£¨ºÁÃë£©
+	// è·å–ç­‰å¾…çš„æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
 	int getSleepTime();
 
 };

@@ -10,19 +10,19 @@ class Food
 {
 public:
 
-	// ¹¹Ôìº¯Êý
+	// æž„é€ å‡½æ•°
 	Food(Wall & tempWall);
 
-	// Ê³ÎïµÄX×ø±ê
+	// é£Ÿç‰©çš„Xåæ ‡
 	int x;
 
-	// Ê³ÎïµÄY×ø±ê
+	// é£Ÿç‰©çš„Yåæ ‡
 	int y;
 
-	// Ç½
+	// å¢™
 	Wall& wall;
 
-	// ÉèÖÃÊ³Îï
+	// è®¾ç½®é£Ÿç‰©
 	void setFood();
 
 };

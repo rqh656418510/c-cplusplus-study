@@ -12,7 +12,7 @@ void Food::setFood()
 		x = rand() % (Wall::ROW - 2) + 1;
 		y = rand() % (Wall::COL - 2) + 1;
 
-		// 如果随机的位置是蛇头或者蛇身，则重新生成随机数
+		// 濡傛灉闅忔満鐨勪綅缃槸铔囧ご鎴栬�呰泧韬紝鍒欓噸鏂扮敓鎴愰殢鏈烘暟
 		if (wall.getWall(x, y) == ' ') {
 			wall.setWall(x, y, '#');
 			break;

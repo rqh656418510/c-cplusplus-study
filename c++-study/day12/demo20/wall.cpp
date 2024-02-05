@@ -72,7 +72,7 @@ char Wall::getWall(int x, int y)
 void Wall::setWall(int x, int y, char c)
 {
 	gameArray[x][y] = c;
-	// 通过定位光标修改控制台的内容
+	// 閫氳繃瀹氫綅鍏夋爣淇敼鎺у埗鍙扮殑鍐呭
 	gotoXY(y * 2, x);
 	cout << c;
 }
