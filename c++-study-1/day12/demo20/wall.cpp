@@ -1,5 +1,4 @@
 #include "wall.h"
-
 #include "windows.h"
 
 
