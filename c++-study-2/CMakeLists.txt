@@ -4,3 +4,4 @@ project(c___study)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(day01-demo01 day01/demo01/main.cpp)
+add_executable(day01-demo02 day01/demo02/main.cpp)
