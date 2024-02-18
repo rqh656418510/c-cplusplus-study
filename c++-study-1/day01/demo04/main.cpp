@@ -37,8 +37,12 @@ int main() {
     // 使用 NameSpaceC 命名空间中的变量
     using NameSpaceB::NameSpaceC::Teacher;
 
+    // 命名空间可以起别名
+    namespace NameSpaceD = NameSpaceB;
+
     printf("a = %d\n", a);
     printf("a = %d\n", NameSpaceB::a);
+    printf("a = %d\n", NameSpaceD::a);
 
     Teacher teacher = {"Jim", 20};
     printf("teacher.age = %d\n", teacher.age);
