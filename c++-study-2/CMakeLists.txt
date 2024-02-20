@@ -9,3 +9,5 @@ add_executable(day01-demo03 day01/demo03/main.cpp day01/demo03/game1.cpp day01/d
 add_executable(day01-demo04 day01/demo04/main.cpp)
 add_executable(day01-demo05 day01/demo05/main.cpp)
 add_executable(day01-demo06 day01/demo06/main.cpp)
+add_executable(day01-demo07 day01/demo07/main.cpp)
+add_executable(day01-demo08 day01/demo08/main.cpp)
