@@ -28,7 +28,7 @@ int & hello() {
     return a;
 }
 
-// 不要返回局部变量的引用
+// 当函数的返回值是引用时，不要返回局部变量的引用，否则会出现意想不到的结果
 void test03() {
     int &ref = hello();
     cout << "ref = " << ref << endl;    // 第一次正确打印值，是因为编译器做了优化
@@ -38,9 +38,22 @@ void test03() {
     cout << "ref = " << ref << endl;
 }
 
+// 函数的返回值是引用
+int & bye() {
+    static int a = 0;
+    // 返回全局变量的引用
+    return a;
+}
+
+// 当函数的返回值是引用时，这个函数调用可以作为左值
+void test04() {
+    bye() = 100;    // 相当于写了 a = 100
+}
+
 int main() {
     test01();
     test02();
     test03();
+    test04();
     return 0;
 }
