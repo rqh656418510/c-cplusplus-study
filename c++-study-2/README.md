@@ -7,7 +7,7 @@
     ├── demo03          命名空间的使用
     ├── demo04          using 声明与 using 编译指令的使用
     ├── demo05          C++ 对 const 关键字的增强
-    ├── demo06          引用
+    ├── demo06          C++ 中的引用
 ```
 
 ## 常用命令
