@@ -5,8 +5,9 @@
     ├── demo01          第一个 C++ 程序
     ├── demo02          双冒号作用域限定运算符
     ├── demo03          命名空间的使用
-    ├── demo04          using 声明与 using 编译指令
-    ├── demo05          const 关键字增强
+    ├── demo04          using 声明与 using 编译指令的使用
+    ├── demo05          C++ 对 const 关键字的增强
+    ├── demo06          引用
 ```
 
 ## 常用命令

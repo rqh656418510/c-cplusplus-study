@@ -1,5 +1,5 @@
 /**
- * 1. using 声明与 using 编译指令
+ * 1. using 声明与 using 编译指令的使用
  */
 
 #include <iostream>

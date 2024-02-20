@@ -1,5 +1,5 @@
 /**
- * 1. const 关键字增强
+ * 1. C++ 对 const 关键字的增强
  */
 
 #include <iostream>
