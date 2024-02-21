@@ -1,5 +1,7 @@
 /**
  * 1. C++ 中引用的本质
+ *
+ * <p> 引用在 C++ 中的内部实现是一个常指针: Type * const name
  */
 
 #include <iostream>
