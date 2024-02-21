@@ -36,15 +36,20 @@ void test02() {
     cout << "*p = " << *p << endl;
 }
 
-// 使用常量引用修饰形参
+// 函数参数是常量引用
 void showValue(const int &val) {
-    // val = 10;    无法直接更改形参的值，编译会不通过
-    cout << "val = " << val << endl;
+    // 无法直接更改形参的值，编译会不通过
+    // val = 10;
+
+    // 但可以使用指针的方式更改形参的值
+    int *p = (int *) &val;
+    *p = 30;
 }
 
 void test03() {
-    int a = 3;
+    int a = 10;
     showValue(a);
+    cout << "a = " << a << endl;
 }
 
 int main() {
