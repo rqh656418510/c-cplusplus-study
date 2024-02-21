@@ -8,11 +8,11 @@ using namespace std;
 
 int main() {
     const int b = 10;
-    printf("b:%d\n", &b);
+    printf("b = %d\n", b);
 
-    // int &a = 19; 若不加const关键字，则编译失败
+    // int &a = 19; 引用必须是和一块合法的内存空间关联，若不加const关键字，则编译失败
 
     const int &a = 19;
-    printf("&a:%d \n", &a);
+    printf("a = %d \n", a);
     return 0;
 }
