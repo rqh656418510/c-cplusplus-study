@@ -8,9 +8,6 @@ using namespace std;
 
 // 常量引用的使用
 void test01() {
-    // 常量
-    const int b = 10;
-    printf("b = %d\n", b);
 
     // 引用必须是和一块合法的内存空间关联，若不加const关键字，则编译失败
     // int &a = 19;
@@ -21,8 +18,25 @@ void test01() {
     cout << "a = " << a << endl;
 }
 
-// 使用字面量常量对常量引用初始化后，将生成一个只读变量，但可以使用指针的方式更改常量引用的值
+// 使用普通变量初始化常量引用
 void test02() {
+    int a = 10;
+
+    // 使用普通变量初始化常量引用
+    const int &b = a;
+
+    // b = 11;  错误写法，这里不能通过引用改变 a 的值，无法通过编译
+
+    // 可以使用指针的方式更改常量引用的值
+    int *p = (int *) &b;
+    *p = 12;
+
+    cout << "a = " << a << endl;
+    cout << "b = " << b << endl;
+}
+
+// 使用字面量常量对常量引用初始化后，将生成一个只读变量，但可以使用指针的方式更改常量引用的值
+void test03() {
     // 使用字面量常量对常量引用初始化
     const int &a = 10;
 
@@ -46,7 +60,7 @@ void showValue(const int &val) {
     *p = 30;
 }
 
-void test03() {
+void test04() {
     int a = 10;
     showValue(a);
     cout << "a = " << a << endl;
@@ -56,5 +70,6 @@ int main() {
     test01();
     test02();
     test03();
+    test04();
     return 0;
 }
