@@ -27,14 +27,17 @@ public:
     }
 
     double getArea() {
+        if (this->radius == 0) {
+            return 0;
+        }
         this->area = 3.14 * this->radius * this->radius;
         return this->area;
     }
 
 private:
 
-    double radius;  // 圆形的半径
-    double area;    // 圆形的面积
+    double radius = 0;  // 圆形的半径
+    double area = 0;    // 圆形的面积
 
 };
 
