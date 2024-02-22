@@ -6,6 +6,8 @@
 
 using namespace std;
 
+const double PI = 3.14159;
+
 class Circle {
 
 public:
@@ -30,7 +32,7 @@ public:
         if (this->radius == 0) {
             return 0;
         }
-        this->area = 3.14 * this->radius * this->radius;
+        this->area = PI * this->radius * this->radius;
         return this->area;
     }
 
