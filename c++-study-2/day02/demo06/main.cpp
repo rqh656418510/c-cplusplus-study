@@ -1,5 +1,7 @@
 /**
- * 1. extern 浅析
+ * 1. extern 关键字浅析
+ *
+ * <p> 在 C++ 中使用 extern 关键字，可以解决 C++ 调用 C 语言函数的问题
  */
 
 #include <iostream>
