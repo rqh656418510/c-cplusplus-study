@@ -3,6 +3,8 @@
  */
 
 #include <iostream>
+#include "../demo09/circle.h"
+
 
 using namespace std;
 
@@ -42,6 +44,7 @@ private:
     double area = 0;    // 圆形的面积
 
 };
+
 
 int main() {
     Circle c1(3);
