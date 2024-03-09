@@ -41,14 +41,17 @@ int main() {
     // 自动调用有参构造函数(括号法)
     Person p2("Jim", 23);
 
+    // 手动调用有参构造函数(显式法)
+    Person p6 = Person("Tom", 18);
+
     // 自动调用拷贝构造函数(等号法)
     Person p3 = p2;
 
     // 自动调用拷贝构造函数(括号法)
     Person p4(p2);
 
-    // 手动调用有参构造函数(显式法)
-    Person p5 = Person("Tom", 18);
+    // 自动调用拷贝构造函数(括号法)
+    Person p5 = Person(p2);
 
     return 0;
 }
