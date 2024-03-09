@@ -47,7 +47,7 @@ int main() {
     // 自动调用拷贝构造函数(括号法)
     Person p4(p2);
 
-    // 手动调用有参构造函数
+    // 手动调用有参构造函数(显式法)
     Person p5 = Person("Tom", 18);
 
     return 0;
