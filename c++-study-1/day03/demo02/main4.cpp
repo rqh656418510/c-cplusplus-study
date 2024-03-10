@@ -1,14 +1,10 @@
-/**
- * 1. 拷贝构造函数的第四种调用场景
- */
-
 #include <iostream>
 
 using namespace std;
 
 class Location {
 
-private :
+private:
     int x, y;
 
 public:
@@ -18,7 +14,7 @@ public:
         cout << "有参构造函数被调用了" << endl;
     }
 
-    Location(const Location &p) {
+    Location(const Location& p) {
         x = p.x;
         y = p.y;
         cout << "拷贝构造函数被调用了" << endl;
@@ -42,16 +38,29 @@ Location functionA() {
     return l;
 }
 
-int main() {
-    // 匿名对象的去与留，关键是看返回匿名对象时如何接收，一般有以下两种情况：
-
-    // 若将函数functionA()返回的匿名对象，赋值给另外一个同类型的对象，那么匿名对象会被析构
-    // 此时有参构造函数和析构函数被调用两次
+void test01() {
+    // 第一种情况
+    // 在 Debug 模式下，若使用函数 functionA() 的返回值（局部对象），赋值给另外一个同类型的对象时，会自动调用拷贝构造函数
+    // 在 Release 模式下，若使用函数 functionA() 的返回值（局部对象），赋值给另外一个同类型的对象时，不会自动调用拷贝构造函数（编译器优化结果）
     Location A;
     A = functionA();
+}
 
-    // 若使用函数functionA()的匿名对象，来初始化另外一个同类型的对象，那么匿名对象会直接转成B对象
-    // 此时有参构造函数与析构函数各被调用一次
-    // Location B = functionA();
+void test02() {
+    // 第二种情况
+    // 在 Debug 模式下，若使用函数 functionA() 的返回值（局部对象），来初始化另外一个同类型的对象时，会自动调用拷贝构造函数
+    // 在 Release 模式下，若使用函数 functionA() 的返回值（局部对象），来初始化另外一个同类型的对象时，不会自动调用拷贝构造函数（编译器优化的结果）
+    Location B = functionA();
+}
+
+int main() {
+    // 局部对象的去与留，关键是看返回局部对象时如何被接收，一般有以下两种情况
+
+    cout << "----------call test1()----------" << endl;
+    test01();
+
+    cout << "----------call test2()----------" << endl;
+    test02();
+
     return 0;
 }
