@@ -43,8 +43,13 @@ private:
 
 };
 
-void doWork(Person p) {
+void work(Person p) {
     p.setAge(28);
+}
+
+Person play() {
+    Person p("Peter", 23);
+    return p;
 }
 
 void test01() {
@@ -64,9 +69,16 @@ void test02() {
     Person p("Tom", 14);
 
     // 第四种情况：自动调用拷贝构造函数，以值传递的方式给函数参数传值
-    doWork(p);
+    work(p);
 
     cout << "age = " << p.getAge() << endl;
+}
+
+void test03() {
+    // 第五种情况：自动调用拷贝构造函数，函数以值方式返回局部对象
+    // 注意：以下的写法，在 Debug 模式下才会调用拷贝构造函数，Release 模式不会调用拷贝构造函数（编译器优化的结果）
+    Person p = play();
+
 }
 
 int main() {
@@ -75,5 +87,9 @@ int main() {
 
     cout << "----------call test2()----------" << endl;
     test02();
+
+    cout << "----------call test3()----------" << endl;
+    test03();
+
     return 0;
 }
