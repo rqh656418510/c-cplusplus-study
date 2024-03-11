@@ -28,4 +28,4 @@ add_executable(day02-demo10 day02/demo10/main.cpp)
 add_executable(day02-demo11 day02/demo11/main.cpp)
 add_executable(day02-demo12 day02/demo12/main.cpp)
 add_executable(day02-demo13 day02/demo13/main.cpp)
-
+add_executable(day02-demo14 day02/demo14/main.cpp)
