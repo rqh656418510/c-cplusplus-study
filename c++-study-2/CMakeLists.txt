@@ -40,4 +40,4 @@ add_executable(day04-demo04 day04/demo04/main.cpp)
 add_executable(day04-demo05 day04/demo05/main.cpp)
 add_executable(day04-demo06 day04/demo06/main.cpp)
 add_executable(day04-demo07 day04/demo07/main.cpp)
-
+add_executable(day04-demo08 day04/demo08/main.cpp)
