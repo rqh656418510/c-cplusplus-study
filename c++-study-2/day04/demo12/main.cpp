@@ -24,7 +24,7 @@ private :
 
 class Building {
 
-    // 只让 GoodGay 的成员函数 visit() 作为友元函数
+    // 声明只让 GoodGay 的成员函数 visit () 作为友元函数
     friend void GoodGay::visit();
 
 public:
