@@ -43,16 +43,12 @@ GoodGay::GoodGay() {
 
 void GoodGay::visit() {
     cout << "Good friend visiting " << this->building->m_SittingRoom << endl;
-    // 友元类可以直接访问另一个类的私有成员变量
+    // 类 GoodGay 是类 Building 的友元类，因此 GoodGay 类的所有成员函数都可以直接访问 Building 类的私有成员或者保护成员
     cout << "Good friend visiting " << this->building->m_BedRoom << endl;
 }
 
-void test01() {
+int main() {
     GoodGay goodGay;
     goodGay.visit();
-}
-
-int main() {
-    test01();
     return 0;
 }
