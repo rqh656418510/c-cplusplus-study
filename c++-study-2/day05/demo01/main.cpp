@@ -8,7 +8,7 @@ using namespace std;
 
 void test01() {
     MyArray *myArray1 = new MyArray(20);
-    MyArray myArray2(*myArray1);
+    MyArray myArray2 = *myArray1;
 
     // 尾插数据
     for (int i = 0; i < 10; i++) {
