@@ -46,3 +46,6 @@ add_executable(day04-demo10 day04/demo10/person.hpp day04/demo10/main.cpp)
 add_executable(day04-demo11 day04/demo11/main.cpp)
 add_executable(day04-demo12 day04/demo12/main.cpp)
 add_executable(day05-demo01 day05/demo01/MyArray.cpp day05/demo01/main.cpp)
+add_executable(day05-demo02 day05/demo02/main.cpp)
+add_executable(day05-demo03 day05/demo03/main.cpp)
+
