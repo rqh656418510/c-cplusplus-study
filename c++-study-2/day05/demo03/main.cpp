@@ -1,5 +1,7 @@
 /**
  * 左移运算符重载
+ *
+ * <p> `<<` 左移运算符和 `>>` 右移运算符的重载，只能使用友元函数或者全局函数，不能使用类成员函数，这也是友元函数的重要作用之一
  */
 
 #include <iostream>
@@ -36,6 +38,6 @@ ostream &operator<<(ostream &out, Person &p) {
 
 int main() {
     Person p(1, 2);
-    // 重载左移运算符
+    // 左移运算符重载
     cout << p << endl;
 }
