@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// 普通类
 class Person {
 
 public:
