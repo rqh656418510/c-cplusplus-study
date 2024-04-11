@@ -25,7 +25,7 @@ public:
     }
 
     // 后置++（i++）： 在使用后置++时，表达式的值是变量当前的值，然后再递增变量
-    // 使用类成员函数完成 "后置++" 运算符的重载
+    // 使用类成员函数与占位参数完成 "后置++" 运算符的重载
     MyInteger operator++(int) {
         MyInteger temp(this->m_Num);
         this->m_Num++;
