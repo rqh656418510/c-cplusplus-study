@@ -28,6 +28,10 @@ void test01() {
         cout << myArray2->get_data(i) << endl;
     }
 
+    // [] 运算符重载
+    (*myArray2)[1] = 110;
+    cout << (*myArray2)[1] << endl;
+
     delete myArray2;
     delete myArray1;
 }

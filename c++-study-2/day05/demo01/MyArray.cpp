@@ -55,3 +55,8 @@ int MyArray::get_data(int index) {
 void MyArray::set_data(int index, int value) {
     this->pAddress[index] = value;
 }
+
+// [] 运算符重载
+int &MyArray::operator[](int index) {
+    return this->pAddress[index];
+}

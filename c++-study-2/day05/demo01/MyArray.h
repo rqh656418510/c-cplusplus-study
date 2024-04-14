@@ -21,6 +21,8 @@ public:
 
     void set_data(int index, int value);
 
+    int &operator[](int index);
+
 private:
     int *pAddress;      // 指向真正存储数据的指针
     int m_Size;         // 数组大小
