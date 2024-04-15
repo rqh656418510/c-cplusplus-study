@@ -8,6 +8,7 @@ using namespace std;
 class MyPrint {
 
 public:
+    // 函数调用运算符的重载
     void operator()(const string &content) {
         cout << content << endl;
     }
@@ -22,6 +23,7 @@ void test01() {
 class MyAdd {
 
 public:
+    // 函数调用运算符的重载
     int operator()(const int a, const int b) {
         return a + b;
     }
