@@ -55,3 +55,90 @@ istream &operator>>(istream &in, MyString &str) {
 
     return in;
 }
+
+char &MyString::operator[](int index) {
+    return this->pString[index];
+}
+
+MyString &MyString::operator=(const MyString &str) {
+    // 释放原有的内存空间
+    if (nullptr != this->pString) {
+        delete[] this->pString;
+        this->pString = nullptr;
+        this->m_Size = 0;
+    }
+
+    // 重新分配内存空间
+    int length = strlen(str.pString);
+    this->pString = new char[length + 1];
+    strcpy(this->pString, str.pString);
+    this->m_Size = length;
+
+    return *this;
+}
+
+MyString &MyString::operator=(const char *str) {
+    // 释放原有的内存空间
+    if (nullptr != this->pString) {
+        delete[] this->pString;
+        this->pString = nullptr;
+        this->m_Size = 0;
+    }
+
+    // 重新分配内存空间
+    int length = strlen(str);
+    this->pString = new char[length + 1];
+    strcpy(this->pString, str);
+    this->m_Size = length;
+
+    return *this;
+}
+
+MyString MyString::operator+(const MyString &str) {
+    // 字符串拼接后的长度
+    int newSize = this->m_Size + strlen(str.pString) + 1;
+
+    // 分配临时内存空间
+    char *tmp = new char[newSize];
+    memset(tmp, 0, newSize);
+
+    // 拼接字符串
+    strcat(tmp, this->pString);
+    strcat(tmp, str.pString);
+
+    MyString newString(tmp);
+
+    // 释放临时内存空间
+    delete[]tmp;
+
+    return newString;
+}
+
+MyString MyString::operator+(const char *str) {
+    // 字符串拼接后的长度
+    int newSize = this->m_Size + strlen(str) + 1;
+
+    // 分配临时内存空间
+    char *tmp = new char[newSize];
+    memset(tmp, 0, newSize);
+
+    // 拼接字符串
+    strcat(tmp, this->pString);
+    strcat(tmp, str);
+
+    // 创建新的字符串
+    MyString newString(tmp);
+
+    // 释放临时内存空间
+    delete[]tmp;
+
+    return newString;
+}
+
+bool MyString::operator==(const MyString &str) {
+    return strcmp(this->pString, str.pString) == 0 && this->m_Size == str.m_Size;
+}
+
+bool MyString::operator==(const char *str) {
+    return strcmp(this->pString, str) == 0 && this->m_Size == strlen(str);
+}
