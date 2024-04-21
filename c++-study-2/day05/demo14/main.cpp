@@ -38,7 +38,45 @@ void test01() {
     Son son;
 }
 
+class Base2 {
+
+public:
+    Base2(int a) {
+        this->m_A = a;
+        cout << "调用　Base2 的有参构造函数" << endl;
+    }
+
+    ~Base2() {
+        cout << "调用　Base2 的析构函数" << endl;
+    }
+
+private:
+    int m_A;
+
+};
+
+class Son2 : public Base2 {
+
+public:
+    // 使用初始化列表的方式，显式调用父类的有参构造函数
+    Son2(int a) : Base2(a) {
+        cout << "调用　Son2 的构造函数" << endl;
+    }
+
+    ~Son2() {
+        cout << "调用　Son2 的析构函数" << endl;
+    }
+};
+
+void test02() {
+    Son2 son2(5);
+}
+
 int main() {
     test01();
+
+    cout << "------------------" << endl;
+
+    test02();
     return 0;
 }
