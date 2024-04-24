@@ -11,6 +11,11 @@ class Base1 {
 public:
     Base1(int a) {
         this->m_A = a;
+        cout << "调用 Base1 的构造函数" << endl;
+    }
+
+    ~Base1() {
+        cout << "调用 Base1 的析构函数" << endl;
     }
 
 public:
@@ -23,6 +28,11 @@ class Base2 {
 public:
     Base2(int a) {
         this->m_A = a;
+        cout << "调用 Base2 的构造函数" << endl;
+    }
+
+    ~Base2() {
+        cout << "调用 Base2 的析构函数" << endl;
     }
 
 public:
@@ -36,6 +46,11 @@ class Son : public Base1, public Base2 {
 public:
     Son(int a, int b) : Base1(a), Base2(a) {
         this->m_B = b;
+        cout << "调用 Son 的构造函数" << endl;
+    }
+
+    ~Son() {
+        cout << "调用 Son 的析构函数" << endl;
     }
 
 public :
