@@ -21,7 +21,7 @@ class Cat : public Animal {
 
 public:
     // 重写父类的虚函数
-    // 只要父类中的函数有 "virtual" 关键字的声明，那么子类的 "virtual" 声明可写可不写，一般建议都写上
+    // 只要父类中的函数有 "virtual" 关键字的声明，那么子类的 "virtual" 关键字声明可写可不写，一般建议都写上
     virtual void speak() override {
         cout << "Cat is speaking" << endl;
     }
