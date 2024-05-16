@@ -54,7 +54,7 @@ public:
 
 };
 
-void test01() {
+int main() {
     // 错误写法，不能实例化对象
     // 如果类拥有纯析构函数，那么这个类也算是抽象类，即该类不能实例化对象
     // Animal *animal = new Animal();
@@ -62,9 +62,6 @@ void test01() {
     Animal *animal = new Cat("Tom");
     animal->speak();
     delete animal;
-}
 
-int main() {
-    test01();
     return 0;
 }
