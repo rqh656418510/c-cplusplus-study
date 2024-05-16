@@ -17,7 +17,7 @@ public :
         cout << "Animal speaking ..." << endl;
     }
 
-    // 声明纯虚析构函数
+    // 声明纯虚析构函数（必须在类内声明，类外实现）
     virtual ~Animal() = 0;
 
 };
@@ -31,7 +31,7 @@ class Cat : public Animal {
 
 public:
     Cat(char *name) {
-        // 分配内存空间（必须在类内声明，类外实现）
+        // 分配内存空间
         this->m_Name = new char[strlen(name) + 1];
         strcpy(this->m_Name, name);
     }
