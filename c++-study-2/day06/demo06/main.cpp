@@ -13,6 +13,7 @@ using namespace std;
 class Animal {
 
 public :
+
     virtual void speak() {
         cout << "Animal speaking ..." << endl;
     }
@@ -55,8 +56,7 @@ public:
 };
 
 int main() {
-    // 错误写法，不能实例化对象
-    // 如果类拥有纯析构函数，那么这个类也算是抽象类，即该类不能实例化对象
+    // 错误写法，如果类拥有纯析构函数，那么这个类也算是抽象类，即该类不能实例化对象
     // Animal *animal = new Animal();
 
     Animal *animal = new Cat("Tom");
