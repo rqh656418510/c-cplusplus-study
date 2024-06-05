@@ -60,5 +60,5 @@ void Hero::attack(Role *monster) {
 // 装备武器
 void Hero::equipWeapon(Weapon *weapon) {
     this->weapon = weapon;
-    cout << "英雄 " << this->m_Name << " 装备了武器 " << this->weapon->m_WeaponName << endl;
+    cout << "英雄" << this->m_Name << "装备了武器" << this->weapon->m_WeaponName << endl;
 }

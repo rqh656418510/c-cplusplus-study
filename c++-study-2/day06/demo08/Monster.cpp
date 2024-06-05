@@ -12,6 +12,7 @@ Monster::Monster() {
 void Monster::attack(Role *hero) {
     if (this->m_Hold) {
         cout << "怪物" << this->m_Name << "被定身了，本回合无法攻击" << endl;
+        return;
     }
 
     // 计算英雄真实伤害

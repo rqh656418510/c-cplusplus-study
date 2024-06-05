@@ -63,7 +63,7 @@ void playGame() {
         hero->attack(monster);
 
         if (monster->m_Hp <= 0) {
-            cout << "怪物" << monster->m_Name << "已经死亡，顺利通关" << endl;
+            cout << "怪物" << monster->m_Name << "已经死亡，游戏顺利通关" << endl;
             break;
         }
 
@@ -88,6 +88,10 @@ void playGame() {
 }
 
 int main() {
+    // 使用当前时间作为随机种子
+    srand(static_cast<unsigned int>(time(nullptr)));
+
     playGame();
+
     return 0;
 }
