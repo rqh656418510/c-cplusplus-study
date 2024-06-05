@@ -8,6 +8,8 @@ using namespace std;
 // 小刀
 class Knife : public Weapon {
 
+public:
+
     Knife();
 
     // 获取基础伤害

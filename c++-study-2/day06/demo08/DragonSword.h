@@ -8,6 +8,8 @@ using namespace std;
 // 屠龙刀
 class DragonSword : public Weapon {
 
+public:
+
     DragonSword();
 
     // 获取基础伤害

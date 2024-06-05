@@ -1,4 +1,5 @@
 #include "Hero.h"
+#include "Weapon.h"
 #include "Monster.h"
 
 Hero::Hero() {
@@ -54,7 +55,7 @@ void Hero::attack(Monster *monster) {
     // 设置英雄吸血
     this->m_Hp += addHp;
 
-    cout << "英雄" << this->m_Name << "攻击了怪物" << monster->m_Name << "，造成了 " << realDamage << " 伤害" << endl;
+    cout << "英雄" << this->m_Name << "攻击了怪物" << monster->m_Name << "，造成了 " << realDamage << " 点伤害" << endl;
 }
 
 // 装备武器
