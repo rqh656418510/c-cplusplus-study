@@ -1,5 +1,4 @@
 #include "Monster.h"
-#include "Hero.h"
 
 Monster::Monster() {
     this->m_Hp = 300;
@@ -10,7 +9,7 @@ Monster::Monster() {
 }
 
 // 攻击
-void Monster::attack(Hero *hero) {
+void Monster::attack(Role *hero) {
     if (this->m_Hold) {
         cout << "怪物" << this->m_Name << "被定身了，本回合无法攻击" << endl;
     }

@@ -1,6 +1,5 @@
 #include "Hero.h"
 #include "Weapon.h"
-#include "Monster.h"
 
 Hero::Hero() {
     this->m_Hp = 500;
@@ -11,7 +10,7 @@ Hero::Hero() {
 }
 
 // 攻击
-void Hero::attack(Monster *monster) {
+void Hero::attack(Role *monster) {
     int damage = 0; // 伤害
     int addHp = 0;  // 吸血
     bool isHold = false;
