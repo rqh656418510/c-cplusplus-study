@@ -75,3 +75,4 @@ add_executable(day06-demo08 day06/demo08/Knife.cpp day06/demo08/DragonSword.cpp 
 add_executable(day07-demo01 day07/demo01/main.cpp)
 add_executable(day07-demo02 day07/demo02/main.cpp)
 add_executable(day07-demo03 day07/demo03/main.cpp)
+add_executable(day07-demo04 day07/demo04/main.cpp)
