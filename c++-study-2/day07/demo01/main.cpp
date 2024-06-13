@@ -7,7 +7,7 @@
 using namespace std;
 
 // 模板声明
-template<typename T>
+template<class T>
 
 // 函数定义
 void mySwap(T &t1, T &t2) {
@@ -27,7 +27,7 @@ int main() {
     mySwap(m, n);
     cout << "m = " << m << ", n = " << n << endl;
 
-    // 显示指定类型调用（推荐）
+    // 显式指定类型调用（推荐）
     char c1 = 'A', c2 = 'B';
     mySwap<char>(c1, c2);
     cout << "c1 = " << c1 << ", c2 = " << c2 << endl;
