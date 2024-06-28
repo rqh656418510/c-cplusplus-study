@@ -32,7 +32,7 @@ void test01() {
     cout << resutlt << endl;
 }
 
-// 通过第三代具体化自定义数据类型，解决函数模板的局限性问题
+// 通过具体化自定义数据类型，解决函数模板的局限性问题
 // 如果具体化能够优先匹配，那么就选择具体化
 template<> bool myCompare<Person>(Person &a, Person &b) {
     return a.m_age == b.m_age;
