@@ -27,7 +27,7 @@ public:
         return out;
     }
 
-public:
+private:
     string m_Name;
     int m_age;
 

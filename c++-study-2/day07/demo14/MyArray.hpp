@@ -4,7 +4,10 @@
 
 using namespace std;
 
+// 类模板
 template<class T>
+
+// 自定义数组
 class MyArray {
 
 public:
@@ -69,7 +72,7 @@ public:
         return this->pAddress[index];
     }
 
-    // 尾部插入元素
+    // 往尾部插入元素
     void pushBack(T item) {
         this->pAddress[this->m_Size] = item;
         this->m_Size++;
