@@ -28,7 +28,7 @@ protected:
 class Son : public Father {
 
 public:
-    Son(string name, int age, string hobby = "Game") : Father(name, age) {
+    Son(string name, int age, string hobby) : Father(name, age) {
         this->m_Name = name;
         this->m_Age = age;
         this->m_hobby = hobby;
@@ -43,29 +43,33 @@ private:
 
 };
 
+// 基本数据类型的转换
 void test01() {
-    // 基本数据类型之间的转换
     char a = 'a';
     double d = static_cast<double>(a);
     cout << endl << d << endl;
 }
 
+// 继承关系引用互相转换
 void test02() {
+    Father father("Father", 60);
+    Son son("Son", 25, "Game");
+
     // 上行转换（将派生类的引用转换成基类表示），是安全的
-    Son son1("Son", 25);
-    Father father1 = static_cast<Father>(son1);
-    father1.print();
+    Father &father1 = static_cast<Father &>(son);
+    father1.print();    // 发生多态
 
     // 下行转换（将基类的引用转换成派生类表示），是不安全的
-    Father father2("Father", 60);
-    // Son son2 = static_cast<Son>(father2);  // 无法转换，编译出错
+    Son &son2 = static_cast<Son &>(father);
+    son2.print();
 }
 
+// 继承关系指针互相转换
 void test03() {
     // 上行转换（将派生类的指针转换成基类表示），是安全的
-    Son *son1 = new Son("Son", 25);
-    Father *father1 = static_cast<Father *>(son1); // 发生多态
-    father1->print();
+    Son *son1 = new Son("Son", 25, "Game");
+    Father *father1 = static_cast<Father *>(son1);
+    father1->print();   // 发生多态
 
     // 下行转换（将基类的指针转换成派生类表示），是不安全的
     Father *father2 = new Father("Father", 60);
