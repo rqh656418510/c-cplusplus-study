@@ -19,7 +19,8 @@ public:
 
 int devide(int a, int b) {
     // 在栈上创建对象
-    Person person;
+    Person p1;
+    Person p2;
 
     if (b == 0) {
         throw -1;
@@ -28,7 +29,7 @@ int devide(int a, int b) {
 }
 
 int main() {
-    // 异常被抛出后，从进入 try 代码块起，到异常被抛掷前，这期间在栈上构造的所有对象，都会被自动析构，析构的顺序与构造的顺序相反
+    // 栈解旋是指：异常被抛出后，从进入 try 代码块起，到异常被抛掷前，这期间在栈上构造的所有对象，都会被自动析构，析构的顺序与构造的顺序相反
     try {
         int result = devide(9, 3);
         cout << "result = " << result << endl;
