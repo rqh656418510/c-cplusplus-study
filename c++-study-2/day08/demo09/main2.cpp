@@ -21,26 +21,19 @@ public:
         cout << "调用析构函数" << endl;
     }
 
-    void printError() {
-        cout << "Exception Message: null" << endl;
-    }
-
 };
 
 void doWork() {
-    MyException exception;
-    throw &exception;   // 相当于 throw &(MyException());
+    throw MyException();
 }
 
 int main() {
     try {
         doWork();
     }
-    catch (MyException *e) {
-
-        // 执行到这里的时候，自定义异常类的析构函数已经被调用，即指针 e 已经被释放了（变成了野指针），不能再继续使用
-        // e->printError();
-
+    // 如果接收异常的时候，使用了引用，则会使用 throw 时候的那个对象
+    // 也就是说，捕获异常时使用引用，不会调用自定义异常类的拷贝构造函数
+    catch (MyException &e) {
         cout << "捕获到自定义异常" << endl;
     }
     catch (...) {

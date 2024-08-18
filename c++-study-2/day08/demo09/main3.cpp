@@ -28,7 +28,8 @@ public:
 };
 
 void doWork() {
-    throw new MyException();
+    MyException exception;
+    throw &exception;   // 不建议使用这种写法，相当于 throw &(MyException());
 }
 
 int main() {
@@ -36,11 +37,9 @@ int main() {
         doWork();
     }
     catch (MyException *e) {
-        // 自定义异常类的指针 e 可以继续使用，因为自定义异常类的析构函数还没有被调用
-        e->printError();
 
-        // 需要手动调用自定义异常类的析构函数来释放内存
-        delete e;
+        // 执行到这里的时候，自定义异常类的析构函数已经被调用，即指针 e 已经被释放了（变成了野指针），不能再继续使用
+        // e->printError();
 
         cout << "捕获到自定义异常" << endl;
     }
