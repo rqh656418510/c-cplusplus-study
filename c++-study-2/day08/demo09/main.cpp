@@ -21,10 +21,6 @@ public:
         cout << "调用析构函数" << endl;
     }
 
-    void printError() {
-        cout << "Error message" << endl;
-    }
-
 };
 
 void doWork() {
@@ -44,11 +40,6 @@ int main() {
 
     // 捕获异常时使用引用，不会调用自定义异常类的拷贝构造函数
     catch (MyException &e) {
-        cout << "捕获到自定义异常" << endl;
-    }
-
-    // 捕获异常时使用指针，不会调用自定义异常类的拷贝构造函数
-    catch (MyException *e) {
         cout << "捕获到自定义异常" << endl;
     }
     */
