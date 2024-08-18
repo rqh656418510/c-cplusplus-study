@@ -24,7 +24,7 @@ public:
 };
 
 void doWork() {
-    throw MyException();
+    throw MyException();    // 匿名对象的写法
 }
 
 int main() {

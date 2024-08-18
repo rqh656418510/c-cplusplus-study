@@ -28,7 +28,7 @@ public:
 };
 
 void doWork() {
-    throw new MyException();
+    throw new MyException();    // 在堆内存中 new 一个对象
 }
 
 int main() {
