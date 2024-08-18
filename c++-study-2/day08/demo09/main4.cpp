@@ -44,10 +44,10 @@ int main() {
         // 需要手动调用自定义异常类的析构函数来释放内存
         delete e;
 
-        cout << "捕获到自定义异常" << endl;
+        cout << "捕获到自定义异常 ..." << endl;
     }
     catch (...) {
-        cout << "捕获到未知异常" << endl;
+        cout << "捕获到未知异常 ..." << endl;
     }
 
     return 0;
