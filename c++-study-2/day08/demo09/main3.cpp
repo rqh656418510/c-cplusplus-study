@@ -28,7 +28,7 @@ public:
 };
 
 void doWork() {
-    MyException exception;
+    MyException exception;   // 在栈内存上创建一个对象
     throw &exception;   // 抛出一个内存地址，不建议使用这种写法，相当于 throw &(MyException());
 }
 
