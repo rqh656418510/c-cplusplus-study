@@ -11,7 +11,7 @@ class Person {
 public:
     Person(string name, int age) {
         if (age < 0 || age > 150) {
-            // 抛出标准库内的异常
+            // 抛出 C++ 的标准异常类
             throw out_of_range("年龄超出范围");
         }
 

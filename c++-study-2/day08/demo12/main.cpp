@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// 继承自标准异常库的异常类
+// 继承自 C++ 的标准异常类
 class MyOutOfRangeException : public exception {
 
 public:
@@ -33,7 +33,7 @@ public:
     Person(string name, int age) {
         if (age < 0 || age > 150) {
             // 抛出自定义异常类
-            throw MyOutOfRangeException("年龄超出范围");
+            throw MyOutOfRangeException("发生自定义异常：年龄超出范围");
         }
 
         this->m_Name = name;
