@@ -3,4 +3,3 @@ project(c___project_weather)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(c___project_weather main.cpp)
