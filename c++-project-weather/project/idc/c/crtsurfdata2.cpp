@@ -21,6 +21,7 @@ vector<struct st_stcode> vstcode;
 // 将全国气象站点参数文件中的数据加载到vstcode容器
 bool LoadSTCode(const char *initfile);
 
+// 日志文件
 CLogFile logfile;
 
 int main(int argc, char *argv[]) {
