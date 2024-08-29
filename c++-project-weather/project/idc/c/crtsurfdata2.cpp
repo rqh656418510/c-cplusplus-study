@@ -82,6 +82,7 @@ bool LoadSTCode(const char *initfile) {
         }
 
         // 将全国气象站点参数的每个数据项保存到站点参数结构体中
+        memset(&stcode, 0, sizeof(struct st_stcode));
         cmdStr.GetValue(0, stcode.provname, 30); // 省份
         cmdStr.GetValue(1, stcode.obtid, 30);    // 站号
         cmdStr.GetValue(2, stcode.obtname, 30);  // 站名
@@ -93,10 +94,12 @@ bool LoadSTCode(const char *initfile) {
         vstcode.push_back(stcode);
     }
 
+    /*
     for (int i = 0; i < vstcode.size(); i++) {
         logfile.Write("provname=%s, obtid=%s, obtname=%s, lat=%.2f, lon=%.2f, height=%.2f\n",
                       vstcode[i].provname, vstcode[i].obtid, vstcode[i].obtname, vstcode[i].lat, vstcode[i].lon, vstcode[i].height);
     }
+    */
 
     return true;
 }
