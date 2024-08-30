@@ -21,6 +21,25 @@ vector<struct st_stcode> vstcode;
 // 将全国气象站点参数文件中的数据加载到vstcode容器
 bool LoadSTCode(const char *initfile);
 
+// 全国气象站点分钟观测数据结构
+struct st_surfdata {
+    char obtid[11];      // 站点代码。
+    char ddatetime[21];  // 数据时间：格式yyyymmddhh24miss
+    int t;              // 气温：单位，0.1摄氏度。
+    int p;              // 气压：0.1百帕。
+    int u;              // 相对湿度，0-100之间的值。
+    int wd;             // 风向，0-360之间的值。
+    int wf;             // 风速：单位0.1m/s
+    int r;              // 降雨量：0.1mm。
+    int vis;            // 能见度：0.1米。
+};
+
+// 存放全国气象站点分钟观测数据的容器
+vector<struct st_surfdata> vsurfdata;
+
+// 模拟生成全国气象站点分钟观测数据，存放在vsurfdata容器中
+void CrtSurfData();
+
 // 日志文件
 CLogFile logfile;
 
@@ -48,6 +67,9 @@ int main(int argc, char *argv[]) {
     if (LoadSTCode(argv[1]) == false) {
         return -1;
     }
+
+    // 模拟生成全国气象站点分钟观测数据，存放在vsurfdata容器中
+    CrtSurfData();
 
     logfile.WriteEx("crtsurfdata3 结束运行。\n");
 
@@ -103,4 +125,44 @@ bool LoadSTCode(const char *initfile) {
     */
 
     return true;
+}
+
+// 模拟生成全国气象站点分钟观测数据，存放在vsurfdata容器中
+void CrtSurfData() {
+    // 设置随机数种子
+    srand(time(0));
+
+    // 获取当前时间，当成观测时间
+    char strddatetime[21];
+    memset(strddatetime, 0, sizeof(strddatetime));
+    LocalTime(strddatetime, "yyyymmddhh24miss");
+
+    struct st_surfdata stsurfdata;
+
+    // 遍历全国气象站点参数的vscode容器
+    for (int i = 0; i < vstcode.size(); i++) {
+        memset(&stsurfdata, 0, sizeof(struct st_surfdata));
+
+        // 用随机数填充分钟观测数据的结构体
+        strncpy(stsurfdata.obtid, vstcode[i].obtid, 10); // 站点代码。
+        strncpy(stsurfdata.ddatetime, strddatetime, 14);  // 数据时间：格式yyyymmddhh24miss
+        stsurfdata.t = rand() % 351;       // 气温：单位，0.1摄氏度
+        stsurfdata.p = rand() % 265 + 10000; // 气压：0.1百帕
+        stsurfdata.u = rand() % 100 + 1;     // 相对湿度，0-100之间的值。
+        stsurfdata.wd = rand() % 360;      // 风向，0-360之间的值。
+        stsurfdata.wf = rand() % 150;      // 风速：单位0.1m/s
+        stsurfdata.r = rand() % 16;        // 降雨量：0.1mm
+        stsurfdata.vis = rand() % 5001 + 100000;  // 能见度：0.1米
+
+        // 将观测数据的结构体放入vsurfdata容器
+        vsurfdata.push_back(stsurfdata);
+    }
+
+    /*
+    for (int i = 0; i < vsurfdata.size(); i++) {
+        logfile.Write("obtid=%s, ddatetime=%s, t=%d, p=%d, u=%d, wd=%d, wf=%d, r=%d, vis=%d\n",
+                      vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t, vsurfdata[i].p, vsurfdata[i].u,
+                      vsurfdata[i].wd, vsurfdata[i].wf, vsurfdata[i].r, vsurfdata[i].vis);
+    }
+    */
 }
