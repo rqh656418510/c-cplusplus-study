@@ -37,21 +37,28 @@ struct st_surfdata {
 // 存放全国气象站点分钟观测数据的容器
 vector<struct st_surfdata> vsurfdata;
 
+// 观测数据的时间
+char strddatetime[21];
+
 // 模拟生成全国气象站点分钟观测数据，存放在vsurfdata容器中
 void CrtSurfData();
+
+// 将vsurfdata容器中的全国气象站点分钟观测数据写入文件
+bool CrtSurfFile(const char *outpath, const char *datafmt);
 
 // 日志文件
 CLogFile logfile;
 
 int main(int argc, char *argv[]) {
-    if (argc != 4) {
+    if (argc != 5) {
         // 如果参数非法，给出帮助文档。
-        printf("Using: ./crtsurfdata4 inifile outpath logfile\n");
-        printf("Example: ./crtsurfdata4 ../ini/stcode.ini /tmp/surfdata /log/idc/crtsurfdata4.log\n\n");
+        printf("Using: ./crtsurfdata4 inifile outpath logfile datafmt\n");
+        printf("Example: ./crtsurfdata4 ../ini/stcode.ini /tmp/idc/surfdata /log/idc/crtsurfdata4.log xml,json,csv\n\n");
 
         printf("inifile 全国气象站点参数文件名。\n");
         printf("outpath 全国气象站点数据文件存放的目录。\n");
-        printf("logfile 本程序运行的日志文件名。\n\n");
+        printf("logfile 本程序运行的日志文件名。\n");
+        printf("datafmt 生成数据文件的格式，支持xml、json、csv三种格式，中间用逗号分割。\n\n");
 
         return -1;
     }
@@ -70,6 +77,11 @@ int main(int argc, char *argv[]) {
 
     // 模拟生成全国气象站点分钟观测数据，存放在vsurfdata容器中
     CrtSurfData();
+
+    // 将vsurfdata容器中的全国气象站点分钟观测数据写入文件
+    if (strstr(argv[4], "xml") != 0) CrtSurfFile(argv[2], "xml");
+    if (strstr(argv[4], "json") != 0) CrtSurfFile(argv[2], "json");
+    if (strstr(argv[4], "csv") != 0) CrtSurfFile(argv[2], "csv");
 
     logfile.WriteEx("crtsurfdata4 结束运行。\n");
 
@@ -133,7 +145,6 @@ void CrtSurfData() {
     srand(time(0));
 
     // 获取当前时间，当成观测时间
-    char strddatetime[21];
     memset(strddatetime, 0, sizeof(strddatetime));
     LocalTime(strddatetime, "yyyymmddhh24miss");
 
@@ -165,4 +176,40 @@ void CrtSurfData() {
                       vsurfdata[i].wd, vsurfdata[i].wf, vsurfdata[i].r, vsurfdata[i].vis);
     }
     */
+}
+
+// 将vsurfdata容器中的全国气象站点分钟观测数据写入文件
+bool CrtSurfFile(const char *outpath, const char *datafmt) {
+    CFile file;
+
+    // 拼接生成数据的文件名，例如：/tmp/idc/surfdata/SURF_ZH_20210629092200_2254.csv
+    char strFileName[301];
+    sprintf(strFileName, "%s/SURF_ZH_%s_%d.%s", outpath, strddatetime, getpid(), datafmt);
+
+    // 打开文件
+    if (file.OpenForRename(strFileName, "w") == false) {
+        logfile.Write("file.OpenForRename(%s) failed.\n", strFileName);
+    }
+
+    // 写入第一行的标题，只有 CSV 文件才需要有标题
+    if (strcmp(datafmt, "csv") == 0) {
+        file.Fprintf("站点代码,数据时间,气温,气压,相对湿度,风向,风速,降雨量,能见度\n");
+    }
+
+    // 遍历存放分钟观测数据的vsurfdata容器
+    for (int i = 0; i < vsurfdata.size(); i++) {
+        // 写入一条记录
+        if (strcmp(datafmt, "csv") == 0) {
+            file.Fprintf("%s,%s,%.1f,%.1f,%d,%d,%.1f,%.1f,%.1f\n", \
+            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
+            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
+        }
+    }
+
+    // 关闭文件
+    file.CloseAndRename();
+
+    logfile.Write("生成数据文件 %s 成功，数据时间为 %s，记录数为 %d。\n", strFileName, strddatetime, vsurfdata.size());
+
+    return true;
 }
