@@ -1,8 +1,8 @@
 # 开发框架头文件路径。
-PUBINCL = -I/usr/develop/bilibili-workspace/c++-project-weather/project/public
+PUBINCL = -I/usr/local/c-cplusplus-study/c++-project-weather/project/public
 
 # 开发框架cpp文件名，这里直接包含进来，没有采用链接库，是为了方便调试。
-PUBCPP = /usr/develop/bilibili-workspace/c++-project-weather/project/public/_public.cpp
+PUBCPP = /usr/local/c-cplusplus-study/c++-project-weather/project/public/_public.cpp
 
 # 编译参数。
 CFLAGS = -g

@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     if (argc != 5) {
         // 如果参数非法，给出帮助文档。
         printf("Using: ./crtsurfdata4 inifile outpath logfile datafmt\n");
-        printf("Example: ./crtsurfdata4 ../ini/stcode.ini /tmp/idc/surfdata /log/idc/crtsurfdata4.log xml,json,csv\n\n");
+        printf("Example: ./crtsurfdata4 ../ini/stcode.ini /tmp/idc/surfdata /var/log/idc/crtsurfdata4.log xml,json,csv\n\n");
 
         printf("inifile 全国气象站点参数文件名。\n");
         printf("outpath 全国气象站点数据文件存放的目录。\n");
