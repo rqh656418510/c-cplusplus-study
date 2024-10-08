@@ -203,7 +203,7 @@ bool CrtSurfFile(const char *outpath, const char *datafmt) {
 
     // 写入根节点，只有 json 文件才需要
     if (strcmp(datafmt, "json") == 0) {
-	file.Fprintf("{\"data\":[\n");
+        file.Fprintf("{\"data\":[\n");
     }
 
     // 遍历存放分钟观测数据的vsurfdata容器
@@ -214,27 +214,26 @@ bool CrtSurfFile(const char *outpath, const char *datafmt) {
             vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
             vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
         }
-	
-	// xml 文件写入一条记录
-	if (strcmp(datafmt, "xml") == 0) {
-	    file.Fprintf("<obtid>%s</obtid><ddatetime>%s</ddatetime><t>%.1f</t><p>%.1f</p>" \
-            "<u>%d</u><wd>%d</wd><wf>%.1f</wf><r>%.1f</r><vis>%.1f</vis><endl/>\n", \
-            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t/10.0, vsurfdata[i].p/10.0, \
-            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf/10.0, vsurfdata[i].r/10.0, vsurfdata[i].vis/10.0);
-	}
 
-	// json 文件写入一条记录
+        // xml 文件写入一条记录
+        if (strcmp(datafmt, "xml") == 0) {
+            file.Fprintf("<obtid>%s</obtid><ddatetime>%s</ddatetime><t>%.1f</t><p>%.1f</p>" \
+            "<u>%d</u><wd>%d</wd><wf>%.1f</wf><r>%.1f</r><vis>%.1f</vis><endl/>\n", \
+            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
+            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
+        }
+
+        // json 文件写入一条记录
         if (strcmp(datafmt, "json") == 0) {
             file.Fprintf("{\"obtid\":\"%s\",\"ddatetime\":\"%s\",\"t\":\"%.1f\",\"p\":\"%.1f\"," \
             "\"u\":\"%d\",\"wd\":\"%d\",\"wf\":\"%.1f\",\"r\":\"%.1f\",\"vis\":\"%.1f\"}", \
-            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t/10.0, vsurfdata[i].p/10.0, \
-            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf/10.0, vsurfdata[i].r/10.0, vsurfdata[i].vis/10.0);
-	    if (i < vsurfdata.size() - 1) {
-            	file.Fprintf(",\n");
-	    }
-            else {
-		file.Fprintf("\n");
-	    }
+            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
+            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
+            if (i < vsurfdata.size() - 1) {
+                file.Fprintf(",\n");
+            } else {
+                file.Fprintf("\n");
+            }
         }
 
     }
@@ -246,7 +245,7 @@ bool CrtSurfFile(const char *outpath, const char *datafmt) {
 
     // 写入根节点，只有 json 文件才需要写
     if (strcmp(datafmt, "json") == 0) {
-	file.Fprintf("]}\n");
+        file.Fprintf("]}\n");
     }
 
     // 关闭文件

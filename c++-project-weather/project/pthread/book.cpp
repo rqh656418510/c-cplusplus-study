@@ -13,8 +13,8 @@ void alarmfunc(int signal) {
 }
 
 int main() {
-    for (int i=0; i<=64; i++) {
-    	signal(i, handler);
+    for (int i = 0; i <= 64; i++) {
+        signal(i, handler);
     }
 
     // 忽略指定的信号
@@ -30,7 +30,7 @@ int main() {
     alarm(3);
 
     while (1) {
-    	printf("执行了一次任务。\n");
-	sleep(1);
+        printf("执行了一次任务。\n");
+        sleep(1);
     }
 }
