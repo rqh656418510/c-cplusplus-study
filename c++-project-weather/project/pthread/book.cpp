@@ -9,8 +9,8 @@ void handler(int signal) {
 }
 
 int main() {
-    for (int i=0; i<=64; i++) {
-    	signal(i, handler);
+    for (int i = 0; i <= 64; i++) {
+        signal(i, handler);
     }
 
     // 忽略指定的信号
@@ -20,7 +20,7 @@ int main() {
     signal(15, SIG_DFL);
 
     while (1) {
-    	printf("执行了一次任务。\n");
-	sleep(1);
+        printf("执行了一次任务。\n");
+        sleep(1);
     }
 }
