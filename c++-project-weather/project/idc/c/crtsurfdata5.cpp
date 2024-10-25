@@ -52,8 +52,8 @@ CLogFile logfile;
 int main(int argc, char *argv[]) {
     if (argc != 5) {
         // 如果参数非法，给出帮助文档。
-        printf("Using: ./crtsurfdata4 inifile outpath logfile datafmt\n");
-        printf("Example: ./crtsurfdata4 ../ini/stcode.ini /tmp/idc/surfdata /var/log/idc/crtsurfdata4.log xml,json,csv\n\n");
+        printf("Using: ./crtsurfdata5 inifile outpath logfile datafmt\n");
+        printf("Example: ./crtsurfdata5 ../ini/stcode.ini /tmp/idc/surfdata /var/log/idc/crtsurfdata5.log xml,json,csv\n\n");
 
         printf("inifile 全国气象站点参数文件名。\n");
         printf("outpath 全国气象站点数据文件存放的目录。\n");
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    logfile.Write("crtsurfdata4 开始运行。\n");
+    logfile.Write("crtsurfdata5 开始运行。\n");
 
     // 将全国气象站点参数文件中的数据加载到vstcode容器
     if (LoadSTCode(argv[1]) == false) {
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     if (strstr(argv[4], "json") != 0) CrtSurfFile(argv[2], "json");
     if (strstr(argv[4], "csv") != 0) CrtSurfFile(argv[2], "csv");
 
-    logfile.WriteEx("crtsurfdata4 结束运行。\n");
+    logfile.WriteEx("crtsurfdata5 结束运行。\n");
 
     return 0;
 }
@@ -196,14 +196,56 @@ bool CrtSurfFile(const char *outpath, const char *datafmt) {
         file.Fprintf("站点代码,数据时间,气温,气压,相对湿度,风向,风速,降雨量,能见度\n");
     }
 
+    // 写入根标签，只有 xml 文件才需要写
+    if (strcmp(datafmt, "xml") == 0) {
+        file.Fprintf("<data>\n");
+    }
+
+    // 写入根节点，只有 json 文件才需要
+    if (strcmp(datafmt, "json") == 0) {
+        file.Fprintf("{\"data\":[\n");
+    }
+
     // 遍历存放分钟观测数据的vsurfdata容器
     for (int i = 0; i < vsurfdata.size(); i++) {
-        // 写入一条记录
+        // csv 文件写入一条记录
         if (strcmp(datafmt, "csv") == 0) {
             file.Fprintf("%s,%s,%.1f,%.1f,%d,%d,%.1f,%.1f,%.1f\n", \
             vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
             vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
         }
+
+        // xml 文件写入一条记录
+        if (strcmp(datafmt, "xml") == 0) {
+            file.Fprintf("<obtid>%s</obtid><ddatetime>%s</ddatetime><t>%.1f</t><p>%.1f</p>" \
+            "<u>%d</u><wd>%d</wd><wf>%.1f</wf><r>%.1f</r><vis>%.1f</vis><endl/>\n", \
+            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
+            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
+        }
+
+        // json 文件写入一条记录
+        if (strcmp(datafmt, "json") == 0) {
+            file.Fprintf("{\"obtid\":\"%s\",\"ddatetime\":\"%s\",\"t\":\"%.1f\",\"p\":\"%.1f\"," \
+            "\"u\":\"%d\",\"wd\":\"%d\",\"wf\":\"%.1f\",\"r\":\"%.1f\",\"vis\":\"%.1f\"}", \
+            vsurfdata[i].obtid, vsurfdata[i].ddatetime, vsurfdata[i].t / 10.0, vsurfdata[i].p / 10.0, \
+            vsurfdata[i].u, vsurfdata[i].wd, vsurfdata[i].wf / 10.0, vsurfdata[i].r / 10.0, vsurfdata[i].vis / 10.0);
+            if (i < vsurfdata.size() - 1) {
+                file.Fprintf(",\n");
+            } else {
+                file.Fprintf("\n");
+            }
+        }
+
+    }
+
+    // 写入根标签，只有 xml 文件才需要写
+    if (strcmp(datafmt, "xml") == 0) {
+        file.Fprintf("</data>\n");
+    }
+
+    // 写入根节点，只有 json 文件才需要写
+    if (strcmp(datafmt, "json") == 0) {
+        file.Fprintf("]}\n");
     }
 
     // 关闭文件
