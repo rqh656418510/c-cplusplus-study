@@ -41,3 +41,6 @@ Debug
 ### VS Code ###
 .vscode/
 
+### GCC G++ ###
+*.o
+*.out
