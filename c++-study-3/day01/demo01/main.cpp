@@ -19,8 +19,8 @@ int main() {    // main .text
 /**
 
 1. 只编译、汇编到目标代码，不进行链接
- gcc -c sum.cpp
- gcc -c main.cpp
+ g++ -c sum.cpp
+ g++ -c main.cpp
 
 2. 查看目标文件的符号表，包括函数和全局变量的地址、大小等信息
  objdump -t sum.o
@@ -37,5 +37,9 @@ int main() {    // main .text
 5. 查看目标文件中各段的详细信息，包括段的名称、大小、地址、类型和属性等
  readelf -S sum.o
  readelf -S main.o
+
+6. 将目标文件中的汇编代码（通过反汇编得到）与源代码进行对比显示，以便进行调试和分析
+ g++ -c main.cpp -g    // 生成目标文件，-g 参数表示带上调试信息
+ objdump -S main.o
 
 */
