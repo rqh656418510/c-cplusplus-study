@@ -42,4 +42,8 @@ int main() {    // main .text
  g++ -c main.cpp -g    // 生成目标文件，-g 参数表示带上调试信息
  objdump -S main.o
 
+7. 链接所有目标文件，并查看指定文件的符号表信息
+ g++ -e main *.o     // 将所有的目标文件链接成一个完整的程序，默认会生成一个名为 a.out 的可执行文件
+ objdump -t a.out
+
 */
