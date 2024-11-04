@@ -46,4 +46,7 @@ int main() {    // main .text
  g++ -e main *.o     // 将所有的目标文件链接成一个完整的程序，默认会生成一个名为 a.out 的可执行文件
  objdump -t a.out
 
+8. 查看可执行文件（通常是 ELF 格式）的程序头信息
+  readelf -l a.out
+
 */
