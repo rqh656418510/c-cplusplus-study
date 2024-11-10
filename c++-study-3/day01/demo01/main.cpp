@@ -47,6 +47,6 @@ int main() {    // main .text
  objdump -t a.out
 
 8. 查看可执行文件（通常是 ELF 格式）的程序头信息
-  readelf -l a.out
+ readelf -l a.out
 
 */
