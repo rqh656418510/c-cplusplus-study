@@ -1,3 +1,7 @@
+/**
+ * 从编译器角度理解C++代码的编译和链接原理
+ */
+
 #include <iostream>
 
 using namespace std;

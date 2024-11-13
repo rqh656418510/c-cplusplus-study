@@ -1,3 +1,7 @@
+/**
+ * 掌握进程虚拟地址空间区域划分
+ */
+
 #include <iostream>
 
 using namespace std;
