@@ -7,6 +7,7 @@
     ├── demo03          掌握进程虚拟地址空间区域划分
     ├── demo04          const、指针、引用的结合使用
     ├── demo05          全面掌握const的用法
+    ├── demo06          深入理解C++的new和delete
 ```
 
 ## 常用命令
