@@ -1,5 +1,5 @@
 /**
- * 详解函数重载
+ * 掌握const和一二级指针的结合应用
  */
 
 #include <iostream>
