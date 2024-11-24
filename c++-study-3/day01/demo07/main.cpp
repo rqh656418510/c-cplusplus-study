@@ -17,6 +17,7 @@ void test01() {
 /**
  * const与一级指针的结合
  * <p> C++的语言规范：const 修饰的是离它最近的类型
+ * <p> const 在 * 的左边则定值，const 在 * 的右边则定向，即左定值右定向
  */
 void test02() {
     int a = 10;
