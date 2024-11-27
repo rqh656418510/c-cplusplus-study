@@ -25,9 +25,23 @@ bool compare(const char *a, const char *b) {
     return strcmp(a, b) > 0;
 }
 
-int main() {
+void test01() {
     compare(10, 20);
     compare(3.4, 2.4);
     compare("abc", "efd");
+}
+
+extern "C" {
+    int sum(int a, int b);
+}
+
+void test02() {
+    int result = sum(1, 2);
+    cout << "result = " << result << endl;
+}
+
+int main() {
+    test01();
+    test02();
     return 0;
 }
