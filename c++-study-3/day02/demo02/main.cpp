@@ -10,7 +10,7 @@ class Test {
 
 public:
     void func() {
-        cout << "call Test:: func" << endl;
+        cout << "call Test::func" << endl;
     }
 
     static void static_func() {
