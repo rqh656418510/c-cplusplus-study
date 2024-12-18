@@ -63,7 +63,7 @@ public:
 private:
     int *_pstatck; // 动态开辟数组，存储顺序栈的元素
     int _top;   // 指向栈顶元素的位置
-    int _size;  // 数组扩容的总大小
+    int _size;  // 数组的总大小
 
     // 扩容操作
     void resize() {
