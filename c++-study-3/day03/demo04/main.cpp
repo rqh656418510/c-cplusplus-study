@@ -3,24 +3,26 @@
  */
 
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
 // 类模板
 template<typename T>
 // 向量容器
-class MyVectorr {
+class MyVector {
 
 public:
-    // 构造函数
-    MyVectorr(int size = 10) {
+    // 构造函数（需要将内存开辟和对象构造分开处理）
+    MyVector(int size = 10) {
         _first = new T[size];
         _last = _first;
         _end = _first + size;
     }
 
-    // 析构函数
-    ~MyVectorr() {
+    // 析构函数（先析构容器内的有效元素，然后再释放 _first 指针执行的堆内存）
+    ~MyVector() {
+        //
         if (_first != nullptr) {
             delete[] _first;
             _first = _last = _end = nullptr;
@@ -28,7 +30,7 @@ public:
     }
 
     // 拷贝构造函数
-    MyVectorr(const MyVectorr<T> &v) {
+    MyVector(const MyVector<T> &v) {
         // 容器的总大小
         int size = v._end - v._first;
         // 有效元素的个数
@@ -43,7 +45,7 @@ public:
     }
 
     // 赋值运算符重载
-    MyVectorr<T> &operator=(const MyVectorr<T> &v) {
+    MyVector<T> &operator=(const MyVector<T> &v) {
         if (this == v) {
             return *this;
         }
@@ -67,14 +69,14 @@ public:
     }
 
     // 往容器尾部添加元素
-    void push(const T &val) {
+    void push_back(const T &val) {
         if (full()) {
             resize();
         }
         *_last++ = val;
     }
 
-    // 从容器尾部删除元素
+    // 从容器尾部删除元素（需要将对象的析构和内存释放分开处理）
     void pop_back() {
         if (!empty()) {
             --_last;
@@ -84,7 +86,7 @@ public:
     // 返回容器尾部的元素
     T back() const {
         if (empty()) {
-            throw "MyVectorr is empty!";
+            throw "MyVector is empty!";
         }
         return *(_last - 1);
     }
@@ -127,14 +129,26 @@ private:
     }
 };
 
-int main() {
+class Person {
+
+public:
+    Person() {
+        cout << "call Person()" << endl;
+    }
+
+    ~Person() {
+        cout << "call ~Person()" << endl;
+    }
+};
+
+void test01() {
     // 设置随机数种子
     srand(time(nullptr));
 
-    MyVectorr<int> v;
+    MyVector<int> v;
     for (int i = 0; i < 20; i++) {
         int val = random() % 100;
-        v.push(val);
+        v.push_back(val);
         cout << val << " ";
     }
     cout << endl;
@@ -147,6 +161,22 @@ int main() {
         cout << v.back() << " ";
         v.pop_back();
     }
+}
 
+void test02() {
+    Person p1, p2, p3;
+    cout << "===============" << endl;
+    MyVector<Person> v;
+    v.push_back(p1);
+    v.push_back(p2);
+    v.push_back(p3);
+    cout << "===============" << endl;
+    v.pop_back();
+    cout << "===============" << endl;
+}
+
+int main() {
+    // test01();
+    test02();
     return 0;
 }

@@ -1,5 +1,5 @@
 /**
- * 实现C++ STL向量容器MyVectorr代码
+ * 实现C++ STL向量容器MyVector代码
  */
 
 #include <iostream>
@@ -9,18 +9,18 @@ using namespace std;
 // 类模板
 template<typename T>
 // 向量容器
-class MyVectorr {
+class MyVector {
 
 public:
     // 构造函数
-    MyVectorr(int size = 10) {
+    MyVector(int size = 10) {
         _first = new T[size];
         _last = _first;
         _end = _first + size;
     }
 
     // 析构函数
-    ~MyVectorr() {
+    ~MyVector() {
         if (_first != nullptr) {
             delete[] _first;
             _first = _last = _end = nullptr;
@@ -28,7 +28,7 @@ public:
     }
 
     // 拷贝构造函数
-    MyVectorr(const MyVectorr<T> &v) {
+    MyVector(const MyVector<T> &v) {
         // 容器的总大小
         int size = v._end - v._first;
         // 有效元素的个数
@@ -43,7 +43,7 @@ public:
     }
 
     // 赋值运算符重载
-    MyVectorr<T> &operator=(const MyVectorr<T> &v) {
+    MyVector<T> &operator=(const MyVector<T> &v) {
         if (this == v) {
             return *this;
         }
@@ -67,7 +67,7 @@ public:
     }
 
     // 往容器尾部添加元素
-    void push(const T &val) {
+    void push_back(const T &val) {
         if (full()) {
             resize();
         }
@@ -84,7 +84,7 @@ public:
     // 返回容器尾部的元素
     T back() const {
         if (empty()) {
-            throw "MyVectorr is empty!";
+            throw "MyVector is empty!";
         }
         return *(_last - 1);
     }
@@ -131,10 +131,10 @@ int main() {
     // 设置随机数种子
     srand(time(nullptr));
 
-    MyVectorr<int> v;
+    MyVector<int> v;
     for (int i = 0; i < 20; i++) {
         int val = random() % 100;
-        v.push(val);
+        v.push_back(val);
         cout << val << " ";
     }
     cout << endl;
