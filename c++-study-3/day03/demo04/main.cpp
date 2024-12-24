@@ -1,5 +1,5 @@
 /**
- * 实现C++ STL向量容器vector代码
+ * 理解容器空间配置器allocator的重要性
  */
 
 #include <iostream>
