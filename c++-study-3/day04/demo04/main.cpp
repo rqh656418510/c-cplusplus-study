@@ -1,5 +1,5 @@
 /**
- * 什么是容器的迭代器失效问题
+ * vector容器的迭代器iterator实现
  */
 #include <iostream>
 #include <cstring>
