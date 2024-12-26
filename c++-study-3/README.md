@@ -26,6 +26,11 @@
     ├── demo02          理解类模板
     ├── demo03          实现C++ STL向量容器vector代码
     ├── demo04          理解容器空间配置器allocator的重要性
+└── day04
+    ├── demo01          学习复数类CComplex
+    ├── demo02          模拟实现C++的string类代码
+    ├── demo03          string字符串对象的迭代器iterator实现
+    ├── demo04          什么是容器的迭代器失效问题
 ```
 
 ## 常用命令
