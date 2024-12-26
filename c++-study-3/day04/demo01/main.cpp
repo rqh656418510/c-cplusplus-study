@@ -23,6 +23,7 @@ public:
     friend CComplex operator+(const CComplex &left, const CComplex &right);
 
     // 利用友元函数实现左移运算符的重载
+    // 左移运算符的重载只能使用友元函数来实现
     friend ostream &operator<<(ostream &out, const CComplex &c);
 
     void print() {
