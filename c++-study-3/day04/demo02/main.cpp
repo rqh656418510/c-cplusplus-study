@@ -71,8 +71,37 @@ public:
         return strcmp(_pstr, str._pstr) == 0;
     }
 
+    // 中括号运算符重载（读写）
+    char &operator[](int index) {
+        return _pstr[index];
+    }
+
+    // 中括号运算符重载（只读）
+    const char &operator[](int index) const {
+        return _pstr[index];
+    }
+
+    // 返回字符串自身
+    const char *c_str() const {
+        return _pstr;
+    }
+
+    // 获取字符串长度
     long length() const {
-        return strlen(_pstr) - 1;
+        long length = strlen(_pstr);
+
+        // 空字符串
+        if (0 == length) {
+            return 0;
+        }
+
+        // 以 '\0' 结尾的字符串
+        if (_pstr[length] == '\0') {
+            return length;
+        }
+
+        // 不以 '\0' 结尾的字符串
+        return length + 1;
     }
 
 private:
@@ -83,7 +112,9 @@ MyString operator+(const MyString &str1, const MyString &str2) {
     char *_pnew = new char[strlen(str1._pstr) + strlen(str2._pstr) + 1];
     strcpy(_pnew, str1._pstr);
     strcat(_pnew, str2._pstr);
-    return MyString(_pnew);
+    MyString newstr(_pnew);
+    delete[] _pnew;
+    return newstr;
 }
 
 ostream &operator<<(ostream &out, const MyString &str) {
@@ -96,6 +127,7 @@ int main() {
     MyString str1("abcde");
     cout << str1 << endl;
 
+    // 调用构造函数
     MyString str2 = "fghij";
     cout << str2 << endl;
 
@@ -124,7 +156,18 @@ int main() {
     bool result3 = str1 == str2;
     cout << (result3 ? "true" : "false") << endl;
 
-    cout << "length = " << str1.length() << endl;
+    // 中括号运算符重载
+    MyString str5("hello");
+    str5[4] = 'k';
+    cout << "str5[3] = " << str5[4] << endl;
+
+    // 获取字符串长度
+    MyString str6("world");
+    cout << "str6.length = " << str6.length() << endl;
+
+    // 返回字符串自身
+    const char *tmpstr = str6.c_str();
+    cout << tmpstr << endl;
 
     return 0;
 }
