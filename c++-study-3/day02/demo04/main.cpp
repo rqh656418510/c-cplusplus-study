@@ -42,11 +42,11 @@ public:
     }
 
     // 运算符重载
-    void operator=(const SeqStack &stack) {
+    SeqStack &operator=(const SeqStack &stack) {
         cout << "call operator=(const SeqStack &stack)" << endl;
         // 防止自赋值
         if (this == &stack) {
-            return;
+            return *this;
         }
 
         // 释放原来占用的内存空间
@@ -61,6 +61,8 @@ public:
         }
         _top = stack._top;
         _size = stack._size;
+
+        return *this;
     }
 
     // 入栈

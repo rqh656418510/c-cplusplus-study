@@ -64,6 +64,8 @@ public:
         }
         _last = _first + length;
         _end = _first + size;
+
+        return *this;
     }
 
     // 往容器尾部添加元素

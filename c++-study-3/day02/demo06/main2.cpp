@@ -51,6 +51,8 @@ public:
         for (int i = _front; i != _rear; i = (i + 1) % _size) {
             _pQueue[i] = other._pQueue[i];
         }
+
+        return *this;
     }
 
     ~MyQueue() {
