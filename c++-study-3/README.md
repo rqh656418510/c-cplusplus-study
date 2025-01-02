@@ -31,6 +31,7 @@
     ├── demo02          模拟实现C++的string类代码
     ├── demo03          string字符串对象的迭代器iterator实现
     ├── demo04          vector容器的迭代器iterator实现
+    ├── demo05          什么是容器的迭代器失效问题
 ```
 
 ## 常用命令

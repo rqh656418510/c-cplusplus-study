@@ -105,17 +105,58 @@ public:
         return length + 1;
     }
 
+    // 迭代器
+    class iterator {
+    public:
+        iterator(char *p = nullptr) : _p(p) {
+
+        }
+
+        // 重载不等于运算符
+        bool operator!=(const iterator &other) {
+            return _p != other._p;
+        }
+
+        // 重载前置 ++ 运算符
+        iterator &operator++() {
+            _p++;
+            return *this;
+        }
+
+        // 重载后置 ++ 运算符
+        iterator operator++(int) {
+            return iterator(_p++);
+        }
+
+        // 解引用
+        char &operator*() const {
+            return *_p;
+        }
+
+    private:
+        char *_p;
+    };
+
+    // 返回的是容器底层首元素的迭代器的表示
+    iterator begin() {
+        return iterator(_pstr);
+    }
+
+    // 返回的是容器末尾元素后继位置的迭代器的表示
+    iterator end() {
+        return iterator(_pstr + length());
+    }
+
 private:
     char *_pstr;
 };
 
 MyString operator+(const MyString &str1, const MyString &str2) {
-    char *_pnew = new char[strlen(str1._pstr) + strlen(str2._pstr) + 1];
-    strcpy(_pnew, str1._pstr);
-    strcat(_pnew, str2._pstr);
-    MyString newstr(_pnew);
-    delete[] _pnew;
-    return newstr;
+    MyString tmpStr;
+    tmpStr._pstr = new char[strlen(str1._pstr) + strlen(str2._pstr) + 1];
+    strcpy(tmpStr._pstr, str1._pstr);
+    strcat(tmpStr._pstr, str2._pstr);
+    return tmpStr;
 }
 
 ostream &operator<<(ostream &out, const MyString &str) {
@@ -123,52 +164,26 @@ ostream &operator<<(ostream &out, const MyString &str) {
     return out;
 }
 
+void test01() {
+    MyString str1 = "Hello World";
+    // 使用迭代器遍历字符串
+    for (MyString::iterator it = str1.begin(); it != str1.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+
+void test02() {
+    MyString str2 = "Golang";
+    // 使用 For 循环遍历字符串，会自动调用字符串类的 begin() 和 end() 函数
+    for (char ch: str2) {
+        cout << ch << " ";
+    }
+    cout << endl;
+}
+
 int main() {
-    // 调用构造函数
-    MyString str1("abcde");
-    cout << str1 << endl;
-
-    // 调用构造函数
-    MyString str2 = "fghij";
-    cout << str2 << endl;
-
-    // 调用拷贝构造函数
-    MyString str3 = str2;
-    cout << str3 << endl;
-
-    // 赋值运算符重载
-    str3 = str1;
-    cout << str3 << endl;
-
-    // 加法运算符重载
-    MyString str4 = str1 + str2;
-    cout << str4 << endl;
-
-    // 大于运算符重载
-    bool result1 = str1 > str2;
-    cout << (result1 ? "true" : "false") << endl;
-
-    // 小于运算符重载
-    bool result2 = str1 < str2;
-    cout << (result2 ? "true" : "false") << endl;
-
-    // 双等号运算符重载
-    str1 = str2;
-    bool result3 = str1 == str2;
-    cout << (result3 ? "true" : "false") << endl;
-
-    // 中括号运算符重载
-    MyString str5("hello");
-    str5[4] = 'k';
-    cout << "str5[3] = " << str5[4] << endl;
-
-    // 获取字符串长度
-    MyString str6("world");
-    cout << "str6.length = " << str6.length() << endl;
-
-    // 返回字符串自身
-    const char *tmpstr = str6.c_str();
-    cout << tmpstr << endl;
-
+    test01();
+    test02();
     return 0;
 }
