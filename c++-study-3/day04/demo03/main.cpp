@@ -113,7 +113,7 @@ public:
         }
 
         // 重载不等于运算符
-        bool operator!=(const iterator &other) {
+        bool operator!=(const iterator &other) const {
             return _p != other._p;
         }
 
@@ -128,7 +128,7 @@ public:
             return iterator(_p++);
         }
 
-        // 解引用
+        // 解引用运算符重载
         char &operator*() const {
             return *_p;
         }

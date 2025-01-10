@@ -32,6 +32,8 @@
     ├── demo03          string字符串对象的迭代器iterator实现
     ├── demo04          vector容器的迭代器iterator实现
     ├── demo05          什么是容器的迭代器失效问题
+    ├── demo06          深入理解new的delete的原理
+    ├── demo07          new和delete重载实现的对象池应用
 ```
 
 ## 常用命令

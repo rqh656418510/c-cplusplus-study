@@ -102,7 +102,7 @@ public:
     }
 
     // 返回有效元素的个数
-    int size() {
+    int size() const {
         return _last - _first;
     }
 

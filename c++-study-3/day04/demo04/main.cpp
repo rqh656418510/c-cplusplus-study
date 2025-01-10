@@ -149,8 +149,59 @@ public:
     }
 
     // 返回有效元素的个数
-    int size() {
+    int size() const {
         return _last - _first;
+    }
+
+    // 重载中括号运算符
+    T &operator[](int index) {
+        if (index < 0 || index >= size()) {
+            throw "OutOfRangeException";
+        }
+        return _first[index];
+    }
+
+    // 迭代器
+    class iterator {
+
+    public:
+        iterator(T *p = nullptr) : _ptr(p) {
+
+        }
+
+        // 重载不等于运算符
+        bool operator!=(const iterator &other) const {
+            return _ptr != other._ptr;
+        }
+
+        // 重载前置 ++ 运算符
+        iterator &operator++() {
+            _ptr++;
+            return *this;
+        }
+
+        // 重载后置 ++ 运算符
+        iterator operator++(int) {
+            return iterator(_ptr++);
+        }
+
+        // 解引用运算符重载
+        T &operator*() const {
+            return *_ptr;
+        }
+
+    private:
+        T *_ptr;
+    };
+
+    // 返回的是容器底层首元素的迭代器的表示
+    iterator begin() {
+        return iterator(_first);
+    }
+
+    // 返回的是容器末尾元素后继位置的迭代器的表示
+    iterator end() {
+        return iterator(_last);
     }
 
 private:
@@ -200,9 +251,34 @@ public:
 
 };
 
-int main() {
-    // 设置随机数种子
-    srand(time(nullptr));
+void test01() {
+    cout << "============ test01() ============" << endl;
+
+    Vector<int> v;
+    for (int i = 0; i < 20; i++) {
+        int val = random() % 100;
+        v.push_back(val);
+    }
+
+    // 使用中括号取值
+    for (int i = 0; i < v.size(); i++) {
+        cout << v[i] << " ";
+    }
+    cout << endl;
+
+    cout << "size: " << v.size() << endl;
+    cout << "full: " << (v.full() ? "true" : " false") << endl;
+    cout << "empty: " << (v.empty() ? "true" : " false") << endl;
+
+    while (!v.empty()) {
+        cout << v.back() << " ";
+        v.pop_back();
+    }
+    cout << endl;
+}
+
+void test02() {
+    cout << "============ test02() ============" << endl;
 
     // 往容器插入元素
     Vector<int> v;
@@ -214,6 +290,23 @@ int main() {
     cout << endl;
 
     // 使用迭代器变遍历容器
+    for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
 
+    // 使用 For 循环遍历容器，会自动调用容器类的 begin() 和 end() 函数
+    for (int item : v) {
+        cout << item << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    // 设置随机数种子
+    srand(time(nullptr));
+
+    test01();
+    test02();
     return 0;
 }
