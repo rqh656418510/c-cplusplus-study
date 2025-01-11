@@ -124,7 +124,7 @@ public:
     // 从容器尾部删除元素（需要将对象的析构和内存释放分开处理）
     void pop_back() {
         if (!empty()) {
-            verify(_last - 1, _last);
+            verify(_last - 1, _last - 1);
             _last--;
             // 在指定的内存空间中析构对象
             _allocator.destroy(_last);
@@ -272,13 +272,15 @@ private:
         Iterator_Base *cur = &this->_head;
         Iterator_Base *next = this->_head._next;
         while (next != nullptr) {
-            if (next->_cur->_ptr > start && next->_cur->_ptr <= end) {
+            if (next->_cur->_ptr >= start && next->_cur->_ptr <= end) {
                 // 迭代器失效，将迭代器持有的容器指针置为空
                 next->_cur->_pVec = nullptr;
                 // 在迭代器链表中，删除当前迭代器节点，并继续判断后面的迭代器节点是否失效
                 cur->_next = next->_next;
                 delete next;
                 next = cur->_next;
+            } else {
+                next = next->_next;
             }
         }
     }
@@ -302,82 +304,24 @@ public:
 
 };
 
-void test01() {
-    cout << "============ test01() ============" << endl;
-
-    Vector<int> v;
-    for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
-        v.push_back(val);
-    }
-
-    // 使用中括号取值
-    for (int i = 0; i < v.size(); i++) {
-        cout << v[i] << " ";
-    }
-    cout << endl;
-
-    cout << "size: " << v.size() << endl;
-    cout << "full: " << (v.full() ? "true" : " false") << endl;
-    cout << "empty: " << (v.empty() ? "true" : " false") << endl;
-
-    while (!v.empty()) {
-        cout << v.back() << " ";
-        v.pop_back();
-    }
-    cout << endl;
-}
-
-void test02() {
-    cout << "============ test02() ============" << endl;
-
-    // 往容器插入元素
-    Vector<int> v;
-    for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
-        v.push_back(val);
-        cout << val << " ";
-    }
-    cout << endl;
-
-    // 使用迭代器变遍历容器
-    for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-        cout << *it << " ";
-    }
-    cout << endl;
-
-    // 使用 For 循环遍历容器，会自动调用容器类的 begin() 和 end() 函数
-    for (int item : v) {
-        cout << item << " ";
-    }
-    cout << endl;
-}
-
-void test03() {
-    cout << "============ test03() ============" << endl;
-
-    // 往容器插入元素
-    Vector<int> v;
-    for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
-        v.push_back(val);
-        cout << val << " ";
-    }
-    cout << endl;
-
-    // 测试迭代器的失效问题是否已解决
-    Vector<int>::iterator it1 = v.end();
-    v.pop_back();
-    Vector<int>::iterator it2 = v.end();
-    cout << (it1 != it2 ? "true" : "false") << endl;
-}
-
 int main() {
     // 设置随机数种子
     srand(time(nullptr));
 
-    // test01();
-    // test02();
-    test03();
+    // 往容器插入元素
+    Vector<int> v;
+    for (int i = 0; i < 20; i++) {
+        int val = random() % 100;
+        v.push_back(val);
+        cout << val << " ";
+    }
+    cout << endl;
+
+    // 简单测试迭代器的失效问题是否已解决
+    Vector<int>::iterator it1 = v.end();
+    v.pop_back();
+    Vector<int>::iterator it2 = v.end();
+    cout << (it1 != it2 ? "true" : "false") << endl;
+
     return 0;
 }
