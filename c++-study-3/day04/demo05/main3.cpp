@@ -227,6 +227,41 @@ public:
         return iterator(this, _last);
     }
 
+    // 通过迭代器往容器插入元素
+    // 这里暂时不考虑容器扩容，也不考虑 it._prt 的指针合法性
+    iterator insert(iterator it, const T &val) {
+        verify(it._ptr - 1, _last);
+
+        // 重新分配数组的内存空间，并往右边移动数组元素
+        T *p = _last;
+        while (p > it._ptr) {
+            _allocator.construct(p, *(p - 1));
+            _allocator.destroy(p - 1);
+            p--;
+        }
+        _allocator.construct(p, val);
+
+        _last++;
+        return iterator(this, p);
+    }
+
+    // 通过迭代器往容器删除元素
+    iterator erase(iterator it) {
+        verify(it._ptr - 1, _last);
+
+        // 重新分配数组的内存空间，并往左边移动数组元素
+        T *p = it._ptr;
+        while (p < _last - 1) {
+            _allocator.destroy(p);
+            _allocator.construct(p, *(p + 1));
+            p++;
+        }
+        _allocator.destroy(p);
+
+        _last--;
+        return iterator(this, it._ptr);
+    }
+
 private:
     T *_first;  // 指向数组起始的位置
     T *_last;   // 指向数组中有效元素的后继位置
@@ -268,6 +303,7 @@ private:
         _end = _first + size * 2;
     }
 
+    // 维护迭代器的单向链表
     void verify(T *start, T *end) {
         Iterator_Base *cur = &this->_head;
         Iterator_Base *next = this->_head._next;
@@ -304,12 +340,11 @@ public:
 
 };
 
-int main() {
-    // 设置随机数种子
-    srand(time(nullptr));
+void test01() {
+    cout << "============ test01() ============" << endl;
 
     // 往容器插入元素
-    Vector<int> v;
+    Vector<int> v(100);
     for (int i = 0; i < 20; i++) {
         int val = random() % 100;
         v.push_back(val);
@@ -317,11 +352,57 @@ int main() {
     }
     cout << endl;
 
-    // 简单测试迭代器的失效问题是否已解决
-    Vector<int>::iterator it1 = v.end();
-    v.pop_back();
-    Vector<int>::iterator it2 = v.end();
-    cout << (it1 != it2 ? "true" : "false") << endl;
+    // 将容器中的所有偶数删除掉
+    for (Vector<int>::iterator it = v.begin(); it != v.end();) {
+        if (*it % 2 == 0) {
+            // 更新迭代器
+            it = v.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // 使用 For 循环遍历容器，会自动调用容器类的 begin() 和 end() 函数
+    for (int item : v) {
+        cout << item << " ";
+    }
+    cout << endl;
+}
+
+void test02() {
+    cout << "============ test02() ============" << endl;
+
+    // 往容器插入元素
+    Vector<int> v(100);
+    for (int i = 0; i < 20; i++) {
+        int val = random() % 100;
+        v.push_back(val);
+        cout << val << " ";
+    }
+    cout << endl;
+
+    // 给容器中所有的偶数前面添加一个小于该偶数的数字
+    for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+        if (*it % 2 == 0) {
+            // 更新迭代器
+            it = v.insert(it, *it - 1);
+            ++it;
+        }
+    }
+
+    // 使用 For 循环遍历容器，会自动调用容器类的 begin() 和 end() 函数
+    for (int item : v) {
+        cout << item << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    // 设置随机数种子
+    srand(time(nullptr));
+
+    test01();
+    test02();
 
     return 0;
 }
