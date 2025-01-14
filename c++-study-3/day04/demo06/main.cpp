@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// 重写 new 运算符，先调用 operator new 开发内存空间，然后再调用对象的构造函数（初始化）
+// 重写 new 运算符，先调用 operator new 开辟内存空间，然后再调用对象的构造函数（初始化）
 void *operator new(size_t size) {
     void *ptr = malloc(size);
     if (ptr == nullptr) {
@@ -26,7 +26,7 @@ void operator delete(void *ptr) {
     }
 }
 
-// 重写 new[] 运算符，先调用 operator new 开发内存空间，然后再调用对象的构造函数（初始化）
+// 重写 new[] 运算符，先调用 operator new 开辟内存空间，然后再调用对象的构造函数（初始化）
 void *operator new[](size_t size) {
     void *ptr = malloc(size);
     if (ptr == nullptr) {
@@ -44,7 +44,22 @@ void operator delete[](void *ptr) {
     }
 }
 
+class Test {
+public:
+    Test(int data = 10) : _data(data) {
+        cout << "Test()" << endl;
+    }
+
+    ~Test() {
+        cout << "~Test()" << endl;
+    }
+
+private:
+    int _data;
+};
+
 void test01() {
+    cout << "============ test01() ============" << endl;
     try {
         // 调用重载后的 new 和 delete 运算符
         int *p = new int;
@@ -55,6 +70,7 @@ void test01() {
 }
 
 void test02() {
+    cout << "============ test02() ============" << endl;
     try {
         // 调用重载后的 new[] 和 delete[] 运算符
         int *p = new int[10];
@@ -64,8 +80,32 @@ void test02() {
     }
 }
 
+void test03() {
+    cout << "============ test03() ============" << endl;
+    try {
+        // 调用重载后的 new 和 delete 运算符
+        Test *t = new Test(5);
+        delete t;
+    } catch (const bad_alloc &exception) {
+        cerr << exception.what() << endl;
+    }
+}
+
+void test04() {
+    cout << "============ test04() ============" << endl;
+    try {
+        // 调用重载后的 new[] 和 delete[] 运算符
+        Test *t = new Test[2]();
+        delete[] t;
+    } catch (const bad_alloc &exception) {
+        cerr << exception.what() << endl;
+    }
+}
+
 int main() {
     test01();
     test02();
+    test03();
+    test04();
     return 0;
 }
