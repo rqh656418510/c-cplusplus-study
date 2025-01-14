@@ -10,12 +10,19 @@ class Queue {
 
 public:
     Queue() {
+        cout << "Queue()" << endl;
         _size = 0;
         _front = _rear = new QueueItem();
     }
 
     ~Queue() {
-
+        cout << "~Queue()" << endl;
+        QueueItem *cur = _front;
+        while (cur != nullptr) {
+            QueueItem *next = cur->_next;
+            delete cur;
+            cur = next;
+        }
     }
 
     // 入队操作（插入尾节点）
@@ -73,6 +80,8 @@ private:
 };
 
 void test01() {
+    cout << "============ test01() ============" << endl;
+
     Queue<int> queue;
 
     for (int i = 0; i < 10; i++) {
@@ -89,10 +98,26 @@ void test01() {
     cout << endl << "size = " << queue.size() << endl;
 }
 
+void test02() {
+    cout << "============ test02() ============" << endl;
+
+    Queue<int> queue;
+
+    // 如果这里不使用对象池，那么就会频繁开辟和释放内存空间，导致性能消耗比较严重
+    for (int i = 0; i < 1000; i++) {
+        int value = random() % 100 + 1;
+        queue.push(value);
+        queue.pop();
+    }
+
+    cout << (queue.empty() ? "true" : "false") << endl;
+}
+
 int main() {
     // 设置随机种子
     srand(time(nullptr));
 
     test01();
+    test02();
     return 0;
 }
