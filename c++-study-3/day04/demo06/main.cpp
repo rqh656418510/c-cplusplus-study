@@ -26,7 +26,7 @@ void operator delete(void *ptr) {
     }
 }
 
-// 重写 new[] 运算符，先调用 operator new 开辟内存空间，然后再调用对象的构造函数（初始化）
+// 重写 new[] 运算符，先调用 operator new[] 开辟内存空间，然后再调用对象的构造函数（初始化）
 void *operator new[](size_t size) {
     void *ptr = malloc(size);
     if (ptr == nullptr) {
@@ -36,7 +36,7 @@ void *operator new[](size_t size) {
     return ptr;
 }
 
-// 重写 delete[] 运算符，先调用 ptr 指向对象的析构函数，然后再调用 operator delete 释放内存空间
+// 重写 delete[] 运算符，先调用 ptr 指向对象的析构函数，然后再调用 operator delete[] 释放内存空间
 void operator delete[](void *ptr) {
     if (ptr != nullptr) {
         free(ptr);
