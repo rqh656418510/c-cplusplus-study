@@ -33,7 +33,13 @@
     ├── demo04          vector容器的迭代器iterator实现
     ├── demo05          什么是容器的迭代器失效问题
     ├── demo06          深入理解new的delete的原理
-    ├── demo07          new和delete重载实现的对象池应用
+    ├── demo07          重载new和delete运算符来实现对象池
+└── day05
+    ├── demo01          继承的基本意义
+    ├── demo02          派生类的构造过程
+    ├── demo03          重载、隐藏、覆盖
+    ├── demo04          虚函数、静态绑定和动态绑定
+    ├── demo05          虚析构函数
 ```
 
 ## 常用命令
