@@ -1,7 +1,7 @@
 /**
- * 虚函数、静态绑定和动态绑定
+ * 虚函数、动态绑定和动态绑定
  *
- * <p> 静态绑定（不使用虚函数）
+ * <p> 动态绑定（使用虚函数）
  */
 
 #include <iostream>
@@ -16,11 +16,13 @@ public:
 
     }
 
-    void show() {
+    // 虚函数
+    virtual void show() {
         cout << "Base::show()" << endl;
     }
 
-    void show(int num) {
+    // 虚函数
+    virtual void show(int num) {
         cout << "Base::show(int num)" << endl;
     }
 
@@ -53,14 +55,14 @@ int main() {
     Device device(50);
 
     Base *pb = &device;
-    pb->show();           // 静态（编译时期）绑定（函数的调用）
-    pb->show(20);    // 静态（编译时期）绑定（函数的调用）
+    pb->show();           // 动态（运行时期）绑定（函数的调用）
+    pb->show(20);    // 动态（运行时期）绑定（函数的调用）
 
     cout << sizeof(Base) << endl;
     cout << sizeof(Device) << endl;
 
     cout << typeid(pb).name() << endl;      // class Base *
-    cout << typeid(*pb).name() << endl;     // class Base
+    cout << typeid(*pb).name() << endl;     // class Devic e
 
     return 0;
 }
