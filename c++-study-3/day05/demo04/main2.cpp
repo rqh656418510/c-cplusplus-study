@@ -42,10 +42,6 @@ public:
         cout << "Device::show()" << endl;
     }
 
-    void show(int num) {
-        cout << "Device::show(int num)" << endl;
-    }
-
 private:
     int mb;
 
