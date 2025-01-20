@@ -78,7 +78,7 @@ void printArea(Figure* base) {
 }
 
 int main() {
-    // Figure f;    // 错误写法，抽象类不能实例化对象
+    // Figure f;    // 错误写法，抽象类不能实例化
 
     Triangle Triangle(20, 30);
     Square square(50, 60);

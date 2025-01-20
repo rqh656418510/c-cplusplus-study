@@ -76,7 +76,7 @@ void bark(Animal &animal) {
 }
 
 int main() {
-    // 错误写法，抽象类不能实例化对象
+    // 错误写法，抽象类不能实例化
     // Animal animal("Animal");
 
     Cat cat = Cat("Cat");
