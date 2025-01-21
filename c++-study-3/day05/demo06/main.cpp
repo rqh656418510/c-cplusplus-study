@@ -1,81 +1,54 @@
 /**
- * 理解多态到底是什么
+ * 虚析构函数
  */
 
 #include <iostream>
-#include <cstring>
 
 using namespace std;
 
-class Animal {
+class Base {
 
 public:
-    Animal(string name) : _name(name) {
+    Base(int data) : ma(data) {
+        cout << "Base()" << endl;
+    }
 
+    // 虚析构函数
+    virtual ~Base() {
+        cout << "~Base()" << endl;
     }
 
     // 虚函数
-    virtual void bark() {
-
+    virtual void show() {
+        cout << "Base::show()" << endl;
     }
 
-protected:
-    string _name;
+private :
+    int ma;
 
 };
 
-class Cat : public Animal {
+class Device : public Base {
 
 public:
-    Cat(string name) : Animal(name) {
-
+    Device(int data) : Base(data), mb(data) {
+        cout << "Device()" << endl;
     }
 
-    void bark() {
-        cout << _name << " bark: miao miao" << endl;
+    // 当基类的析构函数是 virtual 虚函数，那么派生类的析构函数会自动成为虚函数
+    ~Device() {
+        cout << "~Device()" << endl;
     }
+
+private:
+    int mb;
 
 };
-
-class Dog : public Animal {
-
-public:
-    Dog(string name) : Animal(name) {
-
-    }
-
-    void bark() {
-        cout << _name << " bark: wang wang" << endl;
-    }
-
-};
-
-class Pig : public Animal {
-
-public:
-    Pig(string name) : Animal(name) {
-
-    }
-
-    void bark() {
-        cout << _name << " bark: heng heng" << endl;
-    }
-
-};
-
-void bark(Animal &animal) {
-    // 动态多态（底层是通过动态绑定来实现的）
-    animal.bark();
-}
 
 int main() {
-    Cat cat = Cat("Cat");
-    Dog dog = Dog("Dog");
-    Pig pig = Pig("Pig");
-
-    bark(cat);
-    bark(dog);
-    bark(pig);
+    Base *pb = new Device(10);
+    pb->show();
+    delete pb;
 
     return 0;
 }

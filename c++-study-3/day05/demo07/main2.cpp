@@ -1,97 +1,81 @@
 /**
- * 理解抽象类
+ * 理解多态到底是什么
  */
 
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
-// 抽象类
-class Figure {
+class Animal {
 
 public:
-    // 声明纯虚函数，计算面积
-    virtual double getArea() = 0;
+    Animal(string name) : _name(name) {
+
+    }
+
+    // 虚函数
+    virtual void bark() {
+
+    }
+
+protected:
+    string _name;
+
 };
 
-class Circle : public Figure {
+class Cat : public Animal {
 
 public:
+    Cat(string name) : Animal(name) {
 
-    Circle(double r) {
-        this->r = r;
     }
 
-    // 实现纯虚函数，计算圆的面积
-    virtual double getArea() {
-        double area = 3.14 * r * r;
-        cout << "圆的面积: " << area << endl;
-        return area;
+    void bark() {
+        cout << _name << " bark: miao miao" << endl;
     }
 
-private:
-    double r;
 };
 
-class Triangle : public Figure {
+class Dog : public Animal {
 
 public:
-    Triangle(double a, double b) {
-        this->a = a;
-        this->b = b;
+    Dog(string name) : Animal(name) {
+
     }
 
-    // 实现纯虚函数，计算三角形的面积
-    virtual double getArea() {
-        double area = a * b / 2;
-        cout << "三角形的面积: " << area << endl;
-        return area;
+    void bark() {
+        cout << _name << " bark: wang wang" << endl;
     }
 
-private:
-    double a;
-    double b;
 };
 
-class Square : public Figure {
+class Pig : public Animal {
 
 public:
-    Square(double a, double b) {
-        this->a = a;
-        this->b = b;
+    Pig(string name) : Animal(name) {
+
     }
 
-    // 实现纯虚函数，计算四边形的面积
-    virtual double getArea() {
-        double area = a * b;
-        cout << "四边形的面积: " << area << endl;
-        return area;
+    void bark() {
+        cout << _name << " bark: heng heng" << endl;
     }
 
-private:
-    double a;
-    double b;
 };
 
-void printArea(Figure* base) {
-    base->getArea();
+void bark(Animal *animal) {
+    // 动态多态（底层是通过动态绑定来实现的）
+    animal->bark();
 }
 
 int main() {
-    // Figure f;    // 错误写法，抽象类不能实例化
+    Cat cat = Cat("Cat");
+    Dog dog = Dog("Dog");
+    Pig pig = Pig("Pig");
 
-    Triangle Triangle(20, 30);
-    Square square(50, 60);
-
-    // 可以声明抽象类的指针
-    Figure* pBase = new Circle(5.3);
-    pBase->getArea();
-
-    // 可以声明抽象类的引用
-    Figure& base = square;
-    base.getArea();
-
-    printArea(&Triangle);
+    bark(&cat);
+    bark(&dog);
+    bark(&pig);
 
     return 0;
 }
