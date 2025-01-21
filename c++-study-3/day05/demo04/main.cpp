@@ -16,12 +16,9 @@ public:
 
     }
 
+    // 普通函数（非虚函数）
     void show() {
         cout << "Base::show()" << endl;
-    }
-
-    void show(int num) {
-        cout << "Base::show(int num)" << endl;
     }
 
 private:
@@ -50,7 +47,6 @@ int main() {
 
     Base *pb = &device;
     pb->show();           // 静态（编译时期）绑定（函数的调用）
-    pb->show(20);    // 静态（编译时期）绑定（函数的调用）
 
     cout << sizeof(Base) << endl;
     cout << sizeof(Device) << endl;

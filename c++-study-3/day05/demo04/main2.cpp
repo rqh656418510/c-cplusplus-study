@@ -21,11 +21,6 @@ public:
         cout << "Base::show()" << endl;
     }
 
-    // 虚函数
-    virtual void show(int num) {
-        cout << "Base::show(int num)" << endl;
-    }
-
 private:
     int ma;
 
@@ -52,7 +47,6 @@ int main() {
 
     Base *pb = &device;
     pb->show();           // 动态（运行时期）绑定（函数的调用）
-    pb->show(20);    // 动态（运行时期）绑定（函数的调用）
 
     cout << sizeof(Base) << endl;
     cout << sizeof(Device) << endl;
