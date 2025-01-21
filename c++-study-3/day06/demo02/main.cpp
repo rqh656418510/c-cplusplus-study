@@ -1,11 +1,11 @@
 /**
  * 菱形继承的问题
  */
-
 #include <iostream>
 
 using namespace std;
 
+// 虚继类
 class A {
 
 public:
@@ -22,6 +22,7 @@ public:
 
 };
 
+// 虚继承
 class B : virtual public A {
 
 public:
@@ -38,6 +39,7 @@ public:
 
 };
 
+// 虚继承
 class C : virtual public A {
 
 public:
