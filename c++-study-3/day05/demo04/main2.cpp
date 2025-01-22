@@ -57,7 +57,7 @@ int main() {
     cout << sizeof(Device) << endl;
 
     cout << typeid(pb).name() << endl;      // class Base *
-    cout << typeid(*pb).name() << endl;     // class Devic e
+    cout << typeid(*pb).name() << endl;     // class Device
 
     return 0;
 }
