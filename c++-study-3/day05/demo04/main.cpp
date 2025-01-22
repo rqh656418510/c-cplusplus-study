@@ -21,6 +21,11 @@ public:
         cout << "Base::show()" << endl;
     }
 
+    // 普通函数（非虚函数）
+    void show(int a) {
+        cout << "Base::show(int a)" << endl;
+    }
+
 private:
     int ma;
 

@@ -21,6 +21,11 @@ public:
         cout << "Base::show()" << endl;
     }
 
+    // 虚函数
+    virtual void show(int a) {
+        cout << "Base::show(int a)" << endl;
+    }
+
 private:
     int ma;
 
