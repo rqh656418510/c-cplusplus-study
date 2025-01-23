@@ -1,5 +1,5 @@
 /**
- * deque容器和list容器
+ * vector、deque、list对比
  */
 
 #include <iostream>
