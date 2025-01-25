@@ -1,5 +1,5 @@
 /**
- * 详解容器适配器
+ * 迭代器iterator
  */
 
 #include <iostream>

@@ -52,7 +52,10 @@
     ├── demo01          vector容器
     ├── demo02          无序关联容器
     ├── demo03          有序关联容器
-    ├── demo04          迭代器iterator
+    ├── demo04          详解容器适配器
+    ├── demo05          迭代器iterator
+    ├── demo06          函数对象
+    ├── demo07          泛型算法和绑定器
 ```
 
 ## 常用命令

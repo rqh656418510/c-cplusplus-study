@@ -47,7 +47,7 @@ int main() {
     map1.insert({1002, Student(1002, "Peter")});
     map1.insert({1003, Student(1003, "David")});
 
-    // 获取指定键的值，如果 key 不存在，会自动插入一个键值对 [key, Student()]
+    // 获取指定键的值，如果 key 不存在，会自动插入一个键值对 [key, Student()]，这需要自定义数据类型提供默认构造函数
     cout << map1[1002] << endl;
 
     // 遍历容器
