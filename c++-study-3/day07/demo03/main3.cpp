@@ -1,12 +1,12 @@
 /**
- * 无序关联容器
+ * 有序关联容器
  *
- * <p> unordered_map 容器的使用
+ * <p> map 容器的使用
  */
 
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 using namespace std;
 
@@ -14,8 +14,8 @@ int main() {
     // 设置随机种子
     srand(time(nullptr));
 
-    // 无序的键值对容器（键不允许重复）
-    unordered_map<int, string> map1;
+    // 有序的键值对容器（键不允许重复）
+    map<int, string> map1;
 
     // 插入键值对
     map1.insert(make_pair(1001, "Tom"));
