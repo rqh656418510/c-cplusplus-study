@@ -11,7 +11,7 @@ using namespace std;
 int main() {
     // 设置随机种子
     srand(time(nullptr));
-    
+
     vector<int> v1;
 
     for (int i=0; i< 10; i++) {
