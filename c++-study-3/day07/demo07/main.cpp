@@ -20,27 +20,30 @@ void test01() {
     }
     cout << endl;
 
-    // 排序算法（默认从小到大排序）
-    sort(v1.begin(), v1.end(), greater<int>());
+    // 排序算法（默认升序排序，即从小到大排序）
+    sort(v1.begin(), v1.end());
+
+    // 或者降序排序（从大到小）
+    // sort(v1.begin(), v1.end(), greater<int>());
 
     for (int val : v1) {
         cout << val << " ";
     }
     cout << endl;
 
-    // 二分查找算法（适用于有序容器）
-    if (binary_search(v1.begin(), v1.end(), 25)) {
-        cout << "found number 25" << endl;
-    } else {
-        cout << "not found 25" << endl;
-    }
-
-    // 查找算法
+    // 查找算法（不要求容器按顺序存储元素）
     vector<int>::iterator it1 = find(v1.begin(), v1.end(), 48);
     if (it1 != v1.end()) {
         cout << "found number 48" << endl;
     } else {
         cout << "not found 48" << endl;
+    }
+
+    // 二分查找算法，只适用于升序排序（从小到大）的容器，如果容器的元素是按降序排序（从大到小），则二分查找算法无法正常工作
+    if (binary_search(v1.begin(), v1.end(), 25)) {
+        cout << "found number 25" << endl;
+    } else {
+        cout << "not found 25" << endl;
     }
 }
 
