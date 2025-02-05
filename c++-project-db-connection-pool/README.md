@@ -13,7 +13,7 @@
 - 基于 CAS 的原子整形
 - 智能指针 `shared_ptr`
 - 生产者 - 消费者线程模型
-- C++ 11 的多线程编程、线程互、线程同步通信和 `unique_lock`
+- C++ 11 的多线程编程、线程互斥、线程同步通信和 `unique_lock`
 
 ### 开发平台的选型
 
@@ -49,8 +49,8 @@
 ### 连接池的功能设计
 
 - C++ 源文件的功能划分
-    - `ConnectionPool.cpp` 和 `ConnectionPool.h`：连接池的代码实现
-    - `Connection.cpp` 和 `Connection.h`：数据库操作的代码实现、增删改查的代码实现
+    - `ConnectionPool.h` 和 `ConnectionPool.cpp`：连接池的代码实现
+    - `Connection.h` 和 `Connection.cpp`：数据库操作的代码实现、增删改查的代码实现
 
 - 连接池的实现主要包含了以下功能
     - (1) 连接池只需要一个实例，所以 ConnectionPool 以单例模式进行设计。
