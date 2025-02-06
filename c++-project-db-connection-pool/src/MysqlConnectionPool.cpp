@@ -25,7 +25,7 @@ MysqlConnectionPool::MysqlConnectionPool() {
     }
 
     // 启动 MySQL 连接的生产者线程
-    thread produce(bind(&MysqlConnectionPool::produceConnection, this));
+    // thread produce(bind(&MysqlConnectionPool::produceConnection, this));
 }
 
 MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {
@@ -83,9 +83,9 @@ bool MysqlConnectionPool::loadConfigFile() {
         } else if (key == "maxSize") {
             this->_maxSize = stoi(value);
         } else if (key == "maxIdleTime") {
-            this->_maxIdleTime = stol(value);
+            this->_maxIdleTime = stoi(value);
         } else if (key == "connectionTimeout") {
-            this->_connectionTimeout = stol(value);
+            this->_connectionTimeout = stoi(value);
         }
     }
 
@@ -94,8 +94,27 @@ bool MysqlConnectionPool::loadConfigFile() {
     return true;
 }
 
-shared_ptr<MysqlConnection> *MysqlConnectionPool::getConnection() {
-    return nullptr;
+shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
+    unique_lock<mutex> lock(this->_queueMutex);
+    if (this->_connectionQueue.empty()) {
+        // 如果连接队列为空，则等待指定的时间，直到超时为止
+        this->_cv.wait_for(lock, chrono::milliseconds(this->_connectionTimeout));
+        // 再次判断连接队列是否为空
+        if (this->_connectionQueue.empty()) {
+            LOG("# ERR: %s\n", "Connection queue is empty");
+            return nullptr;
+        }
+    }
+    // 获取队头的连接
+    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front());
+    // 出队操作
+    this->_connectionQueue.pop();
+    // 判断连接队列是否为空
+    if (this->_connectionQueue.empty()) {
+        // 通知生产线程生产连接
+        this->_cv.notify_all();
+    }
+    return sp;
 }
 
 void MysqlConnectionPool::produceConnection() {

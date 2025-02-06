@@ -26,7 +26,7 @@ public:
     ~MysqlConnectionPool();
 
     // 获取 MySQL 连接
-    shared_ptr<MysqlConnection> *getConnection();
+    shared_ptr<MysqlConnection> getConnection();
 
 private:
     // 构造函数私有化
@@ -51,8 +51,8 @@ private:
 
     int _initSize;            // 初始连接数
     int _maxSize;             // 最大连接数
-    long _maxIdleTime;        // 最大空闲时间（单位秒）
-    long _connectionTimeout;  // 连接超时时间（单位毫秒）
+    int _maxIdleTime;        // 最大空闲时间（单位秒）
+    int _connectionTimeout;  // 连接超时时间（单位毫秒）
 
     atomic_int _connectionCount;                 // MySQL 连接的总数量
     queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
