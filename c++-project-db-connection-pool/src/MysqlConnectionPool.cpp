@@ -1,10 +1,10 @@
 #include <thread>
-#include "ConnectionPool.h"
+#include "MysqlConnectionPool.h"
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
-ConnectionPool::ConnectionPool() {
+MysqlConnectionPool::MysqlConnectionPool() {
     // 加载配置文件
     if (!loadConfigFile()) {
         LOG("# ERR: %s\n", "Failed to load config file");
@@ -28,19 +28,19 @@ ConnectionPool::ConnectionPool() {
     // 启动 MySQL 连接的生产者线程
 }
 
-ConnectionPool::ConnectionPool(const ConnectionPool &pool) {
+MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {
 
 }
 
-ConnectionPool::~ConnectionPool() {
+MysqlConnectionPool::~MysqlConnectionPool() {
     // TODO 释放所有 MySQL 连接
 }
 
-ConnectionPool *ConnectionPool::getInstance() {
+MysqlConnectionPool *MysqlConnectionPool::getInstance() {
     return INSTANCE;
 }
 
-bool ConnectionPool::loadConfigFile() {
+bool MysqlConnectionPool::loadConfigFile() {
     // 配置文件的路径
     string configPath = "/tmp/mysql.ini";
     // string configPath = TOSTRING(CONFIG_FILE_PATH);
@@ -95,5 +95,5 @@ bool ConnectionPool::loadConfigFile() {
 }
 
 // 初始化静态变量（单例对象）
-ConnectionPool *ConnectionPool::INSTANCE = new ConnectionPool();
+MysqlConnectionPool *MysqlConnectionPool::INSTANCE = new MysqlConnectionPool();
 

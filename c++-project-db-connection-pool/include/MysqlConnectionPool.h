@@ -10,29 +10,29 @@
 using namespace std;
 
 /**
- * 连接池的实现
+ * MySQL 连接池的实现
  */
-class ConnectionPool {
+class MysqlConnectionPool {
 
 public:
     // 获取单例
-    ConnectionPool *getInstance();
+    MysqlConnectionPool *getInstance();
 
     // 析构函数
-    ~ConnectionPool();
+    ~MysqlConnectionPool();
 
 private:
     // 构造函数私有化
-    ConnectionPool();
+    MysqlConnectionPool();
 
     // 拷贝造函数私有化
-    ConnectionPool(const ConnectionPool &pool);
+    MysqlConnectionPool(const MysqlConnectionPool &pool);
 
     // 加载配置文件
     bool loadConfigFile();
 
     // 单例对象
-    static ConnectionPool *INSTANCE;
+    static MysqlConnectionPool *INSTANCE;
 
     string _host;             // MySQL 连接地址
     string _username;         // MySQL 用户名
