@@ -9,10 +9,10 @@
 - 单例模式
 - Lambda 表达式
 - 队列容器 `queue`
-- MySQL 数据库编程
 - 基于 CAS 的原子整形
 - 智能指针 `shared_ptr`
 - 生产者 - 消费者线程模型
+- MySQL 数据库编程（基于 MySQL Connector/C++）
 - C++ 11 的多线程编程、线程互斥、线程同步通信和 `unique_lock`
 
 ### 开发平台的选型
@@ -21,21 +21,46 @@
 
 #### Linux 平台开发
 
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要安装 `boost`。建议从 [boost 官网](https://www.boost.org/users/download/) 下载 `boost` 的源码压缩包，然后使用 `root` 用户手动编译安装 `boost`，此方式适用于大多数 Linux 系统。
+
+``` sh
+# 下载文件
+$ wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz
+
+# 解压文件
+$ tar -xvf boost_1_78_0.tar.gz
+
+# 进入解压目录
+$ cd boost_1_78_0
+
+# 构建
+$ sudo ./bootstrap.sh --prefix=/usr/local/boost
+
+# 安装（耗时非常长）
+$ sudo ./b2 install --prefix=/usr/local/boost --with=all
+```
+
+然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
+
+``` sh
+# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
+cmake -S . -B build
+
+# 编译项目，生成可执行文件
+cmake --build build
+```
+
 #### Windows 平台开发
 
-在 Windows 平台上，需要先安装 MySQL 服务器，MySQL 的 Windows 安装文件云盘下载地址如下（请选择安装 Development 开发版，这样会包含 `mysql` 头文件和 `libmysql` 库文件）：
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要先安装 `boost`。安装完成后，进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
 
+``` sh
+# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
+cmake -S . -B build
+
+# 编译项目，生成可执行文件
+cmake --build build
 ```
-云盘链接：https://pan.baidu.com/s/1Y1l7qvpdR2clW5OCdOTwrQ
-提取码:95de
-```
-
-在 Windows 平台上，MySQL 数据库编程直接采用 Oracle 公司提供的 MySQL C/C++ 客户端开发包，在 VS 上需要进行相应的头文件和库文件的配置，如下：
-
-- (1) 右键项目 - C/C++ - 常规 - 附加包含目录，填写 `mysql.h` 头文件的路径
-- (2) 右键项目 - 链接器 - 常规 - 附加库目录，填写 `libmysql.lib` 的路径
-- (3) 右键项目 - 链接器 - 输入 - 附加依赖项，填写 `libmysql.lib` 库的名字
-- (4) 把 `libmysql.dll` 动态链接库（Linux 下后缀名是 `.so` 库）放在项目里面
 
 ### 连接池的功能介绍
 
