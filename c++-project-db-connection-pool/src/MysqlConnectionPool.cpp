@@ -95,25 +95,36 @@ bool MysqlConnectionPool::loadConfigFile() {
 }
 
 shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
+    // 获取互斥锁
     unique_lock<mutex> lock(this->_queueMutex);
-    if (this->_connectionQueue.empty()) {
-        // 如果连接队列为空，则等待指定的时间，直到超时为止
-        this->_cv.wait_for(lock, chrono::milliseconds(this->_connectionTimeout));
-        // 再次判断连接队列是否为空
-        if (this->_connectionQueue.empty()) {
-            LOG("# ERR: %s\n", "Connection queue is empty");
-            return nullptr;
+    while (this->_connectionQueue.empty()) {
+        // 如果连接队列为空，则等待指定的时间
+        cv_status status = this->_cv.wait_for(lock, chrono::milliseconds(this->_connectionTimeout));
+        if (cv_status::timeout == status) {
+            // 如果等待超时，再次判断连接队列是否为空
+            if (this->_connectionQueue.empty()) {
+                LOG("# ERR: %s\n", "Failed to get connection, queue is empty");
+                return nullptr;
+            }
         }
     }
-    // 获取队头的连接
-    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front());
+
+    // 获取队头的连接，并返回智能指针，同时自定义智能指针释放资源的方式，将连接归还到队列中
+    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front(), [&](MysqlConnection *pcon) -> void {
+        // 获取互斥锁
+        unique_lock<mutex> lock(this->_queueMutex);
+        // 入队操作（将连接归还到队列中）
+        this->_connectionQueue.push(pcon);
+    });
+
     // 出队操作
     this->_connectionQueue.pop();
-    // 判断连接队列是否为空
+
     if (this->_connectionQueue.empty()) {
-        // 通知生产线程生产连接
+        // 如果连接队列为空，则通知生产线程生产连接
         this->_cv.notify_all();
     }
+
     return sp;
 }
 
@@ -146,5 +157,5 @@ void MysqlConnectionPool::produceConnection() {
     }
 }
 
-// 初始化静态变量（单例对象）
+// 初始化单例对象
 MysqlConnectionPool *MysqlConnectionPool::INSTANCE = new MysqlConnectionPool();
