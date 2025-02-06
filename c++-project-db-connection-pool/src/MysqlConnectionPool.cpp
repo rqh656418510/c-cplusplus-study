@@ -1,4 +1,3 @@
-#include <thread>
 #include "MysqlConnectionPool.h"
 
 #define STRINGIFY(x) #x
@@ -26,6 +25,7 @@ MysqlConnectionPool::MysqlConnectionPool() {
     }
 
     // 启动 MySQL 连接的生产者线程
+    thread produce(bind(&MysqlConnectionPool::produceConnection, this));
 }
 
 MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {
@@ -94,6 +94,38 @@ bool MysqlConnectionPool::loadConfigFile() {
     return true;
 }
 
+shared_ptr<MysqlConnection> *MysqlConnectionPool::getConnection() {
+    return nullptr;
+}
+
+void MysqlConnectionPool::produceConnection() {
+    // 死循环
+    for (;;) {
+        // 获取互斥锁
+        unique_lock<mutex> lock(this->_queueMutex);
+        while (!this - _connectionQueue.empty()) {
+            // 如果连接队列不为空，生产者线程进入等待状态
+            this->_cv.wait(lock);
+        }
+
+        // 当连接数量没有达到上限，继续创建新的连接
+        if (this->_connectionCount < this->_maxSize) {
+            MysqlConnection *connection = new MysqlConnection();
+            // 连接数据库
+            bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
+            // 判断是否连接成功
+            if (connected) {
+                // 入队操作
+                this->_connectionQueue.push(connection);
+                // 计数器加一
+                this->_connectionCount++;
+            }
+        }
+
+        // 通知消费者线程可以消费连接了
+        this->_cv.notify_all();
+    }
+}
+
 // 初始化静态变量（单例对象）
 MysqlConnectionPool *MysqlConnectionPool::INSTANCE = new MysqlConnectionPool();
-

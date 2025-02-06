@@ -24,5 +24,6 @@ void test01() {
 
 int main() {
     test01();
+    sleep(INT64_MAX);
     return 0;
 }
