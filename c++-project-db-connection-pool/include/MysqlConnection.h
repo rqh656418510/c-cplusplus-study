@@ -12,10 +12,13 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
+#include <chrono>
 #include "public.h"
 
 using namespace std;
 using namespace sql;
+
+typedef chrono::system_clock::time_point time_point;
 
 // MySQL 数据库操作类
 class MysqlConnection {
@@ -37,7 +40,7 @@ public:
 
     void refreshAliveTime();
 
-    clock_t getAliveTime() const;
+    long getAliveTime() const;
 
 private:
     string _host;                           // MySQL 连接地址
@@ -46,5 +49,5 @@ private:
     string _dbname;                         // MySQL 数据库
     Driver *_driver;                        // MySQL 驱动
     Connection *_connection;                // MySQL 连接
-    clock_t _aliveTime;                     // 记录连接进入空闲状态后的起始存活时间点
+    time_point _aliveTime;                  // 记录连接进入空闲状态后的起始存活时间点
 };

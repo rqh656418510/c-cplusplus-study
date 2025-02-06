@@ -110,10 +110,12 @@ bool MysqlConnection::connect(const string host, const string username, const st
 
 // 刷新连接进入空闲状态后的起始存活时间点
 void MysqlConnection::refreshAliveTime() {
-    this->_aliveTime = clock();
+    this->_aliveTime = chrono::system_clock::now();
 }
 
-// 获取连接的空闲存活时间
-clock_t MysqlConnection::getAliveTime() const {
-    return clock() - this->_aliveTime;
+// 获取连接的空闲存活时间（单位毫秒）
+long MysqlConnection::getAliveTime() const {
+    chrono::milliseconds active_timestamp_ms = chrono::duration_cast<chrono::milliseconds>(this->_aliveTime.time_since_epoch());
+    chrono::milliseconds now_timestamp_ms = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+    return now_timestamp_ms.count() - active_timestamp_ms.count();
 }

@@ -76,7 +76,6 @@ void testConnectionPoolMultiThread() {
     sleep(20);
     cout << "Pool size: " << pool->getSize() << endl;
 
-    sleep(10);
     delete pool;
 }
 
