@@ -188,7 +188,7 @@ private:
 #pragma warning(pop)
 #endif
 
-  /* statement handle to execute queries initiated by driver. Perhaps it is
+  /* statement handle to execute queries initiated by _driver. Perhaps it is
      a good idea to move it to a separate helper class */
 #ifdef _WIN32
 #pragma warning(push)

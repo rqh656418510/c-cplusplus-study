@@ -1,4 +1,3 @@
-#include "public.h"
 #include "MysqlConnection.h"
 
 // 构造函数
@@ -9,8 +8,8 @@ MysqlConnection::MysqlConnection() {
 // 析构函数
 MysqlConnection::~MysqlConnection() {
     // 关闭数据连接
-    if (this->connection && !this->connection->isClosed()) {
-        this->connection->close();
+    if (this->_connection && !this->_connection->isClosed()) {
+        this->_connection->close();
         LOG("# INFO: %s\n", "Closed mysql connection");
     }
 }
@@ -19,9 +18,9 @@ MysqlConnection::~MysqlConnection() {
 // 如果执行后第一个结果是 ResultSet，则返回 true，否则返回 false
 bool MysqlConnection::execute(const char *sql) {
     try {
-        if (this->connection) {
+        if (this->_connection) {
             unique_ptr<Statement> statement = nullptr;
-            statement.reset(this->connection->createStatement());
+            statement.reset(this->_connection->createStatement());
             if (statement) {
                 return statement->execute(sql);
             }
@@ -38,9 +37,9 @@ bool MysqlConnection::execute(const char *sql) {
 // 函数的返回值是一个整数，指示受影响的行数，对于 CREATE TABLE 或 DROP TABLE 等不操作行的语句，返回值总为零
 int MysqlConnection::executeUpdate(const char *sql) {
     try {
-        if (this->connection) {
+        if (this->_connection) {
             unique_ptr<Statement> statement = nullptr;
-            statement.reset(this->connection->createStatement());
+            statement.reset(this->_connection->createStatement());
             if (statement) {
                 return statement->executeUpdate(sql);
             }
@@ -57,10 +56,10 @@ int MysqlConnection::executeUpdate(const char *sql) {
 unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<string> parameters) {
     unique_ptr<ResultSet> resultSet = nullptr;
     try {
-        if (this->connection) {
+        if (this->_connection) {
             int index = 0;
             unique_ptr<PreparedStatement> statement = nullptr;
-            statement.reset(this->connection->prepareStatement(sql));
+            statement.reset(this->_connection->prepareStatement(sql));
             if (statement) {
                 for (auto iterator = parameters.cbegin(); iterator != parameters.cend(); iterator++) {
                     index++;
@@ -80,27 +79,27 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
 // 连接 MySQL 数据库
 bool MysqlConnection::connect(const string host, const string username, const string password, const string dbname) {
     // 初始化MySQL的连接信息
-    this->host = host;
-    this->username = username;
-    this->password = password;
-    this->dbname = dbname;
+    this->_host = "tcp://" + host;
+    this->_username = username;
+    this->_password = password;
+    this->_dbname = dbname;
 
     try {
         // 加载MySQL驱动
-        this->driver = get_driver_instance();
-        if (!this->driver) {
-            LOG("# ERR: %s\n", "Failed to load mysql driver");
+        this->_driver = get_driver_instance();
+        if (!this->_driver) {
+            LOG("# ERR: %s\n", "Failed to load mysql _driver");
             return false;
         }
 
         // 连接MySQL实例
-        this->connection.reset(driver->connect(this->host.c_str(), this->username.c_str(), this->password.c_str()));
-        if (!this->connection) {
+        this->_connection.reset(_driver->connect(this->_host.c_str(), this->_username.c_str(), this->_password.c_str()));
+        if (!this->_connection) {
             LOG("# ERR: %s\n", "Failed to connect mysql server");
             return false;
         } else {
             // 设置默认数据库
-            this->connection->setSchema(this->dbname.c_str());
+            this->_connection->setSchema(this->_dbname.c_str());
             LOG("# INFO: %s\n", "Inited mysql connection");
             return true;
         }

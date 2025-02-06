@@ -17,6 +17,9 @@ set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 # 指定可执行文件的输出目录
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
+# 定义 MySQL 配置文件的路径
+add_definitions(-DCONFIG_FILE_PATH="${CMAKE_SOURCE_DIR}/config/mysql.ini")
+
 # 自定义目标，每次编译之前清理可执行文件的输出目录
 add_custom_target(clean_bin ALL
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${EXECUTABLE_OUTPUT_PATH}

@@ -3,9 +3,10 @@
 
 using namespace std;
 
-int main() {
+void test01() {
     unique_ptr<MysqlConnection> db(new MysqlConnection());
-    db->connect("tcp://192.168.56.112:3307", "root", "123456", "edu");
+    bool connected = db->connect("192.168.56.112:3307", "root", "123456", "edu");
+    assert(connected);
 
     string querySql = "select * from properties where `KEY` = ?";
     unique_ptr<ResultSet> result = db->query(querySql.c_str(), {"test_limit_price"});
@@ -19,5 +20,9 @@ int main() {
             cout << endl;
         }
     }
+}
+
+int main() {
+    test01();
     return 0;
 }

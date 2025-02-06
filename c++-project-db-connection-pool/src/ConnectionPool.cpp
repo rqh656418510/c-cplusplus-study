@@ -1,1 +1,99 @@
-#include <ConnectionPool.h>
+#include <thread>
+#include "ConnectionPool.h"
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+ConnectionPool::ConnectionPool() {
+    // 加载配置文件
+    if (!loadConfigFile()) {
+        LOG("# ERR: %s\n", "Failed to load config file");
+        return;
+    }
+
+    // 创建初始化数量的 MySQL 连接
+    for (int i = 0; i < this->_initSize; i++) {
+        MysqlConnection *connection = new MysqlConnection();
+        // 连接数据库
+        bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
+        // 判断是否连接成功
+        if (connected) {
+            // 入队操作
+            this->_connectionQueue.push(connection);
+            // 计数器加一
+            this->_connectionCount++;
+        }
+    }
+
+    // 启动 MySQL 连接的生产者线程
+}
+
+ConnectionPool::ConnectionPool(const ConnectionPool &pool) {
+
+}
+
+ConnectionPool::~ConnectionPool() {
+    // TODO 释放所有 MySQL 连接
+}
+
+ConnectionPool *ConnectionPool::getInstance() {
+    return INSTANCE;
+}
+
+bool ConnectionPool::loadConfigFile() {
+    // 配置文件的路径
+    string configPath = "/tmp/mysql.ini";
+    // string configPath = TOSTRING(CONFIG_FILE_PATH);
+
+    // 读取配置文件
+    FILE *file = fopen(configPath.c_str(), "r");
+    if (file == nullptr) {
+        LOG("# ERR: %s %s\n", configPath.c_str(), "file is not exist");
+        return false;
+    }
+
+    while (!feof(file)) {
+        char buffer[1024] = {0};
+        fgets(buffer, 1024, file);
+        string line = buffer;
+
+        // 配置格式：username=root
+        int index = line.find('=', 0);
+
+        // 无效配置项
+        if (index == -1) {
+            continue;
+        }
+
+        int endIndex = line.find('\n', index);
+
+        // 处理配置项
+        string key = line.substr(0, index);
+        string value = line.substr(index + 1, endIndex - index - 1);
+        if (key == "host") {
+            this->_host = value;
+        } else if (key == "username") {
+            this->_username = value;
+        } else if (key == "password") {
+            this->_password = value;
+        } else if (key == "dbname") {
+            this->_dbname = value;
+        } else if (key == "initSize") {
+            this->_initSize = stoi(value);
+        } else if (key == "maxSize") {
+            this->_maxSize = stoi(value);
+        } else if (key == "maxIdleTime") {
+            this->_maxIdleTime = stol(value);
+        } else if (key == "connectionTimeout") {
+            this->_connectionTimeout = stol(value);
+        }
+    }
+
+    fclose(file);
+
+    return true;
+}
+
+// 初始化静态变量（单例对象）
+ConnectionPool *ConnectionPool::INSTANCE = new ConnectionPool();
+

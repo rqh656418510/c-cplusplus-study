@@ -44,7 +44,7 @@ class CPPCONN_PUBLIC_FUNC Driver
 protected:
   virtual ~Driver() {}
 public:
-  // Attempts to make a database connection to the given URL.
+  // Attempts to make a database _connection to the given URL.
 
   virtual Connection * connect(const sql::SQLString& hostName, const sql::SQLString& userName, const sql::SQLString& password) = 0;
 
@@ -69,7 +69,7 @@ extern "C"
 {
   CPPCONN_PUBLIC_FUNC sql::Driver * get_driver_instance();
 
-  /* If dynamic loading is disabled in a driver then this function works just like get_driver_instance() */
+  /* If dynamic loading is disabled in a _driver then this function works just like get_driver_instance() */
   CPPCONN_PUBLIC_FUNC sql::Driver * get_driver_instance_by_name(const char * const clientlib);
 }
 
