@@ -23,6 +23,13 @@
 
 #### Windows 平台开发
 
+在 Windows 平台上，需要先安装 MySQL 服务器，MySQL 的 Windows 安装文件云盘下载地址如下（请选择安装 Development 开发版，这样会包含 `mysql` 头文件和 `libmysql` 库文件）：
+
+```
+云盘链接：https://pan.baidu.com/s/1Y1l7qvpdR2clW5OCdOTwrQ
+提取码:95de
+```
+
 在 Windows 平台上，MySQL 数据库编程直接采用 Oracle 公司提供的 MySQL C/C++ 客户端开发包，在 VS 上需要进行相应的头文件和库文件的配置，如下：
 
 - (1) 右键项目 - C/C++ - 常规 - 附加包含目录，填写 `mysql.h` 头文件的路径
