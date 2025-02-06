@@ -17,6 +17,8 @@ MysqlConnectionPool::MysqlConnectionPool() {
         bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
         // 判断是否连接成功
         if (connected) {
+            // 刷新连接进入空闲状态后的起始存活时间点
+            connection->refreshAliveTime();
             // 入队操作
             this->_connectionQueue.push(connection);
             // 计数器加一
@@ -26,14 +28,20 @@ MysqlConnectionPool::MysqlConnectionPool() {
 
     // 启动 MySQL 连接的生产者线程
     thread produce(bind(&MysqlConnectionPool::produceConnection, this));
+    produce.detach();
+
+    // 启动一个扫描线程，定时扫描多余的空闲连接，并释放连接
+    thread scan(bind(&MysqlConnectionPool::scanIdleConnection, this));
+    scan.detach();
 }
 
 MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {
-
+    throw "Not support copy constructor";
 }
 
 MysqlConnectionPool::~MysqlConnectionPool() {
-    // TODO 释放所有 MySQL 连接
+    // 关闭连接池，释放所有连接
+    this->close();
 }
 
 MysqlConnectionPool *MysqlConnectionPool::getInstance() {
@@ -94,7 +102,39 @@ bool MysqlConnectionPool::loadConfigFile() {
     return true;
 }
 
+void MysqlConnectionPool::close() {
+    // 设置关闭状态
+    this->_closed = true;
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(this->_queueMutex);
+
+    while (!(this->_connectionQueue.empty())) {
+        // 获取队头的连接
+        MysqlConnection *phead = this->_connectionQueue.front();
+        // 出队操作
+        this->_connectionQueue.pop();
+        // 计数器减一
+        this->_connectionCount--;
+        // 释放连接占用的内存空间
+        delete phead;
+    }
+}
+
+bool MysqlConnectionPool::isClosed() {
+    return this->_closed;
+}
+
+int MysqlConnectionPool::getSize() {
+    return this->_connectionCount;
+}
+
 shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
+    if (this->_closed) {
+        LOG("# ERR: %s\n", "Connection pool has closed");
+        return nullptr;
+    }
+
     // 获取互斥锁
     unique_lock<mutex> lock(this->_queueMutex);
     while (this->_connectionQueue.empty()) {
@@ -113,12 +153,19 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
     shared_ptr<MysqlConnection> sp(this->_connectionQueue.front(), [&](MysqlConnection *pcon) -> void {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
+        // 刷新连接进入空闲状态后的起始存活时间点
+        pcon->refreshAliveTime();
         // 入队操作（将连接归还到队列中）
         this->_connectionQueue.push(pcon);
+        // 计数器加一
+        this->_connectionCount++;
     });
 
     // 出队操作
     this->_connectionQueue.pop();
+
+    // 计数器减一
+    this->_connectionCount--;
 
     if (this->_connectionQueue.empty()) {
         // 如果连接队列为空，则通知生产线程生产连接
@@ -129,11 +176,10 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
 }
 
 void MysqlConnectionPool::produceConnection() {
-    // 死循环
-    for (;;) {
+    while (!this->_closed) {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
-        while (!this - _connectionQueue.empty()) {
+        while (!(this->_connectionQueue.empty())) {
             // 如果连接队列不为空，生产者线程进入等待状态
             this->_cv.wait(lock);
         }
@@ -145,6 +191,8 @@ void MysqlConnectionPool::produceConnection() {
             bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
             // 判断是否连接成功
             if (connected) {
+                // 刷新连接进入空闲状态后的起始存活时间点
+                connection->refreshAliveTime();
                 // 入队操作
                 this->_connectionQueue.push(connection);
                 // 计数器加一
@@ -154,6 +202,33 @@ void MysqlConnectionPool::produceConnection() {
 
         // 通知消费者线程可以消费连接了
         this->_cv.notify_all();
+    }
+}
+
+void MysqlConnectionPool::scanIdleConnection() {
+    while (!this->_closed) {
+        // 模拟定时效果
+        this_thread::sleep_for(chrono::seconds(this->_maxIdleTime));
+
+        // 获取互斥锁
+        unique_lock<mutex> lock(this->_queueMutex);
+
+        // 判断当前的连接总数量是否大于初始连接数量
+        while (this->_connectionCount > this->_initSize) {
+            // 扫描队头的连接是否超过最大空闲时间
+            MysqlConnection *phead = this->_connectionQueue.front();
+            if (phead->getAliveTime() > (this->_maxIdleTime * 1000)) {
+                // 出队操作
+                this->_connectionQueue.pop();
+                // 计数器减一
+                this->_connectionCount--;
+                // 释放连接占用的内存空间
+                delete phead;
+            } else {
+                // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
+                break;
+            }
+        }
     }
 }
 

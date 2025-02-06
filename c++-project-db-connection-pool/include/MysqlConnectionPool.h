@@ -19,11 +19,20 @@ using namespace std;
 class MysqlConnectionPool {
 
 public:
-    // 获取单例
-    MysqlConnectionPool *getInstance();
-
     // 析构函数
     ~MysqlConnectionPool();
+
+    // 关闭连接池
+    void close();
+
+    // 判断连接池是否已关闭
+    bool isClosed();
+
+    // 获取连接池中的连接数量
+    int getSize();
+
+    // 获取连接池单例
+    static MysqlConnectionPool *getInstance();
 
     // 获取 MySQL 连接
     shared_ptr<MysqlConnection> getConnection();
@@ -40,6 +49,9 @@ private:
 
     // 生产 MySQL 连接
     void produceConnection();
+
+    // 扫描多余的空闲连接，并释放连接
+    void scanIdleConnection();
 
     // 单例对象
     static MysqlConnectionPool *INSTANCE;
@@ -58,4 +70,5 @@ private:
     queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
     mutex _queueMutex;                           // 维护 MySQL 连接队列线程安全的互斥锁
     condition_variable _cv;                      // 设置条件变量，用于连接生产者线程和连接消费者线程的通信
+    bool _closed = false;                        // 连接池是否已关闭
 };

@@ -35,6 +35,10 @@ public:
 
     bool connect(const string host, const string username, const string password, const string dbname);
 
+    void refreshAliveTime();
+
+    clock_t getAliveTime() const;
+
 private:
     string _host;                           // MySQL 连接地址
     string _username;                       // MySQL 用户名
@@ -42,5 +46,5 @@ private:
     string _dbname;                         // MySQL 数据库
     Driver *_driver;                        // MySQL 驱动
     Connection *_connection;                // MySQL 连接
-
+    clock_t _aliveTime;                     // 记录连接进入空闲状态后的起始存活时间点
 };

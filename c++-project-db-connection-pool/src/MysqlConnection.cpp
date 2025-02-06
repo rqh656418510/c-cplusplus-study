@@ -107,3 +107,13 @@ bool MysqlConnection::connect(const string host, const string username, const st
     }
     return false;
 }
+
+// 刷新连接进入空闲状态后的起始存活时间点
+void MysqlConnection::refreshAliveTime() {
+    this->_aliveTime = clock();
+}
+
+// 获取连接的空闲存活时间
+clock_t MysqlConnection::getAliveTime() const {
+    return clock() - this->_aliveTime;
+}

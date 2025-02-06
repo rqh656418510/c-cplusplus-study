@@ -1,9 +1,10 @@
 #include <iostream>
 #include "MysqlConnection.h"
+#include "MysqlConnectionPool.h"
 
 using namespace std;
 
-void test01() {
+void testQuery() {
     MysqlConnection *connection = new MysqlConnection();
     connection->connect("192.168.56.112:3307", "root", "123456", "edu");
 
@@ -23,8 +24,20 @@ void test01() {
     delete connection;
 }
 
+void testConnectionPool() {
+    MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
+
+    for (int i = 0; i < 20; i++) {
+        pool->getConnection();
+        cout << pool->getSize() << endl;
+    }
+
+    delete pool;
+}
+
 int main() {
-    test01();
+    // testQuery();
+    testConnectionPool();
     sleep(3600);
     return 0;
 }
