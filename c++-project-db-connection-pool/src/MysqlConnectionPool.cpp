@@ -25,7 +25,7 @@ MysqlConnectionPool::MysqlConnectionPool() {
     }
 
     // 启动 MySQL 连接的生产者线程
-    // thread produce(bind(&MysqlConnectionPool::produceConnection, this));
+    thread produce(bind(&MysqlConnectionPool::produceConnection, this));
 }
 
 MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {

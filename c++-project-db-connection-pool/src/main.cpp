@@ -4,12 +4,11 @@
 using namespace std;
 
 void test01() {
-    unique_ptr<MysqlConnection> db(new MysqlConnection());
-    bool connected = db->connect("192.168.56.112:3307", "root", "123456", "edu");
-    assert(connected);
+    MysqlConnection *connection = new MysqlConnection();
+    connection->connect("192.168.56.112:3307", "root", "123456", "edu");
 
-    string querySql = "select * from properties where `KEY` = ?";
-    unique_ptr<ResultSet> result = db->query(querySql.c_str(), {"test_limit_price"});
+    const string querySql = "select * from properties where `KEY` = ?";
+    unique_ptr<ResultSet> result = connection->query(querySql.c_str(), {"test_limit_price"});
     if (result) {
         cout << "Query: " << querySql << endl;
         while (result->next()) {
@@ -20,10 +19,12 @@ void test01() {
             cout << endl;
         }
     }
+
+    delete connection;
 }
 
 int main() {
     test01();
-    sleep(INT64_MAX);
+    sleep(3600);
     return 0;
 }

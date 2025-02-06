@@ -19,8 +19,7 @@ MysqlConnection::~MysqlConnection() {
 bool MysqlConnection::execute(const char *sql) {
     try {
         if (this->_connection) {
-            unique_ptr<Statement> statement = nullptr;
-            statement.reset(this->_connection->createStatement());
+            unique_ptr<Statement> statement(this->_connection->createStatement());
             if (statement) {
                 return statement->execute(sql);
             }
@@ -38,8 +37,7 @@ bool MysqlConnection::execute(const char *sql) {
 int MysqlConnection::executeUpdate(const char *sql) {
     try {
         if (this->_connection) {
-            unique_ptr<Statement> statement = nullptr;
-            statement.reset(this->_connection->createStatement());
+            unique_ptr<Statement> statement(this->_connection->createStatement());
             if (statement) {
                 return statement->executeUpdate(sql);
             }
@@ -58,8 +56,7 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
     try {
         if (this->_connection) {
             int index = 0;
-            unique_ptr<PreparedStatement> statement = nullptr;
-            statement.reset(this->_connection->prepareStatement(sql));
+            unique_ptr<PreparedStatement> statement(this->_connection->prepareStatement(sql));
             if (statement) {
                 for (auto iterator = parameters.cbegin(); iterator != parameters.cend(); iterator++) {
                     index++;
@@ -93,7 +90,7 @@ bool MysqlConnection::connect(const string host, const string username, const st
         }
 
         // 连接MySQL实例
-        this->_connection.reset(_driver->connect(this->_host.c_str(), this->_username.c_str(), this->_password.c_str()));
+        this->_connection = _driver->connect(this->_host.c_str(), this->_username.c_str(), this->_password.c_str());
         if (!this->_connection) {
             LOG("# ERR: %s\n", "Failed to connect mysql server");
             return false;

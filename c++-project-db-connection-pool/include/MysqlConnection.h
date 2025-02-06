@@ -41,6 +41,6 @@ private:
     string _password;                       // MySQL 密码
     string _dbname;                         // MySQL 数据库
     Driver *_driver;                        // MySQL 驱动
-    unique_ptr<Connection> _connection;     // MySQL 连接
+    Connection *_connection;                // MySQL 连接
 
 };
