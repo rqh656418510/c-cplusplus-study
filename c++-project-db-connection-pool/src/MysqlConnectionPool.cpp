@@ -217,7 +217,8 @@ void MysqlConnectionPool::scanIdleConnection() {
         while (this->_connectionCount > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
-            if (phead->getAliveTime() > (this->_maxIdleTime * 1000)) {
+            clock_t tmp = phead->getAliveTime();
+            if (phead->getAliveTime() >= (this->_maxIdleTime * CLOCKS_PER_SEC)) {
                 // 出队操作
                 this->_connectionQueue.pop();
                 // 计数器减一

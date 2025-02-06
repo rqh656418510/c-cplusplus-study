@@ -28,29 +28,30 @@ void testConnectionPoolSingleThread() {
     const string insertSql = "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
-    clock_t startTime = clock();
+    auto start_time = chrono::high_resolution_clock::now();
 
     // 单个线程插入多条记录
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 1500; i++) {
         shared_ptr<MysqlConnection> connection = pool->getConnection();
         connection->executeUpdate(insertSql.c_str());
-        cout << "Insert " << i << " record, pool size: " << pool->getSize() << endl;
+        cout << "Insert " << i << " record, current pool size: " << pool->getSize() << endl;
     }
 
-    clock_t endTime = clock();
-    cout << "Times : " << endTime - startTime << "ms" << endl;
+    auto end_time = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> elapsed_time = end_time - start_time;
+    cout << "Times: " << elapsed_time.count() << "ms" << endl;
 
     delete pool;
 }
 
 void testConnectionPoolMultiThread() {
-    const int num_threads = 10;
+    const int num_threads = 15;
     thread threads[num_threads];
 
     const string insertSql = "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
-    clock_t startTime = clock();
+    auto start_time = chrono::high_resolution_clock::now();
 
     // 创建多个线程插入多条记录
     for (int i = 0; i < num_threads; i++) {
@@ -58,7 +59,7 @@ void testConnectionPoolMultiThread() {
             for (int n = 0; n < 100; n++) {
                 shared_ptr<MysqlConnection> connection = pool->getConnection();
                 connection->executeUpdate(insertSql.c_str());
-                cout << "Thread " << i << ", pool size: " << pool->getSize() << endl;
+                cout << "Thread " << i << ", current pool size: " << pool->getSize() << endl;
             }
         });
     }
@@ -68,9 +69,14 @@ void testConnectionPoolMultiThread() {
         threads[i].join();
     }
 
-    clock_t endTime = clock();
-    cout << "Times : " << endTime - startTime << "ms" << endl;
+    auto end_time = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> elapsed_time = end_time - start_time;
+    cout << "Times: " << elapsed_time.count() << "ms" << endl;
 
+    sleep(20);
+    cout << "Pool size: " << pool->getSize() << endl;
+
+    sleep(10);
     delete pool;
 }
 
