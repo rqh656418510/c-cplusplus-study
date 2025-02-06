@@ -1,57 +1,33 @@
 #include "public.h"
-#include "Connection.h"
+#include "MysqlConnection.h"
 
 // 构造函数
-MySQL::MySQL(const string host, const string username, const string password, const string database) {
+MysqlConnection::MysqlConnection() {
 
-    // 初始化MySQL的连接信息
-    this->host = host;
-    this->username = username;
-    this->password = password;
-    this->database = database;
-
-    try {
-        // 加载MySQL驱动
-        this->driver = get_driver_instance();
-        if (!this->driver) {
-            throw "failed to load mysql driver";
-        }
-
-        // 连接MySQL实例
-        this->connection.reset(driver->connect(this->host.c_str(), this->username.c_str(), this->password.c_str()));
-        if (!this->connection) {
-            throw "failed to connect mysql server";
-        }
-        else {
-            // 设置默认数据库
-            this->connection->setSchema(this->database.c_str());
-        }
-    }
-    catch (SQLException& e) {
-        LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
-        LOG("# ERR: %s\n", e.what());
-    };
 }
 
 // 析构函数
-MySQL::~MySQL() {
-
+MysqlConnection::~MysqlConnection() {
+    // 关闭数据连接
+    if (this->connection && !this->connection->isClosed()) {
+        this->connection->close();
+        LOG("# INFO: %s\n", "Closed mysql connection");
+    }
 }
 
 // 用于执行任何 SQL 语句，返回一个 bool 值，表明执行该 SQL 语句是否返回了 ResultSet
 // 如果执行后第一个结果是 ResultSet，则返回 true，否则返回 false
-bool MySQL::Execute(const char* sql) {
+bool MysqlConnection::execute(const char *sql) {
     try {
         if (this->connection) {
             unique_ptr<Statement> statement = nullptr;
             statement.reset(this->connection->createStatement());
-            if (statement)
-            {
+            if (statement) {
                 return statement->execute(sql);
             }
         }
     }
-    catch (SQLException& e) {
+    catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: %s\n", e.what());
     }
@@ -60,18 +36,17 @@ bool MySQL::Execute(const char* sql) {
 
 // 用于执行 INSERT、UPDATE 或 DELETE 语句以及 SQL DDL（数据定义语言）语句，例如 CREATE TABLE 和 DROP TABLE
 // 函数的返回值是一个整数，指示受影响的行数，对于 CREATE TABLE 或 DROP TABLE 等不操作行的语句，返回值总为零
-int MySQL::ExecuteUpdate(const char* sql) {
+int MysqlConnection::executeUpdate(const char *sql) {
     try {
         if (this->connection) {
             unique_ptr<Statement> statement = nullptr;
             statement.reset(this->connection->createStatement());
-            if (statement)
-            {
+            if (statement) {
                 return statement->executeUpdate(sql);
             }
         }
     }
-    catch (SQLException& e) {
+    catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: %s\n", e.what());
     }
@@ -79,7 +54,7 @@ int MySQL::ExecuteUpdate(const char* sql) {
 }
 
 // 基于 SQL 的预编译机制，执行查询单个结果集（ResultSet）的 SQL 语句，例如 SELECT 语句
-unique_ptr<ResultSet> MySQL::Query(const char* sql, const vector<string> parameters) {
+unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<string> parameters) {
     unique_ptr<ResultSet> resultSet = nullptr;
     try {
         if (this->connection) {
@@ -95,9 +70,44 @@ unique_ptr<ResultSet> MySQL::Query(const char* sql, const vector<string> paramet
             }
         }
     }
-    catch (SQLException& e) {
+    catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: %s\n", e.what());
     }
     return resultSet;
+}
+
+// 连接 MySQL 数据库
+bool MysqlConnection::connect(const string host, const string username, const string password, const string dbname) {
+    // 初始化MySQL的连接信息
+    this->host = host;
+    this->username = username;
+    this->password = password;
+    this->dbname = dbname;
+
+    try {
+        // 加载MySQL驱动
+        this->driver = get_driver_instance();
+        if (!this->driver) {
+            LOG("# ERR: %s\n", "Failed to load mysql driver");
+            return false;
+        }
+
+        // 连接MySQL实例
+        this->connection.reset(driver->connect(this->host.c_str(), this->username.c_str(), this->password.c_str()));
+        if (!this->connection) {
+            LOG("# ERR: %s\n", "Failed to connect mysql server");
+            return false;
+        } else {
+            // 设置默认数据库
+            this->connection->setSchema(this->dbname.c_str());
+            LOG("# INFO: %s\n", "Inited mysql connection");
+            return true;
+        }
+    }
+    catch (SQLException &e) {
+        LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
+        LOG("# ERR: %s\n", e.what());
+    }
+    return false;
 }

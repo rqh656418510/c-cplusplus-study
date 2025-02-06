@@ -17,23 +17,29 @@ using namespace std;
 using namespace sql;
 
 // MySQL 数据库操作类
-class MySQL {
+class MysqlConnection {
 
 public:
-    MySQL(const string host, const string username, const string password, const string database);
-    ~MySQL();
+    MysqlConnection();
+
+    ~MysqlConnection();
 
 public:
-    bool Execute(const char* sql);
-    int ExecuteUpdate(const char* sql);
-    unique_ptr<ResultSet> Query(const char* query, const vector<string> parameters);
+
+    bool execute(const char *sql);
+
+    int executeUpdate(const char *sql);
+
+    unique_ptr<ResultSet> query(const char *query, const vector<string> parameters);
+
+    bool connect(const string host, const string username, const string password, const string dbname);
 
 private:
     string host;
     string username;
     string password;
-    string database;
-    Driver* driver;
+    string dbname;
+    Driver *driver;
     unique_ptr<Connection> connection;
 
 };
