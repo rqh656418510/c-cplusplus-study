@@ -70,5 +70,5 @@ private:
     queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
     mutex _queueMutex;                           // 维护 MySQL 连接队列线程安全的互斥锁
     condition_variable _cv;                      // 设置条件变量，用于连接生产者线程和连接消费者线程的通信
-    bool _closed = false;                        // 连接池是否已关闭
+    atomic_bool _closed;                         // 连接池是否已关闭
 };

@@ -3,7 +3,7 @@
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
-MysqlConnectionPool::MysqlConnectionPool() {
+MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false) {
     // 加载配置文件
     if (!loadConfigFile()) {
         LOG("# ERR: %s\n", "Failed to load config file");
