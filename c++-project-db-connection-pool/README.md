@@ -23,9 +23,9 @@
 
 有关 MySQL 数据库编程、多线程编程、线程互斥和同步通信操作、智能指针、设计模式、容器等等这些技术在 C++ 语言层面都可以直接实现，因此该项目选择直接在 Windows 平台上进行开发，当然项目代码在 Linux 平台下用 `g++` 也可以直接编译运行。
 
-#### Linux 平台开发
+### Linux 平台开发
 
-由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要安装 `boost`。建议从 [boost 官网](https://www.boost.org/users/download/) 下载 `boost` 的源码压缩包，然后使用 `root` 用户手动编译安装 `boost`，此方式适用于大多数 Linux 系统。
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要安装 `boost`。建议从 [boost 官网](https://www.boost.org/users/download/) 下载 `boost` 的源码压缩包，然后使用 `root` 用户手动编译安装 `boost`，此方式适用于大多数 Linux 系统，如下所示：
 
 ``` sh
 # 下载文件
@@ -54,9 +54,14 @@ cmake -S . -B build
 cmake --build build
 ```
 
-#### Windows 平台开发
+### Windows 平台开发
 
-由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要先安装 `boost`。安装完成后，进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要先安装 `boost`，安装步骤如下：
+
+- (1) 在 [Boost 官网](https://www.boost.org/users/download/) 下载最新版本的 `Boost`，并解压到本地磁盘，例如解压路径为：`C:\Program Files\boost_1_77_0`
+- (2) 在 Visual Studio 中右键项目，选择 `属性`，导航到 `配置属性` -> `C/C++` -> `常规` -> `附加包含目录`，添加 `Boost` 的安装路径（如 `C:\Program Files\boost_1_77_0`）
+
+然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
 
 ``` sh
 # 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
