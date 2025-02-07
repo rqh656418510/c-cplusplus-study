@@ -9,11 +9,11 @@
 - 单例模式
 - Lambda 表达式
 - 队列容器 `queue`
-- 基于 CAS 的原子整形
 - 智能指针 `shared_ptr`
+- 基于 CAS 的原子基础类型
 - 生产者 - 消费者线程模型
-- MySQL 数据库编程（基于 MySQL Connector/C++）
-- C++ 11 的多线程编程、线程互斥、线程同步通信和 `unique_lock`
+- MySQL 数据库编程（基于 MySQL Connector/C++ 库）
+- C++ 11 的多线程编程、线程互斥、线程同步通信和 `unique_lock` 的使用
 
 ### 开发平台的选型
 
