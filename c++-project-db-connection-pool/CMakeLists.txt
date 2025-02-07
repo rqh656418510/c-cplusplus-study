@@ -17,14 +17,21 @@ set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 # 指定可执行文件的输出目录
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-# 定义 MySQL 配置文件的路径
-add_definitions(-DCONFIG_FILE_PATH="${CMAKE_SOURCE_DIR}/config/mysql.ini")
-
 # 自定义目标，每次编译之前清理可执行文件的输出目录
 add_custom_target(clean_bin ALL
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${EXECUTABLE_OUTPUT_PATH}
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_PATH}
-    COMMENT "Cleaning bin directory before build"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${EXECUTABLE_OUTPUT_PATH}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_PATH}
+        COMMENT "Cleaning bin directory before build"
+        )
+
+# 自定义命令，每次编译之前拷贝 MySQL 配置文件到可执行文件的输出目录
+add_custom_command(
+        TARGET clean_bin
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/config/mysql.ini
+        ${EXECUTABLE_OUTPUT_PATH}/mysql.ini
+        COMMENT "Copying mysql.ini to bin directory before build"
 )
 
 # 引入项目里的头文件
@@ -42,8 +49,8 @@ link_directories(${PATH_TO_BOOST}/lib ${PATH_TO_MYSQL_CONNECTOR}/lib)
 # 指定可执行文件的名称和项目里的所有源文件
 add_executable(${PROJECT_NAME} ${MAIN_SOURCES})
 
-# 指定编译参数，包括链接库文件：pthread、ssl、crypto
-set(CMAKE_CXX_FLAGS "-lpthread -lssl -lcrypto")
+# 指定编译参数，比如包括链接库文件：pthread、ssl、crypto、boost
+set(CMAKE_CXX_FLAGS "-lpthread -lssl -lcrypto -lboost_system -lboost_filesystem")
 
 # 链接项目里的静态库和动态链接库
 target_link_libraries(${PROJECT_NAME} ssl.so crypto.so mysqlcppconn.so)

@@ -1,12 +1,12 @@
+#include <boost/filesystem.hpp>
 #include "MysqlConnectionPool.h"
 
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
+namespace fs = boost::filesystem;
 
 MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false) {
     // 加载配置文件
     if (!loadConfigFile()) {
-        LOG("# ERR: %s\n", "Failed to load config file");
+        LOG("# ERR: %s\n", "Failed to load config file mysql.ini");
         return;
     }
 
@@ -50,8 +50,7 @@ MysqlConnectionPool *MysqlConnectionPool::getInstance() {
 
 bool MysqlConnectionPool::loadConfigFile() {
     // 配置文件的路径
-    string configPath = "/tmp/mysql.ini";
-    // string configPath = TOSTRING(CONFIG_FILE_PATH);
+    fs::path configPath = fs::current_path().concat("/mysql.ini");
 
     // 读取配置文件
     FILE *file = fopen(configPath.c_str(), "r");
@@ -60,6 +59,7 @@ bool MysqlConnectionPool::loadConfigFile() {
         return false;
     }
 
+    LOG("======== mysql.ini ========\n")
     while (!feof(file)) {
         char buffer[1024] = {0};
         fgets(buffer, 1024, file);
@@ -95,7 +95,9 @@ bool MysqlConnectionPool::loadConfigFile() {
         } else if (key == "connectionTimeout") {
             this->_connectionTimeout = stoi(value);
         }
+        LOG("%s=%s\n", key.c_str(), value.c_str());
     }
+    LOG("======== mysql.ini ========\n\n")
 
     fclose(file);
 
