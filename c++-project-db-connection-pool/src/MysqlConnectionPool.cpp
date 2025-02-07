@@ -103,6 +103,11 @@ bool MysqlConnectionPool::loadConfigFile() {
 }
 
 void MysqlConnectionPool::close() {
+    // 判断连接池是否已关闭
+    if (this->_closed) {
+        return;
+    }
+
     // 设置关闭状态
     this->_closed = true;
 
@@ -121,11 +126,11 @@ void MysqlConnectionPool::close() {
     }
 }
 
-bool MysqlConnectionPool::isClosed() {
+bool MysqlConnectionPool::isClosed() const {
     return this->_closed;
 }
 
-int MysqlConnectionPool::getSize() {
+int MysqlConnectionPool::getSize() const {
     return this->_connectionCount;
 }
 

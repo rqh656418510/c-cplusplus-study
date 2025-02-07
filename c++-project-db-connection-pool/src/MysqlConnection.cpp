@@ -10,7 +10,7 @@ MysqlConnection::~MysqlConnection() {
     // 关闭数据连接
     if (this->_connection && !this->_connection->isClosed()) {
         this->_connection->close();
-        LOG("# INFO: %s\n", "Closed mysql connection");
+        LOG("# DEBUG: %s\n", "Closed mysql connection");
     }
 }
 
@@ -27,6 +27,7 @@ bool MysqlConnection::execute(const char *sql) {
     }
     catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
+        LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
     }
     return false;
@@ -45,6 +46,7 @@ int MysqlConnection::executeUpdate(const char *sql) {
     }
     catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
+        LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
     }
     return 0;
@@ -68,6 +70,7 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
     }
     catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
+        LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
     }
     return resultSet;
@@ -97,12 +100,13 @@ bool MysqlConnection::connect(const string host, const string username, const st
         } else {
             // 设置默认数据库
             this->_connection->setSchema(this->_dbname.c_str());
-            LOG("# INFO: %s\n", "Inited mysql connection");
+            LOG("# DEBUG: %s\n", "Inited mysql connection");
             return true;
         }
     }
     catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
+        LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
     }
     return false;

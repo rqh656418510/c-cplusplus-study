@@ -26,10 +26,10 @@ public:
     void close();
 
     // 判断连接池是否已关闭
-    bool isClosed();
+    bool isClosed() const;
 
     // 获取连接池中的连接数量
-    int getSize();
+    int getSize() const;
 
     // 获取连接池单例
     static MysqlConnectionPool *getInstance();
@@ -63,8 +63,8 @@ private:
 
     int _initSize;            // 初始连接数
     int _maxSize;             // 最大连接数
-    int _maxIdleTime;        // 最大空闲时间（单位秒）
-    int _connectionTimeout;  // 连接超时时间（单位毫秒）
+    int _maxIdleTime;         // 最大空闲时间（单位秒）
+    int _connectionTimeout;   // 连接超时时间（单位毫秒）
 
     atomic_int _connectionCount;                 // MySQL 连接的总数量
     queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
