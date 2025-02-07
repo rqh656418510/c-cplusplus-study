@@ -1,3 +1,7 @@
+/**
+ * MySQL 连接池的实现
+ */
+
 #pragma once
 
 #include <iostream>
@@ -13,9 +17,7 @@
 
 using namespace std;
 
-/**
- * MySQL 连接池的实现
- */
+// MySQL 连接池类
 class MysqlConnectionPool {
 
 public:

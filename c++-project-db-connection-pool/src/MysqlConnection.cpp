@@ -10,7 +10,7 @@ MysqlConnection::~MysqlConnection() {
     // 关闭数据连接
     if (this->_connection && !this->_connection->isClosed()) {
         this->_connection->close();
-        LOG("# DEBUG: %s\n", "Closed mysql connection");
+        // LOG("# DEBUG: %s\n", "Closed mysql connection");
     }
 }
 
@@ -100,7 +100,7 @@ bool MysqlConnection::connect(const string host, const string username, const st
         } else {
             // 设置默认数据库
             this->_connection->setSchema(this->_dbname.c_str());
-            LOG("# DEBUG: %s\n", "Inited mysql connection");
+            // LOG("# DEBUG: %s\n", "Inited mysql connection");
             return true;
         }
     }
