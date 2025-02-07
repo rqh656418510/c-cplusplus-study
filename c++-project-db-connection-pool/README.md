@@ -15,9 +15,9 @@
 - 队列容器 `queue`
 - 智能指针 `shared_ptr`
 - 基于 CAS 的原子基础类型
-- 生产者 - 消费者线程模型
-- MySQL 数据库编程（基于 MySQL Connector/C++ 库）
-- C++ 11 的多线程编程、线程互斥、线程同步通信和 `unique_lock` 的使用
+- MySQL 数据库编程（基于 MySQL Connector/C++）
+- C++ 11 的多线程编程，包括线程互斥、线程同步通信等
+- 生产者 - 消费者线程模型的实现，基于 `mutex`、`unique_lock`、`condition_variable`
 
 ### 开发平台的选型
 
