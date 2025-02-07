@@ -145,6 +145,7 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
     // 获取互斥锁
     unique_lock<mutex> lock(this->_queueMutex);
 
+    // 使用 While 循环来避免线程虚假唤醒
     while (this->_connectionQueue.empty()) {
         // 如果连接队列为空，则等待指定的时间
         cv_status status = this->_cv.wait_for(lock, chrono::milliseconds(this->_connectionTimeout));
@@ -188,6 +189,7 @@ void MysqlConnectionPool::produceConnection() {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
 
+        // 使用 While 循环来避免线程虚假唤醒
         while (!(this->_connectionQueue.empty())) {
             // 如果连接队列不为空，生产者线程进入等待状态
             this->_cv.wait(lock);
@@ -222,6 +224,7 @@ void MysqlConnectionPool::scanIdleConnection() {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
 
+        // 使用 While 循环来避免线程虚假唤醒
         while (this->_connectionCount <= this->_initSize) {
             // 如果当前的连接总数量小于等于初始连接数量，扫描线程进入等待状态
             this->_cv.wait(lock);
