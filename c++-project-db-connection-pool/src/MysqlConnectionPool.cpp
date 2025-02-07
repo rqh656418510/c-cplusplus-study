@@ -26,11 +26,11 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
         }
     }
 
-    // 启动 MySQL 连接的生产者线程
+    // 后台启动 MySQL 连接的生产者线程
     thread produce(bind(&MysqlConnectionPool::produceConnection, this));
     produce.detach();
 
-    // 启动一个扫描线程，定时扫描多余的空闲连接，并释放连接
+    // 后台启动一个扫描线程，定时扫描多余的空闲连接，并释放连接
     thread scan(bind(&MysqlConnectionPool::scanIdleConnection, this));
     scan.detach();
 }
@@ -144,6 +144,7 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
 
     // 获取互斥锁
     unique_lock<mutex> lock(this->_queueMutex);
+
     while (this->_connectionQueue.empty()) {
         // 如果连接队列为空，则等待指定的时间
         cv_status status = this->_cv.wait_for(lock, chrono::milliseconds(this->_connectionTimeout));
@@ -186,6 +187,7 @@ void MysqlConnectionPool::produceConnection() {
     while (!this->_closed) {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
+
         while (!(this->_connectionQueue.empty())) {
             // 如果连接队列不为空，生产者线程进入等待状态
             this->_cv.wait(lock);
@@ -214,11 +216,16 @@ void MysqlConnectionPool::produceConnection() {
 
 void MysqlConnectionPool::scanIdleConnection() {
     while (!this->_closed) {
-        // 模拟定时效果
+        // 模拟定时扫描连接的效果
         this_thread::sleep_for(chrono::seconds(this->_maxIdleTime));
 
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
+
+        while (this->_connectionCount <= this->_initSize) {
+            // 如果当前的连接总数量小于等于初始连接数量，扫描线程进入等待状态
+            this->_cv.wait(lock);
+        }
 
         // 判断当前的连接总数量是否大于初始连接数量
         while (this->_connectionCount > this->_initSize) {

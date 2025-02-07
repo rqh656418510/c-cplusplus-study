@@ -90,18 +90,18 @@ cmake --build build
 ### 连接池的功能设计
 
 - C++ 源文件的功能划分
-    - `ConnectionPool.h` 和 `ConnectionPool.cpp`：连接池的代码实现
-    - `Connection.h` 和 `Connection.cpp`：数据库操作的代码实现、增删改查的代码实现
+    - `MysqlConnection.h` 和 `MysqlConnection.cpp`：数据库增删改查的代码实现
+    - `MysqlConnectionPool.h` 和 `MysqlConnectionPool.cpp`：连接池的代码实现
 
 - 连接池的实现主要包含了以下功能
     - (1) 连接池只需要一个实例，所以 ConnectionPool 以单例模式进行设计。
-    - (2) 应用可以从 ConnectionPool 中可以获取和 MySQL 的连接 Connection。
-    - (3) 空闲连接 Connection 全部维护在一个线程安全的 Connection 队列中，使用线程互斥锁保证队列的线程安全。
-    - (4) 如果 Connection 队列为空，还需要再获取连接，此时需要动态创建连接，上限数量是 maxSize。
-    - (5) 队列中空闲连接时间超过 maxIdleTime 的就要被释放掉，只保留初始的 initSize 个连接就可以了，这个功能点肯定需要放在独立的线程中去做。
-    - (6) 如果 Connection 队列为空，而此时连接的数量已达上限 maxSize，那么等待 connectionTimeout 时间。如果还是获取不到空闲的连接，那么获取连接失败，此处从 Connection 队列获取空闲连接，可以使用带超时时间的 `mutex` 互斥锁来实现连接超时时间。
-    - (7) 用户获取的连接用 `shared_ptr` 智能指针来管理，用 Lambda 表达式定制连接释放的功能（不真正释放连接，而是把连接归还到连接池中）。
-    - (8) 连接的生产和连接的消费采用生产者 - 消费者线程模型来设计，使用了线程间的同步通信机制条件变量和互斥锁。
+    - (2) 应用可以从 ConnectionPool 中获取 MySQL 的连接 Connection。
+    - (3) 空闲连接 Connection 全部存储在一个线程安全的 Connection 队列中，使用互斥锁来保证队列的线程安全。
+    - (4) 如果 Connection 队列为空，应用还需要再获取连接，此时需要动态创建连接，最大的连接数量是 maxSize。
+    - (5) 当队列中空闲连接的存活时间超过 maxIdleTime 后，连接就要被释放掉，只保留初始的 initSize 个连接就可以，这个功能需要放在独立的线程中去完成（定时扫描连接）。
+    - (6) 如果 Connection 队列为空，而且当前已创建的连接的数量已达到上限 maxSize，则应用需要等待 connectionTimeout 时间。如果应用还是获取不到空闲的连接，则获取连接失败；此处从 Connection 队列获取空闲连接时，可以使用带超时时间的 `mutex` 互斥锁来实现连接超时时间。
+    - (7) 应用获取的连接用 `shared_ptr` 智能指针来管理，并用 Lambda 表达式定制连接释放的功能（不真正释放连接，而是将连接归还到 Connection 队列中）。
+    - (8) 连接的生产和连接的消费采用生产者 - 消费者线程模型来设计，使用了线程间的同步通信机制、条件变量和互斥锁。
 
 ### MySQL 的参数调整
 
