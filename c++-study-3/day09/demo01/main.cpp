@@ -49,7 +49,7 @@ public:
         delete[] _pstr;
 
         // 深拷贝
-        _pstr = new char(strlen(str._pstr) + 1);
+        _pstr = new char[strlen(str._pstr) + 1];
         strcpy(_pstr, str._pstr);
 
         return *this;
@@ -61,52 +61,9 @@ public:
     // 左移运算符重载
     friend ostream &operator<<(ostream &out, const MyString &str);
 
-    // 大于运算符重载
-    bool operator>(const MyString &str) const {
-        return strcmp(_pstr, str._pstr) > 0;
-    }
-
-    // 小于运算符重载
-    bool operator<(const MyString &str) const {
-        return strcmp(_pstr, str._pstr) < 0;
-    }
-
-    // 双等号运算符重载
-    bool operator==(const MyString &str) const {
-        return strcmp(_pstr, str._pstr) == 0;
-    }
-
-    // 中括号运算符重载（读写）
-    char &operator[](int index) {
-        return _pstr[index];
-    }
-
-    // 中括号运算符重载（只读）
-    const char &operator[](int index) const {
-        return _pstr[index];
-    }
-
     // 返回字符串自身
     const char *c_str() const {
         return _pstr;
-    }
-
-    // 获取字符串长度
-    long length() const {
-        long length = strlen(_pstr);
-
-        // 空字符串
-        if (0 == length) {
-            return 0;
-        }
-
-        // 以 '\0' 结尾的字符串
-        if (_pstr[length] == '\0') {
-            return length;
-        }
-
-        // 不以 '\0' 结尾的字符串
-        return length + 1;
     }
 
 private:
