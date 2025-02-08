@@ -1,9 +1,10 @@
 /**
- * CMyString的代码问题
+ * CMyString在vector上的应用
  */
 
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
         _pstr = nullptr;
     }
 
-    // 拷贝构造函数
+    // 带左值引用参数的拷贝构造函数
     MyString(const MyString &str) {
         cout << "MyString(const MyString &str)" << endl;
         // 深拷贝
@@ -37,7 +38,14 @@ public:
         strcpy(_pstr, str._pstr);
     }
 
-    // 赋值运算符重载
+    // 带右值引用参数的拷贝构造函数
+    MyString(MyString &&str) {
+        cout << "MyString(MyString &&str)" << endl;
+        _pstr = str._pstr;
+        str._pstr = nullptr;
+    }
+
+    // 带左值引用参数的赋值运算符重载
     MyString &operator=(const MyString &str) {
         cout << "operator=(const MyString &str)" << endl;
         // 防止自赋值
@@ -126,34 +134,29 @@ ostream &operator<<(ostream &out, const MyString &str) {
     return out;
 }
 
-MyString getString(MyString &str) {
-    const char *pstr = str.c_str();
-    MyString tmpStr(pstr);
-    return tmpStr;
-}
-
 void test01() {
     cout << "\n============ test01() ============" << endl;
 
-    MyString str1("aaaaaaa");
-    MyString str2;
-    str2 = getString(str1);
-    cout << str2.c_str() << endl;
+    MyString str1 = "aaa";
+    vector<MyString> v1;
+
+    cout << "----------------------------------" << endl;
+    v1.push_back(str1);
+    cout << "----------------------------------" << endl;
 }
 
 void test02() {
     cout << "\n============ test02() ============" << endl;
 
-    MyString str1("Hello");
-    MyString str2("World");
+    MyString str1 = "aaa";
+    vector<MyString> v1;
     cout << "----------------------------------" << endl;
-    MyString str3 = str1 + str2;
+    v1.push_back(MyString("bbb"));
     cout << "----------------------------------" << endl;
-    cout << str3 << endl;
 }
 
 int main() {
     test01();
-    // test02();
+    test02();
     return 0;
 }
