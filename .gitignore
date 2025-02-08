@@ -1,6 +1,7 @@
 HELP.md
 *.exe
 .gradle
+/bin/
 /build/
 cmake-build-debug
 !gradle/wrapper/gradle-wrapper.jar
