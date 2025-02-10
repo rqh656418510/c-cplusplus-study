@@ -3,6 +3,8 @@ project(c___study_1)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(CMAKE_CXX_FLAGS "-lpthread")
+
 add_executable(day01-demo01 day01/demo01/main.cpp)
 add_executable(day01-demo02 day01/demo02/main.cpp)
 add_executable(day01-demo03 day01/demo03/main.cpp)
@@ -50,7 +52,8 @@ add_executable(day03-demo07 day03/demo07/main.cpp)
 # ...(省略)
 
 add_executable(day10-demo08 day10/demo08/main.cpp day10/demo08/file.cpp)
-add_executable(day11-demo02-3 day11/demo01/main.cpp)
+add_executable(day11-demo01 day11/demo01/main.cpp)
+add_executable(day11-demo02 day11/demo02/main.cpp)
 add_executable(day12-demo01-1 day12/demo01/main.cpp)
 add_executable(day12-demo01-2 day12/demo01/main2.cpp)
 add_executable(day12-demo01-3 day12/demo01/main3.cpp)

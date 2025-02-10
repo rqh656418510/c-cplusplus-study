@@ -348,7 +348,7 @@ void test01() {
     // 往容器插入元素
     Vector<int> v(100);
     for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
+        int val = rand() % 100;
         v.push_back(val);
         cout << val << " ";
     }
@@ -377,7 +377,7 @@ void test02() {
     // 往容器插入元素
     Vector<int> v(100);
     for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
+        int val = rand() % 100;
         v.push_back(val);
         cout << val << " ";
     }

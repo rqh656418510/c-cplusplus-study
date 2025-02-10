@@ -120,7 +120,7 @@ void test01() {
     Queue<int> queue;
 
     for (int i = 0; i < 10; i++) {
-        int value = random() % 100 + 1;
+        int value = rand() % 100 + 1;
         queue.push(value);
         cout << value << " ";
     }
@@ -140,7 +140,7 @@ void test02() {
 
     // 如果这里不使用对象池，那么就会频繁开辟和释放对象的内存空间，导致性能消耗比较严重
     for (int i = 0; i < 1000; i++) {
-        int value = random() % 100 + 1;
+        int value = rand() % 100 + 1;
         queue.push(value);
         queue.pop();
     }

@@ -1,0 +1,122 @@
+## C++ 数据库连接池项目
+
+### 博客教程
+
+- [基于 C++ 实现 MySQL 数据库连接池](https://www.techgrow.cn/posts/993ae2e0.html)
+
+### 项目背景
+
+为了提高 MySQL 数据库 (基于 C/S 设计) 的访问瓶颈，除了在服务器端增加缓存服务器缓存常用的数据之外（例如 Redis），还可以增加连接池，来提高 MySQL Server 的访问效率。在高并发情况下，大量的 TCP 三次握手、MySQL Server 连接认证、MySQL Server 关闭连接回收资源和 TCP 四次挥手所耗费的性能时间也是很明显的，增加连接池就是为了减少这一部分的性能损耗。在市场上比较流行的连接池包括 C3P0、Apache DBCP、HikariCP、阿里巴巴的 Druid 连接池，它们对于短时间内大量的数据库增删改查操作性能的提升是很明显的，但是它们有一个共同点就是，全部都是由 Java 实现的。
+
+### 关键技术
+
+- 单例模式
+- Lambda 表达式
+- 队列容器 `queue`
+- 智能指针 `shared_ptr`
+- 基于 CAS 的原子基础类型
+- MySQL 数据库编程（基于 MySQL Connector/C++）
+- C++ 11 的多线程编程，包括线程互斥、线程同步通信等
+- 生产者 - 消费者线程模型的实现，基于 `mutex`、`unique_lock`、`condition_variable`
+
+### 开发平台的选型
+
+有关 MySQL 数据库编程、多线程编程、线程互斥和同步通信操作、智能指针、设计模式、容器等等这些技术在 C++ 语言层面都可以直接实现，因此该项目选择直接在 Windows 平台上进行开发，当然项目代码在 Linux 平台下用 `g++` 也可以直接编译运行。
+
+### Linux 平台开发
+
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要安装 `boost`。建议从 [boost 官网](https://www.boost.org/users/download/) 下载 `boost` 的源码压缩包，然后使用 `root` 用户手动编译安装 `boost`，此方式适用于大多数 Linux 系统，如下所示：
+
+``` sh
+# 下载文件
+$ wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz
+
+# 解压文件
+$ tar -xvf boost_1_78_0.tar.gz
+
+# 进入解压目录
+$ cd boost_1_78_0
+
+# 构建
+$ sudo ./bootstrap.sh --prefix=/usr/local/boost
+
+# 安装（耗时非常长）
+$ sudo ./b2 install --prefix=/usr/local/boost --with=all
+```
+
+然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
+
+``` sh
+# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
+cmake -S . -B build
+
+# 编译项目，生成可执行文件
+cmake --build build
+```
+
+### Windows 平台开发
+
+由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要先安装 `boost`，安装步骤如下：
+
+- (1) 在 [Boost 官网](https://www.boost.org/users/download/) 下载最新版本的 `Boost`，并解压到本地磁盘，例如解压路径为：`C:\Program Files\boost_1_77_0`
+- (2) 在 Visual Studio 中右键项目，选择 `属性`，导航到 `配置属性` -> `C/C++` -> `常规` -> `附加包含目录`，添加 `Boost` 的安装路径（如 `C:\Program Files\boost_1_77_0`）
+
+然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
+
+``` sh
+# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
+cmake -S . -B build
+
+# 编译项目，生成可执行文件
+cmake --build build
+```
+
+### 连接池的功能介绍
+
+连接池一般包含了数据库连接所用的 IP 地址、Port 端口号、用户名和密码以及其它的性能参数，例如初始连接数、最大连接数、最大空闲时间、连接超时时间等。本项目是基于 C++ 语言实现的连接池，主要也是实现以上几个所有连接池都支持的通用基础功能，其余连接池更多的扩展功能，可以自行实现。
+
+- 初始连接数（initSize）：
+    - 表示连接池事先会和 MySQL Server 创建 initSize 个数的 _connection 连接，当应用发起 MySQL 访问时，不用再创建和 MySQL Server 新的连接，直接从连接池中获取一个可用的连接就可以，使用完成后，并不去释放 _connection，而是把当前 _connection 再归还到连接池当中。
+
+- 最大连接数（maxSize）:
+    - 当并发访问 MySQL Server 的请求增多时，初始连接数已经不够使用了，此时会根据新的请求数量去创建更多的连接给应用去使用，但是新创建的连接数量上限是 maxSize，不能无限制地创建连接，因为每一个连接都会占用一个 socket 资源。一般连接池和服务器程序是部署在一台主机上的，如果连接池占用过多的 socket 资源，那么服务器就不能接收太多的客户端请求了。当这些连接使用完成后，再次归还到连接池当中来维护。
+
+- 最大空闲时间（maxIdleTime）：
+    - 当访问 MySQL 的并发请求多了以后，连接池里面的连接数量会动态增加，上限是 maxSize 个，当这些连接用完再次归还到连接池当中。如果在指定的 maxIdleTime 里面，这些新增加的连接都没有被再次使用过，那么新增加的这些连接资源就要被回收掉，只需要保持初始连接数 initSize 个连接就可以了。
+
+- 连接超时时间（connectionTimeout）:
+    - 当 MySQL 的并发请求量过大，连接池中的连接数量已经到达 maxSize 了，而此时没有空闲的连接可供使用，那么此时应用无法从连接池获取连接，它通过阻塞的方式获取连接的等待时间如果超过 connectionTimeout 时间，则获取连接失败，无法访问数据库。
+
+### 连接池的功能设计
+
+- C++ 源文件的功能划分
+    - `MysqlConnection.h` 和 `MysqlConnection.cpp`：数据库增删改查的代码实现
+    - `MysqlConnectionPool.h` 和 `MysqlConnectionPool.cpp`：连接池的代码实现
+
+- 连接池的实现主要包含了以下功能
+    - (1) 连接池只需要一个实例，所以 ConnectionPool 以单例模式进行设计。
+    - (2) 应用可以从 ConnectionPool 中获取 MySQL 的连接 Connection。
+    - (3) 空闲连接 Connection 全部存储在一个线程安全的 Connection 队列中，使用互斥锁来保证队列的线程安全。
+    - (4) 如果 Connection 队列为空，应用还需要再获取连接，此时需要动态创建连接，最大的连接数量是 maxSize。
+    - (5) 当队列中空闲连接的存活时间超过 maxIdleTime 后，连接就要被释放掉，只保留初始的 initSize 个连接就可以，这个功能需要放在独立的线程中去完成（定时扫描连接）。
+    - (6) 如果 Connection 队列为空，而且当前已创建的连接的数量已达到上限 maxSize，则应用需要等待 connectionTimeout 时间。如果应用还是获取不到空闲的连接，则获取连接失败；此处从 Connection 队列获取空闲连接时，可以使用带超时时间的 `mutex` 互斥锁来实现连接超时时间。
+    - (7) 应用获取的连接用 `shared_ptr` 智能指针来管理，并用 Lambda 表达式定制连接释放的功能（不真正释放连接，而是将连接归还到 Connection 队列中）。
+    - (8) 连接的生产和连接的消费采用生产者 - 消费者线程模型来设计，使用了线程间的同步通信机制、条件变量和互斥锁。
+
+### MySQL 的参数调整
+
+以下命令可以查看 MySQL Server 所支持的最大连接个数，超过 `max_connections` 数量的连接，MySQL Server 会直接拒绝，所以在使用连接池增加连接数量的时候，MySQL Server 的 `max_connections` 参数也要适当地进行调整，以适配连接池的连接上限。
+
+``` sql
+show variables like 'max_connections';
+```
+
+### 连接池的压力测试
+
+验证数据库的插入操作所花费的时间，第一次测试使用普通的数据库访问操作，第二次测试使用带连接池的数据库访问操作，对比两次操作同样数据量所花费的时间，性能压力测试结果如下：
+
+| 数据量 | 未使用连接池所花费时间       | 使用连接池所花费时间         |
+| ------ | ---------------------------- | ---------------------------- |
+| 1000   | 单线程:1891ms 四线程:497ms   | 单线程:1079ms 四线程:408ms   |
+| 5000   | 单线程:10033ms 四线程:2361ms | 单线程: 5380ms 四线程:2041ms |
+| 10000  | 单线程:19403ms 四线程:4589ms | 单线程:10522ms 四线程:4034ms |

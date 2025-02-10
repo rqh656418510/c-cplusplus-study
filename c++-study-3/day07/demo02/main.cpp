@@ -18,7 +18,7 @@ int main() {
 
     // 插入元素
     for (int i = 0; i < 50; i++) {
-        set1.insert(random() % 20 + 1);
+        set1.insert(rand() % 20 + 1);
     }
 
     // 遍历容器

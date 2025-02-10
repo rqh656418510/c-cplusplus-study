@@ -45,7 +45,7 @@ public:
         delete[] _pstr;
 
         // 深拷贝
-        _pstr = new char(strlen(str._pstr) + 1);
+        _pstr = new char[strlen(str._pstr) + 1];
         strcpy(_pstr, str._pstr);
 
         return *this;
