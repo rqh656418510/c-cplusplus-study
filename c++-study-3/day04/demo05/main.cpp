@@ -9,7 +9,7 @@ using namespace std;
 void test01() {
     vector<int> v;
     for (int i = 0; i < 20; i++) {
-        v.push_back(random() % 100 + 1);
+        v.push_back(rand() % 100 + 1);
     }
 
     // 将容器中的所有偶数删除掉
@@ -25,7 +25,7 @@ void test01() {
 void test02() {
     vector<int> v;
     for (int i = 0; i < 20; i++) {
-        v.push_back(random() % 100 + 1);
+        v.push_back(rand() % 100 + 1);
     }
 
     // 给容器中所有的偶数前面添加一个小于该偶数的数字

@@ -135,7 +135,7 @@ int main() {
 
     MyVector<int> v;
     for (int i = 0; i < 20; i++) {
-        int val = random() % 100;
+        int val = rand() % 100;
         v.push_back(val);
         cout << val << " ";
     }

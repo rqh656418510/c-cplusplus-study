@@ -17,7 +17,7 @@ int main() {
 
     for (int i = 0; i < 10; i++) {
         // 往容器尾部插入元素
-        vec.push_back(random() % 100 + 1);
+        vec.push_back(rand() % 100 + 1);
     }
 
     // 获取容器中元素数量
