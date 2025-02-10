@@ -14,7 +14,7 @@ int data = 20;  // data .data
 
 int main() {    // main .text
     int a = gdata;
-    int b = data;
+    int b = ::data;
     int result = sum(a, b);
     cout << "result = " << result << endl;
     return 0;
