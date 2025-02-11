@@ -139,8 +139,18 @@ void test02() {
     cout << str2.c_str() << endl;
 }
 
+void test03() {
+    MyString str1("Hello ");
+    MyString str2("World!");
+    cout << "---------------------------------" << endl;
+    MyString str3 = str1 + str2;
+    cout << "---------------------------------" << endl;
+    cout << str3 << endl;
+}
+
 int main() {
 	// test01();
-    test02();
+    // test02();
+	test03();
 	return 0;
 }
