@@ -1,7 +1,6 @@
 /**
- * CMyString在vector上的应用
+ * MyString在vector上的应用
  */
-
 
 #include <iostream>
 #include <cstring>
