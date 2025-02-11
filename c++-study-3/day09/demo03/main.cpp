@@ -125,7 +125,7 @@ void test01() {
     vector<MyString> v1;
 
     cout << "----------------------------------" << endl;
-    v1.push_back(str1);
+    v1.push_back(str1); // 调用的是带左值引用参数的拷贝构造函数
     cout << "----------------------------------" << endl;
 }
 
@@ -135,7 +135,7 @@ void test02() {
     MyString str1 = "aaa";
     vector<MyString> v1;
     cout << "----------------------------------" << endl;
-    v1.push_back(MyString("bbb"));
+    v1.push_back(MyString("bbb"));  // 调用的是带右值引用参数的拷贝构造函数 
     cout << "----------------------------------" << endl;
 }
 
