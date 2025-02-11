@@ -89,28 +89,10 @@ MyString getString(MyString &str) {
     return tmpStr;
 }
 
-void test01() {
-    cout << "\n============ test01() ============" << endl;
-
+int main() {
     MyString str1("aaaaaaa");
     MyString str2;
     str2 = getString(str1);
     cout << str2.c_str() << endl;
-}
-
-void test02() {
-    cout << "\n============ test02() ============" << endl;
-
-    MyString str1("Hello");
-    MyString str2("World");
-    cout << "----------------------------------" << endl;
-    MyString str3 = str1 + str2;
-    cout << "----------------------------------" << endl;
-    cout << str3 << endl;
-}
-
-int main() {
-    test01();
-    // test02();
-    return 0;
+	return 0;
 }
