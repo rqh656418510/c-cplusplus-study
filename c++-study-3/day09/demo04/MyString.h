@@ -1,5 +1,5 @@
 /**
- * ×Ô¶¨Òå String Àà
+ * è‡ªå®šä¹‰ String ç±»
  */
 
 #pragma
@@ -13,7 +13,7 @@ using namespace std;
 class MyString {
 
 public:
-    // ¹¹Ôìº¯Êý
+    // æž„é€ å‡½æ•°
     MyString(const char* p = nullptr) {
         cout << "MyString(const char *p = nullptr)" << endl;
         if (p != nullptr) {
@@ -26,59 +26,59 @@ public:
         }
     }
 
-    // Îö¹¹º¯Êý
+    // æžæž„å‡½æ•°
     ~MyString() {
         cout << "~MyString()" << endl;
         delete[] _pstr;
         _pstr = nullptr;
     }
 
-    // ´ø×óÖµÒýÓÃ²ÎÊýµÄ¿½±´¹¹Ôìº¯Êý
+    // å¸¦å·¦å€¼å¼•ç”¨å‚æ•°çš„æ‹·è´æž„é€ å‡½æ•°
     MyString(const MyString& str) {
         cout << "MyString(const MyString &str)" << endl;
-        // Éî¿½±´
+        // æ·±æ‹·è´
         _pstr = new char[strlen(str._pstr) + 1];
         strcpy(_pstr, str._pstr);
     }
 
-    // ´øÓÒÖµÒýÓÃ²ÎÊýµÄ¿½±´¹¹Ôìº¯Êý
+    // å¸¦å³å€¼å¼•ç”¨å‚æ•°çš„æ‹·è´æž„é€ å‡½æ•°
     MyString(MyString&& str) {
         cout << "MyString(MyString&& str)" << endl;
-        // Ç³¿½±´ÁÙÊ±¶ÔÏó£¨¿ÉÒÔÌá¸ß´úÂëÖ´ÐÐÐ§ÂÊ£¬¼õÉÙÄÚ´æµÄ¿½±´´ÎÊý£©
+        // æµ…æ‹·è´ä¸´æ—¶å¯¹è±¡ï¼ˆå¯ä»¥æé«˜ä»£ç æ‰§è¡Œæ•ˆçŽ‡ï¼Œå‡å°‘å†…å­˜çš„æ‹·è´æ¬¡æ•°ï¼‰
         _pstr = str._pstr;
         str._pstr = nullptr;
     }
 
-    // ´ø×óÖµÒýÓÃ²ÎÊýµÄ¸³ÖµÔËËã·ûÖØÔØ
+    // å¸¦å·¦å€¼å¼•ç”¨å‚æ•°çš„èµ‹å€¼è¿ç®—ç¬¦é‡è½½
     MyString& operator=(const MyString& str) {
         cout << "operator=(const MyString &str)" << endl;
-        // ·ÀÖ¹×Ô¸³Öµ
+        // é˜²æ­¢è‡ªèµ‹å€¼
         if (this == &str) {
             return *this;
         }
 
-        // ÊÍ·ÅÔ­À´µÄÄÚ´æ¿Õ¼ä
+        // é‡Šæ”¾åŽŸæ¥çš„å†…å­˜ç©ºé—´
         delete[] _pstr;
 
-        // Éî¿½±´
+        // æ·±æ‹·è´
         _pstr = new char[strlen(str._pstr) + 1];
         strcpy(_pstr, str._pstr);
 
         return *this;
     }
 
-    // ´øÓÒÖµÒýÓÃ²ÎÊýµÄ¸³ÖµÔËËã·ûÖØÔØ
+    // å¸¦å³å€¼å¼•ç”¨å‚æ•°çš„èµ‹å€¼è¿ç®—ç¬¦é‡è½½
     MyString& operator=(MyString&& str) {
         cout << "operator=(MyString&& str)" << endl;
-        // ·ÀÖ¹×Ô¸³Öµ
+        // é˜²æ­¢è‡ªèµ‹å€¼
         if (this == &str) {
             return *this;
         }
 
-        // ÊÍ·ÅÔ­À´µÄÄÚ´æ¿Õ¼ä
+        // é‡Šæ”¾åŽŸæ¥çš„å†…å­˜ç©ºé—´
         delete[] _pstr;
 
-        // Ç³¿½±´ÁÙÊ±¶ÔÏó£¨¿ÉÒÔÌá¸ß´úÂëÖ´ÐÐÐ§ÂÊ£¬¼õÉÙÄÚ´æµÄ¿½±´´ÎÊý£©
+        // æµ…æ‹·è´ä¸´æ—¶å¯¹è±¡ï¼ˆå¯ä»¥æé«˜ä»£ç æ‰§è¡Œæ•ˆçŽ‡ï¼Œå‡å°‘å†…å­˜çš„æ‹·è´æ¬¡æ•°ï¼‰
         _pstr = str._pstr;
         str._pstr = nullptr;
 
@@ -86,13 +86,13 @@ public:
     }
 
 
-    // ¼Ó·¨ÔËËã·ûÖØÔØ
+    // åŠ æ³•è¿ç®—ç¬¦é‡è½½
     friend MyString operator+(const MyString& str1, const MyString& str2);
 
-    // ×óÒÆÔËËã·ûÖØÔØ
+    // å·¦ç§»è¿ç®—ç¬¦é‡è½½
     friend ostream& operator<<(ostream& out, const MyString& str);
 
-    // ·µ»Ø×Ö·û´®×ÔÉí
+    // è¿”å›žå­—ç¬¦ä¸²è‡ªèº«
     const char* c_str() const {
         return _pstr;
     }
