@@ -1,10 +1,10 @@
- /**
-  * move移动语义和forward类型完美转发
-  * <p> move：移动语义，将左值类型强转为右值类型
-  * <p> forward：类型完美转发，能够识别左值类型和右值类型
-  * 
-  * <p> move移动语义的使用
-  */
+/**
+ * move移动语义和forward类型完美转发
+ * <p> move：移动语义，将左值类型强转为右值类型
+ * <p> forward：类型完美转发，能够识别左值类型和右值类型
+ * 
+ * <p>  move移动语义 + forward类型的使用
+ */
 
 #include <iostream>
 #include <cstring>
@@ -27,16 +27,15 @@ struct Allocator {
         free(p);
     }
 
-    // 对象构造（接收左值引用参数）
-    void construct(T* p, const T& val) {
-        // 在指定的内存上构造对象（定位 new）
-        new(p)T(val);
-    }
-
     // 对象构造（接收右值引用参数）
-    void construct(T* p, T&& val) {
+    // 基于函数模板的类型推演 + 引用折叠
+    // T & + Ty &&  = T &
+    // T && + Ty &&  = T &&
+    template<typename Ty>
+    void construct(T* p, Ty&& val) {
         // 在指定的内存上构造对象（定位 new）
-        new(p)T(move(val));
+        // forward 是 C++ 中的类型完美转发
+        new(p)T(forward<Ty>(val));
     }
 
     // 对象析构
@@ -123,23 +122,18 @@ public:
         return *this;
     }
 
-    // 往容器尾部添加元素（接收左值引用参数）
-    void push_back(const T& val) {
+    // 往容器尾部添加元素（接收右值引用参数）
+    // 基于函数模板的类型推演 + 引用折叠
+    // T & + Ty &&  = T &
+    // T && + Ty &&  = T &&
+    template<typename Ty>
+    void push_back(Ty &&val) {
         if (full()) {
             resize();
         }
         // 在指定的内存空间中构造对象
-        _allocator.construct(_last, val);
-        _last++;
-    }
-
-    // 往容器尾部添加元素（接收右值引用参数）
-    void push_back(T&& val) {
-        if (full()) {
-			resize();
-        }
-        // 在指定的内存空间中构造对象
-        _allocator.construct(_last, move(val));
+        // forward 是 C++ 中的类型完美转发
+        _allocator.construct(_last, forward<Ty>(val));
         _last++;
     }
 
@@ -273,12 +267,28 @@ public:
 
 };
 
-int main() {
-    // 设置随机数种子
-    srand(time(nullptr));
+void test01() {
+    cout << "\n============ test01() ============" << endl;
+
+    MyString str1 = "aaa";
+    Vector<MyString> v1;
+
+    cout << "----------------------------------" << endl;
+    v1.push_back(str1); // 调用的是带左值引用参数的拷贝构造函数
+    cout << "----------------------------------" << endl;
+}
+
+void test02() {
+    cout << "\n============ test02() ============" << endl;
 
     Vector<MyString> v1;
-    v1.push_back(MyString("Hello"));
+    cout << "----------------------------------" << endl;
+    v1.push_back(MyString("bbb"));  // 调用的是带右值引用参数的拷贝构造函数 
+    cout << "----------------------------------" << endl;
+}
 
+int main() {
+    test01();
+    test02();
     return 0;
 }
