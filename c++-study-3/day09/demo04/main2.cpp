@@ -250,23 +250,6 @@ private:
     }
 };
 
-class Person {
-
-public:
-    Person() {
-        cout << "call Person()" << endl;
-    }
-
-    Person(const Person& p) {
-        cout << "call Person(const Person &p)" << endl;
-    }
-
-    ~Person() {
-        cout << "call ~Person()" << endl;
-    }
-
-};
-
 void test01() {
     cout << "\n============ test01() ============" << endl;
 

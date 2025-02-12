@@ -256,29 +256,28 @@ private:
     }
 };
 
-class Person {
+void test01() {
+    cout << "\n============ test01() ============" << endl;
 
-public:
-    Person() {
-        cout << "call Person()" << endl;
-    }
+    MyString str1 = "aaa";
+    Vector<MyString> v1;
 
-    Person(const Person& p) {
-        cout << "call Person(const Person &p)" << endl;
-    }
+    cout << "----------------------------------" << endl;
+    v1.push_back(str1); // 调用的是带左值引用参数的拷贝构造函数
+    cout << "----------------------------------" << endl;
+}
 
-    ~Person() {
-        cout << "call ~Person()" << endl;
-    }
-
-};
-
-int main() {
-    // 设置随机数种子
-    srand(time(nullptr));
+void test02() {
+    cout << "\n============ test02() ============" << endl;
 
     Vector<MyString> v1;
-    v1.push_back(MyString("Hello"));
+    cout << "----------------------------------" << endl;
+    v1.push_back(MyString("bbb"));  // 调用的是带右值引用参数的拷贝构造函数
+    cout << "----------------------------------" << endl;
+}
 
+int main() {
+    test01();
+    test02();
     return 0;
 }
