@@ -36,6 +36,7 @@ struct Allocator {
     // 对象构造（接收右值引用参数）
     void construct(T* p, T&& val) {
         // 在指定的内存上构造对象（定位 new）
+        // move 是移动语义，可以将左值类型强转为右值类型
         new(p)T(move(val));
     }
 
@@ -139,6 +140,7 @@ public:
             resize();
         }
         // 在指定的内存空间中构造对象
+        // move 是移动语义，可以将左值类型强转为右值类型
         _allocator.construct(_last, move(val));
         _last++;
     }
@@ -146,6 +148,7 @@ public:
     // 从容器尾部删除元素（需要将对象的析构和内存释放分开处理）
     void pop_back() {
         if (!empty()) {
+            verify(_last - 1, _last - 1);
             _last--;
             // 在指定的内存空间中析构对象
             _allocator.destroy(_last);
@@ -187,43 +190,100 @@ public:
     class iterator {
 
     public:
-        iterator(T* p = nullptr) : _ptr(p) {
 
+        friend class Vector<T, Alloc>;
+
+        iterator(Vector<T, Alloc>* pvec = nullptr, T* p = nullptr) : _pVec(pvec), _ptr(p) {
+            // 维护迭代器的单向链表结构
+            Iterator_Base* itb = new Iterator_Base(this, _pVec->_head._next);
+            _pVec->_head._next = itb;
         }
 
         // 重载不等于运算符
         bool operator!=(const iterator& other) const {
+            // 判断迭代器指向的容器是不是同一个
+            if (_pVec == nullptr || _pVec != other._pVec) {
+                throw "Iterator incompatable!";
+            }
             return _ptr != other._ptr;
         }
 
         // 重载前置 ++ 运算符
         iterator& operator++() {
+            // 检测迭代器的有效性
+            if (_pVec == nullptr) {
+                throw "Iterator invalid!";
+            }
             _ptr++;
             return *this;
         }
 
         // 重载后置 ++ 运算符
         iterator operator++(int) {
+            // 检测迭代器的有效性
+            if (_pVec == nullptr) {
+                throw "Iterator invalid!";
+            }
             return iterator(_ptr++);
         }
 
         // 解引用运算符重载
         T& operator*() const {
+            // 检测迭代器的有效性
+            if (_pVec == nullptr) {
+                throw "Iterator invalid!";
+            }
             return *_ptr;
         }
 
     private:
         T* _ptr;
+        Vector<T, Alloc>* _pVec; // 当前迭代器是哪个容器的对象
     };
 
     // 返回的是容器底层首元素的迭代器的表示
     iterator begin() {
-        return iterator(_first);
+        return iterator(this, _first);
     }
 
     // 返回的是容器末尾元素后继位置的迭代器的表示
     iterator end() {
-        return iterator(_last);
+        return iterator(this, _last);
+    }
+
+    // 通过迭代器往容器插入元素
+    // 这里暂时不考虑容器扩容，也不考虑 it._prt 的指针合法性
+    iterator insert(iterator it, const T& val) {
+        verify(it._ptr - 1, _last);
+
+        // 重新分配数组的内存空间，并往右边移动数组元素
+        T* p = _last;
+        while (p > it._ptr) {
+            _allocator.construct(p, *(p - 1));
+            _allocator.destroy(p - 1);
+            p--;
+        }
+        _allocator.construct(p, val);
+
+        _last++;
+        return iterator(this, p);
+    }
+
+    // 通过迭代器往容器删除元素
+    iterator erase(iterator it) {
+        verify(it._ptr - 1, _last);
+
+        // 重新分配数组的内存空间，并往左边移动数组元素
+        T* p = it._ptr;
+        while (p < _last - 1) {
+            _allocator.destroy(p);
+            _allocator.construct(p, *(p + 1));
+            p++;
+        }
+        _allocator.destroy(p);
+
+        _last--;
+        return iterator(this, it._ptr);
     }
 
 private:
@@ -231,6 +291,18 @@ private:
     T* _last;   // 指向数组中有效元素的后继位置
     T* _end;    // 指向数组空间的后继位置
     Alloc _allocator;   // 定义容器空间配置器的对象
+
+    // 迭代器的单向链表结构
+    struct Iterator_Base {
+        Iterator_Base(iterator* cur = nullptr, Iterator_Base* next = nullptr) : _cur(cur), _next(next) {
+
+        }
+
+        iterator* _cur;
+        Iterator_Base* _next;
+    };
+
+    Iterator_Base _head;
 
     // 扩容操作
     void resize() {
@@ -254,30 +326,32 @@ private:
         _last = _first + size;
         _end = _first + size * 2;
     }
+
+    // 维护迭代器的单向链表
+    void verify(T* start, T* end) {
+        Iterator_Base* cur = &this->_head;
+        Iterator_Base* next = this->_head._next;
+        while (next != nullptr) {
+            if (next->_cur->_ptr >= start && next->_cur->_ptr <= end) {
+                // 迭代器失效，将迭代器持有的容器指针置为空
+                next->_cur->_pVec = nullptr;
+                // 在迭代器链表中，删除当前迭代器节点，并继续判断后面的迭代器节点是否失效
+                cur->_next = next->_next;
+                delete next;
+                next = cur->_next;
+            }
+            else {
+                next = next->_next;
+            }
+        }
+    }
+
 };
 
-void test01() {
-    cout << "\n============ test01() ============" << endl;
-
-    MyString str1 = "aaa";
-    Vector<MyString> v1;
-
-    cout << "----------------------------------" << endl;
-    v1.push_back(str1); // 调用的是带左值引用参数的拷贝构造函数
-    cout << "----------------------------------" << endl;
-}
-
-void test02() {
-    cout << "\n============ test02() ============" << endl;
-
-    Vector<MyString> v1;
-    cout << "----------------------------------" << endl;
-    v1.push_back(MyString("bbb"));  // 调用的是带右值引用参数的拷贝构造函数
-    cout << "----------------------------------" << endl;
-}
-
 int main() {
-    test01();
-    test02();
+    Vector<MyString> v1;
+    cout << "----------------------------------" << endl;
+    v1.push_back(MyString("bbb"));  // 调用的是 MyString 带右值引用参数的拷贝构造函数
+    cout << "----------------------------------" << endl;
     return 0;
 }

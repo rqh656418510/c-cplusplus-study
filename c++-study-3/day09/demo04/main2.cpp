@@ -34,7 +34,7 @@ struct Allocator {
     template<typename Ty>
     void construct(T* p, Ty&& val) {
         // 在指定的内存上构造对象（定位 new）
-        // forward 是 C++ 中的类型完美转发
+        // forward 是类型完美转发，可以识别左值类型和右值类型
         new(p)T(forward<Ty>(val));
     }
 
@@ -132,7 +132,7 @@ public:
             resize();
         }
         // 在指定的内存空间中构造对象
-        // forward 是 C++ 中的类型完美转发
+        // forward 是类型完美转发，可以识别左值类型和右值类型
         _allocator.construct(_last, forward<Ty>(val));
         _last++;
     }
@@ -250,28 +250,10 @@ private:
     }
 };
 
-void test01() {
-    cout << "\n============ test01() ============" << endl;
-
-    MyString str1 = "aaa";
-    Vector<MyString> v1;
-
-    cout << "----------------------------------" << endl;
-    v1.push_back(str1); // 调用的是带左值引用参数的拷贝构造函数
-    cout << "----------------------------------" << endl;
-}
-
-void test02() {
-    cout << "\n============ test02() ============" << endl;
-
-    Vector<MyString> v1;
-    cout << "----------------------------------" << endl;
-    v1.push_back(MyString("bbb"));  // 调用的是带右值引用参数的拷贝构造函数
-    cout << "----------------------------------" << endl;
-}
-
 int main() {
-    test01();
-    test02();
+    Vector<MyString> v1;
+    cout << "----------------------------------" << endl;
+    v1.push_back(MyString("bbb"));  // 调用的是 MyString 带右值引用参数的拷贝构造函数
+    cout << "----------------------------------" << endl;
     return 0;
 }
