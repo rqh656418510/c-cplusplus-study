@@ -1,7 +1,7 @@
 /**
- * move移动语义和forward类型完美转发
+ * move移动语义和forward完美转发
  * <p> move：移动语义，将左值类型强转为右值类型
- * <p> forward：类型完美转发，能够识别左值类型和右值类型
+ * <p> forward：完美转发，能够识别左值类型和右值类型
  *
  * <p>  move移动语义 + forward类型的使用
  */
@@ -34,7 +34,7 @@ struct Allocator {
     template<typename Ty>
     void construct(T* p, Ty&& val) {
         // 在指定的内存上构造对象（定位 new）
-        // forward 是类型完美转发，可以识别左值类型和右值类型
+        // forward 是完美转发，可以识别左值类型和右值类型
         new(p)T(forward<Ty>(val));
     }
 
@@ -132,7 +132,7 @@ public:
             resize();
         }
         // 在指定的内存空间中构造对象
-        // forward 是类型完美转发，可以识别左值类型和右值类型
+        // forward 是完美转发，可以识别左值类型和右值类型
         _allocator.construct(_last, forward<Ty>(val));
         _last++;
     }
