@@ -67,6 +67,7 @@ C++ 开发工程师高级进阶课程 - 提升 C++ 面试和开发能力（施�
     ├── demo01          CMyString的代码问题
     ├── demo02          添加带右值引用参数的拷贝构造和赋值函数
     ├── demo03          CMyString在vector上的应用          
+    ├── demo04          move移动语义和forward类型完美转发          
 ```
 
 ## 常用命令
