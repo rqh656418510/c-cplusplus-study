@@ -27,10 +27,6 @@ public:
         return *this;
     }
 
-    int getNum() {
-		return this->_a;
-    }
-
 private:
     int _a;
 };
