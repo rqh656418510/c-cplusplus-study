@@ -20,10 +20,12 @@ public:
         delete _ptr;
     }
 
+    // * 运算符重载函数
     T &operator*() {
         return *_ptr;
     }
 
+    // -> 运算符重载函数
     T *operator->() {
         return _ptr;
     }
