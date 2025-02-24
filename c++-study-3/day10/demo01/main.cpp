@@ -11,51 +11,51 @@ template<typename T>
 class CSmartPtr {
 
 public:
-	CSmartPtr(T* ptr) : _ptr(ptr) {
-		cout << "CSmartPtr()" << endl;
-	}
+    CSmartPtr(T *ptr) : _ptr(ptr) {
+        cout << "CSmartPtr()" << endl;
+    }
 
-	~CSmartPtr() {
-		cout << "~CSmartPtr()" << endl;
-		delete _ptr;
-	}
+    ~CSmartPtr() {
+        cout << "~CSmartPtr()" << endl;
+        delete _ptr;
+    }
 
-	T& operator*() {
-		return *_ptr;
-	}
+    T &operator*() {
+        return *_ptr;
+    }
 
-	T* operator->() {
-		return _ptr;
-	}
+    T *operator->() {
+        return _ptr;
+    }
 
 private:
-	T* _ptr;
+    T *_ptr;
 };
 
 class Person {
 
 public:
-	Person(char* name, int age) : _name(name), _age(age) {
+    Person(char *name, int age) : _name(name), _age(age) {
 
-	}
+    }
 
-	void print() {
-		cout << "name: " << _name << ", age: " << _age << endl;
-	}
+    void print() {
+        cout << "name: " << _name << ", age: " << _age << endl;
+    }
 
 private:
-	char* _name;
-	int _age;
+    char *_name;
+    int _age;
 };
 
 int main() {
-	// 智能指针是利用栈上的对象出作用域后自动析构的特性，来实现资源的自动释放
-	CSmartPtr<int> cptr(new int);
-	*cptr = 30;
+    // 智能指针是利用栈上的对象出作用域后自动析构的特性，来实现资源的自动释放
+    CSmartPtr<int> cptr(new int);
+    *cptr = 30;
 
-	// 错误用法，这样写必须手动执行 delete cptr 来释放资源，即失去智能指针自动释放资源的特性
-	// CSmartPtr<int>* cptr = new CSmartPtr<int>(new int);
+    // 错误用法，这样写必须手动执行 delete cptr 来释放资源，即失去智能指针自动释放资源的特性
+    // CSmartPtr<int>* cptr = new CSmartPtr<int>(new int);
 
-	CSmartPtr<Person> cptr2(new Person("Peter", 30));
-	cptr2->print();
+    CSmartPtr<Person> cptr2(new Person("Peter", 30));
+    cptr2->print();
 }
