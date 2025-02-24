@@ -10,19 +10,19 @@ class Test {
 
 public:
     Test(int a = 5, int b = 5) : _a(a), _b(b) {
-		cout << "Test(" << a << ", " << b << ")" << endl;
+        cout << "Test(" << a << ", " << b << ")" << endl;
     }
 
     ~Test() {
-		cout << "~Test(" << this->_a << ", " << this->_b << ")" << endl;
+        cout << "~Test(" << this->_a << ", " << this->_b << ")" << endl;
     }
 
-	Test(const Test& t) : _a(t._a), _b(t._b) {
+    Test(const Test &t) : _a(t._a), _b(t._b) {
         cout << "Test(const Test& t)" << endl;
-	}
+    }
 
-	Test& operator=(const Test& t) {
-		cout << "operator=(const Test& t)" << endl;
+    Test &operator=(const Test &t) {
+        cout << "operator=(const Test& t)" << endl;
         this->_a = t._a;
         this->_b = t._b;
         return *this;
@@ -60,7 +60,7 @@ void test01() {
     // 先调用普通构造函数，然后再调用赋值运算符重载函数
     // (Test)(50, 50) 会显式生成临时对象，临时对象的生存周期是所在语句
     // 执行效果相当于 `t2 = Test(50);`，这里要求 Test 类拥有对应的构造函数
-    t2 = (Test)(50, 50);
+    t2 = (Test) (50, 50);
 
     // 先调用普通构造函数，然后再调用赋值运算符重载函数
     // 60 会显式生成临时对象，临时对象的生存周期是所在语句
@@ -74,10 +74,10 @@ void test02() {
     cout << "\n============ test02() ============" << endl;
 
     // 调用普通构造函数
-    Test* p1 = new Test(70, 70);
+    Test *p1 = new Test(70, 70);
 
     // 调用（两次）普通构造函数
-    Test* p2 = new Test[2];
+    Test *p2 = new Test[2];
 
     cout << "--------- 4 ---------" << endl;
 
@@ -85,14 +85,14 @@ void test02() {
     // Test(80, 80) 会显式生成临时对象，临时对象的生存周期是所在语句
     // 当临时对象出了所在语句，会立刻被析构，同时指针 p 会成为野指针
     // 结论：使用指针变量指向临时对象是不安全的
-    Test* p3 = &Test(80, 80);
+    Test *p3 = &Test(80, 80);
 
     // 调用普通构造函数
     // Test(90, 90) 会显式生成临时对象，临时对象的生存周期是所在函数
     // 但是，这里的临时对象出了所在语句，不会立刻被析构，而是直到出了函数作用域才会被析构
     // 在函数作用域内，ref 引用会一直有效
     // 结论：使用引用变量指向临时对象是安全的
-    Test& p4 = Test(90, 90);
+    Test &p4 = Test(90, 90);
 
     cout << "--------- 5 ---------" << endl;
 
@@ -100,7 +100,7 @@ void test02() {
     delete p1;
 
     // 调用（两次）析构函数
-	delete[] p2;
+    delete[] p2;
 
     cout << "--------- 6 ---------" << endl;
 }

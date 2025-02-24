@@ -10,19 +10,19 @@ class Test {
 
 public:
     Test(int a = 10) : _a(a) {
-		cout << "Test(int)" << endl;
+        cout << "Test(int)" << endl;
     }
 
     ~Test() {
         cout << "~Test()" << endl;
     }
 
-    Test(const Test& t) : _a(t._a) {
+    Test(const Test &t) : _a(t._a) {
         cout << "Test(const Test& t)" << endl;
-	}
+    }
 
-	Test& operator=(const Test& t) {
-		cout << "operator=(const Test& t)" << endl;
+    Test &operator=(const Test &t) {
+        cout << "operator=(const Test& t)" << endl;
         this->_a = t._a;
         return *this;
     }
@@ -63,7 +63,7 @@ void test01() {
     // 先调用普通构造函数，然后再调用赋值运算符重载函数
     // (Test)20 会显式生成临时对象，临时对象的生存周期是所在语句
     // 执行效果相当于 `t4 = Test(20);`，这里要求 Test 类拥有 int 类型的构造函数
-    t4 = (Test)20;
+    t4 = (Test) 20;
 
     cout << "--------- 3 ---------" << endl;
 
@@ -82,14 +82,14 @@ void test02() {
     // (Test)20 会显式生成临时对象，临时对象的生存周期是所在语句
     // 当临时对象出了所在语句，会立刻被析构，同时指针 p 会成为野指针
     // 结论：使用指针变量指向临时对象是不安全的
-    Test* p = &Test(20);
+    Test *p = &Test(20);
 
     // 调用普通构造函数
     // (Test)20 会显式生成临时对象，临时对象的生存周期是所在函数
     // 但是，这里的临时对象出了所在语句，不会立刻被析构，而是直到出了函数作用域才会被析构
     // 在函数作用域内，ref 引用会一直有效
     // 结论：使用引用变量指向临时对象是安全的
-    Test& ref = Test(20);
+    Test &ref = Test(20);
 
     cout << "--------- 1 ---------" << endl;
 }

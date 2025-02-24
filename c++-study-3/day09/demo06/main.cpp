@@ -9,7 +9,7 @@ using namespace std;
 class Test {
 
 public:
-    Test(int a = 10) :_ma(a) {
+    Test(int a = 10) : _ma(a) {
         cout << "Test(int a)" << endl;
     }
 
@@ -17,14 +17,14 @@ public:
         cout << "~Test()" << endl;
     }
 
-    Test(const Test& t) {
+    Test(const Test &t) {
         cout << "Test(const Test& t)" << endl;
         this->_ma = t._ma;
-	}
+    }
 
-    void operator=(const Test& t) {
-		cout << "operator=(const Test& t)" << endl;
-		this->_ma = t._ma;
+    void operator=(const Test &t) {
+        cout << "operator=(const Test& t)" << endl;
+        this->_ma = t._ma;
     }
 
     int getData() {
@@ -38,12 +38,12 @@ private:
 Test getObject(Test t) {
     int value = t.getData();
     Test tmp(value);
-	return tmp;
+    return tmp;
 }
 
 int main() {
     Test t1;
     Test t2;
-	t2 = getObject(t1);
+    t2 = getObject(t1);
     return 0;
 }
