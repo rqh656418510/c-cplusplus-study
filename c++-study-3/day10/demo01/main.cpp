@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// 模拟实现不带引用计数的智能指针
+// 模拟实现不带引用计数的智能指针，类似 auto_ptr 智能指针
 template<typename T>
 class CSmartPtr {
 
