@@ -20,6 +20,12 @@ public:
         delete _ptr;
     }
 
+    CSmartPtr(const CSmartPtr& src) {
+        cout << "CSmartPtr(const CSmartPtr& src)" << endl;
+        // 深拷贝
+        this->_ptr = new T(*src._ptr);
+    }
+
     // * 运算符重载函数
     T &operator*() {
         return *_ptr;
@@ -37,17 +43,16 @@ private:
 class Person {
 
 public:
-    Person(char *name, int age) : _name(name), _age(age) {
+    Person(int age) : _age(age) {
 
     }
 
     void print() {
-        cout << "name: " << _name << ", age: " << _age << endl;
+        cout << "age: " << _age << endl;
     }
 
 private:
-    char *_name;
-    int _age;
+	int _age;
 };
 
 int main() {
@@ -58,6 +63,8 @@ int main() {
     // 错误用法，这样写必须手动执行 delete cptr 来释放资源，即失去智能指针自动释放资源的特性
     // CSmartPtr<int>* cptr = new CSmartPtr<int>(new int);
 
-    CSmartPtr<Person> cptr2(new Person("Peter", 30));
+    CSmartPtr<Person> cptr2(new Person(30));
     cptr2->print();
+
+    CSmartPtr<Person> cptr3(cptr2);
 }
