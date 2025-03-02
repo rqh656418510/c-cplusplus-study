@@ -65,7 +65,7 @@ public:
     }
 
     // 赋值运算符重载函数
-    CSmartPtr<T> operator=(const CSmartPtr<T> &src) {
+    CSmartPtr<T>& operator=(const CSmartPtr<T> &src) {
         cout << "CSmartPtr<T> operator=(const CSmartPtr<T>& src)" << endl;
         // 避免自赋值
         if (this == &src) {
@@ -119,7 +119,7 @@ private:
 };
 
 int main() {
-    // 多个智能指针管理同一个资源
+    // 测试多个智能指针管理同一个资源
     CSmartPtr<Person> ptr1(new Person(20));
     CSmartPtr<Person> ptr2(ptr1);
     CSmartPtr<Person> ptr3;

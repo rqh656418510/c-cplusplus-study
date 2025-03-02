@@ -21,10 +21,17 @@ public:
         _ptr = nullptr;
     }
 
-    CSmartPtr(const CSmartPtr<T>& src) {
+    CSmartPtr(const CSmartPtr<T> &src) {
         cout << "CSmartPtr(const CSmartPtr& src)" << endl;
         // 深拷贝
         this->_ptr = new T(*src._ptr);
+    }
+
+    CSmartPtr<T>& operator=(const CSmartPtr<T> &src) {
+        cout << "CSmartPtr<T> operator=(const CSmartPtr<T> &src)" << endl;
+        // 深拷贝
+        this->_ptr = new T(*src._ptr);
+        return *this;
     }
 
     // * 运算符重载函数
@@ -53,19 +60,22 @@ public:
     }
 
 private:
-	int _age;
+    int _age;
 };
 
 int main() {
     // 智能指针是利用栈上的对象出作用域后自动析构的特性，来实现资源的自动释放
-    CSmartPtr<int> cptr(new int);
-    *cptr = 30;
+    CSmartPtr<int> cptr1(new int);
+    *cptr1 = 30;
 
     // 错误用法，这样写必须手动执行 delete cptr 来释放资源，即失去智能指针自动释放资源的特性
     // CSmartPtr<int>* cptr = new CSmartPtr<int>(new int);
 
     CSmartPtr<Person> cptr2(new Person(30));
-    cptr2->print();
-
     CSmartPtr<Person> cptr3(cptr2);
+    cptr3->print();
+
+    CSmartPtr<Person> cptr4(new Person(40));
+    cptr3 = cptr2;
+    cptr3->print();
 }
