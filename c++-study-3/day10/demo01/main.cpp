@@ -23,10 +23,10 @@ public:
         delete _ptr;
     }
 
-    // 显式删除拷贝构造
+    // 显式删除带左值引用参数的拷贝构造函数
     CSmartPtr(const CSmartPtr<T> &) = delete;
 
-    // 显式删除拷贝赋值
+    // 显式删除带左值引用参数的赋值运算符重载函数
     CSmartPtr<T> &operator=(const CSmartPtr<T> &) = delete;
 
     // 带右值引用参数的拷贝构造函数，支持移动构造（即支持 move 移动语义）
@@ -132,5 +132,13 @@ void test05() {
     delete rawPtr;                          // 需要手动释放
 
     CSmartPtr<int> p2;
-    p2.reset(new int(20));               // 重新分配资源
+    p2.reset(new int(20));              // 重新分配资源
+}
+
+int main() {
+    test01();
+    test02();
+    test03();
+    test04();
+    test05();
 }
