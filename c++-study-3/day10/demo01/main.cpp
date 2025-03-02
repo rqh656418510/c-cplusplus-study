@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// 模拟实现智能指针
+// 模拟实现不带引用计数的智能指针
 template<typename T>
 class CSmartPtr {
 
@@ -18,9 +18,10 @@ public:
     ~CSmartPtr() {
         cout << "~CSmartPtr()" << endl;
         delete _ptr;
+        _ptr = nullptr;
     }
 
-    CSmartPtr(const CSmartPtr& src) {
+    CSmartPtr(const CSmartPtr<T>& src) {
         cout << "CSmartPtr(const CSmartPtr& src)" << endl;
         // 深拷贝
         this->_ptr = new T(*src._ptr);
