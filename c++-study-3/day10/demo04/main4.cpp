@@ -5,11 +5,12 @@
 #include <iostream>
 #include <memory>
 
-using namespace std;
-
 // weak_ptr 智能指针访问资源
 
-class B;    // 声明 B 的存在，但未定义 B
+using namespace std;
+
+// 声明 B 的存在，但未定义 B
+class B;
 
 class A {
 
