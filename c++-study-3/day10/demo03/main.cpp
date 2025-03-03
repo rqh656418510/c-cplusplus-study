@@ -137,7 +137,7 @@ private:
 };
 
 int main() {
-    // 测试多个智能指针管理同一个对象资源
+    // 测试多个智能指针管理同一个资源
     CSmartPtr<Person> ptr1(new Person(20));
 
     {
@@ -147,10 +147,10 @@ int main() {
         CSmartPtr<Person> ptr3;
         ptr3 = ptr2;                    // 可赋值
         ptr3->print();
-    } // 出了作用域后，ptr2、ptr3 析构，但不影响 ptr1，也不影响对象资源的析构
+    } // 出了作用域后，ptr2、ptr3 析构，但不影响 ptr1，也不影响被管理资源的析构
 
     cout << "Leaving inner scope..." << endl;
 
     ptr1->print();  // 仍然有效
 
-} // 出了作用域后，ptr1 析构，并析构对象资源
+} // 出了作用域后，ptr1 析构，并析构被管理的资源
