@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// 模拟 shared_ptr 智能指针发生循环引用问题
+// 解決 shared_ptr 智能指针的循环引用问题
 
 class B;
 
@@ -21,7 +21,8 @@ public:
 		cout << "~A()" << endl;
 	}
 
-	shared_ptr<B> _ptrB;
+	// 引用对象时，使用弱引用智能指针
+	weak_ptr<B> _ptrB;
 
 };
 
@@ -36,20 +37,22 @@ public:
 		cout << "~B()" << endl;
 	}
 
-	shared_ptr<A> _ptrA;
+	// 引用对象时，使用弱引用智能指针
+	weak_ptr<A> _ptrA;
 };
 
 int main() {
+	// 定义对象时，使用强引用智能指针
 	shared_ptr<A> ptrA(new A());
 	shared_ptr<B> ptrB(new B());
 
-	// 这里会造成智能指针的循环引用，导致程序结束运行后资源无法正常被释放
+	// 这里不会造成智能指针循环引用的问题
 	ptrA->_ptrB = ptrB;
 	ptrB->_ptrA = ptrA;
 
 	// 打印智能指针的引用计数
 	cout << ptrA.use_count() << endl;
 	cout << ptrB.use_count() << endl;
-
+	
 	return 0;
 }
