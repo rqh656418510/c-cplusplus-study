@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// weak_ptr 智能指针的使用
+// 解決 shared_ptr 智能指针的循环引用问题
 
 class B;
 
@@ -20,15 +20,6 @@ public:
 
 	~A() {
 		cout << "~A()" << endl;
-	}
-
-	void func() {
-		cout << "A::func()" << endl;
-		// 必须提升弱引用智能指针为强智能指针，这样才能调用被管理对象的方法
-		shared_ptr<B> ptrB = _ptrB.lock();
-		if (ptrB != nullptr) {
-			ptrB->func();
-		}
 	}
 
 	// 引用对象时，使用弱引用智能指针
@@ -45,15 +36,6 @@ public:
 
 	~B() {
 		cout << "~B()" << endl;
-	}
-
-	void func() {
-		cout << "B::func()" << endl;
-		// 必须提升弱引用智能指针为强智能指针，这样才能调用被管理对象的方法
-		shared_ptr<A> ptrA = _ptrA.lock();
-		if (ptrA != nullptr) {
-			ptrA->func();
-		}
 	}
 
 	// 引用对象时，使用弱引用智能指针

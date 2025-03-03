@@ -7,50 +7,46 @@
 
 using namespace std;
 
-// 模拟 shared_ptr 智能指针发生循环引用问题
+// shared_ptr 智能指针的使用
 
-class B;
-
-class A {
+class Resource {
 
 public:
-	A() {
-		cout << "A()" << endl;
-	}
+    Resource() {
+        cout << "Resource()" << endl;
+    }
 
-	~A() {
-		cout << "~A()" << endl;
-	}
+    ~Resource() {
+        cout << "~Resource()" << endl;
+    }
 
-	shared_ptr<B> _ptrB;
+    void show() {
+        cout << "Using resource" << endl;
+    }
 
-};
-
-class B {
-
-public:
-	B() {
-		cout << "B()" << endl;
-	}
-
-	~B() {
-		cout << "~B()" << endl;
-	}
-
-	shared_ptr<A> _ptrA;
 };
 
 int main() {
-	shared_ptr<A> ptrA(new A());
-	shared_ptr<B> ptrB(new B());
+    // 创建一个 shared_ptr sp1，并管理 Resource 对象
+    shared_ptr<Resource> sp1 = make_shared<Resource>();
 
-	// 这里会造成智能指针的循环引用，导致程序结束运行后资源无法正常被释放
-	ptrA->_ptrB = ptrB;
-	ptrB->_ptrA = ptrA;
+    // 不建议这样写
+    // shared_ptr<Resource> sp1(new Resource());
 
-	// 打印智能指针的引用计数
-	cout << ptrA.use_count() << endl;
-	cout << ptrB.use_count() << endl;
+    // 打印引用计数
+    cout << "Reference count: " << sp1.use_count() << endl;
 
-	return 0;
+    {
+        // 创建一个 shared_ptr sp2，共享 sp1 的资源
+        shared_ptr<Resource> sp2 = sp1;
+        // 打印引用计数
+        cout << "Reference count: " << sp1.use_count() << endl;
+        // 访问资源
+        sp2->show();
+    } // 作用域结束后，sp2 自动析构，引用计数减少
+
+    // 打印引用计数
+    cout << "Reference count: " << sp1.use_count() << endl;
+
+    return 0;
 }
