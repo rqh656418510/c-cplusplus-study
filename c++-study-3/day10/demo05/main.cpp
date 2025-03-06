@@ -3,7 +3,6 @@
  */
 
 #include <iostream>
-#include <memory>
 #include <thread>
 
 using namespace std;
@@ -18,7 +17,7 @@ public:
     }
 
     ~Task() {
-		cout << "~Task()" << endl;
+        cout << "~Task()" << endl;
     }
 
     void run() {
@@ -27,7 +26,7 @@ public:
 
 };
 
-void executTask(Task* task) {
+void executTask(Task *task) {
     // 子线程等待 5 秒
     this_thread::sleep_for(chrono::seconds(5));
     // 执行任务方法
@@ -35,10 +34,10 @@ void executTask(Task* task) {
 }
 
 int main() {
-    Task* task = new Task();
+    Task *task = new Task();
 
     // 创建子线程
-	thread t(executTask, task);
+    thread t(executTask, task);
 
     // 将子线程与 thread 对象分离，使其在后台独立运行，直到子线程执行完毕
     t.detach();

@@ -18,7 +18,7 @@ public:
     }
 
     ~Task() {
-		cout << "~Task()" << endl;
+        cout << "~Task()" << endl;
     }
 
     void run() {
@@ -35,9 +35,8 @@ void executTask(weak_ptr<Task> wp) {
     shared_ptr<Task> sp = wp.lock();
     if (sp != nullptr) {
         sp->run();
-    }
-    else {
-		cout << "Failed to invoke Task:run()";
+    } else {
+        cout << "Failed to invoke Task:run()";
     }
 }
 
@@ -53,7 +52,7 @@ int main() {
         t.detach();
 
     } // 共享对象 task 出了作用域后会自动释放
-    
+
     // 主线程等待子线程执行完成
     this_thread::sleep_for(chrono::seconds(10));
 
