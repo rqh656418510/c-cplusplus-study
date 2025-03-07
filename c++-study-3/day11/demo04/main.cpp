@@ -1,5 +1,5 @@
 /**
- * function函数对象类型的应用示例
+ * bind1st和bind2nd什么时候会用到
  */
 
 #include <iostream>

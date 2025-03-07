@@ -1,5 +1,5 @@
 /**
- * bind和function实现线程池
+ * bind1st和bind2nd的底层实现原理
  */
 
 #include <iostream>

@@ -1,5 +1,5 @@
 /**
- * function的实现原理
+ * bind和function实现线程池
  */
 
 #include <iostream>

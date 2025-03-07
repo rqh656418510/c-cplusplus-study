@@ -1,5 +1,5 @@
 /**
- * bind1st和bind2nd的底层实现原理
+ * function的实现原理
  */
 
 #include <iostream>
