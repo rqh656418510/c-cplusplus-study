@@ -1,5 +1,5 @@
 /**
- * function函数对象类型的应用示例
+ * function类模板的应用示例
  */
 
 #include <iostream>

@@ -79,7 +79,7 @@ C++ 开发工程师高级进阶课程 - 提升 C++ 面试和开发能力（施�
     ├── demo05          多线程访问共享对象的线程安全问题
     ├── demo06          自定义删除器
 └── day11
-    ├── demo01          function函数对象类型的应用示例
+    ├── demo01          function类模板的应用示例
     ├── demo02          function的实现原理
     ├── demo03          bind和function实现线程池
     ├── demo04          bind1st和bind2nd什么时候会用到
