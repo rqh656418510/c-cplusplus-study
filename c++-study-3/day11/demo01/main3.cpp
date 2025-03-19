@@ -1,39 +1,39 @@
 /**
- * functionÀàÄ£°åµÄÓ¦ÓÃÊ¾Àı
+ * functionç±»æ¨¡æ¿çš„åº”ç”¨ç¤ºä¾‹
  */
 
 #include <iostream>
 #include <functional>
-#include <string>
+#include <limits>
 #include <map>
 
 using namespace std;
 
 void doShowAllBooks() {
-	cout << "²é¿´ËùÓĞÊé¼®" << endl;
+    cout << "æŸ¥çœ‹æ‰€æœ‰ä¹¦ç±" << endl;
 };
 
 void doBorrowBook() {
-    cout << "½èÊé" << endl;
+    cout << "å€Ÿä¹¦" << endl;
 };
 
 void doBackBook() {
-    cout << "»¹Êé" << endl;
+    cout << "è¿˜ä¹¦" << endl;
 }
 
 void doQueryBook() {
-    cout << "²éÑ¯Êé¼®" << endl;
+    cout << "æŸ¥è¯¢ä¹¦ç±" << endl;
 }
 
 void doLoginOut() {
-	cout << "×¢Ïú" << endl;
+    cout << "æ³¨é”€" << endl;
 }
 
 int main() {
     int choice = 0;
 
     map<int, function<void()>> actionMap;
-	actionMap.insert({ 1, doShowAllBooks });
+    actionMap.insert({ 1, doShowAllBooks });
     actionMap.insert({ 2, doBorrowBook });
     actionMap.insert({ 3, doBackBook });
     actionMap.insert({ 4, doQueryBook });
@@ -41,30 +41,30 @@ int main() {
 
     for (;;) {
         cout << "\n-------------------" << endl;
-        cout << "1. ²é¿´ËùÓĞÊé¼®" << endl;
-        cout << "2. ½èÊé" << endl;
-        cout << "3. »¹Êé" << endl;
-        cout << "4. ²éÑ¯Êé¼®" << endl;
-        cout << "5. ×¢Ïú" << endl;
+        cout << "1. æŸ¥çœ‹æ‰€æœ‰ä¹¦ç±" << endl;
+        cout << "2. å€Ÿä¹¦" << endl;
+        cout << "3. è¿˜ä¹¦" << endl;
+        cout << "4. æŸ¥è¯¢ä¹¦ç±" << endl;
+        cout << "5. æ³¨é”€" << endl;
         cout << "-------------------" << endl;
-        cout << "ÇëÑ¡Ôñ: ";
+        cout << "è¯·é€‰æ‹©: ";
 
-        // ¼ì²âÊäÈëÊÇ·ñºÏ·¨
+        // æ£€æµ‹è¾“å…¥æ˜¯å¦åˆæ³•
         if (!(cin >> choice)) {
-            cout << "ÊäÈëÊı×ÖÎŞĞ§£¬ÇëÖØĞÂÊäÈë!" << endl;
-            // Çå³ı´íÎó×´Ì¬
+            cout << "è¾“å…¥æ•°å­—æ— æ•ˆï¼Œè¯·é‡æ–°è¾“å…¥!" << endl;
+            // æ¸…é™¤é”™è¯¯çŠ¶æ€
             cin.clear();
-			// ¶ªÆú´íÎóÊäÈë
+            // ä¸¢å¼ƒé”™è¯¯è¾“å…¥
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
 
         auto it = actionMap.find(choice);
         if (it == actionMap.end()) {
-            cout << "ÊäÈëÊı×ÖÎŞĞ§£¬ÇëÖØĞÂÊäÈë!" << endl;
+            cout << "è¾“å…¥æ•°å­—æ— æ•ˆï¼Œè¯·é‡æ–°è¾“å…¥!" << endl;
             continue;
         }
-        
+
         it->second();
     }
     return 0;

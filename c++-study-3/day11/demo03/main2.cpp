@@ -14,7 +14,7 @@ class Thread {
 
 public:
 
-	Thread(function<void(int)> func, int id) : _func(func), _id(id) {
+    Thread(function<void(int)> func, int id) : _func(func), _id(id) {
 
     }
 
@@ -25,7 +25,7 @@ public:
     }
 
 private:
-	function<void(int)> _func;
+    function<void(int)> _func;
     int _id;
 };
 
@@ -63,7 +63,7 @@ public:
     }
 
 private:
-    vector<Thread*>  _pool;
+    vector<Thread *> _pool;
     vector<thread> _handler;
 
     // runInThread() 成员函数充当线程函数
@@ -75,6 +75,5 @@ private:
 int main() {
     ThreadPool pool;
     pool.startPool(10);
-
     return 0;
 }

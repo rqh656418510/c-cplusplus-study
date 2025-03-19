@@ -1,5 +1,5 @@
 /**
- * functionÀàÄ£°åµÄÓ¦ÓÃÊ¾Àı
+ * functionç±»æ¨¡æ¿çš„åº”ç”¨ç¤ºä¾‹
  */
 
 #include <iostream>
@@ -19,11 +19,11 @@ public:
 };
 
 int main() {
-    // Í¨¹ı function º¯Êı¶ÔÏóÀàĞÍ£¬µ÷ÓÃÀàµÄ³ÉÔ±º¯Êı
+    // é€šè¿‡ function å‡½æ•°å¯¹è±¡ç±»å‹ï¼Œè°ƒç”¨ç±»çš„æˆå‘˜å‡½æ•°
     Test t;
     function<void(Test*, string)> function1 = &Test::hello;
     function1(&t, "peter");
-    function1(&Test(), "peter");    // »òÕßÊ¹ÓÃÁÙÊ±±äÁ¿
+    function1(&Test(), "peter");    // æˆ–è€…ä½¿ç”¨ä¸´æ—¶å˜é‡
 
     return 0;
 }

@@ -36,7 +36,7 @@ int main() {
     cout << result1 << endl;
 
     // 例子三，调用类的成员函数
-	int result2 = bind(&Test::sum, Test(), 5, 9)();
+    int result2 = bind(&Test::sum, Test(), 5, 9)();
     cout << result2 << endl;
 
     // 例子四，使用参数占位符（最多可以有20个参数占位符）
