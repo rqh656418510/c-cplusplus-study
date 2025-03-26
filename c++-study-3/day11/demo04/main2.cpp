@@ -19,7 +19,7 @@ int main() {
     // 使用 bind 绑定 greater 的第一个参数，等价于 f(x) = (3 > x)
     function<bool(int)> predicate = bind(greater<int>(), 3, placeholders::_1);
 
-    // 使用 bind 绑定 greater 的第二个参数，等价于 f(x) = (x < 3)
+    // 使用 bind 绑定 less 的第二个参数，等价于 f(x) = (x < 3)
     // function<bool(int)> predicate = bind(less<int>(), placeholders::_1, 3);
 
     vector<int>::iterator it = find_if(vec.begin(), vec.end(), predicate);

@@ -57,20 +57,17 @@ void test02() {
 
     // 查找第一个小于 70 的元素
 
-    // 使用 bind1st
-    // 绑定 greater 的第一个参数，使其始终为 70，让 greater(70, x) 变成一元函数对象
+    // 使用 bind1st 绑定 greater 的第一个参数，使其始终为 70，让 greater(70, x) 变成一元函数对象，等价于 f(x) = (70 > x)
     vector<int>::iterator it = find_if(vec.begin(), vec.end(), bind1st(greater<int>(), 70));
 
-    // 使用 bind2nd
-    // 绑定 less 的第二个参数，使其始终为 70，让 less(x, 70) 变成一元函数对象
+    // 使用 bind2nd 绑定 less 的第二个参数，使其始终为 70，让 less(x, 70) 变成一元函数对象，等价于 f(x) = (x > 70)
     // vector<int>::iterator it = find_if(vec.begin(), vec.end(), bind2nd(less<int>(), 70));
 
     if (it != vec.end()) {
-        cout << *it << endl;
+        cout << "找到小于 70 的第一个元素：" << *it << endl;
     } else {
-        cout << "not found number" << endl;
+        cout << "未找到符合条件的元素" << endl;
     }
-
 }
 
 int main() {
