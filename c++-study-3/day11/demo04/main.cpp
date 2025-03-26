@@ -55,7 +55,7 @@ void test02() {
 
     showContainer(vec);
 
-    // 查找第一个小于 70 是的元素
+    // 查找第一个小于 70 的元素
 
     // 使用 bind1st
     // 绑定 greater 的第一个参数，使其始终为 70，让 greater(70, x) 变成一元函数对象
