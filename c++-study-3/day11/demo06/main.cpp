@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// 函数对象
 template<typename T=void>
 class MyLambda1 {
 
@@ -29,6 +30,7 @@ void test01() {
     t1();
 }
 
+// 函数对象
 template<typename T>
 class MyLambda2 {
 
@@ -52,6 +54,7 @@ void test02() {
     cout << t2(3, 5) << endl;
 }
 
+// 函数对象
 template<typename T=void>
 class MyLambda3 {
 
@@ -92,6 +95,7 @@ void test03() {
     cout << "a = " << a << ", b = " << b << endl;
 }
 
+// 函数对象
 template<typename T=void>
 class MyLambda4 {
 

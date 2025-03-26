@@ -1,5 +1,5 @@
 /**
- * Lambda表达式的实现原理
+ * Lambda表达式的应用实践
  */
 
 #include <iostream>
