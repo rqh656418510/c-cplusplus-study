@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// 模板
+// 通用模板
 template<typename T>
 class MyVector {
 

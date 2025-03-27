@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// 模板
+// 通用模板
 template<typename T>
 bool compare(T a, T b) {
     cout << "template compare" << endl;
