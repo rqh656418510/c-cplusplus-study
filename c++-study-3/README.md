@@ -87,6 +87,12 @@ C++ 开发工程师高级进阶课程 - 提升 C++ 面试和开发能力（施�
     ├── demo06          Lambda表达式的实现原理
     ├── demo07          Lambda表达式的应用实践
     ├── demo08          模板的完全特例化和部分特例化
+└── day12
+    ├── demo01          通过thread类编写C++多线程程序
+    ├── demo02          线程间互斥-mutex互斥锁和lock_guard
+    ├── demo03          线程间同步通信-生产者消费者模型
+    ├── demo04          再谈lock_guard和unique_lock
+    ├── demo05          基于CAS操作的atomic原子类型
 ```
 
 ## 常用命令
