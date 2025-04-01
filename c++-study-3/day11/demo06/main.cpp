@@ -63,7 +63,7 @@ public:
 
     }
 
-    T operator()() const {
+    void operator()() const {
         // 交换两个变量的值
         int temp = _a;
         _a = _b;
@@ -81,7 +81,7 @@ void test03() {
     int b = 30;
 
     // 按值传递，并没有真正交换两个变量的值
-    auto func3 = [a, b]() mutable -> int {
+    auto func3 = [a, b]() mutable -> void {
         int temp = a;
         a = b;
         b = temp;
@@ -104,7 +104,7 @@ public:
 
     }
 
-    T operator()() const {
+    void operator()() const {
         // 交换两个变量的值
         int temp = _a;
         _a = _b;
@@ -122,7 +122,7 @@ void test04() {
     int b = 30;
 
     // 按引用传递，可以真正交换两个变量的值
-    auto func4 = [&a, &b]() mutable -> int {
+    auto func4 = [&a, &b]() mutable -> void {
         int temp = a;
         a = b;
         b = temp;

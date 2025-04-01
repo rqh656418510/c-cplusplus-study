@@ -11,11 +11,11 @@ using namespace std;
 
 void doShowAllBooks() {
     cout << "查看所有书籍" << endl;
-};
+}
 
 void doBorrowBook() {
     cout << "借书" << endl;
-};
+}
 
 void doBackBook() {
     cout << "还书" << endl;
