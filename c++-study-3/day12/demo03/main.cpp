@@ -23,7 +23,7 @@ public:
 
         // 如果队列不为空，则阻塞等待直到满足条件为止（避免虚假唤醒），阻塞等待期间会释放互斥锁
         if (!_queue.empty()) {
-			_cv.wait(lock, [this] {return _queue.empty(); });
+            _cv.wait(lock, [this] { return _queue.empty(); });
         }
 
         // 插入队列元素
@@ -40,17 +40,17 @@ public:
 
         // 如果队列为空，则阻塞等待直到满足条件为止（避免虚假唤醒），阻塞等待期间会释放互斥锁
         if (_queue.empty()) {
-			_cv.wait(lock, [this] {return !_queue.empty(); });
+            _cv.wait(lock, [this] { return !_queue.empty(); });
         }
 
         // 弹出队列元素
         int value = _queue.front();
-		_queue.pop();
+        _queue.pop();
 
         // 通知生产者生产
         _cv.notify_all();
 
-		return value;
+        return value;
     }
 
 private:
@@ -59,7 +59,7 @@ private:
     std::condition_variable _cv;    // 条件变量
 };
 
-void producerTask(MyQueue * queue) {
+void producerTask(MyQueue *queue) {
     while (true) {
         int newValue = std::rand() % 100 + 1;
         queue->push(newValue);
@@ -68,7 +68,7 @@ void producerTask(MyQueue * queue) {
     }
 }
 
-void consumerTask(MyQueue* queue) {
+void consumerTask(MyQueue *queue) {
     while (true) {
         int value = queue->pop();
         std::cout << "消费者消费 " << value << " 号商品" << std::endl;
