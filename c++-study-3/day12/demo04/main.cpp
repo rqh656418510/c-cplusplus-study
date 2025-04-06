@@ -7,8 +7,8 @@
 #include <atomic>
 #include <list>
 
-std::atomic_int _count = 0;
-std::atomic_bool _isReady = false;
+std::atomic_int _count(0);
+std::atomic_bool _isReady(false);
 
 void taskHandler() {
     while (!_isReady) {
@@ -17,7 +17,7 @@ void taskHandler() {
     }
 
     for (int i = 0; i < 100; i++) {
-		_count++;
+        _count++;
     }
 }
 
@@ -31,6 +31,7 @@ int main() {
 
     // 主线程等待几秒
     std::this_thread::sleep_for(std::chrono::seconds(5));
+
     _isReady = true;
 
     // 等待所有子线程执行结束
