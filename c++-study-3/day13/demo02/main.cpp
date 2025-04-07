@@ -136,8 +136,8 @@ int main() {
     light1->show();
 
     unique_ptr<AbstractFactory> audiFactoy(new AudiFactory());
-    unique_ptr<Engine> engine2 = audiFactoy->createEngine("奥迪 X6 引擎");
-    unique_ptr<Light> light2 = audiFactoy->createLight("奥迪 X6 大灯");
+    unique_ptr<Engine> engine2 = audiFactoy->createEngine("奥迪 A8 引擎");
+    unique_ptr<Light> light2 = audiFactoy->createLight("奥迪 A8 大灯");
     engine2->show();
     light2->show();
 
