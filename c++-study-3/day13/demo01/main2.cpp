@@ -55,6 +55,7 @@ public:
 // 工厂方法
 class CarFactory {
 
+public:
     // 纯虚函数
     virtual unique_ptr<Car> createCar(string name) = 0;
 
@@ -81,11 +82,11 @@ public:
 };
 
 int main() {
-    unique_ptr<BmwFactory> bmwFactory(new BmwFactory());
+    unique_ptr<CarFactory> bmwFactory(new BmwFactory());
     unique_ptr<Car> car1 = bmwFactory->createCar("X6");
     car1->show();
 
-    unique_ptr<AudiFactory> audiFactory(new AudiFactory());
+    unique_ptr<CarFactory> audiFactory(new AudiFactory());
     unique_ptr<Car> car2 = audiFactory->createCar("A8");
     car2->show();
 
