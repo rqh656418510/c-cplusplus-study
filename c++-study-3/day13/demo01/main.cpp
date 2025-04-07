@@ -9,11 +9,11 @@
 
 using namespace std;
 
-// 抽象类
+// 车
 class Car {
 
 public:
-    Car(string name) : _name(name) {
+    explicit Car(string name) : _name(name) {
 
     }
 
@@ -25,35 +25,34 @@ protected:
 
 };
 
-// 子类
+// 宝马车
 class Bmw : public Car {
 
 public:
-
-    Bmw(string name) : Car(name) {
+    explicit Bmw(string name) : Car(name) {
 
     }
 
-    void show() {
-        cout << "这是一辆宝马轿车" << endl;
+    void show() override {
+        cout << "这是一辆宝马 " << _name << endl;
     }
 
 };
 
-// 子类
+// 奥迪车
 class Audi : public Car {
 
 public:
-    Audi(string name) : Car(name) {
+    explicit Audi(string name) : Car(name) {
 
     }
 
-    void show() {
-        cout << "这是一辆奥迪轿车" << endl;
+    void show() override {
+        cout << "这是一辆奥迪 " << _name << endl;
     }
 };
 
-
+// 枚举类型
 enum CarType {
     BMW, AUDI
 };
@@ -62,12 +61,12 @@ enum CarType {
 class SimpleFactory {
 
 public:
-    unique_ptr<Car> createCar(CarType type) {
+    static unique_ptr<Car> createCar(CarType type) {
         switch (type) {
             case BMW:
-                return unique_ptr<Car>(new Bmw("X5"));
+                return unique_ptr<Car>(new Bmw("X6"));
             case AUDI:
-                return unique_ptr<Car>(new Audi("A5"));
+                return unique_ptr<Car>(new Audi("A8"));
             default:
                 cerr << "传入的工厂参数不正确 : " << type << endl;
                 break;
@@ -76,12 +75,10 @@ public:
 };
 
 int main() {
-    unique_ptr<SimpleFactory> factory(new SimpleFactory);
-
-    unique_ptr<Car> car1 = factory->createCar(BMW);
+    unique_ptr<Car> car1 = SimpleFactory::createCar(BMW);
     car1->show();
 
-    unique_ptr<Car> car2 = factory->createCar(AUDI);
+    unique_ptr<Car> car2 = SimpleFactory::createCar(AUDI);
     car2->show();
 
     return 0;
