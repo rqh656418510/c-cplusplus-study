@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 
-// 懒汉单例模式（线程安全），基于 mutex + atomic + 双端检锁（DCL），兼容 C++ 11 以下的编译器
+// 懒汉单例模式，基于 mutex + atomic + 双端检锁（DCL），兼容 C++ 11 以下的编译器
 
 using namespace std;
 
@@ -78,6 +78,5 @@ int main() {
     Singleton *s1 = Singleton::getInstance();
     Singleton *s2 = Singleton::getInstance();
     cout << (s1 == s2 ? "true" : "false") << endl;
-
     return 0;
 }
