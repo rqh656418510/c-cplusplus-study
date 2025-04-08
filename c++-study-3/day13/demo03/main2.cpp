@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 
-// 懒汉单例模式
+// 懒汉单例模式（线程安全），基于 mutex + atomic + 双端检锁（DCL），兼容 C++ 11 以下的编译器
 
 using namespace std;
 
@@ -25,7 +25,7 @@ private:
     Singleton &operator=(const Singleton &) = delete;
 
 public:
-    // 获取单例对象（双端检锁 - DCL）
+    // 获取单例对象
     static Singleton *getInstance() {
         // 获取单例对象
         Singleton *instance = _singleton.load(memory_order_acquire);
