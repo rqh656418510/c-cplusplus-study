@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-using namespace std;
-
 // 饿汉单例模式
+
+using namespace std;
 
 class Singleton {
 

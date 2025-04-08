@@ -6,15 +6,15 @@
 #include <mutex>
 #include <atomic>
 
-using namespace std;
-
 // 懒汉单例模式
+
+using namespace std;
 
 class Singleton {
 
 private:
     // 私有的默认构造函数
-    Singleton() {
+    Singleton() noexcept {
 
     }
 
@@ -25,25 +25,25 @@ private:
     Singleton &operator=(const Singleton &) = delete;
 
 public:
-    // 获取单例对象（双重检查锁定 - DCL）
+    // 获取单例对象（双端检锁 - DCL）
     static Singleton *getInstance() {
-        // 获取单例对象（原子操作 + 避免指令重排）
+        // 获取单例对象
         Singleton *instance = _singleton.load(memory_order_acquire);
 
         // 第一次检测
         if (instance == nullptr) {
             // 获取互斥锁
-            unique_lock<mutex> lock(mutex);
+            lock_guard<mutex> lock(_mutex);
 
-            // 获取单例对象（原子操作 + 避免指令重排）
-            instance = _singleton.load(memory_order_acquire);
+            // 获取单例对象
+            instance = _singleton.load(memory_order_relaxed);
 
             // 第二次检测
             if (instance == nullptr) {
                 // 初始化单例对象
                 instance = new Singleton();
 
-                // 设置单例对象（原子操作 + 避免指令重排）
+                // 设置单例对象
                 _singleton.store(instance, memory_order_release);
             }
         }
@@ -53,11 +53,13 @@ public:
     // 销毁单例对象
     static void destroyInstance() {
         // 获取互斥锁
-        unique_lock<mutex> lock(mutex);
+        lock_guard<mutex> lock(_mutex);
 
         // 释放资源
         Singleton *instance = _singleton.exchange(nullptr);
-        delete instance;
+        if (instance != nullptr) {
+            delete instance;
+        }
     }
 
 private:
