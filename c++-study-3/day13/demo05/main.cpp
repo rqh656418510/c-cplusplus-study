@@ -13,8 +13,13 @@ class VideoApp {
 public:
     // 纯虚函数，拥有纯虚函数的基类，通常称之为抽象类
     virtual void freeMovie() = 0;
+
     virtual void vipMovie() = 0;
-	virtual void ticketMovie() = 0;
+
+    virtual void ticketMovie() = 0;
+
+    // 虚析构函数
+    virtual ~VideoApp() {};
 
 };
 
@@ -61,7 +66,7 @@ public:
     }
 
 private:
-    VideoApp* _app;
+    VideoApp *_app;
 
 };
 
@@ -90,11 +95,11 @@ public:
     }
 
 private:
-    VideoApp* _app;
+    VideoApp *_app;
 
 };
 
-void watchMovie(unique_ptr<VideoApp> & app) {
+void watchMovie(unique_ptr<VideoApp> &app) {
     app->freeMovie();
     app->vipMovie();
     app->ticketMovie();
