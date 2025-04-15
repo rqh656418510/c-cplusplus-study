@@ -14,7 +14,7 @@ public:
     virtual void play() = 0;
 
     // 虚析构函数
-    ~VGA() {}
+    virtual ~VGA() {}
 
 };
 
@@ -47,7 +47,7 @@ public:
     virtual void play() = 0;
 
     // 虚析构函数
-    ~HDMI() {}
+    virtual ~HDMI() {}
 
 };
 
