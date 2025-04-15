@@ -61,10 +61,10 @@ public:
 
 int main() {
     Coffee *basicCoffee = new BasicCoffee();
-    Coffee *milkCoffee = new Milk(basicCoffee);
-    cout << milkCoffee->getDescription() << endl;
-    cout << milkCoffee->cost() << endl;
+    Coffee *milk = new Milk(basicCoffee);
+    cout << milk->getDescription() << endl;
+    cout << milk->cost() << endl;
 
-    delete milkCoffee;
+    delete milk;
     delete basicCoffee;
 }
