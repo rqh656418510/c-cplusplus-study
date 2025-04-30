@@ -78,6 +78,7 @@ C++ 开发工程师高级进阶课程 - 提升 C++ 面试和开发能力（施�
     ├── demo04          shared_ptr的交叉引用问题
     ├── demo05          多线程访问共享对象的线程安全问题
     ├── demo06          自定义删除器
+    ├── demo07          建议用make_shared代替shared_ptr
 └── day11
     ├── demo01          function类模板的应用示例
     ├── demo02          function的实现原理
