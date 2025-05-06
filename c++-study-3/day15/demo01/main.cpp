@@ -19,6 +19,7 @@ public:
         cout << "Test(int, int)" << endl;
     }
 
+    // 析构函数
     ~Test() {
         cout << "~Test()" << endl;
     }
