@@ -113,7 +113,6 @@ C++ 开发工程师高级进阶课程 - 提升 C++ 面试和开发能力（施�
     ├── demo01          C++11容器emplace方法原理剖析一
     ├── demo02          C++11容器emplace方法原理剖析二
     ├── demo03          C++11容器emplace方法原理剖析三
-    ├── demo04          建议用make_shared代替shared_ptr
 ```
 
 ## 常用命令
