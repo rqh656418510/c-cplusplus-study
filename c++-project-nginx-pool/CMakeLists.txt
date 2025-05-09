@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.15)
-project(c___study_3)
 
+project(Nginx_Pool)
+
+# C++ 版本
 set(CMAKE_CXX_STANDARD 11)
 
+# 构建模式
 set(CMAKE_BUILD_TYPE Debug)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CMAKE_CXX_FLAGS "-lpthread")
-endif()
+# 指定源文件
+file(GLOB SRC_FILES src/*.cpp)
 
-add_executable(ngx_pool_demo src/main.cpp)
+# 编译并链接
+add_executable(Nginx_Pool ${SRC_FILES})
+
+# 引入头文件
+target_include_directories(Nginx_Pool PRIVATE ${CMAKE_SOURCE_DIR}/include)
