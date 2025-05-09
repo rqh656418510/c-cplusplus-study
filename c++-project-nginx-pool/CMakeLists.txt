@@ -2,17 +2,17 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Nginx_Pool)
 
-# C++ °æ±¾
+# C++ ç‰ˆæœ¬
 set(CMAKE_CXX_STANDARD 11)
 
-# ¹¹½¨Ä£Ê½
+# æ„å»ºæ¨¡å¼
 set(CMAKE_BUILD_TYPE Debug)
 
-# Ö¸¶¨Ô´ÎÄ¼ş
+# æŒ‡å®šæºæ–‡ä»¶
 file(GLOB SRC_FILES src/*.cpp)
 
-# ±àÒë²¢Á´½Ó
+# ç¼–è¯‘å¹¶é“¾æ¥
 add_executable(Nginx_Pool ${SRC_FILES})
 
-# ÒıÈëÍ·ÎÄ¼ş
+# å¼•å…¥å¤´æ–‡ä»¶
 target_include_directories(Nginx_Pool PRIVATE ${CMAKE_SOURCE_DIR}/include)

@@ -1,48 +1,49 @@
 #include<iostream>
 #include<memory>
+#include <string.h>
 #include "ngx_mem_pool.h"
 
 using namespace std;
 
-// ×Ô¶¨ÒåÊı¾İÀàĞÍ
+// è‡ªå®šä¹‰æ•°æ®ç±»å‹
 struct Data {
-    char* ptr;
-    FILE* pfile;
+    char *ptr;
+    FILE *pfile;
 };
 
-// ×Ô¶¨Òå×ÊÔ´ÇåÀí²Ù×÷
-void cleanFunc1(void * arg) {
-	char* p = (char*)arg;
-	cout << "free ptr memory!" << endl;
+// è‡ªå®šä¹‰èµ„æºæ¸…ç†æ“ä½œ
+void cleanFunc1(void *arg) {
+    char *p = (char *) arg;
+    cout << "free ptr memory!" << endl;
     free(p);
 }
 
-// ×Ô¶¨Òå×ÊÔ´ÇåÀí²Ù×÷
-void cleanFunc2(void * arg) {
-	FILE* p = (FILE*)arg;
+// è‡ªå®šä¹‰èµ„æºæ¸…ç†æ“ä½œ
+void cleanFunc2(void *arg) {
+    FILE *p = (FILE *) arg;
     cout << "close file!" << endl;
-	fclose(p);
+    fclose(p);
 }
 
 int main() {
-    // ´´½¨ÄÚ´æ³Ø
+    // åˆ›å»ºå†…å­˜æ± 
     unique_ptr<ngx_mem_pool> pool(new ngx_mem_pool(256));
 
-	// ´ÓĞ¡¿éÄÚ´æ³Ø·ÖÅäÄÚ´æ
-    void* p1 = pool->ngx_palloc(128);
-    if (p1 == nullptr){
+    // ä»å°å—å†…å­˜æ± åˆ†é…å†…å­˜
+    void *p1 = pool->ngx_palloc(128);
+    if (p1 == nullptr) {
         cout << "ngx_palloc 128 bytes fail..." << endl;
         return -1;
     }
 
-    // ´Ó´ó¿éÄÚ´æ³Ø·ÖÅäÄÚ´æ
-    Data* p2 = (Data*) pool->ngx_palloc(512);
-	if (p2 == nullptr) {
-		cout << "ngx_palloc 512 bytes fail..." << endl;
+    // ä»å¤§å—å†…å­˜æ± åˆ†é…å†…å­˜
+    Data *p2 = (Data *) pool->ngx_palloc(512);
+    if (p2 == nullptr) {
+        cout << "ngx_palloc 512 bytes fail..." << endl;
         return -1;
     }
 
-	p2->ptr = (char*)malloc(12);
+    p2->ptr = (char *) malloc(12);
     if (p2->ptr == nullptr) {
         cout << "malloc 12 bytes fail..." << endl;
         return -1;
@@ -51,17 +52,17 @@ int main() {
     strcpy(p2->ptr, "hello world");
     p2->pfile = fopen("data.txt", "w");
 
-    // Ìí¼Ó×ÊÔ´ÇåÀí²Ù×÷
-    ngx_pool_cleanup_s* c1 = pool->ngx_pool_cleanup_add(sizeof(char*));
+    // æ·»åŠ èµ„æºæ¸…ç†æ“ä½œ
+    ngx_pool_cleanup_s *c1 = pool->ngx_pool_cleanup_add(sizeof(char *));
     c1->handler = cleanFunc1;
     c1->data = p2->ptr;
 
-    // Ìí¼Ó×ÊÔ´ÇåÀí²Ù×÷
-    ngx_pool_cleanup_s* c2 = pool->ngx_pool_cleanup_add(sizeof(FILE*));
+    // æ·»åŠ èµ„æºæ¸…ç†æ“ä½œ
+    ngx_pool_cleanup_s *c2 = pool->ngx_pool_cleanup_add(sizeof(FILE *));
     c2->handler = cleanFunc2;
     c2->data = p2->pfile;
 
-    // ÄÚ´æ³ØÓÉÖÇÄÜÖ¸Õë¹ÜÀí£¬³ÌĞòÔËĞĞ½áÊøºó»á×Ô¶¯Ïú»ÙÄÚ´æ³Ø
+    // å†…å­˜æ± ç”±æ™ºèƒ½æŒ‡é’ˆç®¡ç†ï¼Œç¨‹åºè¿è¡Œç»“æŸåä¼šè‡ªåŠ¨é”€æ¯å†…å­˜æ± 
 
     return 0;
 }
