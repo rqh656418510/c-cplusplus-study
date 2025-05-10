@@ -20,6 +20,7 @@ public:
 	static void* allocate(size_t __n) {
 		void* __result = malloc(__n);
 		if (nullptr == __result) {
+			// 调用OOM处理流程
 			__result = _S_oom_malloc(__n);
 		}
 		return __result;
@@ -34,6 +35,7 @@ public:
 	static void* reallocate(void* __p, size_t /* old_sz */, size_t __new_sz) {
 		void* __result = realloc(__p, __new_sz);
 		if (nullptr == __result) {
+			// 调用OOM处理流程
 			__result = _S_oom_realloc(__p, __new_sz);
 		}
 		return __result;
@@ -56,10 +58,13 @@ void* __malloc_alloc_template<__inst>::_S_oom_malloc(size_t __n) {
 	void (*__my_malloc_handler)();
 	void* __result;
 
+	// 死循环
 	for (;;) {
 		__my_malloc_handler = __malloc_alloc_oom_handler;
 		if (0 == __my_malloc_handler) { throw std::bad_alloc(); }
+		// 调用OOM回调函数
 		(*__my_malloc_handler)();
+		// 再次尝试申请内存
 		__result = malloc(__n);
 		if (__result) return(__result);
 	}
@@ -70,10 +75,13 @@ void* __malloc_alloc_template<__inst>::_S_oom_realloc(void* __p, size_t __n) {
 	void (*__my_malloc_handler)();
 	void* __result;
 
+	// 死循环
 	for (;;) {
 		__my_malloc_handler = __malloc_alloc_oom_handler;
 		if (0 == __my_malloc_handler) { throw std::bad_alloc(); }
+		// 调用OOM回调函数
 		(*__my_malloc_handler)();
+		// 再次尝试内存重分配
 		__result = realloc(__p, __n);
 		if (__result) return(__result);
 	}
