@@ -76,13 +76,16 @@ typedef __default_alloc_template<Person> allocator_person;
 
 // 测试基础类型
 void test01() {
+    // 设置随机种子
+    srand(time(nullptr));
+
     vector<int, allocator_int> vec1;
 
     for (int i = 0; i < 10; ++i) {
         vec1.push_back(rand() % 10 + 1);
 	}
 
-    for (int item : vec1) {
+	for (const int& item : vec1) {
 		cout << item << " ";
     }
 
@@ -101,16 +104,10 @@ void test02() {
     for (auto it = vec2.begin(); it != vec2.end(); ++it) {
 		it->display();
     }
-
-    cout << endl;
 }
 
 int main() {
-    // 设置随机种子
-    srand(time(nullptr));
-
     test01();
     test02();
-
     return 0;
 }
