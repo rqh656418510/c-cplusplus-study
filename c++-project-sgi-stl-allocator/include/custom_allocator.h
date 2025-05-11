@@ -3,8 +3,8 @@
 #include<mutex>
 #include<stdexcept>
 
-// 一级空间配置器，用于分配大块内存，
-// 基于 malloc() 和 free() 实现内存管理，可以设置发生 OOM 时释放内存的回调函数
+// 一级空间配置器，用于分配大块内存
+// 基于 malloc() 和 free() 来实现内存管理，可以设置发生 OOM 时释放内存的回调函数
 template <int __inst>
 class __malloc_alloc_template {
 
@@ -92,15 +92,17 @@ void* __malloc_alloc_template<__inst>::_S_oom_realloc(void* __p, size_t __n) {
 typedef __malloc_alloc_template<0> malloc_alloc;
 
 
-/************************************************************************************************************/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// 二级空间配置器，基于内存池管理小块内存
+// 二级空间配置器，用于分配小块内存
+// 采用基于自由链表原理的内存池机制来实现内存管理
 template<typename T>
 class __default_alloc_template {
 
 public:
 
+	// 重定义类型
 	using value_type = T;
 
 	// 构造函数
@@ -287,7 +289,7 @@ private:
 			_S_start_free += __total_bytes;
 			return(__result);
 		}
-		// 第二种情况：内存池剩余空间不能满足全部需求，但至少能分配一个以上的块
+		// 第二种情况：内存池剩余空间不能满足全部需求，但至少能分配一个以上的内存 chunk 块
 		else if (__bytes_left >= __size) {
 			__nobjs = (int)(__bytes_left / __size);
 			__total_bytes = __size * __nobjs;
@@ -295,7 +297,7 @@ private:
 			_S_start_free += __total_bytes;
 			return(__result);
 		}
-		// 第三种情况：内存池剩余空间不足一个块大小
+		// 第三种情况：内存池剩余空间不足一个内存 chunk 块大小
 		else {
 			// 计算需要申请的内存总量：2倍需求 + 附加量（堆大小的1/16并向上对齐）
 			size_t __bytes_to_get = 2 * __total_bytes + _S_round_up(_S_heap_size >> 4);
@@ -345,7 +347,7 @@ private:
 			_S_heap_size += __bytes_to_get;	// 累计分配的内存总量
 			_S_end_free = _S_start_free + __bytes_to_get;	// 设置新的内存池结束位置
 
-			// 递归调用自身处理内存分配请求（此时内存池已有新申请的空间）
+			// 递归调用自身处理内存分配请求（此时内存池已有新申请的内存空间）
 			return(_S_chunk_alloc(__size, __nobjs));
 		}
 	}
