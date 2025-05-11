@@ -4,7 +4,7 @@
 #include<stdexcept>
 
 // 一级空间配置器，用于分配大块内存，
-// 封装了 malloc() 和 free() 操作，可以设置出现 OOM 时释放内存的回调函数
+// 基于 malloc() 和 free() 实现内存管理，可以设置发生 OOM 时释放内存的回调函数
 template <int __inst>
 class __malloc_alloc_template {
 
@@ -50,6 +50,7 @@ public:
 
 };
 
+// 初始化类静态成员变量
 template <int __inst>
 void (*__malloc_alloc_template<__inst>::__malloc_alloc_oom_handler)() = 0;
 
@@ -61,7 +62,7 @@ void* __malloc_alloc_template<__inst>::_S_oom_malloc(size_t __n) {
 	// 死循环
 	for (;;) {
 		__my_malloc_handler = __malloc_alloc_oom_handler;
-		if (0 == __my_malloc_handler) { throw std::bad_alloc(); }
+		if (nullptr == __my_malloc_handler) { throw std::bad_alloc(); }
 		// 调用OOM回调函数
 		(*__my_malloc_handler)();
 		// 再次尝试申请内存
@@ -78,7 +79,7 @@ void* __malloc_alloc_template<__inst>::_S_oom_realloc(void* __p, size_t __n) {
 	// 死循环
 	for (;;) {
 		__my_malloc_handler = __malloc_alloc_oom_handler;
-		if (0 == __my_malloc_handler) { throw std::bad_alloc(); }
+		if (nullptr == __my_malloc_handler) { throw std::bad_alloc(); }
 		// 调用OOM回调函数
 		(*__my_malloc_handler)();
 		// 再次尝试内存重分配
@@ -96,24 +97,27 @@ typedef __malloc_alloc_template<0> malloc_alloc;
 
 // 二级空间配置器，基于内存池管理小块内存
 template<typename T>
-class custom_allocator {
+class __default_alloc_template {
 
 public:
 
 	using value_type = T;
 
 	// 构造函数
-	constexpr custom_allocator() noexcept {}
+	constexpr __default_alloc_template() noexcept {}
 
 	// 拷贝构造函数
-	constexpr custom_allocator(const custom_allocator&) noexcept = default;
+	constexpr __default_alloc_template(const __default_alloc_template&) noexcept = default;
 
 	// 模板构造函数
 	template <class _Other>
-	constexpr custom_allocator(const custom_allocator<_Other>&) noexcept {}
+	constexpr __default_alloc_template(const __default_alloc_template<_Other>&) noexcept {}
 
 	// 开辟内存空间
 	T* allocate(size_t __n) {
+		// 申请内存的总字节数
+		__n = __n * sizeof(T);
+
 		void* __ret = nullptr;
 
 		// 分配大块内存
@@ -145,6 +149,9 @@ public:
 
 	// 释放内存空间
 	void deallocate(void* __p, size_t __n) {
+		// 释放内存的总字节数
+		__n = __n * sizeof(T);
+
 		// 大块内存直接交由malloc分配器释放掉
 		if (__n > (size_t)_MAX_BYTES) {
 			malloc_alloc::deallocate(__p, __n);
@@ -251,7 +258,7 @@ private:
 		// 获取对应大小的自由链表
 		__my_free_list = _S_free_list + _S_freelist_index(__n);
 
-		// 将新分配的内存 chunk 块添加到自由链表中
+		// 将新分配的内存 chunk 块添加到对应的自由链表中
 		__result = (_Obj*)__chunk;
 		*__my_free_list = __next_obj = (_Obj*)(__chunk + __n);
 		for (__i = 1; ; __i++) {
@@ -319,7 +326,7 @@ private:
 					__my_free_list = _S_free_list + _S_freelist_index(__i);
 					__p = *__my_free_list;
 					// 找到可用内存块
-					if (0 != __p) {
+					if (nullptr != __p) {
 						*__my_free_list = __p->_M_free_list_link;
 						_S_start_free = (char*)__p;
 						_S_end_free = _S_start_free + __i;
@@ -346,18 +353,17 @@ private:
 };
 
 // 初始化类静态成员变量
+template<typename T>
+char* __default_alloc_template<T>::_S_start_free = nullptr;
 
 template<typename T>
-char* custom_allocator<T>::_S_start_free = nullptr;
+char* __default_alloc_template<T>::_S_end_free = nullptr;
 
 template<typename T>
-char* custom_allocator<T>::_S_end_free = nullptr;
+size_t __default_alloc_template<T>::_S_heap_size = 0;
 
 template<typename T>
-size_t custom_allocator<T>::_S_heap_size = 0;
+std::mutex __default_alloc_template<T>::_mtx;
 
 template<typename T>
-std::mutex custom_allocator<T>::_mtx;
-
-template<typename T>
-typename custom_allocator<T>::_Obj* volatile custom_allocator<T>::_S_free_list[_NFREELISTS] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+typename __default_alloc_template<T>::_Obj* volatile __default_alloc_template<T>::_S_free_list[_NFREELISTS] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
