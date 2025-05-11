@@ -74,7 +74,7 @@ public:
 using allocator_int = __default_alloc_template<int>;
 using allocator_person = __default_alloc_template<Person>;
 
-// 测试基础类型
+// 测试基础类型的内存分配
 void test01() {
     // 设置随机种子
     srand(time(nullptr));
@@ -92,7 +92,7 @@ void test01() {
     cout << endl;
 }
 
-// 测试自定义类型
+// 测试自定义类型的内存分配
 void test02() {
     vector<Person, allocator_person> vec2;
     // 强制指定初始容量（减少扩容次数）
