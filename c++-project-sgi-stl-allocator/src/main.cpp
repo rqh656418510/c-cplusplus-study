@@ -1,113 +1,113 @@
 #include<iostream>
 #include<vector>
-#include "custom_allocator.h"
+#include<cstring>
+#include "allocator.h"
 
 using namespace std;
 
-// ×Ô¶¨ÒåÊı¾İÀàĞÍ
+// è‡ªå®šä¹‰æ•°æ®ç±»å‹
 class Person {
 
 private:
-    char* name;
+    char *name;
     int age;
 
-	// Éî¿½±´×Ö·û´®
-    void deepCopy(const char* source) {
+    // æ·±æ‹·è´å­—ç¬¦ä¸²
+    void deepCopy(const char *source) {
         if (source) {
-			name = new char[strlen(source) + 1];
+            name = new char[strlen(source) + 1];
             strcpy(name, source);
-        }
-        else {
-			name = nullptr;
+        } else {
+            name = nullptr;
         }
     }
 
 public:
-    // ¹¹Ôìº¯Êı
-    Person(const char* name, int age) : age(age) {
+    // æ„é€ å‡½æ•°
+    Person(const char *name, int age) : age(age) {
         cout << "Person(name, age)" << endl;
         deepCopy(name);
     }
 
-    // ¿½±´¹¹Ôìº¯Êı
-    Person(const Person& other) : age(other.age) {
-		cout << "Person(const Person&)" << endl;
+    // æ‹·è´æ„é€ å‡½æ•°
+    Person(const Person &other) : age(other.age) {
+        cout << "Person(const Person&)" << endl;
         deepCopy(other.name);
     }
-    
-    // ¿½±´¸³ÖµÔËËã·û£¨¹æÔòÈıÔ­Ôò£©
-    Person& operator=(const Person& other) {
+
+    // æ‹·è´èµ‹å€¼è¿ç®—ç¬¦ï¼ˆè§„åˆ™ä¸‰åŸåˆ™ï¼‰
+    Person &operator=(const Person &other) {
         cout << "Person& operator=(const Person&)" << endl;
-		// ·ÀÖ¹×Ô¸³Öµ
+        // é˜²æ­¢è‡ªèµ‹å€¼
         if (this != &other) {
-            // ÏÈÊÍ·ÅÔ­ÓĞÄÚ´æ
+            // å…ˆé‡Šæ”¾åŸæœ‰å†…å­˜
             delete[] name;
 
-            // ¿½±´ĞÂÊı¾İ
+            // æ‹·è´æ–°æ•°æ®
             age = other.age;
             deepCopy(other.name);
-		}
+        }
         return *this;
     }
 
-    // Îö¹¹º¯Êı
+    // ææ„å‡½æ•°
     ~Person() {
         cout << "~Person()" << endl;
         delete[] name;
     }
 
-    const char* getName() const { 
-        return name; 
+    const char *getName() const {
+        return name;
     }
 
-    int getAge() const { 
-        return age; 
+    int getAge() const {
+        return age;
     }
 
     void display() const {
-		cout << "Name: " << (name ? name : "[Unnamed]") << ", Age: " << age << endl;
+        cout << "Name: " << (name ? name : "[Unnamed]") << ", Age: " << age << endl;
     }
 
 };
 
-// ÖØ¶¨ÒåÀàĞÍ
-typedef __default_alloc_template<int> allocator_int;
-typedef __default_alloc_template<Person> allocator_person;
+// é‡å®šä¹‰ç±»å‹
+using allocator_int = __default_alloc_template<int>;
+using allocator_person = __default_alloc_template<Person>;
 
-// ²âÊÔ»ù´¡ÀàĞÍ
+// æµ‹è¯•åŸºç¡€ç±»å‹
 void test01() {
-    // ÉèÖÃËæ»úÖÖ×Ó
+    // è®¾ç½®éšæœºç§å­
     srand(time(nullptr));
 
     vector<int, allocator_int> vec1;
 
     for (int i = 0; i < 10; ++i) {
         vec1.push_back(rand() % 10 + 1);
-	}
+    }
 
-	for (const int& item : vec1) {
-		cout << item << " ";
+    for (const int &item : vec1) {
+        cout << item << " ";
     }
 
     cout << endl;
 }
 
-// ²âÊÔ×Ô¶¨ÒåÀàĞÍ
+// æµ‹è¯•è‡ªå®šä¹‰ç±»å‹
 void test02() {
     vector<Person, allocator_person> vec2;
-    // Ç¿ÖÆÖ¸¶¨³õÊ¼ÈİÁ¿£¨¼õÉÙÀ©Èİ´ÎÊı£©
-	vec2.reserve(5);
+    // å¼ºåˆ¶æŒ‡å®šåˆå§‹å®¹é‡ï¼ˆå‡å°‘æ‰©å®¹æ¬¡æ•°ï¼‰
+    vec2.reserve(5);
 
     vec2.push_back(Person("Jim", 18));
     vec2.push_back(Person("Peter", 23));
 
     for (auto it = vec2.begin(); it != vec2.end(); ++it) {
-		it->display();
+        it->display();
     }
 }
 
 int main() {
-	test01();
+    test01();
     test02();
     return 0;
 }
