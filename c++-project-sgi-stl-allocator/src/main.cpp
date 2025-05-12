@@ -75,6 +75,7 @@ void test01() {
     // 设置随机种子
     srand(time(nullptr));
 
+    // 使用 SGI STL 二级空间配置器
     vector<int, simple_alloc<int, default_alloc>> vec1;
 
     for (int i = 0; i < 10; ++i) {
@@ -90,6 +91,7 @@ void test01() {
 
 // 测试自定义类型的内存分配
 void test02() {
+    // 使用 SGI STL 二级空间配置器
     vector<Person, simple_alloc<Person, default_alloc>> vec2;
 
     // 如果不想频繁触发容器扩容，可以强制指定容器的预留容量

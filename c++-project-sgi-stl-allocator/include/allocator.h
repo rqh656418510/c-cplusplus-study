@@ -158,7 +158,7 @@ public:
             // 获取对应大小的自由链表的互斥锁
             std::lock_guard<std::mutex> __lock_instance(_S_free_list_mtx[_S_freelist_index(__n)]);
 
-            // 回收内存，将释放的小块内存插入到自由链表头部（头插法）
+            // 回收内存，将释放的小块内存插入到自由链表的头部（头插法）
             __q->_M_free_list_link = *__my_free_list;
             *__my_free_list = __q;
         }
@@ -251,7 +251,7 @@ void *__default_alloc_template<inst>::_S_refill(size_t __n) {
     // 一次性分配 20 个内存 chunk 块，但万一内存空间不足，获得的块数可能小于 20
     int __nobjs = 20;
 
-    // 分配多个指定大小的内存 chunk 块
+    // 分配多个指定大小的内存 chunk 块，参数 __nobjs 使用引用传递
     char *__chunk = _S_chunk_alloc(__n, __nobjs);
 
     _Obj *volatile *__my_free_list;
@@ -260,6 +260,7 @@ void *__default_alloc_template<inst>::_S_refill(size_t __n) {
     _Obj *__next_obj;
     int __i;
 
+    // 如果只获得一个内存 chunk 块，就直接分配给调用者使用，自由链表不会添加新节点
     if (1 == __nobjs) {
         return (__chunk);
     }
@@ -267,10 +268,10 @@ void *__default_alloc_template<inst>::_S_refill(size_t __n) {
     // 获取对应大小的自由链表
     __my_free_list = _S_free_list + _S_freelist_index(__n);
 
-    // 将新分配的内存 chunk 块添加到对应的自由链表中
-    __result = (_Obj *) __chunk;
+    // 将分配到的多个内存 chunk 块添加到对应的自由链表中（即将各个 chunk 块串联起来）
+    __result = (_Obj *) __chunk;    // 这个内存 chunk 返回给调用者
     *__my_free_list = __next_obj = (_Obj *) (__chunk + __n);
-    for (__i = 1;; __i++) {
+    for (__i = 1;; __i++) {     // 从 1 开始，因为第 0 个返回给调用者
         __current_obj = __next_obj;
         __next_obj = (_Obj *) ((char *) __next_obj + __n);
         if (__nobjs - 1 == __i) {
@@ -287,37 +288,38 @@ template<int inst>
 char *__default_alloc_template<inst>::_S_chunk_alloc(size_t __size, int &__nobjs) {
     char *__result;
     size_t __total_bytes = __size * __nobjs;    // 计算需要分配的总字节数
-    size_t __bytes_left = _S_end_free - _S_start_free;    // 获取内存池剩余空间
+    size_t __bytes_left = _S_end_free - _S_start_free;    // 获取整个内存池剩余空间
 
-    // 第一种情况：内存池剩余空间完全满足需求
+    // 第一种情况：整个内存池的剩余空间完全可以满足需求
     if (__bytes_left >= __total_bytes) {
         __result = _S_start_free;
         _S_start_free += __total_bytes;
         return (__result);
     }
-        // 第二种情况：内存池剩余空间不能满足全部需求，但至少能分配一个以上的内存 chunk 块
+    // 第二种情况：整个内存池的剩余空间不能满足全部需求，但至少能分配一个以上的内存 chunk 块
     else if (__bytes_left >= __size) {
+        // 更改为实际能够供应的内存 chunk 数
         __nobjs = (int) (__bytes_left / __size);
         __total_bytes = __size * __nobjs;
         __result = _S_start_free;
         _S_start_free += __total_bytes;
         return (__result);
     }
-        // 第三种情况：内存池剩余空间不足一个内存 chunk 块大小
+    // 第三种情况：整个内存池的剩余空间不足一个内存 chunk 块大小
     else {
         // 计算需要申请的内存总量：2倍需求 + 附加量（堆大小的1/16并向上对齐）
         size_t __bytes_to_get = 2 * __total_bytes + _S_round_up(_S_heap_size >> 4);
 
-        // 尝试利用内存池的剩余碎片
+        // 尝试回收利用内存池的剩余碎片
         if (__bytes_left > 0) {
             // 获取对应大小的自由链表
             _Obj *volatile *__my_free_list = _S_free_list + _S_freelist_index(__bytes_left);
-            // 将剩余碎片插入自由链表头部（头插法）
+            // 将剩余碎片插入到自由链表的头部（头插法）
             ((_Obj *) _S_start_free)->_M_free_list_link = *__my_free_list;
             *__my_free_list = (_Obj *) _S_start_free;
         }
 
-        // 申请新的内存块到内存池
+        // 申请新的内存块并添加到内存池中
         _S_start_free = (char *) malloc(__bytes_to_get);
 
         //  新的内存块申请失败处理
@@ -326,25 +328,27 @@ char *__default_alloc_template<inst>::_S_chunk_alloc(size_t __size, int &__nobjs
             _Obj *volatile *__my_free_list;
             _Obj *__p;
 
-            // 尝试从更大的自由链表中查找可用内存块
-            // 注意：不尝试更小的请求，因为在多处理器环境中容易导致问题
+            // 尝试从其他字节数更大的自由链表中查找可用内存块
+            // 注意：不尝试从字节数更小的自由链表中查找，因为在多处理器环境中容易出现问题
             for (__i = __size; __i <= (size_t) _MAX_BYTES; __i += (size_t) _ALIGN) {
                 // 获取对应大小的自由链表
                 __my_free_list = _S_free_list + _S_freelist_index(__i);
                 __p = *__my_free_list;
                 // 找到可用内存块
                 if (nullptr != __p) {
+                    // 调整自由链表以获取未使用的内存块
                     *__my_free_list = __p->_M_free_list_link;
                     _S_start_free = (char *) __p;
                     _S_end_free = _S_start_free + __i;
+                    // 递归调用自身，为了修正 __nobjs
                     return (_S_chunk_alloc(__size, __nobjs));
-                    // 注意：任何剩余碎片最终会被加入合适的自由链表
+                    // 注意：任何剩余碎片最终都会被加入到合适的自由链表中备用
                 }
             }
 
             // 所有自由链表都无可用内存时的最后处理手段
             _S_end_free = nullptr;    // 异常安全处理
-            _S_start_free = (char *) malloc_alloc::allocate(__bytes_to_get);    // 使用备用分配策略（可能抛出异常或终止程序）
+            _S_start_free = (char *) malloc_alloc::allocate(__bytes_to_get);    // 调用一级空间配置器分配内存（可能会抛出OOM异常）
             // 此处假设分配操作总会成功（要么抛出异常，要么解决问题）
         }
 
@@ -352,7 +356,7 @@ char *__default_alloc_template<inst>::_S_chunk_alloc(size_t __size, int &__nobjs
         _S_heap_size += __bytes_to_get;    // 累计分配的内存总量
         _S_end_free = _S_start_free + __bytes_to_get;    // 设置新的内存池结束位置
 
-        // 递归调用自身处理内存分配请求（此时内存池已有新申请的内存空间）
+        // 递归调用自身，为了修正 __nobjs（此时内存池已有新申请的内存块）
         return (_S_chunk_alloc(__size, __nobjs));
     }
 }
