@@ -4,17 +4,9 @@
 #include<stdexcept>
 
 // 一级空间配置器，用于分配大块内存
-// 基于 malloc() 和 free() 来实现内存管理，可以设置发生 OOM 时释放内存的回调函数
+// 封装 malloc() 和 free() 来实现内存管理，可以设置发生 OOM 时释放内存的回调函数
 template<int __inst>
 class __malloc_alloc_template {
-
-private:
-
-    static void *_S_oom_malloc(size_t);
-
-    static void *_S_oom_realloc(void *, size_t);
-
-    static void (*__malloc_alloc_oom_handler)();
 
 public:
 
@@ -50,11 +42,19 @@ public:
         return (__old);
     }
 
+private:
+
+    static void *_S_oom_malloc(size_t);
+
+    static void *_S_oom_realloc(void *, size_t);
+
+    static void (*__malloc_alloc_oom_handler)();
+
 };
 
 // 初始化类静态成员变量
 template<int __inst>
-void (*__malloc_alloc_template<__inst>::__malloc_alloc_oom_handler)() = 0;
+void (*__malloc_alloc_template<__inst>::__malloc_alloc_oom_handler)() = nullptr;
 
 template<int __inst>
 void *__malloc_alloc_template<__inst>::_S_oom_malloc(size_t __n) {
@@ -134,8 +134,8 @@ public:
             // 获取对应大小的自由链表
             _Obj *volatile *__my_free_list = _S_free_list + _S_freelist_index(__n);
 
-            // 获取互斥锁
-            std::lock_guard<std::mutex> __lock_instance(_mtx);
+            // 获取对应大小的自由链表的互斥锁
+            std::lock_guard<std::mutex> __lock_instance(_S_free_list_mtx[_S_freelist_index(__n)]);
 
             // 获取自由链表的头节点
             _Obj *__result = *__my_free_list;
@@ -167,8 +167,8 @@ public:
             _Obj *volatile *__my_free_list = _S_free_list + _S_freelist_index(__n);
             _Obj *__q = (_Obj *) __p;
 
-            // 获取互斥锁
-            std::lock_guard<std::mutex> __lock_instance(_mtx);
+            // 获取对应大小的自由链表的互斥锁
+            std::lock_guard<std::mutex> __lock_instance(_S_free_list_mtx[_S_freelist_index(__n)]);
 
             // 将释放的小块内存插入到自由链表头部（头插法）
             __q->_M_free_list_link = *__my_free_list;
@@ -193,17 +193,18 @@ public:
 
         // 第三种情况：需要执行内存重分配
         __result = allocate(__new_sz);    // 申请新内存块（根据内存池策略）
-        __copy_sz = __new_sz > __old_sz ? __old_sz : __new_sz;    // 安全拷贝大小（取较小值）
+        __copy_sz = __new_sz > __old_sz ? __old_sz : __new_sz;   // 安全拷贝大小（取较小值）
         memcpy(__result, __p, __copy_sz);    // 数据拷贝（仅拷贝有效内容）
         deallocate(__p, __old_sz);     // 释放旧内存块（根据旧内存块的大小进行回收）
 
         return (__result);
     }
 
-    // 对象构造
-    void construct(T *__p, const T &__val) {
+    // 对象构造（利用可变参数模板 + 引用折叠 + 完美转发）
+    template<typename... Args>
+    void construct(T *__p, Args &&... args) {
         // 在指定的内存构造对象（定位 new）
-        new(__p) T(__val);
+        new(__p) T(std::forward<Args>(args)...);
     }
 
     // 对象析构
@@ -224,9 +225,6 @@ private:
         char _M_client_data[1];				// 实际分配给用户的内存起始位置
     };
 
-    // 互斥锁（内存池基于自由链表实现，需要考虑线程安全问题）
-    static std::mutex _mtx;
-
     // 记录内存 chunk 块的分配情况
     static char *_S_start_free;
     static char *_S_end_free;
@@ -234,6 +232,9 @@ private:
 
     // 组织所有自由链表的数组，数组的每一个元素的类型都是 _Obj*
     static _Obj *volatile _S_free_list[_NFREELISTS];
+
+    // 所有自由链表的互斥锁的数组（内存池基于自由链表实现，需要考虑线程安全问题，为每个自由链表添加一个互斥锁，降低锁的粒度）
+    static std::mutex _S_free_list_mtx[_NFREELISTS];
 
     // 将 __bytes 上调至最邻近的 8 的倍数（实现内存对齐）
     static size_t _S_round_up(size_t __bytes) {
@@ -324,9 +325,8 @@ private:
 
                 // 尝试从更大的自由链表中查找可用内存块
                 // 注意：不尝试更小的请求，因为在多处理器环境中容易导致问题
-                for (__i = __size;
-                     __i <= (size_t) _MAX_BYTES;
-                     __i += (size_t) _ALIGN) {
+                for (__i = __size; __i <= (size_t) _MAX_BYTES; __i += (size_t) _ALIGN) {
+                    // 获取对应大小的自由链表
                     __my_free_list = _S_free_list + _S_freelist_index(__i);
                     __p = *__my_free_list;
                     // 找到可用内存块
@@ -367,7 +367,7 @@ template<typename T>
 size_t __default_alloc_template<T>::_S_heap_size = 0;
 
 template<typename T>
-std::mutex __default_alloc_template<T>::_mtx;
+std::mutex __default_alloc_template<T>::_S_free_list_mtx[_NFREELISTS];
 
 template<typename T>
 typename __default_alloc_template<T>::_Obj *volatile __default_alloc_template<T>::_S_free_list[_NFREELISTS] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};

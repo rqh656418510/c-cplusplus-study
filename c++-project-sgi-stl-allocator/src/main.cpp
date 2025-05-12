@@ -95,8 +95,9 @@ void test01() {
 // 测试自定义类型的内存分配
 void test02() {
     vector<Person, allocator_person> vec2;
-    // 强制指定初始容量（减少扩容次数）
-    vec2.reserve(5);
+
+    // 如果不想频繁触发容器扩容，可以强制指定容器的预留容量
+    // vec2.reserve(5);
 
     vec2.push_back(Person("Jim", 18));
     vec2.push_back(Person("Peter", 23));
