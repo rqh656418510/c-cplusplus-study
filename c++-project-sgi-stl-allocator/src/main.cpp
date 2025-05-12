@@ -35,7 +35,7 @@ public:
         deepCopy(other.name);
     }
 
-    // 拷贝赋值运算符（规则三原则）
+    // 赋值运算符
     Person &operator=(const Person &other) {
         cout << "Person& operator=(const Person&)" << endl;
         // 防止自赋值
