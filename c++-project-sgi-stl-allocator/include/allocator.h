@@ -44,10 +44,13 @@ public:
 
 private:
 
+    // 内存空间开辟时的OOM处理流程
     static void *_S_oom_malloc(size_t);
 
+    // 内存空间重分配时的OOM处理流程
     static void *_S_oom_realloc(void *, size_t);
 
+    // OOM回调函数
     static void (*__malloc_alloc_oom_handler)();
 
 };
@@ -61,7 +64,7 @@ void *__malloc_alloc_template<inst>::_S_oom_malloc(size_t __n) {
     void (*__my_malloc_handler)();
     void *__result;
 
-    // 死循环
+    // 死循环，不断尝试释放、申请、再释放、再申请...
     for (;;) {
         __my_malloc_handler = __malloc_alloc_oom_handler;
         if (nullptr == __my_malloc_handler) { throw std::bad_alloc(); }
@@ -78,7 +81,7 @@ void *__malloc_alloc_template<inst>::_S_oom_realloc(void *__p, size_t __n) {
     void (*__my_malloc_handler)();
     void *__result;
 
-    // 死循环
+    // 死循环，不断尝试释放、重分配、再释放、再重分配...
     for (;;) {
         __my_malloc_handler = __malloc_alloc_oom_handler;
         if (nullptr == __my_malloc_handler) { throw std::bad_alloc(); }
@@ -108,12 +111,12 @@ public:
     static void *allocate(size_t __n) {
         void *__ret = nullptr;
 
-        // 分配大块内存
+        // 分配大块内存（当字节数大于 128）
         if (__n > (size_t) _MAX_BYTES) {
-            // 采用一级空间配置器分配大内存
+            // 调用一级空间配置器分配大内存
             __ret = malloc_alloc::allocate(__n);
         }
-            // 分配小块内存
+        // 分配小块内存
         else {
             // 获取对应大小的自由链表
             _Obj *volatile *__my_free_list = _S_free_list + _S_freelist_index(__n);
@@ -123,9 +126,12 @@ public:
 
             // 获取自由链表的头节点
             _Obj *__result = *__my_free_list;
-            if (__result == nullptr)
-                // 如果头节点为空（即没有空闲的内存 chunk 块），则分配新的 chunk 块
+
+            // 如果头节点为空（即没有空闲的内存 chunk 块），则分配新的内存 chunk 块
+            if (__result == nullptr) {
                 __ret = _S_refill(_S_round_up(__n));
+            }
+            // 如果有空闲的内存 chunk 块，则将其取出来，并维护自由链表的结构
             else {
                 // 将自由链表的头节点指向下一个内存 chunk 块
                 *__my_free_list = __result->_M_free_list_link;
@@ -138,20 +144,21 @@ public:
 
     // 释放内存空间
     static void deallocate(void *__p, size_t __n) {
-        // 大块内存直接交由一级空间配置器释放掉
+        // 大块内存（当字节数大于 128）直接交由一级空间配置器释放掉
         if (__n > (size_t) _MAX_BYTES) {
             malloc_alloc::deallocate(__p, __n);
         }
-            // 小块内存回收到自由链表
+        // 小块内存回收到自由链表
         else {
             // 获取对应大小的自由链表
             _Obj *volatile *__my_free_list = _S_free_list + _S_freelist_index(__n);
+
             _Obj *__q = (_Obj *) __p;
 
             // 获取对应大小的自由链表的互斥锁
             std::lock_guard<std::mutex> __lock_instance(_S_free_list_mtx[_S_freelist_index(__n)]);
 
-            // 将释放的小块内存插入到自由链表头部（头插法）
+            // 回收内存，将释放的小块内存插入到自由链表头部（头插法）
             __q->_M_free_list_link = *__my_free_list;
             *__my_free_list = __q;
         }
@@ -183,8 +190,8 @@ public:
 
 private:
 
-    enum { _ALIGN = 8 };            // 内存对齐粒度（每次分配 8 字节的倍数）
-    enum { _MAX_BYTES = 128 };      // 二级空间配置器的最大管理范围（128 字节）
+    enum { _ALIGN = 8 };            // 小块内存的对齐粒度（每次分配 8 字节的倍数）
+    enum { _MAX_BYTES = 128 };      // 小块内存的最大字节数（128 字节）
     enum { _NFREELISTS = 16 };      // 自由链表的数量，计算方式：_MAX_BYTES / _ALIGN
 
     // 每一个内存 chunk 块的头信息
@@ -194,8 +201,8 @@ private:
     };
 
     // 记录内存 chunk 块的分配情况
-    static char *_S_start_free;
-    static char *_S_end_free;
+    static char *_S_start_free;     // 整个内存池的起始位置，只在 _S_chunk_alloc() 中发生变化
+    static char *_S_end_free;       // 整个内存池的结束位置，只在 _S_chunk_alloc() 中发生变化
     static size_t _S_heap_size;
 
     // 组织所有自由链表的数组，数组的每一个元素的类型都是 _Obj*
@@ -241,9 +248,12 @@ typename __default_alloc_template<inst>::_Obj *volatile __default_alloc_template
 
 template<int inst>
 void *__default_alloc_template<inst>::_S_refill(size_t __n) {
-    // 一次性分配 20 个内存 chunk 块
+    // 一次性分配 20 个内存 chunk 块，但万一内存空间不足，获得的块数可能小于 20
     int __nobjs = 20;
+
+    // 分配多个指定大小的内存 chunk 块
     char *__chunk = _S_chunk_alloc(__n, __nobjs);
+
     _Obj *volatile *__my_free_list;
     _Obj *__result;
     _Obj *__current_obj;
@@ -354,7 +364,7 @@ using default_alloc = __default_alloc_template<0>;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// 空间配置器的接口，符合 STL 规范
+// 空间配置器的接口，符合 STL 规范，按元素的大小分配内存
 template<typename T, typename Alloc>
 class simple_alloc {
 
