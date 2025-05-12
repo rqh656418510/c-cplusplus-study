@@ -70,16 +70,12 @@ public:
 
 };
 
-// 重定义类型
-using allocator_int = __default_alloc_template<int>;
-using allocator_person = __default_alloc_template<Person>;
-
 // 测试基础类型的内存分配
 void test01() {
     // 设置随机种子
     srand(time(nullptr));
 
-    vector<int, allocator_int> vec1;
+    vector<int, simple_alloc<int, default_alloc>> vec1;
 
     for (int i = 0; i < 10; ++i) {
         vec1.push_back(rand() % 10 + 1);
@@ -94,7 +90,7 @@ void test01() {
 
 // 测试自定义类型的内存分配
 void test02() {
-    vector<Person, allocator_person> vec2;
+    vector<Person, simple_alloc<Person, default_alloc>> vec2;
 
     // 如果不想频繁触发容器扩容，可以强制指定容器的预留容量
     // vec2.reserve(5);
