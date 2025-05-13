@@ -6,4 +6,4 @@
 
 ### 博客教程
 
-- [SGI STL 内存池源码浅析](https://www.techgrow.cn/posts/712a574b.html)
+- [SGI STL 内存池源码剖析](https://www.techgrow.cn/posts/712a574b.html)
