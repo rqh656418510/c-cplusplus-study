@@ -8,12 +8,9 @@
 
 ////////////////////////////////////////// 线程池类 ////////////////////////////////////////////
 
-// 任务的最大数量
-const int TASK_MAX_THRESHHOLD = 1024;
-
 // 线程池构造
 ThreadPool::ThreadPool() {
-	initThreadSize_ = 4;
+	initThreadSize_ = INIT_THREAD_SIZE;
 	taskSize_ = 0;
 	taskQueMaxThreshHold_ = TASK_MAX_THRESHHOLD;
 	poolMode_ = PoolMode::MODE_FIXED;
@@ -60,6 +57,8 @@ void ThreadPool::threadHandler() {
 		// 获取互斥锁
 		std::unique_lock<std::mutex> lock(taskQueMtx_);
 
+		std::cout << "thread " << std::this_thread::get_id() << " 等待获取任务..." << std::endl;
+
 		// 等待任务队列不为空
 		notEmpty_.wait(lock, [this]() { return taskQueue_.size() > 0; });
 
@@ -69,6 +68,8 @@ void ThreadPool::threadHandler() {
 		// 将任务从任务队列中移除
 		taskQueue_.pop();
 		taskSize_--;
+
+		std::cout << "thread " << std::this_thread::get_id() << " 成功获取任务..." << std::endl;
 
 		// 如果获取了任务之后，任务队列依旧不为空，则继续通知其他线程执行任务
 		if (taskQueue_.size() > 0) {
