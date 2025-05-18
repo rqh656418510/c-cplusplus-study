@@ -24,7 +24,8 @@ public:
         }
 
 		// 模拟任务执行耗时
-		std::this_thread::sleep_for(std::chrono::seconds(rand() % 5 + 1));
+		// std::this_thread::sleep_for(std::chrono::seconds(rand() % 5 + 1));
+		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		return Any(sum);
 	}
@@ -44,8 +45,11 @@ int main() {
     // 设置线程池的工作模式
 	pool.setMode(PoolMode::MODE_CACHED);
 
-    // 启动线程池
-    pool.start();
+	// 设置线程池Cached模式的最大线程数量
+    pool.setThreadSizeMaxThreshHold(8);
+
+	// 启动线程池（指定初始的线程数量）
+	pool.start(4);
 
 	std::vector<std::shared_ptr<Result>> results;
     ulong begin = 0;
@@ -68,7 +72,7 @@ int main() {
         // 存储任务执行结果
         if (result->isValid()) {
 			results.emplace_back(result);
-        }
+		}
     }
 
 	// 统计任务执行结果

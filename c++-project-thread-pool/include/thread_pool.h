@@ -10,12 +10,19 @@
 #include<mutex>
 #include<condition_variable>
 #include<stdexcept>
+#include<unordered_map>
 
 // 初始的线程数量
 const int INIT_THREAD_SIZE = 4;
 
-// 任务的最大数量
+// 任务队列的最大任务数量
 const int TASK_MAX_THRESHHOLD = 1024;
+
+// 线程池Cached模式的最大线程数量
+const int THREAD_SIZE_MAX_THRESHHOLD = 200;
+
+// 线程允许的最大空闲时间（单位秒）
+const int THREAD_MAX_IDLE_TIME = 10;
 
 // 线程池支持的模式
 enum class PoolMode {
@@ -199,7 +206,7 @@ class Thread {
 
 public:
 	// 线程处理函数对象的类型
-	using ThreadHandler = std::function<void()>;
+	using ThreadHandler = std::function<void(int)>;
 
 	// 线程构造
 	Thread(ThreadHandler handler);
@@ -210,7 +217,12 @@ public:
 	// 启动线程
 	void start();
 
+	// 获取线程ID
+	int getId() const;
+
 private:
+	int threadId_;					// 线程ID
+	static int generateId_;			// 用于辅助生成全局唯一的线程ID
 	ThreadHandler threadHandler_;	// 线程处理函数
 };
 
@@ -227,8 +239,11 @@ public:
 	// 设置线程池的工作模式
 	void setMode(PoolMode mode);
 
-	// 设置任务队列的最大容量
-	void setTaskQueMaxThreshHold(size_t size);
+	// 设置线程池Cached模式的最大线程数量
+	void setThreadSizeMaxThreshHold(int threshhold);
+
+	// 设置任务队列的最大任务数量
+	void setTaskQueMaxThreshHold(size_t threshhold);
 
 	// 启动线程池
 	void start(int initThreadSize = INIT_THREAD_SIZE);
@@ -244,20 +259,29 @@ public:
 
 private:
 	// 线程处理函数（负责执行任务）
-	void threadHandler();
+	void threadHandler(int threadId);
+
+	// 检查线程池的运行状态
+	bool checkRunningState() const;
 
 private:
-	PoolMode poolMode_;									// 线程池的模式
-	std::vector<std::unique_ptr<Thread>> threads_;		// 线程列表
-	size_t initThreadSize_;								// 初始的线程数量
+	std::unordered_map<int, std::unique_ptr<Thread>> threads_;		// 线程集合
+	PoolMode poolMode_;												// 线程池的模式
+	std::atomic_bool isPoolRuning_;									// 表示线程池是否正在运行
+	
 
-	std::queue<std::shared_ptr<Task>> taskQueue_;		// 任务队列
-	std::atomic_uint taskSize_;							// 任务队列的任务数量
-	size_t taskQueMaxThreshHold_;						// 任务队列的最大容量
+	size_t initThreadSize_;											// 初始的线程数量
+	std::atomic_int idleThreadSize_;								// 空闲线程的数量
+	std::atomic_int curThreadSize_;									// 当前线程池的线程数量
+	int threadSizeMaxThreshHold_;									// 线程池Cached模式的最大线程数量
 
-	std::mutex taskQueMtx_;								// 任务队列操作的互斥锁
-	std::condition_variable notFull_;					// 表示任务队列不满，用于通知用户线程提交任务
-	std::condition_variable notEmpty_;					// 表示任务队列不空，用于通知线程池执行任务
+	std::queue<std::shared_ptr<Task>> taskQueue_;					// 任务队列
+	std::atomic_uint taskSize_;										// 当前任务队列的任务数量
+	size_t taskQueMaxThreshHold_;									// 任务队列的最大任务数量
+
+	std::mutex taskQueMtx_;											// 任务队列操作的互斥锁
+	std::condition_variable notFull_;								// 表示任务队列不满，用于通知用户线程提交任务
+	std::condition_variable notEmpty_;								// 表示任务队列不空，用于通知线程池执行任务
 };
 
 #endif
