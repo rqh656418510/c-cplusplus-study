@@ -17,7 +17,7 @@ public:
     virtual Any run() override {
         std::cout << "execute task by thread " << std::this_thread::get_id() << std::endl;
 
-		// 执行计算
+		// 当前线程执行计算
         ulong sum = 0;
         for (ulong i = begin_; i <= end_; ++i) {
 			sum += i;
