@@ -26,19 +26,23 @@ public:
 		// 模拟任务执行耗时
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
+		// 返回当前线程的计算结果
 		return Any(sum);
 	}
 
 private:
-    ulong begin_;
-    ulong end_;
+    ulong begin_;	// 开始计算的位置
+	ulong end_;		// 结束计算的位置
 };
 
 int main() {
 	// 创建线程池
     ThreadPool pool;
 
-    // 设置线程池的工作模式
+	// 设置线程池使用Fixed模式（固定大小线程池）
+	// pool.setMode(PoolMode::MODE_FIXED);
+
+	// 设置线程池使用Cached模式（缓存线程池）
 	pool.setMode(PoolMode::MODE_CACHED);
 
 	// 设置线程池Cached模式的最大线程数量
@@ -74,15 +78,15 @@ int main() {
 	// 统计任务执行结果
 	ulong sum = 0;
     for (int i = 0; i < results.size(); i++) {
-		// 阻塞等待任务执行完成，并获取执行结果
+		// 阻塞等待任务执行完成，并获取任务执行结果
 		ulong result = results[i]->get().cast<ulong>();
         sum += result;
 	}
     
     // 输出并行计算结果
-	std::cout << "1 + 2 + ... + " << end << " = " << sum << std::endl;
+	std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
 
-    // 阻塞主线程
+    // 阻塞主线程，直到用户按下任意键
 	char c = getchar();
 
     return 0;

@@ -282,6 +282,7 @@ private:
 	std::mutex taskQueMtx_;											// 任务队列操作的互斥锁
 	std::condition_variable notFull_;								// 表示任务队列不满，用于通知用户线程提交任务
 	std::condition_variable notEmpty_;								// 表示任务队列不空，用于通知线程池执行任务
+	std::condition_variable allExit_;								// 表示等待线程池回收所有线程
 };
 
 #endif

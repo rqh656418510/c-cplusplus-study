@@ -23,7 +23,17 @@ ThreadPool::ThreadPool() {
 
 // 线程池析构
 ThreadPool::~ThreadPool() {
+	// 设置线程池的运行状态
+	isPoolRuning_ = false;
 
+	// 唤醒所有正在等待获取任务的线程
+	notEmpty_.notify_all();
+
+	// 获取互斥锁
+	std::unique_lock<std::mutex> lock(taskQueMtx_);
+
+	// 等待线程池里的所有线程回收完成
+	allExit_.wait(lock, [this]() { return threads_.size() == 0; });
 }
 
 // 设置线程池的工作模式
@@ -80,26 +90,26 @@ void ThreadPool::threadHandler(int threadId) {
 	// 记录线程首次运行的时间
 	auto lastTime = std::chrono::high_resolution_clock().now();
 
-	// 死循环
-	for (;;) {
+	// 线程一直循环运行
+	while (checkRunningState()) {
 		// 获取互斥锁
 		std::unique_lock<std::mutex> lock(taskQueMtx_);
 
 		std::cout << "thread " << std::this_thread::get_id() << " 等待获取任务..." << std::endl;
-
-		// 线程池Cached模式的处理，回收线程池中的空闲线程
-		if (PoolMode::MODE_CACHED == poolMode_) {
-			// 使用while循环避免虚假唤醒
-			while (taskQueue_.size() == 0) {
+		
+		// 使用while循环避免虚假唤醒
+		while (taskQueue_.size() == 0) {
+			// 线程池Cached模式的处理
+			if (PoolMode::MODE_CACHED == poolMode_) {
 				// 等待一段时间
 				std::cv_status waitResult = notEmpty_.wait_for(lock, std::chrono::seconds(1));
 				// 需要区分超时返回，还是线程正常被唤醒返回
 				if (std::cv_status::timeout == waitResult) {
 					auto nowTime = std::chrono::high_resolution_clock().now();
 					auto duration = std::chrono::duration_cast<std::chrono::seconds>(nowTime - lastTime);
-					// 当线程的空闲时间超过最大阀值，且当前线程池的线程数量大于初始线程数量，则开始回收线程
+					// 当线程的空闲时间超过最大阀值，且当前线程池的线程数量大于初始线程数量，则开始回收线程池中的空闲线程
 					if (duration.count() > THREAD_MAX_IDLE_TIME && curThreadSize_ > initThreadSize_) {
-						// 从线程集合中删除指定的线程
+						// 从线程集合中删除当前线程
 						threads_.erase(threadId);
 						// 更新空闲线程的数量
 						idleThreadSize_--;
@@ -111,10 +121,22 @@ void ThreadPool::threadHandler(int threadId) {
 					}
 				}
 			}
-		}
-		else {
-			// 等待任务队列不为空
-			notEmpty_.wait(lock, [this]() { return taskQueue_.size() > 0; });
+			// 线程池Fixed模式的处理
+			else {
+				// 等待任务队列不为空
+				notEmpty_.wait(lock);
+			}
+
+			// 如果线程池要结束运行，则回收线程资源
+			if (!checkRunningState()) {
+				// 从线程集合中删除当前线程
+				threads_.erase(threadId);
+				// 唤醒等待线程池回收完毕的线程
+				allExit_.notify_all();
+				// 打印日志信息
+				std::cout << "thread pool destroy, thread " << threadId << " exited." << std::endl;
+				return;
+			}
 		}
 
 		// 空闲线程数量减一（线程执行任务之前）
@@ -151,6 +173,15 @@ void ThreadPool::threadHandler(int threadId) {
 		// 更新线程最后执行完任务的时间
 		lastTime = std::chrono::high_resolution_clock().now();
 	}
+
+	// 由于线程池要结束运行，因此从线程集合中删除当前线程
+	threads_.erase(threadId);
+
+	// 唤醒等待线程池回收完毕的线程
+	allExit_.notify_all();
+
+	// 打印日志信息
+	std::cout << "thread pool destroy_xxx, thread " << threadId << " exited." << std::endl;
 }
 
 // 提交任务给线程池
@@ -172,10 +203,10 @@ std::shared_ptr<Result> ThreadPool::submitTask(std::shared_ptr<Task> task) {
 	// 因为刚放入了新任务，任务队列肯定不为空，通知线程池中的线程去执行任务
 	notEmpty_.notify_all();
 
-	// Cache模式的处理，根据任务数量动态增加线程池的线程数量
+	// 线程池Cached模式的处理，根据任务数量动态增加线程池的线程数量
 	if (PoolMode::MODE_CACHED == poolMode_ && taskSize_ > idleThreadSize_ && curThreadSize_ < threadSizeMaxThreshHold_) {
 		// 打印日志信息
-		std::cout << "create new thread." << std::endl;
+		std::cout << "expand and create new thread." << std::endl;
 		// 创建新线程对象，并将线程处理函数传递给线程对象的构造函数
 		std::unique_ptr<Thread> thread = std::make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this, std::placeholders::_1));
 		// 获取线程ID（必须在线程放入线程集合之前获取一次线程ID，否则后续将可能获取到空值）
