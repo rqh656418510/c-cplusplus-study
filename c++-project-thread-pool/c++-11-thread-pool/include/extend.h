@@ -1,4 +1,4 @@
-#ifndef EXTEND_H
+﻿#ifndef EXTEND_H
 #define EXTEND_H
 
 #include <memory>
@@ -9,28 +9,30 @@
 ///////////////////////////////////// make_unique() /////////////////////////////////////
 
 
-// 创建非数组类型对象
-template<typename T, typename... Args>
-typename std::enable_if<!std::is_array<T>::value, std::unique_ptr<T>>::type
-make_unique(Args &&... args) {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+namespace extend {
+    // 创建非数组类型对象
+    template<typename T, typename... Args>
+    typename std::enable_if<!std::is_array<T>::value, std::unique_ptr<T>>::type
+        make_unique(Args &&... args) {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+
+    // 创建未知大小的数组（例如 make_unique<T[]>(n)）
+    template<typename T>
+    typename std::enable_if<std::is_array<T>::value&& std::extent<T>::value == 0, std::unique_ptr<T>>::type
+        make_unique(std::size_t size) {
+        using ElementType = typename std::remove_extent<T>::type;
+        return std::unique_ptr<T>(new ElementType[size]());
+    }
+
+    // 禁止使用定长数组（例如 make_unique<int[10]> 是不合法的）
+    template<typename T, typename... Args>
+    typename std::enable_if<(std::extent<T>::value != 0), void>::type
+        make_unique(Args &&...) = delete;
 }
 
-// 创建未知大小的数组（例如 make_unique<T[]>(n)）
-template<typename T>
-typename std::enable_if<std::is_array<T>::value && std::extent<T>::value == 0, std::unique_ptr<T>>::type
-make_unique(std::size_t size) {
-    using ElementType = typename std::remove_extent<T>::type;
-    return std::unique_ptr<T>(new ElementType[size]());
-}
 
-// 禁止使用定长数组（例如 make_unique<int[10]> 是不合法的）
-template<typename T, typename... Args>
-typename std::enable_if<(std::extent<T>::value != 0), void>::type
-make_unique(Args &&...) = delete;
-
-
-///////////////////////////////////// any 类型 /////////////////////////////////////
+///////////////////////////////////// Any 类型 /////////////////////////////////////
 
 
 // Any 类型（可以接收任意数据类型）
@@ -57,7 +59,7 @@ public:
 
     // 构造函数（让 Any 类型可以接收任意数据类型）
     template<typename T>
-    Any(T data) : base_(make_unique<Derive < T>>(data)) {
+    Any(T data) : base_(extend::make_unique<Derive < T>>(data)) {
 
     }
 
@@ -111,7 +113,7 @@ private:
 };
 
 
-///////////////////////////////////// 信号量类 /////////////////////////////////////
+///////////////////////////////////// Semaphore 信号量 /////////////////////////////////////
 
 
 // 信号量类（用于线程通信）

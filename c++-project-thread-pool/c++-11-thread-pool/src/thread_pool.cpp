@@ -1,4 +1,4 @@
-#include<iostream>
+﻿#include<iostream>
 #include<functional>
 #include<thread>
 #include<memory>
@@ -170,7 +170,7 @@ void ThreadPool::start(int initThreadSize) {
     // 创建初始的线程
     for (int i = 0; i < initThreadSize_; i++) {
         // 创建线程对象，并将线程处理函数传递给线程对象的构造函数
-        std::unique_ptr<Thread> thread = make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this, std::placeholders::_1));
+        std::unique_ptr<Thread> thread = extend::make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this, std::placeholders::_1));
         // 将线程对象放入线程集合中
         threads_.emplace(thread->getId(), std::move(thread));
     }
@@ -305,7 +305,7 @@ std::shared_ptr<Result> ThreadPool::submitTask(std::shared_ptr<Task> task) {
         // 打印日志信息
         std::cout << "expand and create new thread." << std::endl;
         // 创建新线程对象，并将线程处理函数传递给线程对象的构造函数
-        std::unique_ptr<Thread> thread = make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this, std::placeholders::_1));
+        std::unique_ptr<Thread> thread = extend::make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this, std::placeholders::_1));
         // 获取线程ID（必须在线程放入线程集合之前获取一次线程ID，否则后续将可能获取到空值）
         int threadId = thread->getId();
         // 将新线程对象放入线程集合中
