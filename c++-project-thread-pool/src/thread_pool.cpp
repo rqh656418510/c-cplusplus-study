@@ -36,7 +36,7 @@ void ThreadPool::start(int initThreadSize) {
 	// 记录初始的线程数量
 	initThreadSize_ = initThreadSize;
 
-	// 创建初始线程
+	// 创建初始的线程
 	for (int i = 0; i < initThreadSize_; ++i) {
 		// 创建线程对象，并将线程处理函数传递给线程对象的构造函数
 		std::unique_ptr<Thread> thread = std::make_unique<Thread>(std::bind(&ThreadPool::threadHandler, this));
@@ -44,7 +44,7 @@ void ThreadPool::start(int initThreadSize) {
 		threads_.emplace_back(std::move(thread));
 	}
 
-	// 启动初始线程
+	// 启动初始的线程
 	for (int i = 0; i < initThreadSize_; ++i) {
 		threads_[i]->start();
 	}
@@ -84,21 +84,21 @@ void ThreadPool::threadHandler() {
 
 		// 当前线程负责执行任务
 		if (task != nullptr) {
-			task->run();
+			task->exec();
 		}
 	}
 }
 
 // 提交任务给线程池
-void ThreadPool::submitTask(std::shared_ptr<Task> task) {
+std::shared_ptr<Result> ThreadPool::submitTask(std::shared_ptr<Task> task) {
 	// 获取互斥锁
 	std::unique_lock<std::mutex> lock(taskQueMtx_);
 
 	// 等待任务队列有空余位置（不满）
-	bool result = notFull_.wait_for(lock, std::chrono::seconds(1), [this]() { return taskQueue_.size() < taskQueMaxThreshHold_; });
-	if (!result) {
+	bool waitResult = notFull_.wait_for(lock, std::chrono::seconds(1), [this]() { return taskQueue_.size() < taskQueMaxThreshHold_; });
+	if (!waitResult) {
 		std::cerr << "task queue is full, submit task failed.";
-		return;
+		return std::make_shared<Result>(task, false);
 	}
 
 	// 如果任务队列有空余位置（不满），则将任务放入任务队列中
@@ -107,6 +107,9 @@ void ThreadPool::submitTask(std::shared_ptr<Task> task) {
 
 	// 因为刚放入了新任务，任务队列肯定不为空，通知线程池分配线程去执行任务
 	notEmpty_.notify_all();
+
+	// 返回任务执行结果
+	return std::make_shared<Result>(task);
 }
 
 
@@ -130,4 +133,68 @@ void Thread::start() {
 
 	// 将子线程设置为分离线程
 	t.detach();
+}
+
+
+////////////////////////////////////////// 任务抽象类 /////////////////////////////////////////////
+
+
+// 构造函数
+Task::Task() : result_(nullptr) {
+
+}
+
+// 执行任务
+void Task::exec() {
+	// 执行任务处理逻辑（发生多态调用）
+	Any data = run();
+
+	// 设置任务执行结果
+	if (result_ != nullptr) {
+		result_->setVal(std::move(data));
+	}
+}
+
+// 设置任务执行结果
+void Task::setResult(Result * p) {
+	result_ = p;
+}
+
+
+////////////////////////////////////////// 任务结果类 /////////////////////////////////////////////
+
+
+// 构造函数
+Result::Result(std::shared_ptr<Task> task, bool isValid) : task_(task), isValid_(isValid) {
+	// 关联任务和任务执行结果
+	task->setResult(this);
+}
+
+// 获取任务执行结果
+Any Result::get() {
+	// 如果任务执行结果无效，直接返回
+	if (!isValid_) {
+		// TODO 优化代码
+		return "";
+	}
+
+	// 等待获取一个信号量资源（即让当前线程等待任务执行结果）
+	sem_.wait();
+
+	// 返回任务执行结果
+	return std::move(data_);
+}
+
+// 设置任务执行结果
+void Result::setVal(Any data) {
+	// 存储任务执行结果
+	data_ = std::move(data);
+
+	// 增加一个信号量资源（即通知其他线程获取任务执行结果）
+	sem_.post();
+}
+
+// 获取任务执行结果是否有效
+bool Result::isValid() const {
+	return isValid_;
 }

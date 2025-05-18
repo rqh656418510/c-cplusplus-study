@@ -55,7 +55,7 @@ public:
 	template<typename T>
 	T cast() {
 		// 将基类指针转换为派生类指针（向下转换）
-		Derive<T>* p = dynamic_cast<Derive<T>>(base_.get());
+		Derive<T>* p = dynamic_cast<Derive<T>*>(base_.get());
 		if (p == nullptr) {
 			throw std::runtime_error("type is unmatch!");
 		}
@@ -100,12 +100,98 @@ private:
 
 };
 
+// 信号量类
+class Semaphore {
+
+public:
+	// 构造函数
+	Semaphore(int limit = 0) : limit_(limit) {
+
+	}
+
+	// 析构函数
+	~Semaphore() = default;
+
+	// 获取一个信号量资源
+	void wait() {
+		// 获取互斥锁
+		std::unique_lock<std::mutex> lock(mtx_);
+
+		// 等待信号量资源
+		cond_.wait(lock, [this]() { return limit_ > 0; });
+
+		// 更改资源计数
+		limit_--;
+	}
+
+	// 增加一个信号量资源
+	void post() {
+		// 获取互斥锁
+		std::unique_lock<std::mutex> lock(mtx_);
+
+		// 更改资源计数
+		limit_++;
+
+		// 通知其他线程获取信号量资源
+		cond_.notify_all();
+	}
+
+private:
+	int limit_;						// 资源计数
+	std::mutex mtx_;				// 互斥锁
+	std::condition_variable cond_;  // 条件变量
+};
+
+// 任务执行结果类的前置声明
+class Result;
+
 // 任务抽象类
 class Task {
 
 public:
-	// 纯虚函数，实现自定义任务的处理
+	// 构造函数
+	Task();
+
+	// 析构函数
+	~Task() = default;
+
+	// 纯虚函数，实现用户自定义的任务处理逻辑
 	virtual Any run() = 0;
+
+	// 执行任务
+	void exec();
+
+	// 设置任务执行结果
+	void setResult(Result* p);
+
+private:
+	Result* result_;	// 任务执行结果（使用裸指针，避免智能指针循环引用问题）
+};
+
+// 任务执行结果类
+class Result {
+
+public:
+	// 构造函数
+	Result(std::shared_ptr<Task> task, bool isValid = true);
+
+	// 析构函数
+	~Result() = default;
+
+	// 获取任务执行结果
+	Any get();
+
+	// 设置任务执行结果
+	void setVal(Any data);
+
+	// 获取任务执行结果是否有效
+	bool isValid() const;
+
+private:
+	Any data_;						// 存储任务执行的结果
+	Semaphore sem_;					// 线程通信的信号量
+	std::shared_ptr<Task> task_;	// 关联对应的任务
+	std::atomic_bool isValid_;		// 任务执行结果是否有效
 };
 
 // 线程类
@@ -148,7 +234,7 @@ public:
 	void start(int initThreadSize = INIT_THREAD_SIZE);
 
 	// 提交任务给线程池
-	void submitTask(std::shared_ptr<Task> task);
+	std::shared_ptr<Result> submitTask(std::shared_ptr<Task> task);
 
 	// 禁止拷贝构造
 	ThreadPool(const ThreadPool&) = delete;
