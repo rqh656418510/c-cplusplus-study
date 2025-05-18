@@ -1,5 +1,6 @@
 ﻿#include<iostream>
 #include<vector>
+#include <limits>
 #include "thread_pool.h"
 
 // 类型重定义
@@ -36,17 +37,44 @@ private:
 };
 
 int main() {
+	// 线程池的工作模式
+	int poolMode = 0;
+
+	while (true) {
+		// 获取用户输入
+		std::cout << "请选择线程池的工作模式，0 - Fixed，1 - Cached" << std::endl;
+		std::cin >> poolMode;
+
+		// 判断是否为非法输入
+		if (std::cin.fail()) {
+			// 清除错误标志位
+			std::cin.clear();
+			// 丢弃错误输入
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cout << "输入无效，请重新输入一个合法的数字！\n" << std::endl;
+		}
+		else {
+			// 清空输入缓冲区
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			break;
+		}
+	}
+
 	// 创建线程池
     ThreadPool pool;
 
-	// 设置线程池使用Fixed模式（固定大小线程池）
-	// pool.setMode(PoolMode::MODE_FIXED);
+	// 设置线程池的工作模式
+	if (poolMode == 0) {
+		// Fixed模式（固定大小线程池）
+		pool.setMode(PoolMode::MODE_FIXED);
+	}
+	else {
+		// Cached模式（缓存线程池）
+		pool.setMode(PoolMode::MODE_CACHED);
 
-	// 设置线程池使用Cached模式（缓存线程池）
-	pool.setMode(PoolMode::MODE_CACHED);
-
-	// 设置线程池Cached模式的最大线程数量
-    pool.setThreadSizeMaxThreshHold(8);
+		// 设置线程池Cached模式的最大线程数量
+		pool.setThreadSizeMaxThreshHold(8);
+	}
 
 	// 启动线程池（指定初始的线程数量）
 	pool.start(4);
