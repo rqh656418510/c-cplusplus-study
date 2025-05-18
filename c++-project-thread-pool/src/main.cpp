@@ -24,7 +24,6 @@ public:
         }
 
 		// 模拟任务执行耗时
-		// std::this_thread::sleep_for(std::chrono::seconds(rand() % 5 + 1));
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		return Any(sum);
@@ -36,10 +35,7 @@ private:
 };
 
 int main() {
-    // 设置随机种子
-    srand(time(nullptr));
-
-    // 创建线程池
+	// 创建线程池
     ThreadPool pool;
 
     // 设置线程池的工作模式

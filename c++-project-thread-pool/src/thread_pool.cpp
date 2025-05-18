@@ -77,7 +77,7 @@ void ThreadPool::start(int initThreadSize) {
 
 // 线程处理函数（负责执行任务）
 void ThreadPool::threadHandler(int threadId) {
-
+	// 记录线程首次运行的时间
 	auto lastTime = std::chrono::high_resolution_clock().now();
 
 	// 死循环
@@ -90,9 +90,10 @@ void ThreadPool::threadHandler(int threadId) {
 		// 线程池Cached模式的处理，回收线程池中的空闲线程
 		if (PoolMode::MODE_CACHED == poolMode_) {
 			// 使用while循环避免虚假唤醒
-			while(taskQueue_.size() > 0) {
+			while (taskQueue_.size() == 0) {
+				// 等待一段时间
 				std::cv_status waitResult = notEmpty_.wait_for(lock, std::chrono::seconds(1));
-				// 区分超时返回还是任务执行完返回
+				// 需要区分超时返回，还是线程正常被唤醒返回
 				if (std::cv_status::timeout == waitResult) {
 					auto nowTime = std::chrono::high_resolution_clock().now();
 					auto duration = std::chrono::duration_cast<std::chrono::seconds>(nowTime - lastTime);
@@ -147,7 +148,7 @@ void ThreadPool::threadHandler(int threadId) {
 		// 空闲线程数量加一（线程执行完任务之后）
 		idleThreadSize_++;
 
-		// 更新线程池最后执行完任务的时间
+		// 更新线程最后执行完任务的时间
 		lastTime = std::chrono::high_resolution_clock().now();
 	}
 }

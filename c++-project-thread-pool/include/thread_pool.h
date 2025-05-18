@@ -16,13 +16,13 @@
 const int INIT_THREAD_SIZE = 4;
 
 // 任务队列的最大任务数量
-const int TASK_MAX_THRESHHOLD = 1024;
+const int TASK_MAX_THRESHHOLD = INT_MAX;
 
 // 线程池Cached模式的最大线程数量
-const int THREAD_SIZE_MAX_THRESHHOLD = 200;
+const int THREAD_SIZE_MAX_THRESHHOLD = 1024;
 
 // 线程允许的最大空闲时间（单位秒）
-const int THREAD_MAX_IDLE_TIME = 10;
+const int THREAD_MAX_IDLE_TIME = 60;
 
 // 线程池支持的模式
 enum class PoolMode {
