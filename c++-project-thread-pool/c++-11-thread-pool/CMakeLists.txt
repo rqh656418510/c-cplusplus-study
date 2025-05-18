@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 project(Thread_Pool)
 
 # C++ 版本
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 # 构建模式
 set(CMAKE_BUILD_TYPE Debug)
