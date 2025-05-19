@@ -68,12 +68,15 @@ int main() {
         if (poolMode == 0) {
             // Fixed模式（固定大小线程池）
             pool.setMode(PoolMode::MODE_FIXED);
+            std::cout << "线程池模式：Fixed" << std::endl;
         } else {
             // Cached模式（缓存线程池）
             pool.setMode(PoolMode::MODE_CACHED);
 
             // 设置线程池Cached模式的最大线程数量
             pool.setThreadSizeMaxThreshHold(8);
+
+            std::cout << "线程池模式：Cached" << std::endl;
         }
 
         // 启动线程池（指定初始的线程数量）
