@@ -14,7 +14,7 @@
 #include<climits>
 #include"extend.h"
 
-// 初始的线程数量
+// 初始的线程数量（默认是CPU核数）
 const int INIT_THREAD_SIZE = std::thread::hardware_concurrency();
 
 // 任务队列的最大任务数量
@@ -24,7 +24,7 @@ const int TASK_MAX_THRESHHOLD = INT_MAX;
 const int THREAD_SIZE_MAX_THRESHHOLD = 1024;
 
 // 线程允许的最大空闲时间（单位秒）
-const int THREAD_MAX_IDLE_TIME = 5;
+const int THREAD_MAX_IDLE_TIME = 60;
 
 // 线程池支持的模式
 enum class PoolMode {

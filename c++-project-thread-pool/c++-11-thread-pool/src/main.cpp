@@ -59,64 +59,66 @@ int main() {
         }
     }
 
-    // 创建线程池
-    ThreadPool pool;
+    // 局部作用域开始
+    {
+        // 创建线程池
+        ThreadPool pool;
 
-    // 设置线程池的工作模式
-    if (poolMode == 0) {
-        // Fixed模式（固定大小线程池）
-        pool.setMode(PoolMode::MODE_FIXED);
-    } else {
-        // Cached模式（缓存线程池）
-        pool.setMode(PoolMode::MODE_CACHED);
-
-        // 设置线程池Cached模式的最大线程数量
-        pool.setThreadSizeMaxThreshHold(8);
-    }
-
-    // 启动线程池（指定初始的线程数量）
-    pool.start(4);
-
-    std::vector<std::shared_ptr<Result>> results;
-    ULong begin = 0;
-    ULong end = 0;
-    ULong step = 100000;
-
-    // 提交多个任务
-    for (int i = 0; i < 10; i++) {
-
-        // 计算区间
-        begin = end + 1;
-        end = begin + step - 1;
-
-        // 创建任务
-        std::shared_ptr<Task> task = std::make_shared<CalculateTask>(begin, end);
-
-        // 提交任务
-        std::shared_ptr<Result> result = pool.submitTask(task);
-
-        // 存储任务执行结果
-        if (result->isValid()) {
-            results.emplace_back(result);
+        // 设置线程池的工作模式
+        if (poolMode == 0) {
+            // Fixed模式（固定大小线程池）
+            pool.setMode(PoolMode::MODE_FIXED);
         }
-    }
+        else {
+            // Cached模式（缓存线程池）
+            pool.setMode(PoolMode::MODE_CACHED);
 
-    // 统计任务执行结果
-    ULong sum = 0;
-    for (int i = 0; i < results.size(); i++) {
-        // 阻塞等待任务执行完成，并获取任务执行结果
-        ULong result = results[i]->get().cast<ULong>();
-        sum += result;
-    }
+            // 设置线程池Cached模式的最大线程数量
+            pool.setThreadSizeMaxThreshHold(8);
+        }
 
-    // 输出并行计算结果
-    std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
+        // 启动线程池（指定初始的线程数量）
+        pool.start(4);
+
+        std::vector<std::shared_ptr<Result>> results;
+        ULong begin = 0;
+        ULong end = 0;
+        ULong step = 100000;
+
+        // 提交多个任务
+        for (int i = 0; i < 10; i++) {
+
+            // 计算区间
+            begin = end + 1;
+            end = begin + step - 1;
+
+            // 创建任务
+            std::shared_ptr<Task> task = std::make_shared<CalculateTask>(begin, end);
+
+            // 提交任务
+            std::shared_ptr<Result> result = pool.submitTask(task);
+
+            // 存储任务执行结果
+            if (result->isValid()) {
+                results.emplace_back(result);
+            }
+        }
+
+        // 统计任务执行结果
+        ULong sum = 0;
+        for (int i = 0; i < results.size(); i++) {
+            // 阻塞等待任务执行完成，并获取任务执行结果
+            ULong result = results[i]->get().cast<ULong>();
+            sum += result;
+        }
+
+        // 输出并行计算结果
+        std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
+
+    } // 局部作用域结束后，线程池自动析构
 
     // 打印提示信息
-    std::cout << "==> 程序运行完成" << std::endl;
-
-    // 阻塞主线程，直到用户按下任意键
-    char c = getchar();
+    std::cout << "==> 程序运行结束" << std::endl;
 
     return 0;
 }
