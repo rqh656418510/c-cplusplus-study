@@ -59,7 +59,7 @@ public:
     // 带右值的赋值运算符（移动赋值运算符）
     Any &operator=(Any &&other) noexcept {
         if (this != &other) {
-            base_ = std::move(other.base_);
+            std::swap(base_, other.base_);
         }
         return *this;
     }
