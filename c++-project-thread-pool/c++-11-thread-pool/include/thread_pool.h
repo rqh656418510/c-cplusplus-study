@@ -79,8 +79,8 @@ public:
 
 private:
     Any data_;                        // 存储任务执行的结果
-    Semaphore sem_;                    // 线程通信的信号量
-    std::shared_ptr<Task> task_;    // 关联对应的任务
+    Semaphore sem_;                   // 线程通信的信号量
+    std::shared_ptr<Task> task_;      // 关联对应的任务
     std::atomic_bool isValid_;        // 任务执行结果是否有效
 };
 

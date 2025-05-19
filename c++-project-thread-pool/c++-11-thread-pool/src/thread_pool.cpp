@@ -197,7 +197,7 @@ void ThreadPool::threadHandler(int threadId) {
         // 打印日志信息
         std::cout << "thread " << std::this_thread::get_id() << " 等待获取任务..." << std::endl;
 
-        // 使用while循环避免虚假唤醒，同时使用双重检查（DCL）
+        // 使用while循环避免虚假唤醒，同时使用双重检查（DCL）来避免线程死锁
         while (checkRunningState() && taskQueue_.size() == 0) {
             // 线程池Cached模式的处理,由于Cached模式下有可能已经创建了很多的线程，但是空闲时间超过最大阀值，因此需要将多余的空闲线程回收掉
             if (PoolMode::MODE_CACHED == poolMode_) {

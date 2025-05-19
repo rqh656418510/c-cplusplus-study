@@ -52,8 +52,7 @@ int main() {
             // 丢弃错误输入
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "输入无效，请重新输入一个合法的数字！\n" << std::endl;
-        }
-        else {
+        } else {
             // 清空输入缓冲区
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             break;
@@ -69,8 +68,7 @@ int main() {
         if (poolMode == 0) {
             // Fixed模式（固定大小线程池）
             pool.setMode(PoolMode::MODE_FIXED);
-        }
-        else {
+        } else {
             // Cached模式（缓存线程池）
             pool.setMode(PoolMode::MODE_CACHED);
 
