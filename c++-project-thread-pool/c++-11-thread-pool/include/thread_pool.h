@@ -80,14 +80,18 @@ public:
     // 设置任务执行结果
     void setVal(Any data);
 
-    // 获取任务执行结果是否有效
+    // 判断任务执行结果是否有效
     bool isValid() const;
+
+    // 判断关联的任务是否已完成
+    bool isFinished() const;
 
 private:
     Any data_;                        // 存储任务执行的结果
     Semaphore sem_;                   // 线程通信的信号量
-    std::shared_ptr<Task> task_;      // 关联对应的任务
     std::atomic_bool isValid_;        // 任务执行结果是否有效
+    std::shared_ptr<Task> task_;      // 关联的任务
+    std::atomic_bool isFinished_;       // 关联的任务是否已执行完成
 };
 
 
@@ -159,6 +163,9 @@ private:
     // 检查线程池的运行状态
     bool checkRunningState() const;
 
+    // 清理已完成的任务执行结果
+    void cleanTaskResult();
+
 private:
     std::unordered_map<int, std::unique_ptr<Thread>> threads_;        // 线程集合
     PoolMode poolMode_;                                               // 线程池的模式
@@ -177,6 +184,9 @@ private:
     std::condition_variable notFull_;                                 // 表示任务队列不满，用于通知用户线程提交任务
     std::condition_variable notEmpty_;                                // 表示任务队列不空，用于通知线程池执行任务
     std::condition_variable allExit_;                                 // 表示等待线程池回收所有线程
+
+    std::vector<std::shared_ptr<Result>> taskResults_;                // 任务执行结果列表，用于避免任务执行结果比任务早被析构
+    std::mutex taskResultsMtx_;                                       // 任务执行结果的互斥锁
 };
 
 #endif // THREAD_POOL_H

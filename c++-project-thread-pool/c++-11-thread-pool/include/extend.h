@@ -52,17 +52,10 @@ public:
     Any &operator=(const Any &) = delete;
 
     // 带右值的拷贝构造函数（移动拷贝构造）
-    Any(Any &&other) noexcept : base_(std::move(other.base_)) {
-
-    }
+    Any(Any&& other) = default;
 
     // 带右值的赋值运算符（移动赋值运算符）
-    Any &operator=(Any &&other) noexcept {
-        if (this != &other) {
-            std::swap(base_, other.base_);
-        }
-        return *this;
-    }
+    Any &operator=(Any &&other) = default;
 
     // 通用构造函数（让 Any 类型可以接收任意数据类型）
     template<typename T>

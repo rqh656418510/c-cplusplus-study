@@ -35,23 +35,22 @@ void Task::setResult(Result *p) {
 
 
 // 构造函数
-Result::Result(std::shared_ptr<Task> task, bool isValid) : task_(task), isValid_(isValid) {
+Result::Result(std::shared_ptr<Task> task, bool isValid) : task_(task), isValid_(isValid), isFinished_(false) {
     // 关联任务和任务执行结果
     task->setResult(this);
 }
 
 // 获取任务执行结果
 Any Result::get() {
-    // 如果任务执行结果无效，直接返回
+    // 如果任务执行结果无效，则直接返回
     if (!isValid_) {
-        // TODO 优化代码
         return "";
     }
 
-    // 等待获取一个信号量资源（即让当前线程等待任务执行结果）
+    // 等待获取一个信号量资源（即让当前线程等待任务执行完成）
     sem_.wait();
 
-    // 返回任务执行结果
+    // 返回任务执行完成的结果
     return std::move(data_);
 }
 
@@ -60,13 +59,21 @@ void Result::setVal(Any data) {
     // 存储任务执行结果
     data_ = std::move(data);
 
+    // 设置关联的任务已执行完成
+    isFinished_ = true;
+
     // 增加一个信号量资源（即通知其他线程获取任务执行结果）
     sem_.post();
 }
 
-// 获取任务执行结果是否有效
+// 判断任务执行结果是否有效
 bool Result::isValid() const {
     return isValid_;
+}
+
+// 判断关联的任务是否已完成
+bool Result::isFinished() const {
+    return isFinished_;
 }
 
 
@@ -157,6 +164,18 @@ void ThreadPool::setTaskQueMaxThreshHold(size_t threshhold) {
 // 检查线程池的运行状态
 bool ThreadPool::checkRunningState() const {
     return isPoolRuning_;
+}
+
+// 清理已完成的任务执行结果
+void ThreadPool::cleanTaskResult() {
+    // 获取互斥锁
+    std::lock_guard<std::mutex> resultLock(taskResultsMtx_);
+    // 将满足条件的元素移动到容器末尾
+    auto new_end = std::remove_if(taskResults_.begin(), taskResults_.end(), [](const std::shared_ptr<Result>& res) {
+        return res->isFinished();
+        });
+    // 删除容器末尾那段区域的所有元素
+    taskResults_.erase(new_end, taskResults_.end());
 }
 
 // 启动线程池
@@ -272,6 +291,9 @@ void ThreadPool::threadHandler(int threadId) {
         // 更新空闲线程数量（在当前线程执行完任务之后）
         idleThreadSize_++;
 
+        // 清理已完成的任务执行结果（在当前线程执行完任务之后）
+        cleanTaskResult();
+        
         // 更新当前线程最后执行完任务的时间
         lastTime = std::chrono::high_resolution_clock().now();
     }
@@ -284,9 +306,18 @@ std::shared_ptr<Result> ThreadPool::submitTask(std::shared_ptr<Task> task) {
 
     // 等待任务队列有空余位置（不满）
     bool waitResult = notFull_.wait_for(lock, std::chrono::seconds(1), [this]() { return taskQueue_.size() < taskQueMaxThreshHold_; });
+    // 如果等待超时，则返回无效的任务执行结果
     if (!waitResult) {
+        // 打印错误信息
         std::cerr << "task queue is full, submit task failed.";
-        return std::make_shared<Result>(task, false);
+        // 无效的任务执行结果
+        std::shared_ptr<Result> result = std::make_shared<Result>(task, false);
+        // 获取互斥锁
+        std::unique_lock<std::mutex> resultLock(taskResultsMtx_);
+        // 将任务执行结果保存起来，防止用户未使用而导致提前析构
+        taskResults_.emplace_back(result);
+        // 返回任务执行结果
+        return result;
     }
 
     // 如果任务队列有空余位置（不满），则将任务放入任务队列中
@@ -314,6 +345,12 @@ std::shared_ptr<Result> ThreadPool::submitTask(std::shared_ptr<Task> task) {
         curThreadSize_++;
     }
 
+    // 有效的任务执行结果
+    std::shared_ptr<Result> result = std::make_shared<Result>(task);
+    // 获取互斥锁
+    std::unique_lock<std::mutex> resultLock(taskResultsMtx_);
+    // 将任务执行结果保存起来，防止用户未使用而导致提前析构
+    taskResults_.emplace_back(result);
     // 返回任务执行结果
-    return std::make_shared<Result>(task);
+    return result;
 }
