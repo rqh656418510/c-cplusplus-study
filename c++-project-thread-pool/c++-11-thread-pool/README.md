@@ -20,7 +20,7 @@ cd c++-11-thread-pool
 cmake -S . -B build && cmake --build build
 ```
 
-- 动态链接库的安装（可选），如果不安装，程序在运行时可能会遇到找不到动态链接库的问题
+- 动态链接库的安装（可选），如果不安装，第三方程序在运行时可能会遇到找不到动态链接库的问题
 
 ``` sh
 # 进入项目的源码根目录
@@ -51,7 +51,7 @@ g++ -fPIC -Iinclude -shared src/thread_pool.cpp -o libthread_pool.so -pthread -s
 g++ -Iinclude src/thread_pool.cpp src/test.cpp -o thread_pool_test -pthread -std=c++11
 ```
 
-- 动态链接库的安装（可选），如果不安装，程序在运行时可能会遇到找不到动态链接库的问题
+- 动态链接库的安装（可选），如果不安装，第三方程序在运行时可能会遇到找不到动态链接库的问题
 
 ``` sh
 # 进入项目的源码根目录
