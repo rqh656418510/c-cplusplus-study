@@ -8,7 +8,9 @@
 
 ### 编译动态链接库
 
-- 第一种方法：cmake 编译
+#### cmake 编译
+
+- 项目的编译构建
 
 ``` sh
 # 进入项目的源码根目录
@@ -16,12 +18,27 @@ cd c++-11-thread-pool
 
 # 编译生成动态链接库和可执行测试程序
 cmake -S . -B build && cmake --build build
-
-# 将头文件和编译生成的动态链接库安装到系统中（可选）
-cmake --install build
 ```
 
-- 第二种方法：g++ 编译
+- 动态链接库的安装（可选），如果不安装，程序在运行时可能会遇到找不到动态链接库的问题
+
+``` sh
+# 进入项目的源码根目录
+cd c++-11-thread-pool
+
+# 将头文件和编译生成的动态链接库安装到系统中
+sudo cmake --install build
+
+# 创建系统的动态链接库配置文件
+sudo echo "/usr/local/lib" > /etc/ld.so.conf.d/custom.conf
+
+# 重载系统的动态链接库配置
+sudo ldconfig
+```
+
+#### g++ 编译
+
+- 项目的编译构建
 
 ``` sh
 # 进入项目的源码根目录
@@ -32,10 +49,23 @@ g++ -fPIC -Iinclude -shared src/thread_pool.cpp -o libthread_pool.so -pthread -s
 
 # 编译生成可执行测试程序
 g++ -Iinclude src/thread_pool.cpp src/test.cpp -o thread_pool_test -pthread -std=c++11
+```
 
-# 将头文件安装到系统中（可选）
-mv ./include/* /usr/local/include
+- 动态链接库的安装（可选），如果不安装，程序在运行时可能会遇到找不到动态链接库的问题
 
-# 将编译生成的动态链接库安装到系统中（可选）
-mv libthread_pool.so /usr/local/lib
+``` sh
+# 进入项目的源码根目录
+cd c++-11-thread-pool
+
+# 将头文件安装到系统中
+sudo mv ./include/* /usr/local/include
+
+# 将编译生成的动态链接库安装到系统中
+sudo mv libthread_pool.so /usr/local/lib
+
+# 创建系统的动态链接库配置文件
+sudo echo "/usr/local/lib" > /etc/ld.so.conf.d/custom.conf
+
+# 重载系统的动态链接库配置
+sudo ldconfig
 ```
