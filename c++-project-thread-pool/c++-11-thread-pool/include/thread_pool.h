@@ -24,7 +24,7 @@ const int TASK_MAX_THRESHHOLD = INT_MAX;
 const int THREAD_SIZE_MAX_THRESHHOLD = 1024;
 
 // 线程允许的最大空闲时间（单位秒）
-const int THREAD_MAX_IDLE_TIME = 60;
+const int THREAD_MAX_IDLE_TIME = 5;
 
 // 线程池支持的模式
 enum class PoolMode {

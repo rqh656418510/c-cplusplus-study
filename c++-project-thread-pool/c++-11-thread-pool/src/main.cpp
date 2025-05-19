@@ -33,11 +33,11 @@ public:
 
 private:
     ULong begin_;    // 开始计算的位置
-    ULong end_;        // 结束计算的位置
+    ULong end_;      // 结束计算的位置
 };
 
 int main() {
-    // 线程池的工作模式（默认Fixed模式）
+    // 线程池的工作模式
     int poolMode = 0;
 
     while (true) {
@@ -52,7 +52,8 @@ int main() {
             // 丢弃错误输入
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "输入无效，请重新输入一个合法的数字！\n" << std::endl;
-        } else {
+        }
+        else {
             // 清空输入缓冲区
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             break;
@@ -115,10 +116,10 @@ int main() {
         // 输出并行计算结果
         std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
 
-    } // 局部作用域结束后，线程池自动析构
+    } // 局部作用域结束，线程池自动析构，回收线程池中的所有线程
 
-    // 打印提示信息
-    std::cout << "==> 程序运行结束" << std::endl;
+    // 阻塞主线程，直到用户按下任意键
+    char c = getchar();
 
     return 0;
 }

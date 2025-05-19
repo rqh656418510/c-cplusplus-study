@@ -123,11 +123,11 @@ ThreadPool::~ThreadPool() {
     // 设置线程池的运行状态
     isPoolRuning_ = false;
 
-    // 唤醒所有正在等待获取任务的线程
-    notEmpty_.notify_all();
-
-    // 获取互斥锁
+    // 获取互斥锁，用于等待线程池里面所有的线程结束运行（线程有两种状态：阻塞等待获取任务 & 正在执行任务中）
     std::unique_lock<std::mutex> lock(taskQueMtx_);
+
+    // 必须先获取互斥锁，然后再唤醒所有正在等待获取任务的线程，避免发生线程死锁问题
+    notEmpty_.notify_all();
 
     // 等待线程池里的所有线程回收完成
     allExit_.wait(lock, [this]() { return threads_.size() == 0; });
@@ -197,11 +197,10 @@ void ThreadPool::threadHandler(int threadId) {
         // 打印日志信息
         std::cout << "thread " << std::this_thread::get_id() << " 等待获取任务..." << std::endl;
 
-        // 使用while循环避免虚假唤醒
-        while (taskQueue_.size() == 0) {
-            // 线程池Cached模式的处理
+        // 使用while循环避免虚假唤醒，同时使用双重检查（DCL）
+        while (checkRunningState() && taskQueue_.size() == 0) {
+            // 线程池Cached模式的处理,由于Cached模式下有可能已经创建了很多的线程，但是空闲时间超过最大阀值，因此需要将多余的空闲线程回收掉
             if (PoolMode::MODE_CACHED == poolMode_) {
-                // 等待一段时间
                 std::cv_status waitResult = notEmpty_.wait_for(lock, std::chrono::seconds(1));
                 // 需要区分超时返回，还是线程正常被唤醒返回
                 if (std::cv_status::timeout == waitResult) {
@@ -227,21 +226,14 @@ void ThreadPool::threadHandler(int threadId) {
                 // 等待任务队列不为空
                 notEmpty_.wait(lock);
             }
-
-            // 如果线程池要结束运行，则回收当前线程
-            if (!checkRunningState()) {
-                // 从线程集合中删除当前线程
-                threads_.erase(threadId);
-                // 唤醒等待线程池回收完毕的线程
-                allExit_.notify_all();
-                // 打印日志信息
-                std::cout << "thread pool destroy, thread " << threadId << " exited." << std::endl;
-                // 结束线程处理函数的执行，相当于结束当前线程
-                return;
-            }
         }
 
-        // 空闲线程数量减一（线程执行任务之前）
+        // 如果线程池要结束运行，则跳出最外层的while循环，触发线程的回收
+        if (!checkRunningState()) {
+            break;
+        }
+
+        // 更新空闲线程数量（在当前线程执行任务之前）
         idleThreadSize_--;
 
         // 从任务队列中获取需要执行的任务
