@@ -52,25 +52,37 @@ public:
     Any &operator=(const Any &) = delete;
 
     // 带右值的拷贝构造函数（移动拷贝构造）
-    Any(Any &&) = default;
+    Any(Any&& other) noexcept : base_(std::move(other.base_)) {
+
+    }
 
     // 带右值的赋值运算符（移动赋值运算符）
-    Any &operator=(Any &&) = default;
-
-    // 构造函数（让 Any 类型可以接收任意数据类型）
+    Any& operator=(Any&& other) noexcept {
+        if (this != &other) {
+            base_ = std::move(other.base_);
+        }
+        return *this;
+    }
+    
+    // 通用构造函数（让 Any 类型可以接收任意数据类型）
     template<typename T>
-    Any(T data) : base_(extend::make_unique<Derive < T>>(data)) {
+    Any(T&& data) : base_(extend::make_unique<Derive<std::decay_t<T>>>(std::forward<T>(data))) {
 
     }
 
     // 类型转换（将 Any 类型存储的数据类型提取出来）
     template<typename T>
     T cast() {
-        // 将基类指针转换为派生类指针（向下转换）
+        if (base_ == nullptr) {
+            throw std::runtime_error("Any is empty");
+        }
+
+        // 将基类指针转换为派生类指针（类型向下转换）
         Derive <T> *p = dynamic_cast<Derive <T> *>(base_.get());
         if (p == nullptr) {
             throw std::runtime_error("type is unmatch!");
         }
+
         // 返回真实的数据类型
         return p->getData();
     }
@@ -89,8 +101,9 @@ private:
     class Derive : public Base {
 
     public:
-        // 构造函数
-        Derive(T data) : data_(data) {
+        // 通用构造函数
+        template<typename U>
+        Derive(U&& data) : data_(std::forward<U>(data)) {
 
         }
 
@@ -153,7 +166,7 @@ public:
     }
 
 private:
-    int limit_;                        // 资源计数
+    int limit_;                     // 资源计数
     std::mutex mtx_;                // 互斥锁
     std::condition_variable cond_;  // 条件变量
 };

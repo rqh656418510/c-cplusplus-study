@@ -190,15 +190,27 @@ void ThreadPool::threadHandler(int threadId) {
     // 记录当前线程首次运行的时间
     auto lastTime = std::chrono::high_resolution_clock().now();
 
-    // 线程一直循环等待有任务执行
-    while (checkRunningState()) {
+    // For死循环，为了实现在线程池结束时，所有任务必须执行完成，线程池才可以回收线程
+    for (;;) {
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(taskQueMtx_);
+
         // 打印日志信息
         std::cout << "thread " << std::this_thread::get_id() << " 等待获取任务..." << std::endl;
 
-        // 使用while循环避免虚假唤醒，同时使用双重检查（DCL）来避免线程死锁
-        while (checkRunningState() && taskQueue_.size() == 0) {
+        // 让当前线程等待获取任务，使用While循环避免虚假唤醒
+        while (taskQueue_.size() == 0) {
+            // 如果任务列表为空，且线程池要结束运行，则回收当前线程
+            if (!checkRunningState()) {
+                // 从线程集合中删除当前线程
+                threads_.erase(threadId);
+                // 唤醒等待线程池回收完毕的线程
+                allExit_.notify_all();
+                // 打印日志信息
+                std::cout << "thread pool destroy, thread " << threadId << " exited." << std::endl;
+                // 结束线程处理函数的执行，相当于结束当前线程
+                return;
+            }
             // 线程池Cached模式的处理,由于Cached模式下有可能已经创建了很多的线程，但是空闲时间超过最大阀值，因此需要将多余的空闲线程回收掉
             if (PoolMode::MODE_CACHED == poolMode_) {
                 std::cv_status waitResult = notEmpty_.wait_for(lock, std::chrono::seconds(1));
@@ -226,11 +238,6 @@ void ThreadPool::threadHandler(int threadId) {
                 // 等待任务队列不为空
                 notEmpty_.wait(lock);
             }
-        }
-
-        // 如果线程池要结束运行，则跳出最外层的while循环，触发线程的回收
-        if (!checkRunningState()) {
-            break;
         }
 
         // 更新空闲线程数量（在当前线程执行任务之前）
@@ -268,15 +275,6 @@ void ThreadPool::threadHandler(int threadId) {
         // 更新当前线程最后执行完任务的时间
         lastTime = std::chrono::high_resolution_clock().now();
     }
-
-    // 为了避免在线程池结束运行时，出现线程被漏掉回收的情况；当跳出最外层的while循环后，需要从线程集合中删除当前线程
-    threads_.erase(threadId);
-
-    // 唤醒等待线程池回收完毕的线程
-    allExit_.notify_all();
-
-    // 打印日志信息
-    std::cout << "thread pool destroy, thread " << threadId << " exited." << std::endl;
 }
 
 // 提交任务给线程池
