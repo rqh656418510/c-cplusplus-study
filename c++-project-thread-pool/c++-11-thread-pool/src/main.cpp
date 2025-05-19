@@ -38,7 +38,7 @@ private:
 
 int main() {
     // 线程池的工作模式
-    int poolMode = 0;
+    int poolMode = -1;
 
     while (true) {
         // 获取用户输入
