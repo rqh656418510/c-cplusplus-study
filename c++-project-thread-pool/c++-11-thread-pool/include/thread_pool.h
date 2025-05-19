@@ -14,6 +14,8 @@
 #include<climits>
 #include"extend.h"
 
+////////////////////////////////////////// 线程池核心参数 ///////////////////////////////////////////
+
 // 初始的线程数量（默认是CPU的核心数）
 const int INIT_THREAD_SIZE = std::thread::hardware_concurrency();
 

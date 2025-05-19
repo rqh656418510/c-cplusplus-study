@@ -1,4 +1,5 @@
 ﻿#include<iostream>
+#include<algorithm>
 #include<functional>
 #include<thread>
 #include<memory>
@@ -171,9 +172,9 @@ void ThreadPool::cleanTaskResult() {
     // 获取互斥锁
     std::lock_guard<std::mutex> resultLock(taskResultsMtx_);
     // 将满足条件的元素移动到容器末尾
-    auto new_end = std::remove_if(taskResults_.begin(), taskResults_.end(), [](const std::shared_ptr<Result>& res) {
+    auto new_end = std::remove_if(taskResults_.begin(), taskResults_.end(), [](const std::shared_ptr<Result> &res) {
         return res->isFinished();
-        });
+    });
     // 删除容器末尾那段区域的所有元素
     taskResults_.erase(new_end, taskResults_.end());
 }
@@ -293,7 +294,7 @@ void ThreadPool::threadHandler(int threadId) {
 
         // 清理已完成的任务执行结果（在当前线程执行完任务之后）
         cleanTaskResult();
-        
+
         // 更新当前线程最后执行完任务的时间
         lastTime = std::chrono::high_resolution_clock().now();
     }
