@@ -13,14 +13,14 @@ namespace extend {
     // 创建非数组类型对象
     template<typename T, typename... Args>
     typename std::enable_if<!std::is_array<T>::value, std::unique_ptr<T>>::type
-        make_unique(Args &&... args) {
+    make_unique(Args &&... args) {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
     // 创建未知大小的数组（例如 make_unique<T[]>(n)）
     template<typename T>
-    typename std::enable_if<std::is_array<T>::value&& std::extent<T>::value == 0, std::unique_ptr<T>>::type
-        make_unique(std::size_t size) {
+    typename std::enable_if<std::is_array<T>::value && std::extent<T>::value == 0, std::unique_ptr<T>>::type
+    make_unique(std::size_t size) {
         using ElementType = typename std::remove_extent<T>::type;
         return std::unique_ptr<T>(new ElementType[size]());
     }
@@ -28,7 +28,7 @@ namespace extend {
     // 禁止使用定长数组（例如 make_unique<int[10]> 是不合法的）
     template<typename T, typename... Args>
     typename std::enable_if<(std::extent<T>::value != 0), void>::type
-        make_unique(Args &&...) = delete;
+    make_unique(Args &&...) = delete;
 }
 
 
@@ -52,21 +52,21 @@ public:
     Any &operator=(const Any &) = delete;
 
     // 带右值的拷贝构造函数（移动拷贝构造）
-    Any(Any&& other) noexcept : base_(std::move(other.base_)) {
+    Any(Any &&other) noexcept : base_(std::move(other.base_)) {
 
     }
 
     // 带右值的赋值运算符（移动赋值运算符）
-    Any& operator=(Any&& other) noexcept {
+    Any &operator=(Any &&other) noexcept {
         if (this != &other) {
             base_ = std::move(other.base_);
         }
         return *this;
     }
-    
+
     // 通用构造函数（让 Any 类型可以接收任意数据类型）
     template<typename T>
-    Any(T&& data) : base_(extend::make_unique<Derive<std::decay_t<T>>>(std::forward<T>(data))) {
+    Any(T&& data) : base_(extend::make_unique<Derive<typename std::decay<T>::type>>(std::forward<T>(data))) {
 
     }
 
@@ -103,7 +103,7 @@ private:
     public:
         // 通用构造函数
         template<typename U>
-        Derive(U&& data) : data_(std::forward<U>(data)) {
+        Derive(U &&data) : data_(std::forward<U>(data)) {
 
         }
 
