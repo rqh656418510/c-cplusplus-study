@@ -37,7 +37,7 @@ private:
 };
 
 int main() {
-    // 线程池的工作模式
+    // 线程池的工作模式（默认Fixed模式）
     int poolMode = 0;
 
     while (true) {
@@ -111,6 +111,9 @@ int main() {
 
     // 输出并行计算结果
     std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
+
+    // 打印提示信息
+    std::cout << "==> 程序运行完成" << std::endl;
 
     // 阻塞主线程，直到用户按下任意键
     char c = getchar();

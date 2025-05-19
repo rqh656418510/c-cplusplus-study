@@ -167,6 +167,9 @@ void ThreadPool::start(int initThreadSize) {
     // 记录初始的线程数量
     initThreadSize_ = initThreadSize;
 
+    // 记录当前线程池的线程数量
+    curThreadSize_ = initThreadSize;
+
     // 创建初始的线程
     for (int i = 0; i < initThreadSize_; i++) {
         // 创建线程对象，并将线程处理函数传递给线程对象的构造函数
