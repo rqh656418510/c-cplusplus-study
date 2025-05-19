@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # 项目名称和语言
-project(thread_pool VERSION 1.0 LANGUAGES CXX)
+project(cxx_11_thread_pool VERSION 1.0 LANGUAGES CXX)
 
 # 设置 C++ 版本
 set(CMAKE_CXX_STANDARD 11)
