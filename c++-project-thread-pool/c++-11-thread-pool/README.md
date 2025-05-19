@@ -16,6 +16,9 @@ cd c++-11-thread-pool
 
 # 编译生成动态链接库和可执行测试程序
 cmake -S . -B build && cmake --build build
+
+# 将头文件和编译生成的动态链接库安装到系统中（可选）
+cmake --install build
 ```
 
 - 第二种方法：g++ 编译
@@ -29,4 +32,10 @@ g++ -fPIC -Iinclude -shared src/thread_pool.cpp -o libthread_pool.so -pthread -s
 
 # 编译生成可执行测试程序
 g++ -Iinclude src/thread_pool.cpp src/test.cpp -o thread_pool_test -pthread -std=c++11
+
+# 将头文件安装到系统中（可选）
+mv ./include/* /usr/local/include
+
+# 将编译生成的动态链接库安装到系统中（可选）
+mv libthread_pool.so /usr/local/lib
 ```

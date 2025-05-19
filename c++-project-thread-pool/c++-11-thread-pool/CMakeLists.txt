@@ -38,3 +38,12 @@ add_executable(thread_pool_test ${SRC_FILES})
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(thread_pool_test PRIVATE pthread)
 endif ()
+
+# 设置默认的安装前缀路径
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Install path prefix." FORCE)
+endif()
+
+# 将头文件和编译生成的动态链接库安装到指定位置（可选）
+install(DIRECTORY include/ DESTINATION include)
+install(TARGETS thread_pool DESTINATION lib)
