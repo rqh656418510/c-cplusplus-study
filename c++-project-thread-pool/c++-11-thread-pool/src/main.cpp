@@ -114,9 +114,15 @@ int main() {
         // 输出并行计算结果
         std::cout << "==> 计算结果：1 + 2 + ... + " << end << " = " << sum << std::endl;
 
+        // 如果是Cached模式，则等待一段时间，触发线程池回收空闲线程
+        if (poolMode == 1) {
+            std::cout << "==> 等待空闲线程被回收..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(THREAD_MAX_IDLE_TIME + 5));
+        }
+
     } // 局部作用域结束，线程池自动析构，回收线程池中的所有线程
 
-    // 阻塞主线程，直到用户按下任意键
+    // 阻塞主线程，直到用户按下任意键才结束程序
     char c = getchar();
 
     return 0;
