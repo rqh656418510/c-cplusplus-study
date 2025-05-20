@@ -161,7 +161,7 @@ public:
             limit_++;
 
             // 通知其他线程获取信号量资源
-            // 特别注意，在默认情况下，Linux 平台中 condition_variable 的析构函数什么也没做，会导致这里状态已经失效；一旦 Result 对象提前析构，就会无故阻塞线程，造成线程死锁
+            // 特别注意，在默认情况下，Linux 平台中 condition_variable 的析构函数什么也没做，会导致这里状态已经失效；一旦外部使用它的对象（比如 Result）提前析构，就会无故阻塞线程，造成线程死锁
             cond_.notify_all();
         }
     }
@@ -170,7 +170,7 @@ private:
     int limit_;                     // 资源计数
     std::mutex mtx_;                // 互斥锁
     std::condition_variable cond_;  // 条件变量
-    std::atomic_bool isDestroyed;   // 是否已经被析构
+    std::atomic_bool isDestroyed;   // 是否已经被析构（用于解决Linux平台的兼容问题）
 };
 
 #endif // EXTEND_H
