@@ -162,13 +162,13 @@ public:
 
     // 提交任务给线程池（使用可变参数模板 + 引用折叠 + 完美转发）
     template<typename Func, typename... Args>
-    auto submitTask(Func&& func, Args&&...args) -> std::future<decltype(func(args...))> {
+    auto submitTask(Func &&func, Args &&...args) -> std::future<decltype(func(args...))> {
         // 推导任务执行结果的类型（返回值类型）
         using RType = decltype(func(args...));
 
         // 封装一个任意可调用对象（函数、函数对象、Lambda表达式等）为异步任务
         auto task = std::make_shared<std::packaged_task<RType()>>(
-            std::bind(std::forward<Func>(func), std::forward<Args>(args)...));
+                std::bind(std::forward<Func>(func), std::forward<Args>(args)...));
 
         // 获取与异步任务关联的Future，方便用户获取任务执行结果
         std::future<RType> future = task->get_future();
@@ -183,7 +183,7 @@ public:
             // 打印错误信息
             std::cerr << "task queue is full, submit task failed.";
             // 封装一个空的任务
-            auto task = std::make_shared<std::packaged_task<RType()>>([]()->RType { return RType(); });
+            auto task = std::make_shared<std::packaged_task<RType()>>([]() -> RType { return RType(); });
             // 执行一个空的任务
             (*task)();
             // 返回与任务关联的Future
@@ -191,7 +191,7 @@ public:
         }
 
         // 如果任务队列有空余位置（不满），则将任务放入任务队列中
-        taskQueue_.emplace([task](){
+        taskQueue_.emplace([task]() {
             (*task)();
         });
 
@@ -278,7 +278,7 @@ private:
                         }
                     }
                 }
-                // 线程池Fixed模式的处理
+                    // 线程池Fixed模式的处理
                 else {
                     // 等待任务队列不为空
                     notEmpty_.wait(lock);

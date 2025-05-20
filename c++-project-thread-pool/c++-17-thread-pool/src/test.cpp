@@ -86,14 +86,14 @@ int main() {
             std::future<ULong> result = pool.submitTask(sum, begin, end);
 
             // 存储与任务关联的Future
-			results.emplace_back(std::move(result));
+            results.emplace_back(std::move(result));
         }
 
         // 统计任务执行结果
         ULong sum = 0;
         for (int i = 0; i < results.size(); i++) {
             // 阻塞等待任务执行完成，并获取任务执行结果
-			ULong result = results[i].get();
+            ULong result = results[i].get();
             sum += result;
         }
 
