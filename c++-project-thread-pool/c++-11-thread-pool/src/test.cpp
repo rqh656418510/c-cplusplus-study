@@ -119,7 +119,7 @@ int main() {
 
         // 如果是Cached模式，则等待一段时间，触发线程池回收空闲线程
         if (poolMode == 1) {
-            std::cout << "==> 等待空闲线程被回收（最大空闲时间是60秒）..." << std::endl;
+            std::cout << "==> 等待空闲线程被回收（默认的最大空闲时间是60秒）..." << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(THREAD_MAX_IDLE_TIME + 5));
         }
 
