@@ -69,4 +69,3 @@ sudo echo "/usr/local/lib" > /etc/ld.so.conf.d/custom.conf
 # 重载系统的动态链接库配置
 sudo ldconfig
 ```
-
