@@ -106,7 +106,7 @@ int Thread::getId() const {
     return threadId_;
 }
 
-// 用于辅助生成全局唯一的线程ID
+// 初始化用于辅助生成全局唯一的线程ID
 int Thread::generateId_ = 0;
 
 
