@@ -227,7 +227,7 @@ void ThreadPool::threadHandler(int threadId) {
                 // 唤醒等待线程池回收完毕的线程
                 allExit_.notify_all();
                 // 打印日志信息
-                std::cout << "thread pool destroy, thread " << threadId << " exited." << std::endl;
+                std::cout << "thread pool destroy, thread " << std::this_thread::get_id() << " exited." << std::endl;
                 // 结束线程处理函数的执行，相当于结束当前线程
                 return;
             }
@@ -247,7 +247,7 @@ void ThreadPool::threadHandler(int threadId) {
                         // 更新当前线程池的线程数量
                         curThreadSize_--;
                         // 打印日志信息
-                        std::cout << "idle thread " << threadId << " exited." << std::endl;
+                        std::cout << "idle thread " << std::this_thread::get_id() << " exited." << std::endl;
                         // 结束线程处理函数的执行，相当于结束当前线程
                         return;
                     }
