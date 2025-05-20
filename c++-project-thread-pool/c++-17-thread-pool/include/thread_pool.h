@@ -14,8 +14,10 @@
 #include<climits>
 #include"extend.h"
 
-// 初始的线程数量
-const int INIT_THREAD_SIZE = 4;
+////////////////////////////////////////// 线程池核心参数 ///////////////////////////////////////////
+
+// 初始的线程数量（默认是CPU的核心数）
+const int INIT_THREAD_SIZE = std::thread::hardware_concurrency();
 
 // 任务队列的最大任务数量
 const int TASK_MAX_THRESHHOLD = INT_MAX;
@@ -32,10 +34,13 @@ enum class PoolMode {
     MODE_CACHED    // 缓存线程池
 };
 
+
+////////////////////////////////////////// 任务抽象类 /////////////////////////////////////////////
+
+
 // 任务执行结果类的前置声明
 class Result;
 
-// 任务抽象类
 class Task {
 
 public:
@@ -58,7 +63,10 @@ private:
     Result *result_;    // 任务执行结果（使用裸指针，避免智能指针循环引用问题）
 };
 
-// 任务执行结果类
+
+////////////////////////////////////////// 任务结果类 /////////////////////////////////////////////
+
+
 class Result {
 
 public:
@@ -74,17 +82,24 @@ public:
     // 设置任务执行结果
     void setVal(Any data);
 
-    // 获取任务执行结果是否有效
+    // 判断任务执行结果是否有效
     bool isValid() const;
+
+    // 判断关联的任务是否已完成
+    bool isFinished() const;
 
 private:
     Any data_;                        // 存储任务执行的结果
-    Semaphore sem_;                    // 线程通信的信号量
-    std::shared_ptr<Task> task_;    // 关联对应的任务
+    Semaphore sem_;                   // 线程通信的信号量
     std::atomic_bool isValid_;        // 任务执行结果是否有效
+    std::shared_ptr<Task> task_;      // 关联的任务
+    std::atomic_bool isFinished_;     // 关联的任务是否已执行完成
 };
 
-// 线程类
+
+////////////////////////////////////////// 线程类 /////////////////////////////////////////////
+
+
 class Thread {
 
 public:
@@ -109,7 +124,10 @@ private:
     ThreadHandler threadHandler_;     // 线程处理函数
 };
 
-// 线程池类
+
+////////////////////////////////////////// 线程池类 /////////////////////////////////////////////
+
+
 class ThreadPool {
 
 public:
@@ -147,6 +165,9 @@ private:
     // 检查线程池的运行状态
     bool checkRunningState() const;
 
+    // 清理已完成的任务执行结果
+    void cleanTaskResult();
+
 private:
     std::unordered_map<int, std::unique_ptr<Thread>> threads_;        // 线程集合
     PoolMode poolMode_;                                               // 线程池的模式
@@ -165,6 +186,9 @@ private:
     std::condition_variable notFull_;                                 // 表示任务队列不满，用于通知用户线程提交任务
     std::condition_variable notEmpty_;                                // 表示任务队列不空，用于通知线程池执行任务
     std::condition_variable allExit_;                                 // 表示等待线程池回收所有线程
+
+    std::vector<std::shared_ptr<Result>> taskResults_;                // 任务执行结果列表，用于避免任务执行结果比任务早被析构
+    std::mutex taskResultsMtx_;                                       // 任务执行结果的互斥锁
 };
 
 #endif // THREAD_POOL_H

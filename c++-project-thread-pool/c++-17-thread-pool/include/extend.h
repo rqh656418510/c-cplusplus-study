@@ -13,14 +13,14 @@ namespace extend {
     // 创建非数组类型对象
     template<typename T, typename... Args>
     typename std::enable_if<!std::is_array<T>::value, std::unique_ptr<T>>::type
-        make_unique(Args &&... args) {
+    make_unique(Args &&... args) {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
     // 创建未知大小的数组（例如 make_unique<T[]>(n)）
     template<typename T>
-    typename std::enable_if<std::is_array<T>::value&& std::extent<T>::value == 0, std::unique_ptr<T>>::type
-        make_unique(std::size_t size) {
+    typename std::enable_if<std::is_array<T>::value && std::extent<T>::value == 0, std::unique_ptr<T>>::type
+    make_unique(std::size_t size) {
         using ElementType = typename std::remove_extent<T>::type;
         return std::unique_ptr<T>(new ElementType[size]());
     }
@@ -28,7 +28,7 @@ namespace extend {
     // 禁止使用定长数组（例如 make_unique<int[10]> 是不合法的）
     template<typename T, typename... Args>
     typename std::enable_if<(std::extent<T>::value != 0), void>::type
-        make_unique(Args &&...) = delete;
+    make_unique(Args &&...) = delete;
 }
 
 
@@ -52,25 +52,30 @@ public:
     Any &operator=(const Any &) = delete;
 
     // 带右值的拷贝构造函数（移动拷贝构造）
-    Any(Any &&) = default;
+    Any(Any&& other) = default;
 
     // 带右值的赋值运算符（移动赋值运算符）
-    Any &operator=(Any &&) = default;
+    Any &operator=(Any &&other) = default;
 
-    // 构造函数（让 Any 类型可以接收任意数据类型）
+    // 通用构造函数（让 Any 类型可以接收任意数据类型）
     template<typename T>
-    Any(T data) : base_(extend::make_unique<Derive < T>>(data)) {
+    Any(T&& data) : base_(extend::make_unique<Derive<typename std::decay<T>::type>>(std::forward<T>(data))) {
 
     }
 
     // 类型转换（将 Any 类型存储的数据类型提取出来）
     template<typename T>
     T cast() {
-        // 将基类指针转换为派生类指针（向下转换）
+        if (base_ == nullptr) {
+            throw std::runtime_error("Any is empty");
+        }
+
+        // 将基类指针转换为派生类指针（类型向下转换）
         Derive <T> *p = dynamic_cast<Derive <T> *>(base_.get());
         if (p == nullptr) {
             throw std::runtime_error("type is unmatch!");
         }
+
         // 返回真实的数据类型
         return p->getData();
     }
@@ -89,8 +94,9 @@ private:
     class Derive : public Base {
 
     public:
-        // 构造函数
-        Derive(T data) : data_(data) {
+        // 通用构造函数
+        template<typename U>
+        Derive(U &&data) : data_(std::forward<U>(data)) {
 
         }
 
@@ -121,41 +127,50 @@ class Semaphore {
 
 public:
     // 构造函数
-    Semaphore(int limit = 0) : limit_(limit) {
+    Semaphore(int limit = 0) : limit_(limit), isDestroyed(false) {
 
     }
 
     // 析构函数
-    ~Semaphore() = default;
+    ~Semaphore() {
+        // 标记当前对象已经被析构
+        isDestroyed = true;
+    };
 
     // 获取一个信号量资源
     void wait() {
-        // 获取互斥锁
-        std::unique_lock<std::mutex> lock(mtx_);
+        if (!isDestroyed) {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(mtx_);
 
-        // 等待信号量资源
-        cond_.wait(lock, [this]() { return limit_ > 0; });
+            // 等待信号量资源
+            cond_.wait(lock, [this]() { return limit_ > 0; });
 
-        // 更改资源计数
-        limit_--;
+            // 更改资源计数
+            limit_--;
+        }
     }
 
     // 增加一个信号量资源
     void post() {
-        // 获取互斥锁
-        std::unique_lock<std::mutex> lock(mtx_);
+        if (!isDestroyed) {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(mtx_);
 
-        // 更改资源计数
-        limit_++;
+            // 更改资源计数
+            limit_++;
 
-        // 通知其他线程获取信号量资源
-        cond_.notify_all();
+            // 通知其他线程获取信号量资源
+            // 特别注意，在默认情况下，Linux 平台中 condition_variable 的析构函数什么也没做，会导致这里状态已经失效；一旦外部使用它的对象（比如 Result）提前析构，就会无故阻塞线程，造成线程死锁
+            cond_.notify_all();
+        }
     }
 
 private:
-    int limit_;                        // 资源计数
+    int limit_;                     // 资源计数
     std::mutex mtx_;                // 互斥锁
     std::condition_variable cond_;  // 条件变量
+    std::atomic_bool isDestroyed;   // 是否已经被析构（用于解决Linux平台的兼容问题）
 };
 
 #endif // EXTEND_H
