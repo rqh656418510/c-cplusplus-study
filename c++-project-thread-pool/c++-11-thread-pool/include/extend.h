@@ -127,41 +127,50 @@ class Semaphore {
 
 public:
     // 构造函数
-    Semaphore(int limit = 0) : limit_(limit) {
+    Semaphore(int limit = 0) : limit_(limit), isDestroyed(false) {
 
     }
 
     // 析构函数
-    ~Semaphore() = default;
+    ~Semaphore() {
+        // 标记当前对象已经被析构
+        isDestroyed = true;
+    };
 
     // 获取一个信号量资源
     void wait() {
-        // 获取互斥锁
-        std::unique_lock<std::mutex> lock(mtx_);
+        if (!isDestroyed) {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(mtx_);
 
-        // 等待信号量资源
-        cond_.wait(lock, [this]() { return limit_ > 0; });
+            // 等待信号量资源
+            cond_.wait(lock, [this]() { return limit_ > 0; });
 
-        // 更改资源计数
-        limit_--;
+            // 更改资源计数
+            limit_--;
+        }
     }
 
     // 增加一个信号量资源
     void post() {
-        // 获取互斥锁
-        std::unique_lock<std::mutex> lock(mtx_);
+        if (!isDestroyed) {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(mtx_);
 
-        // 更改资源计数
-        limit_++;
+            // 更改资源计数
+            limit_++;
 
-        // 通知其他线程获取信号量资源
-        cond_.notify_all();
+            // 通知其他线程获取信号量资源
+            // 特别注意，在默认情况下，Linux 平台中 condition_variable 的析构函数什么也没做，会导致这里状态已经失效；一旦 Result 对象提前析构，就会无故阻塞线程，造成线程死锁
+            cond_.notify_all();
+        }
     }
 
 private:
     int limit_;                     // 资源计数
     std::mutex mtx_;                // 互斥锁
     std::condition_variable cond_;  // 条件变量
+    std::atomic_bool isDestroyed;   // 是否已经被析构
 };
 
 #endif // EXTEND_H

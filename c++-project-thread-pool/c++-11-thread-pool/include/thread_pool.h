@@ -93,7 +93,7 @@ private:
     Semaphore sem_;                   // 线程通信的信号量
     std::atomic_bool isValid_;        // 任务执行结果是否有效
     std::shared_ptr<Task> task_;      // 关联的任务
-    std::atomic_bool isFinished_;       // 关联的任务是否已执行完成
+    std::atomic_bool isFinished_;     // 关联的任务是否已执行完成
 };
 
 
