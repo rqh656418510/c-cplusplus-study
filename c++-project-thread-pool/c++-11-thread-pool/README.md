@@ -8,7 +8,7 @@
 
 ### 编译动态链接库
 
-#### cmake 编译
+#### CMake 编译
 
 - 项目的编译构建
 
@@ -36,7 +36,7 @@ sudo echo "/usr/local/lib" > /etc/ld.so.conf.d/custom.conf
 sudo ldconfig
 ```
 
-#### g++ 编译
+#### G++ 编译
 
 - 项目的编译构建
 
