@@ -8,7 +8,7 @@
 
 ### 编译构建
 
-> 使用的 `g++` 版本是 `4.8.5`，CMake 版本是 `3.27.7`；若版本过低，可能会出现线程池代码编译失败的问题
+> 使用的 `g++` 版本是 `4.8.5`，CMake 版本是 `3.25.1`；若版本过低，可能会出现线程池代码编译失败的问题
 
 #### CMake 编译
 
@@ -18,6 +18,9 @@ cd c++-17-thread-pool
 
 # 编译生成可执行测试程序
 cmake -S . -B build && cmake --build build
+
+# 将头文件安装到系统中（可选）
+sudo cmake --install build
 ```
 
 #### G++ 编译
@@ -28,4 +31,7 @@ cd c++-17-thread-pool
 
 # 编译生成可执行测试程序
 g++ -Iinclude src/test.cpp -o thread_pool_test -pthread -std=c++17
+
+# 将头文件安装到系统中（可选）
+sudo cp ./include/* /usr/local/include
 ```

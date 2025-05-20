@@ -60,10 +60,10 @@ g++ -Iinclude src/thread_pool.cpp src/test.cpp -o thread_pool_test -pthread -std
 cd c++-11-thread-pool
 
 # 将头文件安装到系统中
-sudo mv ./include/* /usr/local/include
+sudo cp ./include/* /usr/local/include
 
 # 将编译生成的动态链接库安装到系统中
-sudo mv libthread_pool.so /usr/local/lib
+sudo cp libthread_pool.so /usr/local/lib
 
 # 创建系统的动态链接库配置文件
 sudo echo "/usr/local/lib" > /etc/ld.so.conf.d/custom.conf
