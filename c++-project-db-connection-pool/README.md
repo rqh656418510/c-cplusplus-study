@@ -1,14 +1,14 @@
 ## C++ 数据库连接池项目
 
-### 博客教程
+## 博客教程
 
 - [基于 C++ 实现 MySQL 数据库连接池](https://www.techgrow.cn/posts/993ae2e0.html)
 
-### 项目背景
+## 项目背景
 
 为了提高 MySQL 数据库 (基于 C/S 设计) 的访问瓶颈，除了在服务器端增加缓存服务器缓存常用的数据之外（例如 Redis），还可以增加连接池，来提高 MySQL Server 的访问效率。在高并发情况下，大量的 TCP 三次握手、MySQL Server 连接认证、MySQL Server 关闭连接回收资源和 TCP 四次挥手所耗费的性能时间也是很明显的，增加连接池就是为了减少这一部分的性能损耗。在市场上比较流行的连接池包括 C3P0、Apache DBCP、HikariCP、阿里巴巴的 Druid 连接池，它们对于短时间内大量的数据库增删改查操作性能的提升是很明显的，但是它们有一个共同点就是，全部都是由 Java 实现的。
 
-### 关键技术
+## 关键技术
 
 - 单例模式
 - Lambda 表达式
@@ -19,13 +19,28 @@
 - C++ 11 的多线程编程，包括线程互斥、线程同步通信等
 - 生产者 - 消费者线程模型的实现，基于 `mutex`、`unique_lock`、`condition_variable`
 
-### 开发平台的选型
+## 版本说明
 
-有关 MySQL 数据库编程、多线程编程、线程互斥和同步通信操作、智能指针、设计模式、容器等等这些技术在 C++ 语言层面都可以直接实现，因此该项目选择直接在 Windows 平台上进行开发，当然项目代码在 Linux 平台下用 `g++` 也可以直接编译运行。
+使用的各软件版本如下所示：
 
-### Linux 平台开发
+| 软件                | 版本     |
+| ------------------- | -------- |
+| C++                 | `11`     |
+| Boost               | `1_78_0` |
+| MySQL Connector/C++ | `1.1.13` |
+| G++ (GCC)           | `4.8.5`  |
+| CMake               | `3.25.1` |
+| MySQL               | `5.7.33` |
+| Clion               | `2019.3` |
+| CentOS              | `7.9`    |
 
-由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要安装 `boost`。建议从 [boost 官网](https://www.boost.org/users/download/) 下载 `boost` 的源码压缩包，然后使用 `root` 用户手动编译安装 `boost`，此方式适用于大多数 Linux 系统，如下所示：
+> 有关 MySQL 数据库编程、多线程编程、线程互斥和同步通信操作、智能指针、设计模式、容器等等这些技术在 C++ 语言层面都可以直接实现，因此本文的数据库连接池代码是同时兼容 Windows 平台和 Linux 平台的，只是 CMake 配置稍微有一点区别。由于 MySQL 在 Linux 平台上使用得比较多，因此本文选择在 Linux 平台上进行开发，并使用 CMake 和 GCC 直接编译运行项目。
+
+## 准备工作
+
+### 安装 Boost
+
+- 由于 MySQL Connector/C++ 依赖了 Boost，因此本地 Linux 系统需要安装 Boost。建议从 [Boost 官网](https://www.boost.org/users/download/) 下载 Boost 的源码压缩包，然后使用 `root` 用户手动编译安装 Boost，此方式适用于绝大多数 Linux 系统，如下所示：
 
 ``` sh
 # 下载文件
@@ -44,34 +59,12 @@ $ sudo ./bootstrap.sh --prefix=/usr/local/boost
 $ sudo ./b2 install --prefix=/usr/local/boost --with=all
 ```
 
-然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
+### 安装 MySQL Connector/C++
 
-``` sh
-# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
-cmake -S . -B build
+- (1) 在 [MySQL 官网](https://dev.mysql.com/downloads/connector/cpp/) 上下载 `1.1.13` 版本的 MySQL Connector/C++，下载完成后直接解压文件。
+- (2) 将解压得到的 `include` 和 `lib` 目录拷贝到数据库连接池项目中，然后配置 CMake 加载 MySQL Connector/C++ 的头文件和动态链接库即可。
 
-# 编译项目，生成可执行文件
-cmake --build build
-```
-
-### Windows 平台开发
-
-由于 MySQL Connector/C++ 依赖了 `boost`，因此本地操作系统需要先安装 `boost`，安装步骤如下：
-
-- (1) 在 [Boost 官网](https://www.boost.org/users/download/) 下载最新版本的 `Boost`，并解压到本地磁盘，例如解压路径为：`C:\Program Files\boost_1_77_0`
-- (2) 在 Visual Studio 中右键项目，选择 `属性`，导航到 `配置属性` -> `C/C++` -> `常规` -> `附加包含目录`，添加 `Boost` 的安装路径（如 `C:\Program Files\boost_1_77_0`）
-
-然后进入项目的根目录，通过 CMake 命令直接编译项目即可，比如：
-
-``` sh
-# 配置项目，生成构建文件（例如 Makefile 或 Ninja 文件）
-cmake -S . -B build
-
-# 编译项目，生成可执行文件
-cmake --build build
-```
-
-### 连接池的功能介绍
+## 连接池的功能介绍
 
 连接池一般包含了数据库连接所用的 IP 地址、Port 端口号、用户名和密码以及其它的性能参数，例如初始连接数、最大连接数、最大空闲时间、连接超时时间等。本项目是基于 C++ 语言实现的连接池，主要也是实现以上几个所有连接池都支持的通用基础功能，其余连接池更多的扩展功能，可以自行实现。
 
@@ -87,7 +80,7 @@ cmake --build build
 - 连接超时时间（connectionTimeout）:
     - 当 MySQL 的并发请求量过大，连接池中的连接数量已经到达 maxSize 了，而此时没有空闲的连接可供使用，那么此时应用无法从连接池获取连接，它通过阻塞的方式获取连接的等待时间如果超过 connectionTimeout 时间，则获取连接失败，无法访问数据库。
 
-### 连接池的功能设计
+## 连接池的功能设计
 
 - C++ 源文件的功能划分
     - `MysqlConnection.h` 和 `MysqlConnection.cpp`：数据库增删改查的代码实现
@@ -103,7 +96,7 @@ cmake --build build
     - (7) 应用获取的连接用 `shared_ptr` 智能指针来管理，并用 Lambda 表达式定制连接释放的功能（不真正释放连接，而是将连接归还到 Connection 队列中）。
     - (8) 连接的生产和连接的消费采用生产者 - 消费者线程模型来设计，使用了线程间的同步通信机制、条件变量和互斥锁。
 
-### MySQL 的参数调整
+## MySQL 的参数调整
 
 以下命令可以查看和设置 MySQL Server 所支持的最大连接数，当超过 `max_connections` 数量的连接，MySQL Server 会直接拒绝。因此，在使用数据库连接池增加 MySQL 连接数量的时候，MySQL Server 的 `max_connections` 参数也要适当地进行调整，以适配数据库连接池的最大连接数（`maxSize`），否则会大大影响数据库连接池的运行效果。
 
@@ -115,12 +108,12 @@ SHOW VARIABLES LIKE 'max_connections';
 SET GLOBAL max_connections = 200;
 ```
 
-### 连接池的压力测试
+## 连接池的压力测试
 
 验证数据库的插入操作所花费的时间，第一次测试使用普通的数据库访问操作，第二次测试使用带连接池的数据库访问操作，对比两次操作同样数据量所花费的时间，性能压力测试结果如下：
 
-| 数据量 | 未使用连接池所花费时间       | 使用连接池所花费时间         |
-| ------ | ---------------------------- | ---------------------------- |
-| 1000   | 单线程:1891ms 四线程:497ms   | 单线程:1079ms 四线程:408ms   |
-| 5000   | 单线程:10033ms 四线程:2361ms | 单线程: 5380ms 四线程:2041ms |
-| 10000  | 单线程:19403ms 四线程:4589ms | 单线程:10522ms 四线程:4034ms |
+| 数据量 | 未使用连接池所花费时间        | 使用连接池所花费时间          |
+| ------ | ----------------------------- | ----------------------------- |
+| 1000   | 单线程:1891ms，四线程:497ms   | 单线程:1079ms，四线程:408ms   |
+| 5000   | 单线程:10033ms，四线程:2361ms | 单线程: 5380ms，四线程:2041ms |
+| 10000  | 单线程:19403ms，四线程:4589ms | 单线程:10522ms，四线程:4034ms |
