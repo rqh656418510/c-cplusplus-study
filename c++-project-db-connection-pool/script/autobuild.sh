@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 脚本中任一命令执行出错就退出
+set -e
+
 # 获取脚本所在目录的绝对路径
 SCRIPT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 PROJECT_ROOT="${SCRIPT_DIR}/.."

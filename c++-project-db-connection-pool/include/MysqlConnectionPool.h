@@ -40,11 +40,14 @@ public:
     shared_ptr<MysqlConnection> getConnection();
 
 private:
-    // 构造函数私有化
+    // 私有化构造函数
     MysqlConnectionPool();
 
-    // 拷贝造函数私有化
-    MysqlConnectionPool(const MysqlConnectionPool &pool);
+    // 删除拷贝构造函数
+    MysqlConnectionPool(const MysqlConnectionPool &) = delete;
+
+    // 删除赋值运算符
+    MysqlConnectionPool &operator=(const MysqlConnectionPool &) = delete;
 
     // 加载配置文件
     bool loadConfigFile();

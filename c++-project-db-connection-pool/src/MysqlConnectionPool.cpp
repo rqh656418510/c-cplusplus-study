@@ -35,10 +35,6 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
     scan.detach();
 }
 
-MysqlConnectionPool::MysqlConnectionPool(const MysqlConnectionPool &pool) {
-    throw "Not support copy constructor";
-}
-
 MysqlConnectionPool::~MysqlConnectionPool() {
     // 关闭连接池，释放所有连接
     this->close();
