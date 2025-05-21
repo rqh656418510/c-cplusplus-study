@@ -47,10 +47,10 @@ include_directories(${PATH_TO_BOOST}/include ${PATH_TO_MYSQL_CONNECTOR}/include)
 link_directories(${PATH_TO_BOOST}/lib ${PATH_TO_MYSQL_CONNECTOR}/lib)
 
 # 指定可执行文件的名称和项目里的所有源文件
-add_executable(${PROJECT_NAME} ${MAIN_SOURCES})
+add_executable(${PROJECT_NAME}_test ${MAIN_SOURCES})
 
 # 指定编译参数，比如包括链接库文件：pthread、ssl、crypto、boost
 set(CMAKE_CXX_FLAGS "-lpthread -lssl -lcrypto -lboost_system -lboost_filesystem")
 
 # 链接项目里的静态库和动态链接库
-target_link_libraries(${PROJECT_NAME} ssl.so crypto.so mysqlcppconn.so)
+target_link_libraries(${PROJECT_NAME}_test ssl.so crypto.so mysqlcppconn.so)

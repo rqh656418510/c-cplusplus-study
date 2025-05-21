@@ -105,10 +105,14 @@ cmake --build build
 
 ### MySQL 的参数调整
 
-以下命令可以查看 MySQL Server 所支持的最大连接个数，超过 `max_connections` 数量的连接，MySQL Server 会直接拒绝，所以在使用连接池增加连接数量的时候，MySQL Server 的 `max_connections` 参数也要适当地进行调整，以适配连接池的连接上限。
+以下命令可以查看和设置 MySQL Server 所支持的最大连接数，当超过 `max_connections` 数量的连接，MySQL Server 会直接拒绝。因此，在使用数据库连接池增加 MySQL 连接数量的时候，MySQL Server 的 `max_connections` 参数也要适当地进行调整，以适配数据库连接池的最大连接数（`maxSize`），否则会大大影响数据库连接池的运行效果。
 
 ``` sql
-show variables like 'max_connections';
+-- 查询MySQL的最大连接数
+SHOW VARIABLES LIKE 'max_connections';
+
+-- 全局设置MySQL的最大连接数（立即生效，但数据库重启后失效）
+SET GLOBAL max_connections = 200;
 ```
 
 ### 连接池的压力测试
