@@ -1,5 +1,5 @@
 /**
- * MySQL 连接池的实现
+ * MySQL 连接池的定义
  */
 
 #pragma once

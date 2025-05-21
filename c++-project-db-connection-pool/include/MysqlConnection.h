@@ -1,5 +1,5 @@
 /**
- * MySQL 增删改查操作的实现
+ * MySQL 增删改查操作的定义
  */
 
 #pragma once
