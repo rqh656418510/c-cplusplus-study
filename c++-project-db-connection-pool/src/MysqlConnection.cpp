@@ -10,6 +10,7 @@ MysqlConnection::~MysqlConnection() {
     // 关闭数据连接
     if (this->_connection && !this->_connection->isClosed()) {
         this->_connection->close();
+        this->_connection = nullptr;
         // LOG("# DEBUG: %s\n", "Closed mysql connection");
     }
 }
@@ -85,7 +86,7 @@ bool MysqlConnection::connect(const string host, const string username, const st
     this->_dbname = dbname;
 
     try {
-        // 加载MySQL驱动
+        // 获取数据库驱动，返回的是单例对象，由 MySQL Connector/C++ 管理，不需要手动释放资源（delete）
         this->_driver = get_driver_instance();
         if (!this->_driver) {
             LOG("# ERR: %s\n", "Failed to load mysql _driver");
