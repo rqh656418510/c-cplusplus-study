@@ -120,7 +120,7 @@ cd c++-project-db-connection-pool
 cmake -S . -B build && cmake --build build
 
 # 运行可执行测试程序
-./db_connection_pool_test
+./bin/db_connection_pool_test
 ```
 
 - 验证数据库的插入操作所花费的时间，第一次测试使用普通的数据库访问操作，第二次测试使用带连接池的数据库访问操作，对比两次操作同样数据量所花费的时间，性能压力测试结果如下：
