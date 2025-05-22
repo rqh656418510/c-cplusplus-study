@@ -46,3 +46,4 @@ Debug
 ### GCC G++ ###
 *.o
 *.out
+test
