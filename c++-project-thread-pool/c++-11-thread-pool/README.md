@@ -6,6 +6,21 @@
 
 - [基于 C++ 手写线程池](https://www.techgrow.cn/posts/585aa296.html)
 
+### 运行测试代码
+
+> 使用的 `g++` 版本是 `4.8.5`，CMake 版本是 `3.25.1`；若版本过低，可能会出现线程池代码编译失败的问题
+
+``` shell
+# 进入项目的源码根目录
+cd c++-11-thread-pool
+
+# 编译构建生成可执行测试程序
+cmake -S . -B build && cmake --build build
+
+# 运行可执行测试程序
+./build/thread_pool_test
+```
+
 ### 编译动态链接库
 
 > 使用的 `g++` 版本是 `4.8.5`，CMake 版本是 `3.25.1`；若版本过低，可能会出现线程池代码编译失败的问题
