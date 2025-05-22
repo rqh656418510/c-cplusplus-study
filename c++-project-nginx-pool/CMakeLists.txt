@@ -11,8 +11,8 @@ set(CMAKE_BUILD_TYPE Debug)
 # 指定源文件
 file(GLOB SRC_FILES src/*.cpp)
 
-# 编译并链接
-add_executable(Nginx_Pool ${SRC_FILES})
+# 编译生成可执行测试程序
+add_executable(Nginx_Pool_Test ${SRC_FILES})
 
 # 引入头文件
-target_include_directories(Nginx_Pool PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(Nginx_Pool_Test PRIVATE ${CMAKE_SOURCE_DIR}/include)
