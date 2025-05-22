@@ -45,10 +45,10 @@ public:
     // 析构函数
     ~Any() = default;
 
-    // 禁止带左值的拷贝构造函数
+    // 禁用带左值的拷贝构造函数
     Any(const Any &) = delete;
 
-    // 禁止带左值的赋值运算符
+    // 禁用带左值的赋值运算符
     Any &operator=(const Any &) = delete;
 
     // 带右值的拷贝构造函数（移动拷贝构造）
