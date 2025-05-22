@@ -14,11 +14,11 @@
 # 进入项目的源码根目录
 cd c++-11-thread-pool
 
-# 编译构建生成可执行测试程序
-cmake -S . -B build && cmake --build build
+# 编译生成可执行测试程序
+g++ -Iinclude src/thread_pool.cpp src/test.cpp -o thread_pool_test -pthread -std=c++11
 
 # 运行可执行测试程序
-./build/thread_pool_test
+./thread_pool_test
 ```
 
 ### 编译动态链接库
