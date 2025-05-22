@@ -46,3 +46,4 @@ Debug
 ### GCC G++ ###
 *.o
 *.out
+SGI_STL_Allocator_Test
