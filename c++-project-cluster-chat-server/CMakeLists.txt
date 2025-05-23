@@ -11,9 +11,8 @@ set(CMAKE_BUILD_TYPE Debug)
 # 指定源文件
 file(GLOB SRC_FILES src/*.cpp)
 
-# 编译并链接
+# 编译生成可执行测试文件
 add_executable(${PROJECT_NAME}_test ${SRC_FILES})
 
 # 引入头文件
-target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
+target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/thirdparty)
