@@ -41,9 +41,8 @@ tmp/*
 Debug
 
 ### VS Code ###
-.vscode/
 
 ### GCC G++ ###
 *.o
 *.out
-test
+cluster_chat_server_test
