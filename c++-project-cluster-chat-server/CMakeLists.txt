@@ -4,15 +4,33 @@ project(cluster_chat_server)
 
 # C++ 版本
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 构建模式
 set(CMAKE_BUILD_TYPE Debug)
 
-# 指定源文件
+# 指定项目源文件
 file(GLOB SRC_FILES src/*.cpp)
 
 # 编译生成可执行测试文件
 add_executable(${PROJECT_NAME}_test ${SRC_FILES})
 
-# 引入头文件
-target_include_directories(${PROJECT_NAME}_test PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/thirdparty)
+# 指定头文件
+target_include_directories(${PROJECT_NAME}_test
+    PRIVATE
+    # 项目的头文件
+    ${CMAKE_SOURCE_DIR}/include
+    # 项目的第三方头文件
+    ${CMAKE_SOURCE_DIR}/thirdparty
+    # 系统的头文件，如 Muduo 头文件
+    /usr/local/include
+)
+
+# 链接依赖的第三方库（必须注意顺序）
+target_link_libraries(${PROJECT_NAME}_test
+    muduo_net
+    muduo_http
+    muduo_inspect
+    muduo_base
+    pthread
+)
