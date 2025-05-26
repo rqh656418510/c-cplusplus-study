@@ -26,7 +26,7 @@ target_include_directories(${PROJECT_NAME}_test
     /usr/local/include
 )
 
-# 链接依赖的静态库或者动态库（必须注意顺序，从上到下链接）
+# 指定链接的静态库或者动态库（必须注意顺序，从上到下链接）
 target_link_libraries(${PROJECT_NAME}_test
     muduo_net
     muduo_http
