@@ -36,10 +36,13 @@ public:
 private:
     // 处理用户的连接创建和断开
     void onConnection(const muduo::net::TcpConnectionPtr &conn) {
+        // 连接创建
         if (conn->connected()) {
             std::cout << conn->peerAddress().toIpPort() << " -> " << conn->localAddress().toIpPort() << " state: online"
                       << std::endl;
-        } else {
+        }
+        // 连接断开
+        else {
             std::cout << conn->peerAddress().toIpPort() << " -> " << conn->localAddress().toIpPort()
                       << " state: offline" << std::endl;
             // 断开连接（释放资源）
@@ -47,10 +50,10 @@ private:
         }
     }
 
-    // 处理用户读写事件
+    // 处理用户读写事件（比如接收客户端发送的数据）
     void onMessage(const muduo::net::TcpConnectionPtr &conn, muduo::net::Buffer *buffer, muduo::Timestamp time) {
         std::string message = buffer->retrieveAllAsString();
-        std::cout << "receive message: " << message << ", time: " << time.toString() << std::endl;
+        std::cout << "receive message: " << message << ", time: " << time.toFormattedString(false) << std::endl;
     }
 
     muduo::net::TcpServer _server;
