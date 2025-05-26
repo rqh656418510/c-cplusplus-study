@@ -3,13 +3,16 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "muduo_client.h"
 #include "muduo_server.h"
 
 using namespace std;
 
-int main() {
+// 初始化服务器
+void initServer() {
+    // 创建服务器
     muduo::net::EventLoop loop;
     muduo::net::InetAddress addr("127.0.0.1", 6000);
     ChatServer server(&loop, addr, "ChatServer");
@@ -19,6 +22,36 @@ int main() {
 
     // 以阻塞方式等待新用户的连接、已连接用户的读写事件等
     loop.loop();
+}
+
+// 初始化客户端
+void initClient() {
+    // 创建客户端
+    muduo::net::EventLoop loop;
+    muduo::net::InetAddress addr("127.0.0.1", 6000);
+    ChatClient client(&loop, addr, "ChatClient");
+
+    // 连接服务器
+    client.connect();
+
+    // 以阻塞方式等待服务器发送的数据
+    loop.loop();
+}
+
+int main() {
+    // 启动服务器线程
+    thread serverThread(initServer);
+    serverThread.detach();
+
+    // 等待一会，让服务器线程先启动
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    // 启动客户端线程
+    thread clientThread(initClient);
+    clientThread.detach();
+
+    // 阻塞等待用户按下任意键，然后结束程序运行
+    char c = getchar();
 
     return 0;
 }
