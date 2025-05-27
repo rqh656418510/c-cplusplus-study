@@ -1,8 +1,18 @@
+/**
+ * 聊天服务器的实现
+ */
+
 #include "chatserver.hpp"
 
 #include <iostream>
+#include <string>
+
+#include "json.hpp"
 
 using namespace std;
+
+// 类型重定义
+using json = nlohmann::json;
 
 // 构造函数
 ChatServer::ChatServer(EventLoop* loop, const InetAddress& listenAddr, const string& nameArg)
@@ -30,8 +40,19 @@ void ChatServer::start() {
 
 // 处理用户的连接创建和断开
 void ChatServer::onConnection(const TcpConnectionPtr& conn) {
+    // 断开连接（释放资源）
+    if (!conn->connected()) {
+        conn->shutdown();
+    }
 }
 
 // 处理用户读写事件（比如接收客户端发送的数据）
 void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp time) {
+    // 获取客户端发送的数据
+    string message = buf->retrieveAllAsString();
+
+    // JSON 字符串反序列化
+    json jsonObj = json::parse(message);
+
+    cout << "server receive message: " << message << endl;
 }

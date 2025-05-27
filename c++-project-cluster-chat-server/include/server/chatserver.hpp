@@ -1,6 +1,10 @@
 #ifndef CHATSERVER_H
 #define CHATSERVER_H
 
+/**
+ * 聊天服务器的头文件
+ */
+
 #include <muduo/net/EventLoop.h>
 #include <muduo/net/TcpServer.h>
 
