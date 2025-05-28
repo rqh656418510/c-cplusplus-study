@@ -4,12 +4,17 @@
 
 #include "chatserver.hpp"
 
+#include <muduo/base/Logging.h>
+
 #include <iostream>
 #include <string>
 
+#include "chatservice.hpp"
 #include "json.hpp"
+#include "public.hpp"
 
 using namespace std;
+using namespace muduo;
 
 // 类型重定义
 using json = nlohmann::json;
@@ -51,8 +56,15 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
     // 获取客户端发送的数据
     string message = buf->retrieveAllAsString();
 
+    // 打印日志信息
+    LOG_DEBUG << "server receive message : " << message;
+
     // JSON 字符串反序列化
     json jsonObj = json::parse(message);
 
-    cout << "server receive message: " << message << endl;
+    // 获取消息处理器
+    auto msgHandler = ChatService::instance()->getMsgHandler(jsonObj["msgId"].get<int>());
+
+    // 调用消息处理器，执行相应的业务处理
+    msgHandler(conn, jsonObj, time);
 }

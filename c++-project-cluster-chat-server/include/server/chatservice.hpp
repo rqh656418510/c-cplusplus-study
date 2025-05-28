@@ -13,30 +13,34 @@
 
 #include "json.hpp"
 
+using namespace std;
 using namespace muduo;
 using namespace muduo::net;
-using namespace std;
 
 // 类型重定义
 using json = nlohmann::json;
+
+// 处理消息的回调类型
 using MsgHandler = function<void(const TcpConnectionPtr& conn, const json& data, Timestamp time)>;
 
-// 聊天服务器的业务类（单例）
+// 聊天服务器的业务类（单例对象）
 class ChatService {
 public:
     // 获取单例对象
     static ChatService* instance();
 
     // 处理登录业务
-    void login(const TcpConnectionPtr& conn, json& data, Timestamp time);
+    void login(const TcpConnectionPtr& conn, const json& data, Timestamp time);
 
     // 处理注册业务
-    void reg(const TcpConnectionPtr& conn, json& data, Timestamp time);
+    void reg(const TcpConnectionPtr& conn, const json& data, Timestamp time);
+
+    // 获取消息对应的处理器
+    MsgHandler getMsgHandler(int msgId);
 
 private:
     // 私有构造函数
-    ChatService() {
-    }
+    ChatService();
 
     // 删除拷贝构造函数
     ChatService(const ChatService&) = delete;
