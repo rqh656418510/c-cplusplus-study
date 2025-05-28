@@ -8,5 +8,6 @@ add_executable(cluster_chat_server ${SRC_FILES})
 target_link_libraries(cluster_chat_server
     muduo_net
     muduo_base
+    mysqlclient
     pthread
 )
