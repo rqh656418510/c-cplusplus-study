@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 #include "json.hpp"
+#include "usermodel.hpp"
 
 using namespace std;
 using namespace muduo;
@@ -50,6 +51,9 @@ private:
 
     // 关联消息ID和消息处理器
     unordered_map<int, MsgHandler> _msgHandlerMap;
+
+    // User 表的数据操作对象
+    UserModel _userModel;
 };
 
 #endif  // CHATSERVICE_H

@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "public.hpp"
+#include "usermodel.hpp"
 
 using namespace std;
 using namespace muduo;
@@ -51,5 +52,29 @@ void ChatService::login(const TcpConnectionPtr& conn, const json& data, Timestam
 
 // 处理注册业务
 void ChatService::reg(const TcpConnectionPtr& conn, const json& data, Timestamp time) {
-    LOG_INFO << "execute register service";
+    // 创建用户对象
+    string name = data["name"];
+    string password = data["password"];
+    User user(name, password);
+
+    // 插入用户记录
+    bool result = _userModel.insert(user);
+
+    // 插入用户记录成功
+    if (result) {
+        json response;
+        response["errNum"] = 0;
+        response["userId"] = user.getId();
+        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        // 返回数据给客户端
+        conn->send(response.dump());
+    }
+    // 插入用户记录失败
+    else {
+        json response;
+        response["errNum"] = 1;
+        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        // 返回数据给客户端
+        conn->send(response.dump());
+    }
 }

@@ -1,11 +1,18 @@
+#include <muduo/base/Logging.h>
+
 #include <iostream>
 
 #include "chatserver.hpp"
 
 using namespace std;
+using namespace muduo;
 
 int main() {
-    cout << "chat server start ..." << endl;
+    // 设置日志级别为 DEBUG
+    Logger::setLogLevel(Logger::DEBUG);
+
+    // 打印日志信息
+    LOG_INFO << "chat server start ...";
 
     // 定义聊天服务器
     EventLoop loop;
