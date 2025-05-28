@@ -39,7 +39,7 @@ MsgHandler ChatService::getMsgHandler(int msgId) {
         // 返回一个默认的消息处理器（空操作）
         return [=](const TcpConnectionPtr& conn, const json& data, Timestamp time) {
             // 打印日志信息
-            LOG_ERROR << "not found msg handler by msgid " << msgId;
+            LOG_ERROR << "not found message handler by msgid " << msgId;
         };
     }
     return _msgHandlerMap[msgId];
@@ -47,7 +47,47 @@ MsgHandler ChatService::getMsgHandler(int msgId) {
 
 // 处理登录业务
 void ChatService::login(const TcpConnectionPtr& conn, const json& data, Timestamp time) {
-    LOG_INFO << "execute login service";
+    int id = data["id"].get<int>();
+    string password = data["password"];
+
+    // 查询用户信息
+    User user = _userModel.select(id);
+
+    // 登录成功
+    if (user.getId() == id && user.getPassword() == password) {
+        // 重复登录
+        if (user.getState() == "online") {
+            // 返回数据给客户端
+            json response;
+            response["errNum"] = 2;
+            response["errMsg"] = "该账号在其他设备已登录";
+            response["msgId"] = MsgType::LOGIN_MSG_ACK;
+            conn->send(response.dump());
+        }
+        // 登录成功
+        else {
+            // 更新用户登录状态
+            user.setState("online");
+            _userModel.updateState(user);
+
+            // 返回数据给客户端
+            json response;
+            response["errNum"] = 0;
+            response["userId"] = user.getId();
+            response["userName"] = user.getName();
+            response["msgId"] = MsgType::LOGIN_MSG_ACK;
+            conn->send(response.dump());
+        }
+    }
+    // 登录失败
+    else {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = 2;
+        response["errMsg"] = "用户名或密码不正确";
+        response["msgId"] = MsgType::LOGIN_MSG_ACK;
+        conn->send(response.dump());
+    }
 }
 
 // 处理注册业务
@@ -55,26 +95,38 @@ void ChatService::reg(const TcpConnectionPtr& conn, const json& data, Timestamp 
     // 创建用户对象
     string name = data["name"];
     string password = data["password"];
-    User user(name, password);
+
+    // 查询用户名是否已被注册
+    User oldUser = _userModel.selectByName(name);
+    if (oldUser.getId() != -1) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = 1;
+        response["errMsg"] = "用户名已被注册";
+        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
 
     // 插入用户记录
-    bool result = _userModel.insert(user);
+    User newUser(name, password);
+    bool result = _userModel.insert(newUser);
 
     // 插入用户记录成功
     if (result) {
+        // 返回数据给客户端
         json response;
         response["errNum"] = 0;
-        response["userId"] = user.getId();
+        response["userId"] = newUser.getId();
         response["msgId"] = MsgType::REGISTER_MSG_ACK;
-        // 返回数据给客户端
         conn->send(response.dump());
     }
     // 插入用户记录失败
     else {
+        // 返回数据给客户端
         json response;
         response["errNum"] = 1;
         response["msgId"] = MsgType::REGISTER_MSG_ACK;
-        // 返回数据给客户端
         conn->send(response.dump());
     }
 }

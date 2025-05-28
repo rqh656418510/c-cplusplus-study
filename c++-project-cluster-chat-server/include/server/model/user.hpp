@@ -9,10 +9,25 @@ using namespace std;
 // User 表映射的实体类
 class User {
 public:
-    User(string name = "", string password = "", string state = "offline") {
+    User() {
+        this->id = -1;
+        this->name = "";
+        this->password = "";
+        this->state = "offline";
+    }
+
+    User(int id, string name, string password, string state) {
+        this->id = id;
         this->name = name;
         this->password = password;
         this->state = state;
+    }
+
+    User(string name, string password) {
+        this->id = -1;
+        this->name = name;
+        this->password = password;
+        this->state = "offline";
     }
 
     void setId(int id) {
