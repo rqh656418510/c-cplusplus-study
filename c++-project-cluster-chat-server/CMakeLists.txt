@@ -21,6 +21,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include/public)
 include_directories(${PROJECT_SOURCE_DIR}/include/client)
 include_directories(${PROJECT_SOURCE_DIR}/include/server)
 include_directories(${PROJECT_SOURCE_DIR}/include/server/db)
+include_directories(${PROJECT_SOURCE_DIR}/include/server/dao)
+include_directories(${PROJECT_SOURCE_DIR}/include/server/model)
 
 # 指定项目的第三方头文件
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty)
