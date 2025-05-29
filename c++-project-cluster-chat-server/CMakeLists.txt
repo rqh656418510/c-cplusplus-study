@@ -37,11 +37,11 @@ find_library(MYSQL_LIBRARY NAMES mysqlclient PATHS
 
 # 指定 MySQL 的静态或动态库
 if (MYSQL_LIBRARY)
-    message(STATUS "Found MySQL Library: ${MYSQL_LIBRARY}")
+    message(STATUS "Found MySQL library: ${MYSQL_LIBRARY}")
     get_filename_component(MYSQL_LIBRARY_DIR ${MYSQL_LIBRARY} DIRECTORY)
     link_directories(${MYSQL_LIBRARY_DIR})
 else ()
-    message(FATAL_ERROR "MySQL library not found!")
+    message(FATAL_ERROR "MySQL library not found")
 endif ()
 
 # 加载 CMake 子目录
