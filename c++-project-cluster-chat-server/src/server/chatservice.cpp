@@ -37,7 +37,7 @@ MsgHandler ChatService::getMsgHandler(int msgId) {
     // 如果消息处理器不存在
     if (it == _msgHandlerMap.end()) {
         // 返回一个默认的消息处理器（空操作）
-        return [=](const TcpConnectionPtr& conn, const json& data, Timestamp time) {
+        return [=](const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
             // 打印日志信息
             LOG_ERROR << "not found message handler by msgid " << msgId;
         };
@@ -46,9 +46,9 @@ MsgHandler ChatService::getMsgHandler(int msgId) {
 }
 
 // 处理登录业务
-void ChatService::login(const TcpConnectionPtr& conn, const json& data, Timestamp time) {
-    int id = data["id"].get<int>();
-    string password = data["password"];
+void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    int id = (*data)["id"].get<int>();
+    string password = (*data)["password"].get<string>();
 
     // 查询用户信息
     User user = _userModel.select(id);
@@ -91,10 +91,10 @@ void ChatService::login(const TcpConnectionPtr& conn, const json& data, Timestam
 }
 
 // 处理注册业务
-void ChatService::reg(const TcpConnectionPtr& conn, const json& data, Timestamp time) {
+void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
     // 创建用户对象
-    string name = data["name"];
-    string password = data["password"];
+    string name = (*data)["name"].get<string>();
+    string password = (*data)["password"].get<string>();
 
     // 查询用户名是否已被注册
     User oldUser = _userModel.selectByName(name);

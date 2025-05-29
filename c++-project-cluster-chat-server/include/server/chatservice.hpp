@@ -21,8 +21,8 @@ using namespace muduo::net;
 // 类型重定义
 using json = nlohmann::json;
 
-// 处理消息的回调类型
-using MsgHandler = function<void(const TcpConnectionPtr& conn, const json& data, Timestamp time)>;
+// 处理消息的回调类型（使用智能指针是为了兼容低版本的G++编译器）
+using MsgHandler = function<void(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time)>;
 
 // 聊天服务器的业务类（单例对象）
 class ChatService {
@@ -31,10 +31,10 @@ public:
     static ChatService* instance();
 
     // 处理登录业务
-    void login(const TcpConnectionPtr& conn, const json& data, Timestamp time);
+    void login(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
     // 处理注册业务
-    void reg(const TcpConnectionPtr& conn, const json& data, Timestamp time);
+    void reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgId);

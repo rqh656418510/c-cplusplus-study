@@ -30,8 +30,19 @@ include_directories(${PROJECT_SOURCE_DIR}/thirdparty)
 # 指定系统的头文件，如 Muduo 头文件
 include_directories(/usr/local/include)
 
+# 搜索 MySQL 的静态或动态库
+find_library(MYSQL_LIBRARY NAMES mysqlclient PATHS
+    /usr/lib /usr/local/lib /usr/lib64/mysql /usr/lib/x86_64-linux-gnu
+)
+
 # 指定 MySQL 的静态或动态库
-link_directories(/usr/lib/x86_64-linux-gnu)
+if (MYSQL_LIBRARY)
+    message(STATUS "Found MySQL Library: ${MYSQL_LIBRARY}")
+    get_filename_component(MYSQL_LIBRARY_DIR ${MYSQL_LIBRARY} DIRECTORY)
+    link_directories(${MYSQL_LIBRARY_DIR})
+else ()
+    message(FATAL_ERROR "MySQL library not found!")
+endif ()
 
 # 加载 CMake 子目录
 add_subdirectory(src)

@@ -66,5 +66,5 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
     auto msgHandler = ChatService::instance()->getMsgHandler(jsonObj["msgId"].get<int>());
 
     // 调用消息处理器，执行相应的业务处理
-    msgHandler(conn, jsonObj, time);
+    msgHandler(conn, make_shared<json>(jsonObj), time);
 }
