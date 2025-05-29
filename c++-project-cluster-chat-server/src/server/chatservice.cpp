@@ -90,10 +90,10 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             response["userName"] = user.getName();
             response["msgType"] = MsgType::LOGIN_MSG_ACK;
 
-            // 查询用户是否有离线消息
+            // 查询该用户是否有离线消息
             vector<OfflineMessage> messages = _offflineMessageModel.select(user.getId());
             if (!messages.empty()) {
-                // 返回所有离线消息给用户
+                // 返回所有离线消息给该用户
                 response["offlinemsg"] = messages;
                 // 读取该用户的离线消息后，将该用户的离线消息全部删除掉
                 _offflineMessageModel.remove(user.getId());
@@ -171,6 +171,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 获取互斥锁
     unique_lock<mutex> lock(_connMapmutex);
 
+    // 获取消息接收者的连接信息
     auto it = _userConnMap.find(toId);
     if (it != _userConnMap.end()) {
         // 用户在线，发送消息给消息接收者
@@ -183,7 +184,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
     // 用户不在线，存储离线消息
     if (!toOnline) {
-        OfflineMessage msg((*data).dump(), getTimestamp());
+        OfflineMessage msg(toId, (*data).dump(), getTimestamp());
         // 新增离线消息
         _offflineMessageModel.insert(msg);
     }

@@ -12,8 +12,8 @@ bool OfflineMessageModel::insert(const OfflineMessage& message) {
     char sql[1024] = {0};
 
     // 拼接 SQL 语句
-    sprintf(sql, "insert into offlinemessage(userid, message) values('%d', '%s')", message.getUserId(),
-            message.getMessage());
+    sprintf(sql, "insert into offlinemessage(userid, message, createtime) values('%d', '%s', '%d')",
+            message.getUserId(), message.getMessage().c_str(), message.getCreateTime());
 
     // 执行 SQL 语句
     MySQL mysql;
