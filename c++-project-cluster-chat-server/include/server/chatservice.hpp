@@ -13,6 +13,7 @@
 #include <unordered_map>
 
 #include "json.hpp"
+#include "offlinemessagemodel.hpp"
 #include "usermodel.hpp"
 
 using namespace std;
@@ -59,7 +60,7 @@ private:
     // 关联消息ID和消息处理器（用于解耦业务代码）
     unordered_map<int, MsgHandler> _msgHandlerMap;
 
-    // 存储在线用户的通信连接
+    // 存储在线用户的通信连接（操作时必须自行保证线程安全）
     unordered_map<int, TcpConnectionPtr> _userConnMap;
 
     // 互斥锁，保证 _userConnMap 的线程安全
@@ -67,6 +68,9 @@ private:
 
     // User 表的数据操作对象
     UserModel _userModel;
+
+    // OfflineMessage 表的数据操作对象
+    OfflineMessageModel _offflineMessageModel;
 };
 
 #endif  // CHATSERVICE_H

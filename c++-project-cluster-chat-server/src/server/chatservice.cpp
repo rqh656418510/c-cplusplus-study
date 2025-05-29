@@ -7,7 +7,9 @@
 #include <muduo/base/Logging.h>
 
 #include <iostream>
+#include <vector>
 
+#include "offlinemessagemodel.hpp"
 #include "public.hpp"
 #include "usermodel.hpp"
 
@@ -81,12 +83,22 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             user.setState("online");
             _userModel.updateState(user);
 
-            // 返回数据给客户端
+            // 返回给客户端的数据
             json response;
             response["errNum"] = 0;
             response["userId"] = user.getId();
             response["userName"] = user.getName();
             response["msgType"] = MsgType::LOGIN_MSG_ACK;
+
+            // 查询用户是否有离线消息
+            vector<OfflineMessage> messages = _offflineMessageModel.select(user.getId());
+            if (!messages.empty()) {
+                // 返回所有离线消息给用户
+                response["offlinemsg"] = messages;
+                // 读取该用户的离线消息后，将该用户的离线消息全部删除掉
+                _offflineMessageModel.remove(user.getId());
+            }
+
             conn->send(response.dump());
         }
     }
@@ -147,9 +159,6 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 消息发送者的用户ID
     int fromId = (*data)["fromId"].get<int>();
 
-    // 消息发送者的用户名称
-    string fromName = (*data)["fromName"].get<string>();
-
     // 消息发送者的消息内容
     string fromMsg = (*data)["fromMsg"].get<string>();
 
@@ -174,7 +183,9 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
     // 用户不在线，存储离线消息
     if (!toOnline) {
-        // TODO 存储离线消息
+        OfflineMessage msg((*data).dump(), getTimestamp());
+        // 新增离线消息
+        _offflineMessageModel.insert(msg);
     }
 }
 
@@ -198,7 +209,7 @@ void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
     // 释放互斥锁
     lock.unlock();
 
-    // 更新用户的登录状态信息
+    // 更新用户的登录状态
     if (user.getId() != -1) {
         user.setState("offline");
         _userModel.updateState(user);

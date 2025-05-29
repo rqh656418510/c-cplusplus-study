@@ -51,7 +51,7 @@ User UserModel::selectByName(string name) {
     if (mysql.connect()) {
         // 执行 SQL 语句
         MYSQL_RES* result = mysql.query(sql);
-        if (result != nullptr) {
+        if (result != nullptr && mysql_num_rows(result) > 0) {
             // 获取查询结果
             MYSQL_ROW row = mysql_fetch_row(result);
             // 封装返回的数据

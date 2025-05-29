@@ -45,9 +45,10 @@ void ChatServer::start() {
 
 // 处理用户的连接创建和断开
 void ChatServer::onConnection(const TcpConnectionPtr& conn) {
-    // 断开连接（释放资源）
     if (!conn->connected()) {
+        // 处理用户连接异常关闭的情况
         ChatService::instance()->clientCloseExcetpion(conn);
+        // 断开连接（释放资源）
         conn->shutdown();
     }
 }

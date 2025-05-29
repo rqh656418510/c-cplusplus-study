@@ -21,7 +21,7 @@
 - 一对一聊天
 
 ``` json
-{"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "toId": 24}
+{"msgType": 5, "fromId": 22, "fromMsg": "hello", "toId": 24}
 
-{"msgType": 5, "fromId": 24, "fromName": "peter", "fromMsg": "hello", "toId": 22}
+{"msgType": 5, "fromId": 24, "fromMsg": "hello", "toId": 22}
 ```
