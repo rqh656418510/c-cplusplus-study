@@ -9,6 +9,7 @@
 
 #include <functional>
 #include <iostream>
+#include <mutex>
 #include <unordered_map>
 
 #include "json.hpp"
@@ -36,8 +37,14 @@ public:
     // 处理注册业务
     void reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
+    // 处理一对一聊天消息
+    void singleChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgId);
+
+    // 处理用户连接异常关闭的情况
+    void clientCloseExcetpion(const TcpConnectionPtr& conn);
 
 private:
     // 私有构造函数
@@ -49,8 +56,14 @@ private:
     // 删除赋值运算符
     ChatService& operator=(const ChatService&) = delete;
 
-    // 关联消息ID和消息处理器
+    // 关联消息ID和消息处理器（用于解耦业务代码）
     unordered_map<int, MsgHandler> _msgHandlerMap;
+
+    // 存储在线用户的通信连接
+    unordered_map<int, TcpConnectionPtr> _userConnMap;
+
+    // 互斥锁，保证 _userConnMap 的线程安全
+    mutex _connMapmutex;
 
     // User 表的数据操作对象
     UserModel _userModel;

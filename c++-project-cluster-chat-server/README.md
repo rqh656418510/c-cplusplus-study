@@ -9,16 +9,19 @@
 - 用户注册
 
 ``` json
-{"msgId": 3, "name": "jim", "password": "123456"}
+{"msgType": 3, "name": "jim", "password": "123456"}
 ```
 
 - 用户登录
 
 ``` json
-{"msgId": 1, "id": 22, "password": "123456"}
+{"msgType": 1, "id": 22, "password": "123456"}
 ```
 
-### 博客教程
+- 一对一聊天
 
-- [基于 C++ 开发集群聊天服务器](https://www.techgrow.cn/posts/e635f0aa.html)
+``` json
+{"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "toId": 24}
 
+{"msgType": 5, "fromId": 24, "fromName": "peter", "fromMsg": "hello", "toId": 22}
+```

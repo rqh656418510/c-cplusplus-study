@@ -47,6 +47,7 @@ void ChatServer::start() {
 void ChatServer::onConnection(const TcpConnectionPtr& conn) {
     // 断开连接（释放资源）
     if (!conn->connected()) {
+        ChatService::instance()->clientCloseExcetpion(conn);
         conn->shutdown();
     }
 }
@@ -57,13 +58,18 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
     string message = buf->retrieveAllAsString();
 
     // 打印日志信息
-    LOG_DEBUG << "server receive message : " << message;
+    LOG_DEBUG << "server received message : " << message;
 
     // JSON 字符串反序列化
     json jsonObj = json::parse(message);
 
+    // 非法消息直接忽略处理
+    if (!jsonObj.contains("msgType")) {
+        return;
+    }
+
     // 获取消息处理器
-    auto msgHandler = ChatService::instance()->getMsgHandler(jsonObj["msgId"].get<int>());
+    auto msgHandler = ChatService::instance()->getMsgHandler(jsonObj["msgType"].get<int>());
 
     // 调用消息处理器，执行相应的业务处理
     msgHandler(conn, make_shared<json>(jsonObj), time);

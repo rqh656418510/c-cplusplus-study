@@ -21,6 +21,8 @@ ChatService::ChatService() {
         {MsgType::LOGIN_MSG, bind(&ChatService::login, this, placeholders::_1, placeholders::_2, placeholders::_3)});
     _msgHandlerMap.insert(
         {MsgType::REGISTER_MSG, bind(&ChatService::reg, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    _msgHandlerMap.insert({MsgType::SINGLE_CHAT_MSG,
+                           bind(&ChatService::singleChat, this, placeholders::_1, placeholders::_2, placeholders::_3)});
 }
 
 // 获取单例对象
@@ -61,11 +63,20 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             json response;
             response["errNum"] = 2;
             response["errMsg"] = "该账号在其他设备已登录";
-            response["msgId"] = MsgType::LOGIN_MSG_ACK;
+            response["msgType"] = MsgType::LOGIN_MSG_ACK;
             conn->send(response.dump());
         }
         // 登录成功
         else {
+            // 获取互斥锁
+            unique_lock<mutex> lock(_connMapmutex);
+
+            // 存储在线用户的通信连接
+            _userConnMap.insert({user.getId(), conn});
+
+            // 释放互斥锁
+            lock.unlock();
+
             // 更新用户登录状态
             user.setState("online");
             _userModel.updateState(user);
@@ -75,7 +86,7 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             response["errNum"] = 0;
             response["userId"] = user.getId();
             response["userName"] = user.getName();
-            response["msgId"] = MsgType::LOGIN_MSG_ACK;
+            response["msgType"] = MsgType::LOGIN_MSG_ACK;
             conn->send(response.dump());
         }
     }
@@ -85,7 +96,7 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
         json response;
         response["errNum"] = 2;
         response["errMsg"] = "用户名或密码不正确";
-        response["msgId"] = MsgType::LOGIN_MSG_ACK;
+        response["msgType"] = MsgType::LOGIN_MSG_ACK;
         conn->send(response.dump());
     }
 }
@@ -103,7 +114,7 @@ void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data
         json response;
         response["errNum"] = 1;
         response["errMsg"] = "用户名已被注册";
-        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        response["msgType"] = MsgType::REGISTER_MSG_ACK;
         conn->send(response.dump());
         return;
     }
@@ -118,7 +129,7 @@ void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data
         json response;
         response["errNum"] = 0;
         response["userId"] = newUser.getId();
-        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        response["msgType"] = MsgType::REGISTER_MSG_ACK;
         conn->send(response.dump());
     }
     // 插入用户记录失败
@@ -126,7 +137,70 @@ void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data
         // 返回数据给客户端
         json response;
         response["errNum"] = 1;
-        response["msgId"] = MsgType::REGISTER_MSG_ACK;
+        response["msgType"] = MsgType::REGISTER_MSG_ACK;
         conn->send(response.dump());
+    }
+}
+
+// 处理一对一聊天消息
+void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    // 消息发送者的用户ID
+    int fromId = (*data)["fromId"].get<int>();
+
+    // 消息发送者的用户名称
+    string fromName = (*data)["fromName"].get<string>();
+
+    // 消息发送者的消息内容
+    string fromMsg = (*data)["fromMsg"].get<string>();
+
+    // 消息接收者的用户ID
+    int toId = (*data)["toId"].get<int>();
+
+    // 消息接收者是否在线
+    bool toOnline = false;
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(_connMapmutex);
+
+    auto it = _userConnMap.find(toId);
+    if (it != _userConnMap.end()) {
+        // 用户在线，发送消息给消息接收者
+        toOnline = true;
+        it->second->send((*data).dump());
+    }
+
+    // 释放互斥锁
+    lock.unlock();
+
+    // 用户不在线，存储离线消息
+    if (!toOnline) {
+        // TODO 存储离线消息
+    }
+}
+
+// 处理用户连接异常关闭的情况
+void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
+    // 用户信息
+    User user;
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(_connMapmutex);
+
+    // 从Map表中删除用户对应的连接信息
+    for (auto it = _userConnMap.begin(); it != _userConnMap.end(); ++it) {
+        if (it->second == conn) {
+            user.setId(it->first);
+            _userConnMap.erase(it->first);
+            break;
+        }
+    }
+
+    // 释放互斥锁
+    lock.unlock();
+
+    // 更新用户的登录状态信息
+    if (user.getId() != -1) {
+        user.setState("offline");
+        _userModel.updateState(user);
     }
 }
