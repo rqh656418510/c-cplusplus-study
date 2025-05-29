@@ -30,6 +30,7 @@ bool MySQL::connect() {
         LOG_INFO << "connect mysql success!";
     } else {
         LOG_ERROR << "connect mysql failed!";
+        LOG_ERROR << mysql_error(_conn);
     }
 
     return p;
@@ -39,7 +40,8 @@ bool MySQL::connect() {
 bool MySQL::update(string sql) {
     LOG_DEBUG << sql;
     if (mysql_query(_conn, sql.c_str())) {
-        LOG_ERROR << __FILE__ << ":" << __LINE__ << ":" << sql << " execute failed!";
+        LOG_ERROR << __FILE__ << ":" << __LINE__ << " " << sql << " execute failed!";
+        LOG_ERROR << mysql_error(_conn);
         return false;
     }
 
@@ -50,7 +52,8 @@ bool MySQL::update(string sql) {
 MYSQL_RES *MySQL::query(string sql) {
     LOG_DEBUG << sql;
     if (mysql_query(_conn, sql.c_str())) {
-        LOG_ERROR << __FILE__ << ":" << __LINE__ << ":" << sql << " execute failed!";
+        LOG_ERROR << __FILE__ << ":" << __LINE__ << " " << sql << " execute failed!";
+        LOG_ERROR << mysql_error(_conn);
         return nullptr;
     }
 
