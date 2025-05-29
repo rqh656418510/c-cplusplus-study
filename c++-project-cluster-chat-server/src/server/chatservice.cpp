@@ -184,7 +184,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
     // 用户不在线，存储离线消息
     if (!toOnline) {
-        OfflineMessage msg(toId, (*data).dump(), getTimestamp());
+        OfflineMessage msg(toId, (*data).dump(), timestamp());
         // 新增离线消息
         _offflineMessageModel.insert(msg);
     }
@@ -201,7 +201,9 @@ void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
     // 从Map表中删除用户对应的连接信息
     for (auto it = _userConnMap.begin(); it != _userConnMap.end(); ++it) {
         if (it->second == conn) {
+            // 记录用户ID
             user.setId(it->first);
+            // 移除连接信息
             _userConnMap.erase(it->first);
             break;
         }

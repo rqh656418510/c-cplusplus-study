@@ -11,11 +11,6 @@ public:
     OfflineMessage() {
     }
 
-    OfflineMessage(string message, long createtime) {
-        this->message = message;
-        this->createtime = createtime;
-    }
-
     OfflineMessage(int userid, string message, long createtime) {
         this->userid = userid;
         this->message = message;

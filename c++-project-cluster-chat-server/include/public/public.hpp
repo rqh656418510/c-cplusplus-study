@@ -18,7 +18,7 @@ enum MsgType {
 };
 
 // 获取当前时间戳（毫秒）
-inline long getTimestamp() {
+inline long timestamp() {
     // 获取当前系统时间点
     chrono::system_clock::time_point now = chrono::system_clock::now();
     // 转换为时间戳

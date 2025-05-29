@@ -57,7 +57,7 @@ MYSQL_RES *MySQL::query(string sql) {
         return nullptr;
     }
 
-    return mysql_use_result(_conn);
+    return mysql_store_result(_conn);
 }
 
 // 获取数据库连接

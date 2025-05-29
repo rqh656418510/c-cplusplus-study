@@ -14,7 +14,7 @@ User UserModel::select(int id) {
     char sql[1024] = {0};
 
     // 拼接 SQL 语句
-    sprintf(sql, "select id, name, password, state from user where id = '%d'", id);
+    sprintf(sql, "select id, name, password, state from user where id = %d", id);
 
     // 执行查询操作
     MySQL mysql;
@@ -95,7 +95,7 @@ bool UserModel::updateState(User& user) {
     char sql[1024] = {0};
 
     // 拼接 SQL 语句
-    sprintf(sql, "update user set state = '%s' where id = '%d'", user.getState().c_str(), user.getId());
+    sprintf(sql, "update user set state = '%s' where id = %d", user.getState().c_str(), user.getId());
 
     // 执行 SQL 语句
     MySQL mysql;
