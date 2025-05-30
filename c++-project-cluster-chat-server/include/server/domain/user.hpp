@@ -16,13 +16,6 @@ public:
         this->state = "offline";
     }
 
-    User(int id, string name, string password, string state) {
-        this->id = id;
-        this->name = name;
-        this->password = password;
-        this->state = state;
-    }
-
     User(string name, string password) {
         this->id = -1;
         this->name = name;
@@ -30,19 +23,17 @@ public:
         this->state = "offline";
     }
 
-    void setId(int id) {
+    User(int id, string name, string state) {
         this->id = id;
-    }
-
-    void setName(string name) {
         this->name = name;
+        this->password = "";
+        this->state = state;
     }
 
-    void setPassword(string password) {
+    User(int id, string name, string password, string state) {
+        this->id = id;
+        this->name = name;
         this->password = password;
-    }
-
-    void setState(string state) {
         this->state = state;
     }
 
@@ -60,6 +51,22 @@ public:
 
     string getState() const {
         return this->state;
+    }
+
+    void setId(int id) {
+        this->id = id;
+    }
+
+    void setName(string name) {
+        this->name = name;
+    }
+
+    void setPassword(string password) {
+        this->password = password;
+    }
+
+    void setState(string state) {
+        this->state = state;
     }
 
 private:

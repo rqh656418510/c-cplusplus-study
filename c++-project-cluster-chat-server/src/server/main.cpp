@@ -22,7 +22,7 @@ int main() {
     // 打印日志信息
     LOG_INFO << "chat server start ...";
 
-    // 注册 SIGINT 信号处理器
+    // 注册中断信号（SIGINT）的处理器
     signal(SIGINT, resetHandler);
 
     // 定义聊天服务器

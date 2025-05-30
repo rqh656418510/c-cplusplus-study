@@ -70,5 +70,6 @@ vector<OfflineMessage> OfflineMessageModel::select(int userId) {
         }
     }
 
+    // 返回查询结果
     return results;
 }

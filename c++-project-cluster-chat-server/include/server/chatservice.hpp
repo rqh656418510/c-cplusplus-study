@@ -12,6 +12,7 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "friendmodel.hpp"
 #include "json.hpp"
 #include "offlinemessagemodel.hpp"
 #include "usermodel.hpp"
@@ -41,11 +42,17 @@ public:
     // 处理一对一聊天消息
     void singleChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
+    // 处理添加好友消息
+    void addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgId);
 
     // 处理用户连接异常关闭的情况
     void clientCloseExcetpion(const TcpConnectionPtr& conn);
+
+    // 获取当前用户的 ID
+    int getCurrUserId(const TcpConnectionPtr& conn);
 
     // 处理服务器（Ctrl+C）退出后的业务重置
     void reset();
@@ -74,6 +81,9 @@ private:
 
     // OfflineMessage 表的数据操作对象
     OfflineMessageModel _offflineMessageModel;
+
+    // Friend 表的数据操作对象
+    FriendModel _friendModel;
 };
 
 #endif  // CHATSERVICE_H

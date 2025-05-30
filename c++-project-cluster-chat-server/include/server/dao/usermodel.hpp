@@ -1,7 +1,11 @@
 #ifndef USERMODEL_H
 #define USERMODEL_H
 
+#include "json.hpp"
 #include "user.hpp"
+
+// 类型重定义
+using json = nlohmann::json;
 
 // User 表的数据操作类
 class UserModel {
@@ -21,5 +25,12 @@ public:
     // 重置所有用户的登录状态
     bool resetState();
 };
+
+// JSON 序列化
+inline void to_json(json& j, const User& user) {
+    j["id"] = user.getId();
+    j["name"] = user.getName();
+    j["state"] = user.getState();
+}
 
 #endif  // USERMODEL_H

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 
+#include "friendmodel.hpp"
 #include "offlinemessagemodel.hpp"
 #include "public.hpp"
 #include "usermodel.hpp"
@@ -25,6 +26,8 @@ ChatService::ChatService() {
         {MsgType::REGISTER_MSG, bind(&ChatService::reg, this, placeholders::_1, placeholders::_2, placeholders::_3)});
     _msgHandlerMap.insert({MsgType::SINGLE_CHAT_MSG,
                            bind(&ChatService::singleChat, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    _msgHandlerMap.insert({MsgType::ADD_FRIEND_MSG,
+                           bind(&ChatService::addFriend, this, placeholders::_1, placeholders::_2, placeholders::_3)});
 }
 
 // 获取单例对象
@@ -93,12 +96,20 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             // 查询该用户是否有离线消息
             vector<OfflineMessage> messages = _offflineMessageModel.select(user.getId());
             if (!messages.empty()) {
-                // 返回所有离线消息给该用户
+                // 返回该用户的所有离线消息
                 response["offlinemsg"] = messages;
                 // 读取该用户的离线消息后，将该用户的离线消息全部删除掉
                 _offflineMessageModel.remove(user.getId());
             }
 
+            // 查询该用户的好友列表
+            vector<User> friends = _friendModel.select(user.getId());
+            if (!friends.empty()) {
+                // 返回该用户的好友列表
+                response["friends"] = friends;
+            }
+
+            // 返回数据给客户端
             conn->send(response.dump());
         }
     }
@@ -149,6 +160,7 @@ void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data
         // 返回数据给客户端
         json response;
         response["errNum"] = 1;
+        response["errMsg"] = "用户名注册失败";
         response["msgType"] = MsgType::REGISTER_MSG_ACK;
         conn->send(response.dump());
     }
@@ -190,6 +202,32 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     }
 }
 
+// 处理添加好友消息
+void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    int userid = (*data)["userid"].get<int>();
+    int friendid = (*data)["friendid"].get<int>();
+
+    // 控制不能添加自己为好友
+    if (getCurrUserId(conn) == friendid) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = 3;
+        response["errMsg"] = "不允许添加自己为好友";
+        response["msgType"] = MsgType::ADD_FRIEND_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
+
+    // 新增好友关系
+    _friendModel.insert(userid, friendid);
+
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = 0;
+    response["msgType"] = MsgType::ADD_FRIEND_MSG_ACK;
+    conn->send(response.dump());
+}
+
 // 处理用户连接异常关闭的情况
 void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
     // 用户信息
@@ -217,6 +255,29 @@ void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
         user.setState("offline");
         _userModel.updateState(user);
     }
+}
+
+// 获取当前用户的 ID
+int ChatService::getCurrUserId(const TcpConnectionPtr& conn) {
+    // 当前用户的 ID
+    int userid = -1;
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(_connMapmutex);
+
+    // 从Map表中删除用户对应的连接信息
+    for (auto it = _userConnMap.begin(); it != _userConnMap.end(); ++it) {
+        if (it->second == conn) {
+            // 记录当前连接对应的用户ID
+            userid = it->first;
+            break;
+        }
+    }
+
+    // 释放互斥锁
+    lock.unlock();
+
+    return userid;
 }
 
 // 处理服务器（Ctrl+C）退出后的业务重置
