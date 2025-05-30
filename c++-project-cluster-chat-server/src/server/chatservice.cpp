@@ -218,3 +218,9 @@ void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
         _userModel.updateState(user);
     }
 }
+
+// 处理服务器（Ctrl+C）退出后的业务重置
+void ChatService::reset() {
+    // 重置所有用户的登录状态
+    _userModel.resetState();
+}

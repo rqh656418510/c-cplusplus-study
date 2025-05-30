@@ -105,3 +105,19 @@ bool UserModel::updateState(User& user) {
 
     return false;
 }
+
+// 重置所有用户的登录状态
+bool UserModel::resetState() {
+    char sql[1024] = {0};
+
+    // 拼接 SQL 语句
+    sprintf(sql, "update user set state = 'offline' where state = 'online'");
+
+    // 执行 SQL 语句
+    MySQL mysql;
+    if (mysql.connect() && mysql.update(sql)) {
+        return true;
+    }
+
+    return false;
+}

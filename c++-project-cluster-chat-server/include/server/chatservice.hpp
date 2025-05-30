@@ -47,6 +47,9 @@ public:
     // 处理用户连接异常关闭的情况
     void clientCloseExcetpion(const TcpConnectionPtr& conn);
 
+    // 处理服务器（Ctrl+C）退出后的业务重置
+    void reset();
+
 private:
     // 私有构造函数
     ChatService();

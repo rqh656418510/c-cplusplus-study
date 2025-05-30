@@ -17,6 +17,9 @@ public:
 
     // 更新用户的登录状态
     bool updateState(User& user);
+
+    // 重置所有用户的登录状态
+    bool resetState();
 };
 
 #endif  // USERMODEL_H

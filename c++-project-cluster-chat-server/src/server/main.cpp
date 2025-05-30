@@ -1,11 +1,19 @@
 #include <muduo/base/Logging.h>
+#include <signal.h>
 
 #include <iostream>
 
 #include "chatserver.hpp"
+#include "chatservice.hpp"
 
 using namespace std;
 using namespace muduo;
+
+// 处理服务器（Ctrl+C）退出后的业务重置
+void resetHandler(int signal) {
+    ChatService::instance()->reset();
+    exit(0);
+}
 
 int main() {
     // 设置日志级别为 DEBUG
@@ -13,6 +21,9 @@ int main() {
 
     // 打印日志信息
     LOG_INFO << "chat server start ...";
+
+    // 注册 SIGINT 信号处理器
+    signal(SIGINT, resetHandler);
 
     // 定义聊天服务器
     EventLoop loop;
@@ -24,8 +35,6 @@ int main() {
 
     // 以阻塞的方式等待新客户端的连接、已连接客户端的读写事件等
     loop.loop();
-
-    char c = getchar();
 
     return 0;
 }
