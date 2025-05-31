@@ -19,15 +19,27 @@ using namespace muduo;
 
 // 构造函数
 ChatService::ChatService() {
-    // 关联消息ID和消息处理器
+    // 关联登录业务
     _msgHandlerMap.insert(
         {MsgType::LOGIN_MSG, bind(&ChatService::login, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联注册业务
     _msgHandlerMap.insert(
         {MsgType::REGISTER_MSG, bind(&ChatService::reg, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联一对一聊天业务
     _msgHandlerMap.insert({MsgType::SINGLE_CHAT_MSG,
                            bind(&ChatService::singleChat, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联添加好友业务
     _msgHandlerMap.insert({MsgType::ADD_FRIEND_MSG,
                            bind(&ChatService::addFriend, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联添加群组业务
+    _msgHandlerMap.insert({MsgType::CREATE_GROUP_MSG, bind(&ChatService::createGroup, this, placeholders::_1,
+                                                           placeholders::_2, placeholders::_3)});
+    // 关联加入群组业务
+    _msgHandlerMap.insert({MsgType::JOIN_GROUP_MSG,
+                           bind(&ChatService::joinGroup, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联群聊天业务
+    _msgHandlerMap.insert({MsgType::GROUP_CHAT_MSG,
+                           bind(&ChatService::groupChat, this, placeholders::_1, placeholders::_2, placeholders::_3)});
 }
 
 // 获取单例对象
@@ -225,6 +237,92 @@ void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>
     json response;
     response["errNum"] = 0;
     response["msgType"] = MsgType::ADD_FRIEND_MSG_ACK;
+    conn->send(response.dump());
+}
+
+// 处理创建群组消息
+void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    string groupname = (*data)["groupname"].get<string>();
+    string groupdesc = (*data)["groupdesc"].get<string>();
+
+    // 当前用户的 ID
+    int userid = getCurrUserId(conn);
+
+    // 新增群组
+    Group group(groupname, groupdesc);
+    bool result = _groupModel.insert(group);
+
+    // 添加群组的创建人信息
+    if (result && group.getId() != -1) {
+        GroupUser groupUser;
+        groupUser.setGroupId(group.getId());
+        groupUser.setUserId(userid);
+        groupUser.setGroupRole("creator");
+        // 新增群组和用户的关联信息
+        _groupUserModel.insert(groupUser);
+    }
+
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = 0;
+    response["msgType"] = MsgType::CREATE_GROUP_MSG_ACK;
+    conn->send(response.dump());
+}
+
+// 处理加入群组消息
+void ChatService::joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    int groupid = (*data)["groupid"].get<int>();
+    int userid = (*data)["userid"].get<int>();
+
+    // 新增群组和用户的关联信息
+    GroupUser groupUser(groupid, userid, "normal");
+    _groupUserModel.insert(groupUser);
+
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = 0;
+    response["msgType"] = MsgType::JOIN_GROUP_MSG_ACK;
+    conn->send(response.dump());
+}
+
+// 处理群聊天消息
+void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    int groupid = (*data)["groupid"].get<int>();
+    string groupmsg = (*data)["groupmsg"].get<string>();
+
+    // 当前用户的 ID
+    int userid = getCurrUserId(conn);
+
+    // 查询群组内的用户（除了当前用户）
+    vector<User> users = _groupUserModel.selectGroupUsers(groupid, userid);
+
+    // 处理群聊消息
+    if (!users.empty()) {
+        // 获取互斥锁
+        unique_lock<mutex> lock;
+
+        // 遍历群组内的用户
+        for (User& user : users) {
+            // 获取连接信息
+            auto it = _userConnMap.find(user.getId());
+            if (it != _userConnMap.end()) {
+                // 用户在线，转发群聊消息
+                it->second->send((*data).dump());
+            } else {
+                // 用户不在线，存储离线群聊消息
+                OfflineMessage message;
+                message.setUserId(user.getId());
+                message.setCreateTime(timestamp());
+                message.setMessage((*data).dump());
+                _offflineMessageModel.insert(message);
+            }
+        }
+    }
+
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = 0;
+    response["msgType"] = MsgType::GROUP_CHAT_MSG_ACK;
     conn->send(response.dump());
 }
 

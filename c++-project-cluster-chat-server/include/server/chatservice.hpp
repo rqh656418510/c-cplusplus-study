@@ -47,6 +47,15 @@ public:
     // 处理添加好友消息
     void addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
+    // 处理创建群组消息
+    void createGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
+    // 处理加入群组消息
+    void joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
+    // 处理群聊天消息
+    void groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgId);
 
