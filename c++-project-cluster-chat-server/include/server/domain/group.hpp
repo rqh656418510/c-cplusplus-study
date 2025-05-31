@@ -2,6 +2,9 @@
 #define GROUP_H
 
 #include <iostream>
+#include <vector>
+
+#include "user.hpp"
 
 using namespace std;
 
@@ -35,6 +38,10 @@ public:
         return this->groupdesc;
     }
 
+    vector<User> getUsers() {
+        return this->users;
+    }
+
     void setId(int id) {
         this->id = id;
     }
@@ -48,9 +55,10 @@ public:
     }
 
 private:
-    int id;            // 群组 ID
-    string groupname;  // 群组的名称
-    string groupdesc;  // 群组的描述
+    int id;              // 群组 ID
+    string groupname;    // 群组的名称
+    string groupdesc;    // 群组的描述
+    vector<User> users;  // 群组内的所有用户
 };
 
 #endif  // GROUP_H

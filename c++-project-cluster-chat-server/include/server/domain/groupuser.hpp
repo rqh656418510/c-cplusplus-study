@@ -44,7 +44,7 @@ public:
 private:
     int groupid;       // 群组 ID
     int userid;        // 用户 ID
-    string grouprole;  // 群组角色
+    string grouprole;  // 群组内的角色
 };
 
 #endif  // GROUPUSER_H

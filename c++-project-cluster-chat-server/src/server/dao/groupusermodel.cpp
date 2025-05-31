@@ -2,7 +2,7 @@
 
 #include "db.h"
 
-// 添加用户与群组关联
+// 添加用户与群组的关联信息
 bool GroupUserModel::insert(const GroupUser& groupUser) {
     char sql[1024] = {0};
 
@@ -50,10 +50,33 @@ vector<Group> GroupUserModel::select(int userId) {
         mysql_free_result(res);
     }
 
+    // 查询群组内的所有用户
+    for (Group& group : result) {
+        // 拼接 SQL 语句
+        sprintf(sql,
+                "select u.id, u.name, u.state from groupuser gu inner join user u on gu.userid = u.id where gu.groupid "
+                "= %d",
+                group.getId());
+
+        // 执行 SQL 语句
+        MYSQL_RES* res2 = mysql.query(sql);
+        if (res2 != nullptr && mysql_num_rows(res2) > 0) {
+            MYSQL_ROW row2;
+            while ((row2 = mysql_fetch_row(res2)) != nullptr) {
+                int id = atoi(row2[0]);
+                string name = row2[1];
+                string state = row2[2];
+                group.getUsers().emplace_back(id, name, state);
+            }
+        }
+        // 释放资源
+        mysql_free_result(res2);
+    }
+
     return result;
 }
 
-// 根据指定的 groupId 查询群组用户的列表，并排除 excludeUserId
+// 根据指定的 groupId，查询该群组的用户列表，并排除 excludeUserId
 vector<User> GroupUserModel::selectGroupUsers(int groupId, int excludeUserId) {
     char sql[1024] = {0};
 
