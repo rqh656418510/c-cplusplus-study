@@ -7,6 +7,18 @@
 
 #include <chrono>
 
+// 错误编码
+enum ErrorCode {
+    SUCCESS = 0,           // 请求处理成功
+    REGISTER_FAIL,         // 注册失败
+    REPEAT_REGISTER,       // 用户名已被注册
+    LOGIN_AUTH_FAIL,       // 用户名或密码不正确
+    REPEAT_LOGIN,          // 账号在其他设备已登录
+    REQUIRE_LOGIN,         // 当前用户未登录
+    ADD_FRIEND_FAIL,       // 不允许添加自己为好友
+    INVALID_MESSAGE_TYPE,  // 消息类型无效
+};
+
 // 消息类型
 enum MsgType {
     LOGIN_MSG = 1,         // 登录消息
@@ -14,6 +26,7 @@ enum MsgType {
     REGISTER_MSG,          // 注册消息
     REGISTER_MSG_ACK,      // 注册响应消息
     SINGLE_CHAT_MSG,       // 一对一聊天消息
+    SINGLE_CHAT_MSG_ACK,   // 一对一聊天响应消息
     ADD_FRIEND_MSG,        // 添加好友消息
     ADD_FRIEND_MSG_ACK,    // 添加好友响应消息
     CREATE_GROUP_MSG,      // 创建群组消息

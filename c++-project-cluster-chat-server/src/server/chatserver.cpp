@@ -66,11 +66,32 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
 
     // 非法消息直接忽略处理
     if (!jsonObj.contains("msgType")) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = ErrorCode::INVALID_MESSAGE_TYPE;
+        response["errMsg"] = "消息类型无效";
+        conn->send(response.dump());
         return;
     }
 
+    // 消息类型
+    int msgType = jsonObj["msgType"].get<int>();
+
+    // 统一验证用户是否已登录
+    if (msgType != MsgType::LOGIN_MSG && msgType != MsgType::REGISTER_MSG) {
+        int userid = ChatService::instance()->getCurrUserId(conn);
+        if (userid == -1) {
+            // 返回数据给客户端
+            json response;
+            response["errNum"] = ErrorCode::REQUIRE_LOGIN;
+            response["errMsg"] = "请登录客户端";
+            conn->send(response.dump());
+            return;
+        }
+    }
+
     // 获取消息处理器
-    auto msgHandler = ChatService::instance()->getMsgHandler(jsonObj["msgType"].get<int>());
+    auto msgHandler = ChatService::instance()->getMsgHandler(msgType);
 
     // 调用消息处理器，执行相应的业务处理
     msgHandler(conn, make_shared<json>(jsonObj), time);

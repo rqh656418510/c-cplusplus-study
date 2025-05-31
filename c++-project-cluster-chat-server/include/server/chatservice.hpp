@@ -57,16 +57,13 @@ public:
     void groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
     // 获取消息对应的处理器
-    MsgHandler getMsgHandler(int msgId);
+    MsgHandler getMsgHandler(int msgType);
 
     // 处理用户连接异常关闭的情况
     void clientCloseExcetpion(const TcpConnectionPtr& conn);
 
     // 获取当前用户的 ID
     int getCurrUserId(const TcpConnectionPtr& conn);
-
-    // 响应未登录的错误信息
-    void reponseRequireLogin(const TcpConnectionPtr& conn);
 
     // 处理服务器（Ctrl+C）退出后的业务重置
     void reset();
