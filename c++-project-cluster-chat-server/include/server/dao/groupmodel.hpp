@@ -8,7 +8,7 @@
 // Group 表的数据操作类
 class GroupModel {
     // 新增群组
-    bool insert(const Group& group);
+    bool insert(Group& group);
 
     // 查询所有群组
     vector<Group> select();

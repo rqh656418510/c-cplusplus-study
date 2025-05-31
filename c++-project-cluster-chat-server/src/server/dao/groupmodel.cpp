@@ -5,7 +5,7 @@
 #include "db.h"
 
 // 新增群组
-bool GroupModel::insert(const Group& group) {
+bool GroupModel::insert(Group& group) {
     char sql[1024] = {0};
 
     // 拼接 SQL 语句
@@ -15,6 +15,10 @@ bool GroupModel::insert(const Group& group) {
     // 执行 SQL 语句
     MySQL mysql;
     if (mysql.connect() && mysql.update(sql)) {
+        // 获取插入新群组的ID
+        uint64_t id = mysql_insert_id(mysql.getConnection());
+        // 设置新群组的 ID
+        group.setId(id);
         return true;
     }
 
