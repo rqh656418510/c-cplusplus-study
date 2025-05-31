@@ -13,6 +13,8 @@
 #include <unordered_map>
 
 #include "friendmodel.hpp"
+#include "groupmodel.hpp"
+#include "groupusermodel.hpp"
 #include "json.hpp"
 #include "offlinemessagemodel.hpp"
 #include "usermodel.hpp"
@@ -84,6 +86,12 @@ private:
 
     // Friend 表的数据操作对象
     FriendModel _friendModel;
+
+    // Group 表的数据操作对象
+    GroupModel _groupModel;
+
+    // GroupUser 表的数据操作对象
+    GroupUserModel _groupUserModel;
 };
 
 #endif  // CHATSERVICE_H

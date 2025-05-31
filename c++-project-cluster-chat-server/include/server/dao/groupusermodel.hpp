@@ -9,6 +9,7 @@
 
 // GroupUser 表的数据操作类
 class GroupUserModel {
+public:
     // 添加用户与用户组关联
     bool insert(const GroupUser& groupUser);
 

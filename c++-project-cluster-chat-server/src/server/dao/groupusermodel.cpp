@@ -8,7 +8,7 @@ bool GroupUserModel::insert(const GroupUser& groupUser) {
 
     // 拼接 SQL 语句
     sprintf(sql, "insert into groupuser(groupid, userid, grouprole) values(%d, %d, '%s')", groupUser.getGroupId(),
-            groupUser.getUserId(), groupUser.getGroupRole());
+            groupUser.getUserId(), groupUser.getGroupRole().c_str());
 
     // 执行 SQL 语句
     MySQL mysql;

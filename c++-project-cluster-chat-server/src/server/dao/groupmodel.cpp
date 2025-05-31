@@ -9,8 +9,8 @@ bool GroupModel::insert(Group& group) {
     char sql[1024] = {0};
 
     // 拼接 SQL 语句
-    sprintf(sql, "insert into allgroup(id, groupname, groupdesc) values(%d, '%s', '%s')", group.getId(),
-            group.getGroupName(), group.getGroupDesc());
+    sprintf(sql, "insert into allgroup(groupname, groupdesc) values('%s', '%s')", group.getGroupName().c_str(),
+            group.getGroupDesc().c_str());
 
     // 执行 SQL 语句
     MySQL mysql;

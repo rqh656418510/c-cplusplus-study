@@ -12,6 +12,7 @@ public:
     }
 
     Group(string groupname, string groupdesc) {
+        this->id = -1;
         this->groupname = groupname;
         this->groupdesc = groupdesc;
     }
@@ -31,7 +32,7 @@ public:
     }
 
     string getGroupDesc() const {
-        return this->getGroupDesc();
+        return this->groupdesc;
     }
 
     void setId(int id) {
