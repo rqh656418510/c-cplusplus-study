@@ -216,11 +216,19 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
 // 处理添加好友消息
 void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    int userid = (*data)["userid"].get<int>();
     int friendid = (*data)["friendid"].get<int>();
 
+    // 当前用户的 ID
+    int userid = getCurrUserId(conn);
+
+    // 判断用户是否已登录
+    if (userid == -1) {
+        reponseRequireLogin(conn);
+        return;
+    }
+
     // 控制不能添加自己为好友
-    if (getCurrUserId(conn) == friendid) {
+    if (userid == friendid) {
         // 返回数据给客户端
         json response;
         response["errNum"] = 3;
@@ -248,6 +256,12 @@ void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<jso
     // 当前用户的 ID
     int userid = getCurrUserId(conn);
 
+    // 判断用户是否已登录
+    if (userid == -1) {
+        reponseRequireLogin(conn);
+        return;
+    }
+
     // 新增群组
     Group group(groupname, groupdesc);
     bool result = _groupModel.insert(group);
@@ -272,7 +286,15 @@ void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<jso
 // 处理加入群组消息
 void ChatService::joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
     int groupid = (*data)["groupid"].get<int>();
-    int userid = (*data)["userid"].get<int>();
+
+    // 当前用户的 ID
+    int userid = getCurrUserId(conn);
+
+    // 判断用户是否已登录
+    if (userid == -1) {
+        reponseRequireLogin(conn);
+        return;
+    }
 
     // 新增群组和用户的关联信息
     GroupUser groupUser(groupid, userid, "normal");
@@ -292,6 +314,12 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
 
     // 当前用户的 ID
     int userid = getCurrUserId(conn);
+
+    // 判断用户是否已登录
+    if (userid == -1) {
+        reponseRequireLogin(conn);
+        return;
+    }
 
     // 查询群组内的用户（除了当前用户）
     vector<User> users = _groupUserModel.selectGroupUsers(groupid, userid);
@@ -376,6 +404,16 @@ int ChatService::getCurrUserId(const TcpConnectionPtr& conn) {
     lock.unlock();
 
     return userid;
+}
+
+// 响应未登录的错误信息
+void ChatService::reponseRequireLogin(const TcpConnectionPtr& conn) {
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = 4;
+    response["errMsg"] = "请登录客户端!";
+    response["msgType"] = MsgType::GROUP_CHAT_MSG_ACK;
+    conn->send(response.dump());
 }
 
 // 处理服务器（Ctrl+C）退出后的业务重置

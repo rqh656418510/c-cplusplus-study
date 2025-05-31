@@ -65,6 +65,9 @@ public:
     // 获取当前用户的 ID
     int getCurrUserId(const TcpConnectionPtr& conn);
 
+    // 响应未登录的错误信息
+    void reponseRequireLogin(const TcpConnectionPtr& conn);
+
     // 处理服务器（Ctrl+C）退出后的业务重置
     void reset();
 
