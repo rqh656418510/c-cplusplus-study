@@ -38,8 +38,12 @@ public:
         return this->groupdesc;
     }
 
-    vector<User> getUsers() {
+    vector<User>& getUsers() {
         return this->users;
+    }
+
+    const vector<User>& getUsers() const {
+        return users;
     }
 
     void setId(int id) {

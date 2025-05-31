@@ -5,6 +5,7 @@
 
 #include "group.hpp"
 #include "json.hpp"
+#include "usermodel.hpp"
 
 // 类型重定义
 using json = nlohmann::json;
@@ -27,6 +28,7 @@ inline void to_json(json& j, const Group& msg) {
     j["id"] = msg.getId();
     j["groupname"] = msg.getGroupName();
     j["groupdesc"] = msg.getGroupDesc();
+    j["groupusers"] = msg.getUsers();
 }
 
 #endif  // GROUPMODEL_H
