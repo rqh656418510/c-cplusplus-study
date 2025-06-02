@@ -370,7 +370,7 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
 // 处理退出登录消息
 void ChatService::loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
     // 关闭客户端连接
-    clientCloseExcetpion(conn);
+    clientConnClose(conn);
 
     // 返回数据给客户端
     json response;
@@ -379,8 +379,8 @@ void ChatService::loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>&
     conn->send(response.dump());
 }
 
-// 处理用户连接异常关闭的情况
-void ChatService::clientCloseExcetpion(const TcpConnectionPtr& conn) {
+// 处理用户连接关闭的情况
+void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
     // 用户信息
     User user;
 

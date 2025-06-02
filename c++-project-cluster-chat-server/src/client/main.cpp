@@ -30,9 +30,7 @@ using namespace std;
 // 类型重定义
 using json = nlohmann::json;
 
-// 控制主菜单页面程序
-bool isMainMenuRunning = false;
-// 记录当前登录的用户信息
+// 记录当前登录用户的基本信息
 User g_currentUser;
 // 记录当前登录用户的好友列表信息
 vector<User> g_currentUserFriendList;
@@ -41,18 +39,20 @@ vector<Group> g_currentUserGroupList;
 
 // 用于读写线程之间的通信
 sem_t rwsem;
+// 控制主菜单页面程序运行
+bool isMainMenuRunning = false;
 // 记录登录状态
 atomic_bool g_isLoginSuccess{false};
 
 // 主聊天页面程序
 void mainMenu(int);
-// 接收线程
+// 接收到消息后的处理逻辑
 void readTaskHandler(int clientfd);
 
-// 显示当前登录成功用户的基本信息
+// 显示当前登录用户的基本信息
 void showCurrentUserData();
 
-// 聊天客户端程序实现，Main线程用作消息发送线程，子线程用作消息接收线程
+// 聊天客户端程序实现，主线程用作消息发送线程，子线程用作消息接收线程
 int main(int argc, char **argv) {
     if (argc < 3) {
         cerr << "command invalid! example: ./chat_client 127.0.0.1 6000" << endl;
@@ -88,13 +88,13 @@ int main(int argc, char **argv) {
     // 初始化读写线程通信用的信号量
     sem_init(&rwsem, 0, 0);
 
-    // 连接服务器成功，启动接收消息的子线程
+    // 连接服务器成功，启动一个接收消息的子线程
     thread readTask(readTaskHandler, clientfd);
     readTask.detach();
 
-    // Main线程用于接收用户输入，负责发送数据
+    // 主线程用于接收用户输入，负责发送数据
     for (;;) {
-        // 显示首页面菜单 登录、注册、退出
+        // 显示首页面菜单：登录、注册、退出
         cout << "========================" << endl;
         cout << "1. login" << endl;
         cout << "2. register" << endl;
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
         cout << "choice: ";
         int choice = 0;
         cin >> choice;
-        cin.get();  // 读掉缓冲区残留的回车
+        cin.get();  // 读掉缓冲区残留的回车键
 
         switch (choice) {
             // 登录业务
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
                 char pwd[50] = {0};
                 cout << "user id: ";
                 cin >> id;
-                cin.get();  // 读掉缓冲区残留的回车
+                cin.get();  // 读掉缓冲区残留的回车键
                 cout << "user password: ";
                 cin.getline(pwd, 50);
 
@@ -129,9 +129,10 @@ int main(int argc, char **argv) {
                     cerr << "send login msg error: " << request << endl;
                 }
 
-                // 等待信号量，由子线程处理完登录的响应消息后，通知Main线程继续执行
+                // 等待信号量，由子线程处理完登录的响应消息后，通知主线程继续执行
                 sem_wait(&rwsem);
 
+                // 用户登录成功
                 if (g_isLoginSuccess) {
                     // 进入聊天主菜单页面
                     isMainMenuRunning = true;
@@ -143,7 +144,7 @@ int main(int argc, char **argv) {
             case 2: {
                 char name[50] = {0};
                 char pwd[50] = {0};
-                cout << "username: ";
+                cout << "user name: ";
                 cin.getline(name, 50);
                 cout << "user password: ";
                 cin.getline(pwd, 50);
@@ -159,7 +160,7 @@ int main(int argc, char **argv) {
                     cerr << "send reg msg error: " << request << endl;
                 }
 
-                // 等待信号量，由子线程处理完注册的响应消息后，通知Main线程继续执行
+                // 等待信号量，由子线程处理完注册的响应消息后，通知主线程继续执行
                 sem_wait(&rwsem);
                 break;
             }
@@ -185,7 +186,7 @@ void doRegResponse(json &responsejs) {
     }
     // 注册成功
     else {
-        cout << "name register success, user id is " << responsejs["id"] << ", do not forget it!" << endl;
+        cout << "name register success, user id is " << responsejs["userId"] << ", do not forget it!" << endl;
     }
 }
 
@@ -198,9 +199,9 @@ void doLoginResponse(json &responsejs) {
     }
     // 登录成功
     else {
-        // 记录当前用户的id和name
-        g_currentUser.setId(responsejs["id"].get<int>());
-        g_currentUser.setName(responsejs["name"]);
+        // 记录当前登录用户的基本信息
+        g_currentUser.setId(responsejs["userId"].get<int>());
+        g_currentUser.setName(responsejs["userName"].get<string>());
 
         // 记录当前用户的好友列表信息
         if (responsejs.contains("friends")) {
@@ -235,13 +236,12 @@ void doLoginResponse(json &responsejs) {
                 json content = json::parse(message.getMessage());
                 // 离线消息的发送时间
                 string time = formatTimestampLocal(message.getCreateTime(), "%Y-%m-%d %H:%M:%S");
-
-                // 一对一聊天消息
+                // 打印一对一聊天消息
                 if (SINGLE_CHAT_MSG == content["msgType"].get<int>()) {
                     cout << time << " [" << content["fromId"] << "] " << content["fromName"].get<string>()
                          << " said: " << content["fromMsg"].get<string>() << endl;
                 }
-                // 群组聊天消息
+                // 打印群组聊天消息
                 else {
                     cout << "群聊消息[" << content["groupid"] << "]: " << time << " [" << content["fromId"] << "] "
                          << content["fromName"].get<string>() << " said: " << content["groupmsg"].get<string>() << endl;
@@ -332,13 +332,13 @@ void groupchat(int, string);
 void loginout(int, string);
 
 // 系统支持的客户端命令列表
-unordered_map<string, string> commandMap = {{"help", "显示所有支持的命令，格式help"},
-                                            {"chat", "一对一聊天，格式chat:friendid:message"},
-                                            {"addfriend", "添加好友，格式addfriend:friendid"},
-                                            {"creategroup", "创建群组，格式creategroup:groupname:groupdesc"},
-                                            {"joingroup", "加入群组，格式joingroup:groupid"},
-                                            {"groupchat", "群组聊天，格式groupchat:groupid:message"},
-                                            {"loginout", "退出登录，格式loginout"}};
+unordered_map<string, string> commandMap = {{"help", "显示所有支持的命令，格式 help"},
+                                            {"chat", "一对一聊天，格式 chat:friendid:message"},
+                                            {"addfriend", "添加好友，格式 addfriend:friendid"},
+                                            {"creategroup", "创建群组，格式 creategroup:groupname:groupdesc"},
+                                            {"joingroup", "加入群组，格式 joingroup:groupid"},
+                                            {"groupchat", "群组聊天，格式 groupchat:groupid:message"},
+                                            {"loginout", "退出登录，格式 loginout"}};
 
 // 注册系统支持的客户端命令处理
 unordered_map<string, function<void(int, string)>> commandHandlerMap = {

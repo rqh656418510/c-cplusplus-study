@@ -62,8 +62,8 @@ public:
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgType);
 
-    // 处理用户连接异常关闭的情况
-    void clientCloseExcetpion(const TcpConnectionPtr& conn);
+    // 处理用户连接关闭的情况
+    void clientConnClose(const TcpConnectionPtr& conn);
 
     // 获取当前用户的 ID
     int getCurrUserId(const TcpConnectionPtr& conn);
