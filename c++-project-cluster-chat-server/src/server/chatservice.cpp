@@ -13,6 +13,7 @@
 #include "offlinemessagemodel.hpp"
 #include "public.hpp"
 #include "usermodel.hpp"
+#include "utils.hpp"
 
 using namespace std;
 using namespace muduo;
@@ -40,6 +41,9 @@ ChatService::ChatService() {
     // 关联群聊天业务
     _msgHandlerMap.insert({MsgType::GROUP_CHAT_MSG,
                            bind(&ChatService::groupChat, this, placeholders::_1, placeholders::_2, placeholders::_3)});
+    // 关联退出登录业务
+    _msgHandlerMap.insert({MsgType::LOGIN_OUT_MSG,
+                           bind(&ChatService::loginOut, this, placeholders::_1, placeholders::_2, placeholders::_3)});
 }
 
 // 获取单例对象
@@ -119,6 +123,12 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
             if (!friends.empty()) {
                 // 返回该用户的好友列表
                 response["friends"] = friends;
+            }
+
+            // 查询该用户的群组列表
+            vector<Group> groups = _groupUserModel.select(user.getId());
+            if (!groups.empty()) {
+                response["groups"] = groups;
             }
 
             // 返回数据给客户端
@@ -333,6 +343,18 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
     json response;
     response["errNum"] = ErrorCode::SUCCESS;
     response["msgType"] = MsgType::GROUP_CHAT_MSG_ACK;
+    conn->send(response.dump());
+}
+
+// 处理退出登录消息
+void ChatService::loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    // 关闭客户端连接
+    clientCloseExcetpion(conn);
+
+    // 返回数据给客户端
+    json response;
+    response["errNum"] = ErrorCode::SUCCESS;
+    response["msgType"] = MsgType::LOGIN_OUT_MSG_ACK;
     conn->send(response.dump());
 }
 

@@ -24,11 +24,18 @@ public:
 };
 
 // JSON 序列化
-inline void to_json(json& j, const Group& msg) {
-    j["id"] = msg.getId();
-    j["groupname"] = msg.getGroupName();
-    j["groupdesc"] = msg.getGroupDesc();
-    j["groupusers"] = msg.getUsers();
+inline void to_json(json& j, const Group& group) {
+    j["id"] = group.getId();
+    j["groupname"] = group.getGroupName();
+    j["groupdesc"] = group.getGroupDesc();
+    j["groupusers"] = group.getUsers();
+}
+
+// JSON 反序列化
+inline void from_json(const json& j, Group& group) {
+    if (j.contains("id")) group.setId(j.at("id").get<int>());
+    if (j.contains("groupname")) group.setGroupName(j.at("groupname").get<string>());
+    if (j.contains("groupdesc")) group.setGroupDesc(j.at("groupdesc").get<string>());
 }
 
 #endif  // GROUPMODEL_H

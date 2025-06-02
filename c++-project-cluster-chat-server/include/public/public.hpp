@@ -5,8 +5,6 @@
  * 公共头文件
  */
 
-#include <chrono>
-
 // 错误编码
 enum ErrorCode {
     SUCCESS = 0,           // 请求处理成功
@@ -35,14 +33,8 @@ enum MsgType {
     JOIN_GROUP_MSG_ACK,    // 加入群组响应消息
     GROUP_CHAT_MSG,        // 群聊天消息
     GROUP_CHAT_MSG_ACK,    // 群聊天响应消息
+    LOGIN_OUT_MSG,         // 退出登录消息
+    LOGIN_OUT_MSG_ACK,     // 退出登录响应消息
 };
-
-// 获取当前时间戳（毫秒）
-inline long timestamp() {
-    // 获取当前系统时间点
-    chrono::system_clock::time_point now = chrono::system_clock::now();
-    // 转换为时间戳
-    return chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count();
-}
 
 #endif  // PUBLIC_H

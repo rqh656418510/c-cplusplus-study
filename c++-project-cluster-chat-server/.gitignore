@@ -46,4 +46,4 @@ Debug
 ### GCC G++ ###
 *.o
 *.out
-cluster_chat_server_test
+chat_server_test

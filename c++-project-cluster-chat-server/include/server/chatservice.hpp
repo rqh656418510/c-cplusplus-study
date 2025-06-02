@@ -56,6 +56,9 @@ public:
     // 处理群聊天消息
     void groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
 
+    // 处理退出登录消息
+    void loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time);
+
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgType);
 

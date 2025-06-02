@@ -30,7 +30,7 @@ inline void to_json(json& j, const OfflineMessage& msg) {
 }
 
 // JSON 反序列化
-inline void from_json(const json& j, OfflineMessage msg) {
+inline void from_json(const json& j, OfflineMessage& msg) {
     if (j.contains("userid")) msg.setUserId(j.at("userid").get<int>());
     if (j.contains("message")) msg.setMessage(j.at("message").get<string>());
     if (j.contains("createtime")) msg.setCreateTime(j.at("createtime").get<long>());

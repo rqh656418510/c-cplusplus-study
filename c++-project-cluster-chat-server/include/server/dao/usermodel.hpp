@@ -33,4 +33,11 @@ inline void to_json(json& j, const User& user) {
     j["state"] = user.getState();
 }
 
+// JSON 反序列化
+inline void from_json(const json& j, User& user) {
+    if (j.contains("id")) user.setId(j.at("id").get<int>());
+    if (j.contains("name")) user.setName(j.at("name").get<string>());
+    if (j.contains("state")) user.setState(j.at("state").get<string>());
+}
+
 #endif  // USERMODEL_H
