@@ -12,8 +12,8 @@
 #include "friendmodel.hpp"
 #include "offlinemessagemodel.hpp"
 #include "public.hpp"
+#include "times.hpp"
 #include "usermodel.hpp"
-#include "utils.hpp"
 
 using namespace std;
 using namespace muduo;
@@ -194,7 +194,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     int fromId = (*data)["fromId"].get<int>();
 
     // 消息发送者的用户名称
-    int fromName = (*data)["fromName"].get<int>();
+    string fromName = (*data)["fromName"].get<string>();
 
     // 消息发送者的消息内容
     string fromMsg = (*data)["fromMsg"].get<string>();
@@ -214,8 +214,10 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 获取消息接收者的连接信息
     auto it = _userConnMap.find(toId);
     if (it != _userConnMap.end()) {
-        // 用户在线，发送消息给消息接收者
+        // 记录消息接收者在线
         toOnline = true;
+        // 转发消息给消息接收者
+        (*data)["timestamp"] = timestamp;
         it->second->send((*data).dump());
     }
 
@@ -317,7 +319,7 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
     int fromId = (*data)["fromId"].get<int>();
 
     // 消息发送者的用户名称
-    int fromName = (*data)["fromName"].get<int>();
+    string fromName = (*data)["fromName"].get<string>();
 
     // 群组的ID
     int groupid = (*data)["groupid"].get<int>();
@@ -345,6 +347,7 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
             auto it = _userConnMap.find(user.getId());
             if (it != _userConnMap.end()) {
                 // 用户在线，转发群聊消息
+                (*data)["timestamp"] = timestamp;
                 it->second->send((*data).dump());
             } else {
                 // 用户不在线，存储离线群聊消息

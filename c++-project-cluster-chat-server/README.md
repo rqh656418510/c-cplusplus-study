@@ -22,7 +22,7 @@
 {"msgType": 1, "id": 23, "password": "123456"}
 ```
 
-- 一对一聊天
+- 发送一对一聊天消息
 
 ``` json
 {"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "toId": 23}
@@ -53,7 +53,9 @@
 - 发送群聊消息
 
 ``` json
-{"msgType": 12, "fromId": 22, "fromName": "jim", "groupid": 1, "groupmsg": "go to study c++"}
+{"msgType": 13, "fromId": 22, "fromName": "jim", "groupid": 1, "groupmsg": "go to study c++"}
+
+{"msgType": 13, "fromId": 23, "fromName": "tom", "groupid": 1, "groupmsg": "go to study rust"}
 ```
 
 ## 业务优化

@@ -21,9 +21,9 @@
 #include "offlinemessage.hpp"
 #include "offlinemessagemodel.hpp"
 #include "public.hpp"
+#include "times.hpp"
 #include "user.hpp"
 #include "usermodel.hpp"
-#include "utils.hpp"
 
 using namespace std;
 
@@ -49,8 +49,6 @@ void mainMenu(int);
 // 接收线程
 void readTaskHandler(int clientfd);
 
-// 获取系统时间（聊天信息需要添加时间信息）
-string getCurrentTime();
 // 显示当前登录成功用户的基本信息
 void showCurrentUserData();
 
@@ -415,14 +413,4 @@ void loginout(int clientfd, string) {
     } else {
         isMainMenuRunning = false;
     }
-}
-
-// 获取系统时间（聊天信息需要添加时间信息）
-string getCurrentTime() {
-    auto tt = chrono::system_clock::to_time_t(chrono::system_clock::now());
-    struct tm *ptm = localtime(&tt);
-    char date[60] = {0};
-    sprintf(date, "%d-%02d-%02d %02d:%02d:%02d", (int)ptm->tm_year + 1900, (int)ptm->tm_mon + 1, (int)ptm->tm_mday,
-            (int)ptm->tm_hour, (int)ptm->tm_min, (int)ptm->tm_sec);
-    return string(date);
 }
