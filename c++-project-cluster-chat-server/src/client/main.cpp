@@ -259,25 +259,27 @@ void doLoginResponse(json &responsejs) {
 void readTaskHandler(int clientfd) {
     for (;;) {
         char buffer[1024] = {0};
-        int len = recv(clientfd, buffer, 1024, 0);  // 阻塞了
+        int len = recv(clientfd, buffer, 1024, 0);  // 阻塞等待
         if (-1 == len || 0 == len) {
             close(clientfd);
             exit(-1);
         }
 
-        // 接收ChatServer转发的数据，反序列化生成json数据对象
+        // 接收ChatServer转发的数据，反序列化生成JSON数据对象
         json js = json::parse(buffer);
+
+        // 消息类型
         int msgtype = js["msgType"].get<int>();
+
         if (SINGLE_CHAT_MSG == msgtype) {
-            cout << js["time"].get<string>() << " [" << js["id"] << "]" << js["name"].get<string>()
-                 << " said: " << js["msg"].get<string>() << endl;
+            cout << time << " [" << js["fromId"] << "] " << js["fromName"].get<string>()
+                 << " said: " << js["fromMsg"].get<string>() << endl;
             continue;
         }
 
         if (GROUP_CHAT_MSG == msgtype) {
-            cout << "群消息[" << js["groupid"] << "]:" << js["time"].get<string>() << " [" << js["id"] << "]"
-                 << js["name"].get<string>() << " said: " << js["msg"].get<string>() << endl;
-            continue;
+            cout << "群聊消息[" << js["groupid"] << "]: " << time << " [" << js["fromId"] << "] "
+                 << js["fromName"].get<string>() << " said: " << js["groupmsg"].get<string>() << endl;
         }
 
         if (LOGIN_MSG_ACK == msgtype) {

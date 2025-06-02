@@ -25,9 +25,9 @@
 - 一对一聊天
 
 ``` json
-{"msgType": 5, "fromId": 22, "fromMsg": "hello", "toId": 23}
+{"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "toId": 23}
 
-{"msgType": 5, "fromId": 23, "fromMsg": "hello", "toId": 22}
+{"msgType": 5, "fromId": 23, "fromName": "tom", "fromMsg": "hello", "toId": 22}
 ```
 
 - 添加好友
@@ -53,7 +53,7 @@
 - 发送群聊消息
 
 ``` json
-{"msgType": 12, "groupid": 1, "groupmsg": "go to study c++"}
+{"msgType": 12, "fromId": 22, "fromName": "jim", "groupid": 1, "groupmsg": "go to study c++"}
 ```
 
 ## 业务优化

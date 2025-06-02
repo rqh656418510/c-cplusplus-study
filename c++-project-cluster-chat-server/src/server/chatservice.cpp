@@ -193,11 +193,17 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 消息发送者的用户ID
     int fromId = (*data)["fromId"].get<int>();
 
+    // 消息发送者的用户名称
+    int fromName = (*data)["fromName"].get<int>();
+
     // 消息发送者的消息内容
     string fromMsg = (*data)["fromMsg"].get<string>();
 
     // 消息接收者的用户ID
     int toId = (*data)["toId"].get<int>();
+
+    // 当前的时间戳
+    long timestamp = getTimestampMs();
 
     // 消息接收者是否在线
     bool toOnline = false;
@@ -218,7 +224,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
     // 用户不在线，存储离线消息
     if (!toOnline) {
-        OfflineMessage msg(toId, (*data).dump(), timestamp());
+        OfflineMessage msg(toId, (*data).dump(), timestamp);
         // 新增离线消息
         _offflineMessageModel.insert(msg);
     }
@@ -307,8 +313,20 @@ void ChatService::joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>
 
 // 处理群聊天消息
 void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
+    // 消息发送者的用户ID
+    int fromId = (*data)["fromId"].get<int>();
+
+    // 消息发送者的用户名称
+    int fromName = (*data)["fromName"].get<int>();
+
+    // 群组的ID
     int groupid = (*data)["groupid"].get<int>();
+
+    // 群组消息的内容
     string groupmsg = (*data)["groupmsg"].get<string>();
+
+    // 当前的时间戳
+    long timestamp = getTimestampMs();
 
     // 当前用户的 ID
     int userid = getCurrUserId(conn);
@@ -332,7 +350,7 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
                 // 用户不在线，存储离线群聊消息
                 OfflineMessage message;
                 message.setUserId(user.getId());
-                message.setCreateTime(timestamp());
+                message.setCreateTime(timestamp);
                 message.setMessage((*data).dump());
                 _offflineMessageModel.insert(message);
             }

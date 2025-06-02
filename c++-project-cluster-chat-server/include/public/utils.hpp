@@ -9,7 +9,7 @@
 #include <string>
 
 // 获取当前时间戳（毫秒）
-inline long timestamp() {
+inline long getTimestampMs() {
     using namespace std::chrono;
 
     // 获取当前系统的时间点
