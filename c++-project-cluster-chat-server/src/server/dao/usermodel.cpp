@@ -20,10 +20,10 @@ User UserModel::select(int id) {
     MySQL mysql;
     if (mysql.connect()) {
         // 执行 SQL 语句
-        MYSQL_RES* result = mysql.query(sql);
-        if (result != nullptr) {
+        MYSQL_RES* res = mysql.query(sql);
+        if (res != nullptr && mysql_num_rows(res) > 0) {
             // 获取查询结果
-            MYSQL_ROW row = mysql_fetch_row(result);
+            MYSQL_ROW row = mysql_fetch_row(res);
             // 封装返回的数据
             User user;
             user.setId(atoi(row[0]));
@@ -31,7 +31,7 @@ User UserModel::select(int id) {
             user.setPassword(row[2]);
             user.setState(row[3]);
             // 释放资源
-            mysql_free_result(result);
+            mysql_free_result(res);
             return user;
         }
     }

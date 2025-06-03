@@ -70,14 +70,14 @@ MsgHandler ChatService::getMsgHandler(int msgType) {
 
 // 处理登录业务
 void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    int id = (*data)["id"].get<int>();
+    string name = (*data)["name"].get<string>();
     string password = (*data)["password"].get<string>();
 
     // 查询用户信息
-    User user = _userModel.select(id);
+    User user = _userModel.selectByName(name);
 
     // 登录成功
-    if (user.getId() == id && user.getPassword() == password) {
+    if (user.getId() != -1 && user.getPassword() == password) {
         // 重复登录
         if (user.getState() == "online") {
             // 返回数据给客户端
@@ -174,6 +174,7 @@ void ChatService::reg(const TcpConnectionPtr& conn, const shared_ptr<json>& data
         json response;
         response["errNum"] = ErrorCode::SUCCESS;
         response["userId"] = newUser.getId();
+        response["userName"] = newUser.getName();
         response["msgType"] = MsgType::REGISTER_MSG_ACK;
         conn->send(response.dump());
     }

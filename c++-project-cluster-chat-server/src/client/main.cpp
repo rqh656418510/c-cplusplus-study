@@ -52,7 +52,9 @@ void readTaskHandler(int clientfd);
 // 显示当前登录用户的基本信息
 void showCurrentUserData();
 
-// 聊天客户端程序实现，主线程用作消息发送线程，子线程用作消息接收线程
+/////////////////////////////////////////////////////首页功能/////////////////////////////////////////////////////
+
+// 聊天客户端程序实现, 主线程用作消息发送线程, 子线程用作消息接收线程
 int main(int argc, char **argv) {
     if (argc < 3) {
         cerr << "command invalid! example: ./chat_client 127.0.0.1 6000" << endl;
@@ -88,13 +90,13 @@ int main(int argc, char **argv) {
     // 初始化读写线程通信用的信号量
     sem_init(&rwsem, 0, 0);
 
-    // 连接服务器成功，启动一个接收消息的子线程
+    // 连接服务器成功, 启动一个接收消息的子线程
     thread readTask(readTaskHandler, clientfd);
     readTask.detach();
 
-    // 主线程用于接收用户输入，负责发送数据
+    // 主线程用于接收用户输入, 负责发送数据
     for (;;) {
-        // 显示首页面菜单：登录、注册、退出
+        // 显示首页面菜单: 登录、注册、退出程序
         cout << "========================" << endl;
         cout << "1. login" << endl;
         cout << "2. register" << endl;
@@ -108,18 +110,17 @@ int main(int argc, char **argv) {
         switch (choice) {
             // 登录业务
             case 1: {
-                int id = 0;
-                char pwd[50] = {0};
-                cout << "user id: ";
-                cin >> id;
-                cin.get();  // 读掉缓冲区残留的回车键
+                char name[50] = {0};
+                char password[50] = {0};
+                cout << "user name: ";
+                cin.getline(name, 50);
                 cout << "user password: ";
-                cin.getline(pwd, 50);
+                cin.getline(password, 50);
 
                 json js;
                 js["msgType"] = LOGIN_MSG;
-                js["id"] = id;
-                js["password"] = pwd;
+                js["name"] = name;
+                js["password"] = password;
                 string request = js.dump();
 
                 g_isLoginSuccess = false;
@@ -129,7 +130,7 @@ int main(int argc, char **argv) {
                     cerr << "send login msg error: " << request << endl;
                 }
 
-                // 等待信号量，由子线程处理完登录的响应消息后，通知主线程继续执行
+                // 等待信号量, 由子线程处理完登录的响应消息后, 通知主线程继续执行
                 sem_wait(&rwsem);
 
                 // 用户登录成功
@@ -160,7 +161,7 @@ int main(int argc, char **argv) {
                     cerr << "send reg msg error: " << request << endl;
                 }
 
-                // 等待信号量，由子线程处理完注册的响应消息后，通知主线程继续执行
+                // 等待信号量, 由子线程处理完注册的响应消息后, 通知主线程继续执行
                 sem_wait(&rwsem);
                 break;
             }
@@ -182,11 +183,12 @@ int main(int argc, char **argv) {
 void doRegResponse(json &responsejs) {
     // 注册失败
     if (0 != responsejs["errNum"].get<int>()) {
-        cerr << "name is already exist, register error!" << endl;
+        cerr << "注册失败: " << responsejs["errMsg"].get<string>() << endl;
     }
     // 注册成功
     else {
-        cout << "name register success, user id is " << responsejs["userId"] << ", do not forget it!" << endl;
+        cout << "注册成功, 用户 ID: " << responsejs["userId"] << " , 用户名称: " << responsejs["userName"].get<string>()
+             << endl;
     }
 }
 
@@ -194,7 +196,7 @@ void doRegResponse(json &responsejs) {
 void doLoginResponse(json &responsejs) {
     // 登录失败
     if (0 != responsejs["errNum"].get<int>()) {
-        cerr << responsejs["errMsg"] << endl;
+        cerr << "登录失败: " << responsejs["errMsg"].get<string>() << endl;
         g_isLoginSuccess = false;
     }
     // 登录成功
@@ -263,7 +265,7 @@ void readTaskHandler(int clientfd) {
             exit(-1);
         }
 
-        // 接收ChatServer转发的数据，反序列化生成JSON数据对象
+        // 接收ChatServer转发的数据, 反序列化生成JSON数据对象
         json js = json::parse(buffer);
 
         // 消息类型
@@ -285,24 +287,14 @@ void readTaskHandler(int clientfd) {
         // 处理登录响应的业务逻辑
         if (LOGIN_MSG_ACK == msgtype) {
             doLoginResponse(js);
-            sem_post(&rwsem);  // 通知主线程，登录结果处理完成
+            sem_post(&rwsem);  // 通知主线程, 登录结果处理完成
             continue;
         }
 
         // 处理注册响应的业务逻辑
         if (REGISTER_MSG_ACK == msgtype) {
             doRegResponse(js);
-            sem_post(&rwsem);  // 通知主线程，注册结果处理完成
-            continue;
-        }
-
-        // 处理添加好友响应的业务逻辑
-        if (ADD_FRIEND_MSG_ACK == msgtype) {
-            continue;
-        }
-
-        // 处理一对一聊天响应的业务逻辑
-        if (SINGLE_CHAT_MSG_ACK == msgtype) {
+            sem_post(&rwsem);  // 通知主线程, 注册结果处理完成
             continue;
         }
     }
@@ -330,6 +322,8 @@ void showCurrentUserData() {
     cout << "======================================================" << endl;
 }
 
+/////////////////////////////////////////////////////主页功能/////////////////////////////////////////////////////
+
 // "help" command handler
 void help(int fd = 0, string str = "");
 // "singlechat" command handler
@@ -346,13 +340,13 @@ void groupchat(int, string);
 void loginout(int, string);
 
 // 系统支持的客户端命令列表
-unordered_map<string, string> commandMap = {{"help", "显示所有支持的命令，格式 help"},
-                                            {"singlechat", "一对一聊天，格式 singlechat:friendid:message"},
-                                            {"addfriend", "添加好友，格式 addfriend:friendid"},
-                                            {"creategroup", "创建群组，格式 creategroup:groupname:groupdesc"},
-                                            {"joingroup", "加入群组，格式 joingroup:groupid"},
-                                            {"groupchat", "群组聊天，格式 groupchat:groupid:message"},
-                                            {"loginout", "退出登录，格式 loginout"}};
+unordered_map<string, string> commandMap = {{"help", "显示所有支持的命令, 格式 help"},
+                                            {"singlechat", "一对一聊天, 格式 singlechat:friendid:message"},
+                                            {"addfriend", "添加好友, 格式 addfriend:friendid"},
+                                            {"creategroup", "创建群组, 格式 creategroup:groupname:groupdesc"},
+                                            {"joingroup", "加入群组, 格式 joingroup:groupid"},
+                                            {"groupchat", "群组聊天, 格式 groupchat:groupid:message"},
+                                            {"loginout", "退出登录, 格式 loginout"}};
 
 // 注册系统支持的客户端命令处理
 unordered_map<string, function<void(int, string)>> commandHandlerMap = {
@@ -399,8 +393,12 @@ void help(int, string) {
 
 // "addfriend" command handler
 void addfriend(int clientfd, string str) {
-    // 数据格式：friendid
+    // 数据格式: friendid
     int friendId = atoi(str.c_str());
+    if (friendId <= 0) {
+        cerr << "add friend command invalid!" << endl;
+        return;
+    }
 
     // 请求参数
     json request;
@@ -418,7 +416,7 @@ void addfriend(int clientfd, string str) {
 
 // "singlechat" command handler
 void singlechat(int clientfd, string str) {
-    // 数据格式：friendid:message
+    // 数据格式: friendid:message
     int idx = str.find(":");
     if (-1 == idx) {
         cerr << "single chat command invalid!" << endl;
