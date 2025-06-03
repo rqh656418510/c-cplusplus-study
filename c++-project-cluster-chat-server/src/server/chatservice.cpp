@@ -199,11 +199,11 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 消息发送者的消息内容
     string fromMsg = (*data)["fromMsg"].get<string>();
 
+    // 消息发送的时间戳
+    long fromTimestamp = (*data)["fromTimestamp"].get<long>();
+
     // 消息接收者的用户ID
     int toId = (*data)["toId"].get<int>();
-
-    // 当前的时间戳
-    long timestamp = getTimestampMs();
 
     // 消息接收者是否在线
     bool toOnline = false;
@@ -217,7 +217,6 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
         // 记录消息接收者在线
         toOnline = true;
         // 转发消息给消息接收者
-        (*data)["timestamp"] = timestamp;
         it->second->send((*data).dump());
     }
 
@@ -226,7 +225,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
     // 用户不在线，存储离线消息
     if (!toOnline) {
-        OfflineMessage msg(toId, (*data).dump(), timestamp);
+        OfflineMessage msg(toId, (*data).dump(), fromTimestamp);
         // 新增离线消息
         _offflineMessageModel.insert(msg);
     }
@@ -240,13 +239,14 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
 
 // 处理添加好友消息
 void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    int friendid = (*data)["friendid"].get<int>();
+    // 当前用户的ID
+    int userId = (*data)["userId"].get<int>();
 
-    // 当前用户的 ID
-    int userid = getCurrUserId(conn);
+    // 好友的用户ID
+    int friendId = (*data)["friendId"].get<int>();
 
     // 控制不能添加自己为好友
-    if (userid == friendid) {
+    if (userId == friendId) {
         // 返回数据给客户端
         json response;
         response["errNum"] = ErrorCode::ADD_FRIEND_FAIL;
@@ -257,7 +257,7 @@ void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>
     }
 
     // 新增好友关系
-    _friendModel.insert(userid, friendid);
+    _friendModel.insert(userId, friendId);
 
     // 返回数据给客户端
     json response;

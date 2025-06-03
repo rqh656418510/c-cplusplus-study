@@ -238,12 +238,12 @@ void doLoginResponse(json &responsejs) {
                 string time = formatTimestampLocal(message.getCreateTime(), "%Y-%m-%d %H:%M:%S");
                 // 打印一对一聊天消息
                 if (SINGLE_CHAT_MSG == content["msgType"].get<int>()) {
-                    cout << time << " [" << content["fromId"] << "] " << content["fromName"].get<string>()
+                    cout << "好友消息[" << content["fromId"] << "] " << time << " " << content["fromName"].get<string>()
                          << " said: " << content["fromMsg"].get<string>() << endl;
                 }
                 // 打印群组聊天消息
                 else {
-                    cout << "群聊消息[" << content["groupid"] << "]: " << time << " [" << content["fromId"] << "] "
+                    cout << "群聊消息[" << content["groupid"] << "] " << time << " [" << content["fromId"] << "] "
                          << content["fromName"].get<string>() << " said: " << content["groupmsg"].get<string>() << endl;
                 }
             }
@@ -253,11 +253,11 @@ void doLoginResponse(json &responsejs) {
     }
 }
 
-// 子线程 - 接收线程
+// 子线程（接收消息的线程）执行的业务逻辑
 void readTaskHandler(int clientfd) {
     for (;;) {
         char buffer[1024] = {0};
-        int len = recv(clientfd, buffer, 1024, 0);  // 阻塞等待
+        int len = recv(clientfd, buffer, 1024, 0);  // 阻塞等待消息
         if (-1 == len || 0 == len) {
             close(clientfd);
             exit(-1);
@@ -269,26 +269,40 @@ void readTaskHandler(int clientfd) {
         // 消息类型
         int msgtype = js["msgType"].get<int>();
 
+        // 打印一对一聊天消息
         if (SINGLE_CHAT_MSG == msgtype) {
-            cout << time << " [" << js["fromId"] << "] " << js["fromName"].get<string>()
+            cout << "好友消息[" << js["fromId"] << "] " << time << " " << js["fromName"].get<string>()
                  << " said: " << js["fromMsg"].get<string>() << endl;
             continue;
         }
 
+        // 打印群组聊天消息
         if (GROUP_CHAT_MSG == msgtype) {
-            cout << "群聊消息[" << js["groupid"] << "]: " << time << " [" << js["fromId"] << "] "
+            cout << "群聊消息[" << js["groupid"] << "] " << time << " [" << js["fromId"] << "] "
                  << js["fromName"].get<string>() << " said: " << js["groupmsg"].get<string>() << endl;
         }
 
+        // 处理登录响应的业务逻辑
         if (LOGIN_MSG_ACK == msgtype) {
-            doLoginResponse(js);  // 处理登录响应的业务逻辑
-            sem_post(&rwsem);     // 通知主线程，登录结果处理完成
+            doLoginResponse(js);
+            sem_post(&rwsem);  // 通知主线程，登录结果处理完成
             continue;
         }
 
+        // 处理注册响应的业务逻辑
         if (REGISTER_MSG_ACK == msgtype) {
             doRegResponse(js);
             sem_post(&rwsem);  // 通知主线程，注册结果处理完成
+            continue;
+        }
+
+        // 处理添加好友响应的业务逻辑
+        if (ADD_FRIEND_MSG_ACK == msgtype) {
+            continue;
+        }
+
+        // 处理一对一聊天响应的业务逻辑
+        if (SINGLE_CHAT_MSG_ACK == msgtype) {
             continue;
         }
     }
@@ -318,8 +332,8 @@ void showCurrentUserData() {
 
 // "help" command handler
 void help(int fd = 0, string str = "");
-// "chat" command handler
-void chat(int, string);
+// "singlechat" command handler
+void singlechat(int, string);
 // "addfriend" command handler
 void addfriend(int, string);
 // "creategroup" command handler
@@ -333,7 +347,7 @@ void loginout(int, string);
 
 // 系统支持的客户端命令列表
 unordered_map<string, string> commandMap = {{"help", "显示所有支持的命令，格式 help"},
-                                            {"chat", "一对一聊天，格式 chat:friendid:message"},
+                                            {"singlechat", "一对一聊天，格式 singlechat:friendid:message"},
                                             {"addfriend", "添加好友，格式 addfriend:friendid"},
                                             {"creategroup", "创建群组，格式 creategroup:groupname:groupdesc"},
                                             {"joingroup", "加入群组，格式 joingroup:groupid"},
@@ -342,8 +356,8 @@ unordered_map<string, string> commandMap = {{"help", "显示所有支持的命�
 
 // 注册系统支持的客户端命令处理
 unordered_map<string, function<void(int, string)>> commandHandlerMap = {
-    {"help", help},           {"chat", chat},           {"addfriend", addfriend}, {"creategroup", creategroup},
-    {"joingroup", joingroup}, {"groupchat", groupchat}, {"loginout", loginout}};
+    {"help", help},           {"singlechat", singlechat}, {"addfriend", addfriend}, {"creategroup", creategroup},
+    {"joingroup", joingroup}, {"groupchat", groupchat},   {"loginout", loginout}};
 
 // 主聊天页面程序
 void mainMenu(int clientfd) {
@@ -351,23 +365,26 @@ void mainMenu(int clientfd) {
 
     char buffer[1024] = {0};
     while (isMainMenuRunning) {
+        // 存储用户选择的命令
+        string command;
         cin.getline(buffer, 1024);
         string commandbuf(buffer);
-        string command;  // 存储命令
         int idx = commandbuf.find(":");
         if (-1 == idx) {
             command = commandbuf;
         } else {
             command = commandbuf.substr(0, idx);
         }
+
+        // 查找相应命令的事件处理器
         auto it = commandHandlerMap.find(command);
         if (it == commandHandlerMap.end()) {
             cerr << "invalid input command!" << endl;
             continue;
         }
 
-        // 调用相应命令的事件处理回调，mainMenu对修改封闭，添加新功能不需要修改该函数
-        it->second(clientfd, commandbuf.substr(idx + 1, commandbuf.size() - idx));  // 调用命令处理方法
+        // 调用相应命令的事件处理回调函数
+        it->second(clientfd, commandbuf.substr(idx + 1, commandbuf.size() - idx));
     }
 }
 
@@ -382,13 +399,53 @@ void help(int, string) {
 
 // "addfriend" command handler
 void addfriend(int clientfd, string str) {
+    // 数据格式：friendid
+    int friendId = atoi(str.c_str());
+
+    // 请求参数
+    json request;
+    request["msgType"] = ADD_FRIEND_MSG;
+    request["userId"] = g_currentUser.getId();
+    request["friendId"] = friendId;
+
+    // 发送数据
+    string buffer = request.dump();
+    int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
+    if (-1 == len) {
+        cerr << "send add friend msg error -> " << buffer << endl;
+    }
 }
 
-// "chat" command handler
-void chat(int clientfd, string str) {
+// "singlechat" command handler
+void singlechat(int clientfd, string str) {
+    // 数据格式：friendid:message
+    int idx = str.find(":");
+    if (-1 == idx) {
+        cerr << "single chat command invalid!" << endl;
+        return;
+    }
+
+    int friendId = atoi(str.substr(0, idx).c_str());
+    string message = str.substr(idx + 1, str.size() - idx);
+
+    // 请求参数
+    json request;
+    request["msgType"] = SINGLE_CHAT_MSG;
+    request["fromId"] = g_currentUser.getId();
+    request["fromName"] = g_currentUser.getName();
+    request["fromMsg"] = message;
+    request["fromTimestamp"] = getTimestampMs();
+    request["toId"] = friendId;
+
+    // 发送数据
+    string buffer = request.dump();
+    int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
+    if (-1 == len) {
+        cerr << "send single chat msg error -> " << buffer << endl;
+    }
 }
 
-// "creategroup" command handler  groupname:groupdesc
+// "creategroup" command handler
 void creategroup(int clientfd, string str) {
 }
 

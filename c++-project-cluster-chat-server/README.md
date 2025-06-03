@@ -22,20 +22,20 @@
 {"msgType": 1, "id": 23, "password": "123456"}
 ```
 
-- 发送一对一聊天消息
-
-``` json
-{"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "toId": 23}
-
-{"msgType": 5, "fromId": 23, "fromName": "tom", "fromMsg": "hello", "toId": 22}
-```
-
 - 添加好友
 
 ``` json
-{"msgType": 6, "friendid": 23}
+{"msgType": 7, "userId": 22, "friendId": 23}
 
-{"msgType": 6, "friendid": 22}
+{"msgType": 7, "userId": 23, "friendId": 22}
+```
+
+- 发送一对一聊天消息
+
+``` json
+{"msgType": 5, "fromId": 22, "fromName": "jim", "fromMsg": "hello", "fromTimestamp": 1748926809683, "toId": 23}
+
+{"msgType": 5, "fromId": 23, "fromName": "tom", "fromMsg": "hello", "fromTimestamp": 1748926809785, "toId": 22}
 ```
 
 - 创建群组
@@ -62,3 +62,6 @@
 
 - 添加好友
     - 添加好友之前，判断好友是否已经添加过
+
+- 一对一聊天
+    - 一对一聊天之前，判断是否已经添加对方为好友
