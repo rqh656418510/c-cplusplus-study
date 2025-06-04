@@ -41,15 +41,13 @@
 - 创建群组
 
 ``` json
-{"msgType": 8, "userId": 22, "groupName": "c++", "groupDesc": "c++ study"}
-
-{"msgType": 8, "userId": 23, "groupName": "rust", "groupDesc": "rust study"}
+{"msgType": 9, "userId": 22, "groupName": "c++", "groupDesc": "c++ study"}
 ```
 
 - 加入群组
 
 ``` json
-{"msgType": 10, "userId": 23, "groupId": 1}
+{"msgType": 11, "userId": 23, "groupId": 1}
 ```
 
 - 发送群聊消息
@@ -65,6 +63,10 @@
 - 添加好友
     - 添加好友之前，判断好友是否真实存在
     - 添加好友之前，判断好友是否已经添加过
+
+- 加入群组
+    - 用户加入群组之前，判断群组是否真实存在
+    - 用户加入群组之前，判断群组是否已经加入过
 
 - 一对一聊天
     - 一对一聊天之前，判断是否已经添加对方为好友
