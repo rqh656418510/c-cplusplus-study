@@ -41,21 +41,23 @@
 - 创建群组
 
 ``` json
-{"msgType": 8, "groupname": "c++", "groupdesc": "c++ study"}
+{"msgType": 8, "userId": 22, "groupName": "c++", "groupDesc": "c++ study"}
+
+{"msgType": 8, "userId": 23, "groupName": "rust", "groupDesc": "rust study"}
 ```
 
 - 加入群组
 
 ``` json
-{"msgType": 10, "groupid": 1}
+{"msgType": 10, "userId": 23, "groupId": 1}
 ```
 
 - 发送群聊消息
 
 ``` json
-{"msgType": 13, "fromId": 22, "fromName": "jim", "groupid": 1, "groupmsg": "go to study c++"}
+{"msgType": 13, "fromId": 22, "fromName": "jim", "fromTimestamp": 1748926809683, "groupId": 1, "groupMsg": "go to study c++"}
 
-{"msgType": 13, "fromId": 23, "fromName": "tom", "groupid": 1, "groupmsg": "go to study rust"}
+{"msgType": 13, "fromId": 23, "fromName": "tom", "fromTimestamp": 1748926809383, "groupId": 1, "groupMsg": "go to study rust"}
 ```
 
 ## 业务优化

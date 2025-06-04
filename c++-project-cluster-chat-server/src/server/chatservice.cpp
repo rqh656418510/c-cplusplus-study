@@ -269,21 +269,24 @@ void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>
 
 // 处理创建群组消息
 void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    string groupname = (*data)["groupname"].get<string>();
-    string groupdesc = (*data)["groupdesc"].get<string>();
+    // 当前用户的ID
+    int userId = (*data)["userId"].get<int>();
 
-    // 当前用户的 ID
-    int userid = getCurrUserId(conn);
+    // 群组名称
+    string groupName = (*data)["groupName"].get<string>();
+
+    // 群组描述
+    string groupDesc = (*data)["groupDesc"].get<string>();
 
     // 新增群组
-    Group group(groupname, groupdesc);
+    Group group(groupName, groupDesc);
     bool result = _groupModel.insert(group);
 
     // 添加群组的创建人信息
     if (result && group.getId() != -1) {
         GroupUser groupUser;
         groupUser.setGroupId(group.getId());
-        groupUser.setUserId(userid);
+        groupUser.setUserId(userId);
         groupUser.setGroupRole("creator");
         // 新增群组和用户的关联信息
         _groupUserModel.insert(groupUser);
@@ -298,13 +301,14 @@ void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<jso
 
 // 处理加入群组消息
 void ChatService::joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    int groupid = (*data)["groupid"].get<int>();
+    // 当前用户的ID
+    int userId = (*data)["userId"].get<int>();
 
-    // 当前用户的 ID
-    int userid = getCurrUserId(conn);
+    // 群组ID
+    int groupId = (*data)["groupId"].get<int>();
 
     // 新增群组和用户的关联信息
-    GroupUser groupUser(groupid, userid, "normal");
+    GroupUser groupUser(groupId, userId, "normal");
     _groupUserModel.insert(groupUser);
 
     // 返回数据给客户端
@@ -322,20 +326,17 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
     // 消息发送者的用户名称
     string fromName = (*data)["fromName"].get<string>();
 
+    // 消息发送的时间戳
+    long fromTimestamp = (*data)["fromTimestamp"].get<long>();
+
     // 群组的ID
-    int groupid = (*data)["groupid"].get<int>();
+    int groupId = (*data)["groupId"].get<int>();
 
     // 群组消息的内容
-    string groupmsg = (*data)["groupmsg"].get<string>();
-
-    // 当前的时间戳
-    long timestamp = getTimestampMs();
-
-    // 当前用户的 ID
-    int userid = getCurrUserId(conn);
+    string groupMsg = (*data)["groupMsg"].get<string>();
 
     // 查询群组内的用户（除了当前用户）
-    vector<User> users = _groupUserModel.selectGroupUsers(groupid, userid);
+    vector<User> users = _groupUserModel.selectGroupUsers(groupId, fromId);
 
     // 处理群聊消息
     if (!users.empty()) {
@@ -348,13 +349,12 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
             auto it = _userConnMap.find(user.getId());
             if (it != _userConnMap.end()) {
                 // 用户在线，转发群聊消息
-                (*data)["timestamp"] = timestamp;
                 it->second->send((*data).dump());
             } else {
                 // 用户不在线，存储离线群聊消息
                 OfflineMessage message;
                 message.setUserId(user.getId());
-                message.setCreateTime(timestamp);
+                message.setCreateTime(fromTimestamp);
                 message.setMessage((*data).dump());
                 _offflineMessageModel.insert(message);
             }
@@ -409,9 +409,8 @@ void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
     }
 }
 
-// 获取当前用户的 ID
+// 获取当前用户的ID
 int ChatService::getCurrUserId(const TcpConnectionPtr& conn) {
-    // 当前用户的 ID
     int userid = -1;
 
     // 获取互斥锁

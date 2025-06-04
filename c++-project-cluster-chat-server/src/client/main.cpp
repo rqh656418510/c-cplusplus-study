@@ -445,14 +445,81 @@ void singlechat(int clientfd, string str) {
 
 // "creategroup" command handler
 void creategroup(int clientfd, string str) {
+    // 数据格式: groupname:groupdesc
+    int idx = str.find(":");
+    if (-1 == idx) {
+        cerr << "create group command invalid!" << endl;
+        return;
+    }
+
+    string groupName = str.substr(0, idx);
+    string groupDesc = str.substr(idx + 1, str.size() - idx);
+
+    // 请求参数
+    json request;
+    request["msgType"] = CREATE_GROUP_MSG;
+    request["userId"] = g_currentUser.getId();
+    request["groupName"] = groupName;
+    request["groupDesc"] = groupDesc;
+
+    // 发送数据
+    string buffer = request.dump();
+    int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
+    if (-1 == len) {
+        cerr << "send create group msg error -> " << buffer << endl;
+    }
 }
 
 // "joingroup" command handler
 void joingroup(int clientfd, string str) {
+    // 数据格式：groupid
+    int groupId = atoi(str.c_str());
+    if (groupId <= 0) {
+        cerr << "join group command invalid!" << endl;
+        return;
+    }
+
+    // 请求参数
+    json request;
+    request["msgType"] = JOIN_GROUP_MSG;
+    request["userId"] = g_currentUser.getId();
+    request["groupId"] = groupId;
+
+    // 发送数据
+    string buffer = request.dump();
+    int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
+    if (-1 == len) {
+        cerr << "send join group msg error -> " << buffer << endl;
+    }
 }
 
 // "groupchat" command handler
 void groupchat(int clientfd, string str) {
+    // 数据格式：groupid:message
+    int idx = str.find(":");
+    if (-1 == idx) {
+        cerr << "group chat command invalid!" << endl;
+        return;
+    }
+
+    int groupId = atoi(str.substr(0, idx).c_str());
+    string groupMessage = str.substr(idx + 1, str.size() - idx);
+
+    // 请求参数
+    json request;
+    request["msgType"] = GROUP_CHAT_MSG;
+    request["fromId"] = g_currentUser.getId();
+    request["fromName"] = g_currentUser.getName();
+    request["fromTimestamp"] = getTimestampMs();
+    request["groupId"] = groupId;
+    request["groupMsg"] = groupMessage;
+
+    // 发送数据
+    string buffer = request.dump();
+    int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
+    if (-1 == len) {
+        cerr << "send group chat msg error -> " << buffer << endl;
+    }
 }
 
 // "loginout" command handler
