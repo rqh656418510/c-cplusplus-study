@@ -39,7 +39,7 @@ vector<Group> g_currentUserGroupList;
 
 // 用于读写线程之间的通信
 sem_t rwsem;
-// 控制主菜单页面程序运行
+// 控制主菜单程序运行
 bool isMainMenuRunning = false;
 // 记录登录状态
 atomic_bool g_isLoginSuccess{false};
@@ -102,11 +102,28 @@ int main(int argc, char **argv) {
         cout << "2. register" << endl;
         cout << "3. quit" << endl;
         cout << "========================" << endl;
-        cout << "choice: ";
-        int choice = 0;
-        cin >> choice;
-        cin.get();  // 读掉缓冲区残留的回车键
 
+        int choice = 0;
+
+        // 用户输入验证循环
+        while (true) {
+            cout << "choice: ";
+            cin >> choice;
+            // 判断输入是否合法
+            if (cin.fail()) {
+                // 输入不是整数，清除错误标志
+                cin.clear();
+                // 清空输入缓冲区
+                cin.ignore(10000, '\n');
+                cerr << "invalid choice!" << endl;
+            } else {
+                // 清除残留的换行符
+                cin.ignore(10000, '\n');
+                break;
+            }
+        }
+
+        // 根据用户输入执行操作
         switch (choice) {
             // 登录业务
             case 1: {
@@ -135,7 +152,7 @@ int main(int argc, char **argv) {
 
                 // 用户登录成功
                 if (g_isLoginSuccess) {
-                    // 进入聊天主菜单页面
+                    // 进入聊天主菜单
                     isMainMenuRunning = true;
                     mainMenu(clientfd);
                 }
@@ -171,7 +188,7 @@ int main(int argc, char **argv) {
                 sem_destroy(&rwsem);
                 exit(0);
             default:
-                cerr << "invalid input!" << endl;
+                cerr << "invalid choice!" << endl;
                 break;
         }
     }
@@ -230,11 +247,11 @@ void doLoginResponse(json &responsejs) {
         // 显示登录用户的基本信息
         showCurrentUserData();
 
-        // 显示当前用户的离线消息  个人聊天信息或者群组消息
+        // 显示当前用户的离线消息（个人聊天信息或者群组消息）
         if (responsejs.contains("offlinemsg")) {
             vector<OfflineMessage> vec = responsejs["offlinemsg"];
             for (OfflineMessage &message : vec) {
-                // 离线消息的内容（JSON）
+                // 离线消息的内容（JSON字符串）
                 json content = json::parse(message.getMessage());
                 // 离线消息的发送时间
                 string datetime = formatTimestampLocal(message.getCreateTime(), "%Y-%m-%d %H:%M:%S");
@@ -271,7 +288,7 @@ void readTaskHandler(int clientfd) {
         // 消息类型
         int msgtype = js["msgType"].get<int>();
 
-        // 打印一对一聊天消息
+        // 处理一对一聊天消息
         if (SINGLE_CHAT_MSG == msgtype) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "好友消息[" << js["fromId"] << "] " << datetime << " " << js["fromName"].get<string>()
@@ -279,7 +296,7 @@ void readTaskHandler(int clientfd) {
             continue;
         }
 
-        // 打印群组聊天消息
+        // 处理群组聊天消息
         if (GROUP_CHAT_MSG == msgtype) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "群聊消息[" << js["groupId"] << "] " << datetime << " [" << js["fromId"] << "] "
@@ -324,7 +341,7 @@ void showCurrentUserData() {
     cout << "======================================================" << endl;
 }
 
-/////////////////////////////////////////////////////主页功能/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////主菜单功能/////////////////////////////////////////////////////
 
 // "help" command handler
 void help(int fd = 0, string str = "");
@@ -355,13 +372,13 @@ unordered_map<string, function<void(int, string)>> commandHandlerMap = {
     {"help", help},           {"singlechat", singlechat}, {"addfriend", addfriend}, {"creategroup", creategroup},
     {"joingroup", joingroup}, {"groupchat", groupchat},   {"loginout", loginout}};
 
-// 主聊天页面程序
+// 主菜单程序
 void mainMenu(int clientfd) {
     help();
 
     char buffer[1024] = {0};
     while (isMainMenuRunning) {
-        // 存储用户选择的命令
+        // 存储用户选择执行的命令
         string command;
         cin.getline(buffer, 1024);
         string commandbuf(buffer);
@@ -386,7 +403,7 @@ void mainMenu(int clientfd) {
 
 // "help" command handler
 void help(int, string) {
-    cout << "show command list >>> " << endl;
+    cout << ">>> show command list >>> " << endl;
     for (auto &p : commandMap) {
         cout << p.first << " : " << p.second << endl;
     }
@@ -505,7 +522,7 @@ void groupchat(int clientfd, string str) {
     }
 
     int groupId = atoi(str.substr(0, idx).c_str());
-    string groupMessage = str.substr(idx + 1, str.size() - idx);
+    string groupMsg = str.substr(idx + 1, str.size() - idx);
 
     // 请求参数
     json request;
@@ -514,7 +531,7 @@ void groupchat(int clientfd, string str) {
     request["fromName"] = g_currentUser.getName();
     request["fromTimestamp"] = getTimestampMs();
     request["groupId"] = groupId;
-    request["groupMsg"] = groupMessage;
+    request["groupMsg"] = groupMsg;
 
     // 发送数据
     string buffer = request.dump();
@@ -526,14 +543,16 @@ void groupchat(int clientfd, string str) {
 
 // "loginout" command handler
 void loginout(int clientfd, string) {
-    json js;
-    js["msgType"] = LOGIN_OUT_MSG;
-    js["id"] = g_currentUser.getId();
-    string buffer = js.dump();
+    // 请求参数
+    json request;
+    request["msgType"] = LOGIN_OUT_MSG;
+    request["userId"] = g_currentUser.getId();
 
+    // 发送数据
+    string buffer = request.dump();
     int len = send(clientfd, buffer.c_str(), strlen(buffer.c_str()) + 1, 0);
     if (-1 == len) {
-        cerr << "send loginout msg error -> " << buffer << endl;
+        cerr << "send login out msg error -> " << buffer << endl;
     } else {
         isMainMenuRunning = false;
     }

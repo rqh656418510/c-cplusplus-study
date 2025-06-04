@@ -335,7 +335,7 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
     // 群组消息的内容
     string groupMsg = (*data)["groupMsg"].get<string>();
 
-    // 查询群组内的用户（除了当前用户）
+    // 查询群组内的用户（除了发送群组消息的用户）
     vector<User> users = _groupUserModel.selectGroupUsers(groupId, fromId);
 
     // 处理群聊消息
@@ -370,8 +370,26 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
 
 // 处理退出登录消息
 void ChatService::loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
-    // 关闭客户端连接
-    clientConnClose(conn);
+    // 当前用户的ID
+    int userId = (*data)["userId"].get<int>();
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(_connMapmutex);
+
+    // 移除连接信息
+    auto it = _userConnMap.find(userId);
+    if (it != _userConnMap.end()) {
+        _userConnMap.erase(it->first);
+    }
+
+    // 释放互斥锁
+    lock.unlock();
+
+    // 更新用户的登录状态
+    User user;
+    user.setId(userId);
+    user.setState("offline");
+    _userModel.updateState(user);
 
     // 返回数据给客户端
     json response;
@@ -409,7 +427,7 @@ void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
     }
 }
 
-// 获取当前用户的ID
+// 获取当前用户的ID（效率较低）
 int ChatService::getCurrUserId(const TcpConnectionPtr& conn) {
     int userid = -1;
 
