@@ -31,7 +31,7 @@ inline std::string formatTimestampLocal(long timestamp_ms, const std::string& fo
     time_duration duration = milliseconds(timestamp_ms);
     ptime utc_time = epoch + duration;
 
-    // 转换为本地时间
+    // 转换为系统本地时间
     typedef c_local_adjustor<ptime> local_adj;
     ptime local_time = local_adj::utc_to_local(utc_time);
 

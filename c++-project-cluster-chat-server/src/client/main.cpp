@@ -237,16 +237,16 @@ void doLoginResponse(json &responsejs) {
                 // 离线消息的内容（JSON）
                 json content = json::parse(message.getMessage());
                 // 离线消息的发送时间
-                string time = formatTimestampLocal(message.getCreateTime(), "%Y-%m-%d %H:%M:%S");
+                string datetime = formatTimestampLocal(message.getCreateTime(), "%Y-%m-%d %H:%M:%S");
                 // 打印一对一聊天消息
                 if (SINGLE_CHAT_MSG == content["msgType"].get<int>()) {
-                    cout << "好友消息[" << content["fromId"] << "] " << time << " " << content["fromName"].get<string>()
-                         << " said: " << content["fromMsg"].get<string>() << endl;
+                    cout << "好友消息[" << content["fromId"] << "] " << datetime << " "
+                         << content["fromName"].get<string>() << " said: " << content["fromMsg"].get<string>() << endl;
                 }
                 // 打印群组聊天消息
                 else {
-                    cout << "群聊消息[" << content["groupid"] << "] " << time << " [" << content["fromId"] << "] "
-                         << content["fromName"].get<string>() << " said: " << content["groupmsg"].get<string>() << endl;
+                    cout << "群聊消息[" << content["groupId"] << "] " << datetime << " [" << content["fromId"] << "] "
+                         << content["fromName"].get<string>() << " said: " << content["groupMsg"].get<string>() << endl;
                 }
             }
         }
@@ -273,15 +273,17 @@ void readTaskHandler(int clientfd) {
 
         // 打印一对一聊天消息
         if (SINGLE_CHAT_MSG == msgtype) {
-            cout << "好友消息[" << js["fromId"] << "] " << time << " " << js["fromName"].get<string>()
+            string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
+            cout << "好友消息[" << js["fromId"] << "] " << datetime << " " << js["fromName"].get<string>()
                  << " said: " << js["fromMsg"].get<string>() << endl;
             continue;
         }
 
         // 打印群组聊天消息
         if (GROUP_CHAT_MSG == msgtype) {
-            cout << "群聊消息[" << js["groupid"] << "] " << time << " [" << js["fromId"] << "] "
-                 << js["fromName"].get<string>() << " said: " << js["groupmsg"].get<string>() << endl;
+            string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
+            cout << "群聊消息[" << js["groupId"] << "] " << datetime << " [" << js["fromId"] << "] "
+                 << js["fromName"].get<string>() << " said: " << js["groupMsg"].get<string>() << endl;
         }
 
         // 处理登录响应的业务逻辑
