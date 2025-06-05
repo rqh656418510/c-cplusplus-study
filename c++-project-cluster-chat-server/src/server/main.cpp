@@ -15,7 +15,16 @@ void resetHandler(int signal) {
     exit(0);
 }
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc < 3) {
+        cerr << "command invalid, example: ./chat_server 127.0.0.1 6000" << endl;
+        exit(-1);
+    }
+
+    // 解析通过命令行参数传递的IP和端口号
+    char *ip = argv[1];
+    uint16_t port = atoi(argv[2]);
+
     // 设置日志级别为 DEBUG
     Logger::setLogLevel(Logger::DEBUG);
 
@@ -27,7 +36,7 @@ int main() {
 
     // 定义聊天服务器
     EventLoop loop;
-    InetAddress address("127.0.0.1", 6000);
+    InetAddress address(ip, port);
     ChatServer server(&loop, address, "ChatServer");
 
     // 启动聊天服务器

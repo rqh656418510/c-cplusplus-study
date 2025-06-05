@@ -4,22 +4,34 @@
 
 - 基于 C++ 开发集群聊天服务器
 
+### 项目运行
+
+- 1. 启动 MySQL、Nginx、Redis 服务
+
+- 2. 启动集群聊天服务端程序
+    - 第一个聊天服务端程序：`chat_server 127.0.0.1 6000`
+    - 第二个聊天服务端程序：`chat_server 127.0.0.1 6002`
+
+- 3. 启动集群聊天客户端程序
+    - 第一个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接 Nginx 的 TCP 负载均衡器
+    - 第二个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接 Nginx 的 TCP 负载均衡器
+
 ### 接口测试
 
 - 用户注册
 
 ``` json
-{"msgType": 3, "name": "jim", "password": "123456"}
+{"msgType": 3, "name": "jim", "password": "12345"}
 
-{"msgType": 3, "name": "tom", "password": "123456"}
+{"msgType": 3, "name": "tom", "password": "12345"}
 ```
 
 - 用户登录
 
 ``` json
-{"msgType": 1, "name": "jim", "password": "123456"}
+{"msgType": 1, "name": "jim", "password": "12345"}
 
-{"msgType": 1, "name": "tom", "password": "123456"}
+{"msgType": 1, "name": "tom", "password": "12345"}
 ```
 
 - 添加好友
