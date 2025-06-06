@@ -20,6 +20,13 @@ using namespace muduo;
 
 // 构造函数
 ChatService::ChatService() {
+    // 连接Redis服务器
+    if (_redis.connect()) {
+        // 设置Redis订阅通道的回调对象（负责处理Redis订阅消息）
+        _redis.init_notify_handler(
+            bind(&ChatService::handleRedisSubScribeMessage, this, placeholders::_1, placeholders::_2));
+    }
+
     // 关联登录业务
     _msgHandlerMap.insert(
         {MsgType::LOGIN_MSG, bind(&ChatService::login, this, placeholders::_1, placeholders::_2, placeholders::_3)});
@@ -68,6 +75,32 @@ MsgHandler ChatService::getMsgHandler(int msgType) {
     return _msgHandlerMap[msgType];
 }
 
+// 处理Redis订阅通道中发生的消息
+void ChatService::handleRedisSubScribeMessage(int userid, string msg) {
+    // JSON 反序列化
+    json js = json::parse(msg.c_str());
+
+    // 消息发送的时间
+    long timestamp = js["fromTimestamp"].get<long>();
+
+    // 获取互斥锁
+    unique_lock<mutex> lock(_connMapmutex);
+
+    // 获取消息接收者的连接信息
+    auto it = _userConnMap.find(userid);
+    if (it != _userConnMap.end()) {
+        // 消息接收者在线（指在当前聊天服务器中），直接转发消息
+        it->second->send(js.dump());
+    } else {
+        // 当接收到Redis订阅消息时，如果消息接收者刚好下线，则存储离线消息
+        OfflineMessage msg(userid, js.dump(), timestamp);
+        _offflineMessageModel.insert(msg);
+    }
+
+    // 释放互斥锁
+    lock.unlock();
+}
+
 // 处理登录业务
 void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& data, Timestamp time) {
     string name = (*data)["name"].get<string>();
@@ -97,6 +130,9 @@ void ChatService::login(const TcpConnectionPtr& conn, const shared_ptr<json>& da
 
             // 释放互斥锁
             lock.unlock();
+
+            // 向Redis订阅Channel
+            _redis.subscribe(user.getId());
 
             // 更新用户登录状态
             user.setState("online");
@@ -206,8 +242,8 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 消息接收者的用户ID
     int toId = (*data)["toId"].get<int>();
 
-    // 消息接收者是否在线
-    bool toOnline = false;
+    // 消息接收者是否在当前聊天服务器中
+    bool toExisted = false;
 
     // 获取互斥锁
     unique_lock<mutex> lock(_connMapmutex);
@@ -215,20 +251,27 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 获取消息接收者的连接信息
     auto it = _userConnMap.find(toId);
     if (it != _userConnMap.end()) {
-        // 记录消息接收者在线
-        toOnline = true;
-        // 转发消息给消息接收者
+        // 记录消息接收者在线（指在当前聊天服务器中）
+        toExisted = true;
+        // 消息接收者在线（指在当前聊天服务器中），直接转发消息
         it->second->send((*data).dump());
     }
 
     // 释放互斥锁
     lock.unlock();
 
-    // 用户不在线，存储离线消息
-    if (!toOnline) {
-        OfflineMessage msg(toId, (*data).dump(), fromTimestamp);
-        // 新增离线消息
-        _offflineMessageModel.insert(msg);
+    // 消息接收者不在当前聊天服务器中
+    if (!toExisted) {
+        User toUser = _userModel.select(toId);
+        // 判断消息接收者是否在线（指在其他聊天服务器中）
+        if (toUser.getState() == "online") {
+            // 消息接收者在线，通过Redis发布消息
+            _redis.publish(toId, (*data).dump());
+        } else {
+            // 消息接收者不在线，存储离线消息
+            OfflineMessage msg(toId, (*data).dump(), fromTimestamp);
+            _offflineMessageModel.insert(msg);
+        }
     }
 
     // 返回数据给客户端
@@ -345,18 +388,25 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
 
         // 遍历群组内的用户
         for (User& user : users) {
-            // 获取连接信息
+            // 获取用户的连接信息
             auto it = _userConnMap.find(user.getId());
             if (it != _userConnMap.end()) {
-                // 用户在线，转发群聊消息
+                // 用户在线（指在当前聊天服务器中），直接转发群聊消息
                 it->second->send((*data).dump());
             } else {
-                // 用户不在线，存储离线群聊消息
-                OfflineMessage message;
-                message.setUserId(user.getId());
-                message.setCreateTime(fromTimestamp);
-                message.setMessage((*data).dump());
-                _offflineMessageModel.insert(message);
+                User toUser = _userModel.select(user.getId());
+                // 判断用户是否在线（指在其他聊天服务器中）
+                if (toUser.getState() == "online") {
+                    // 用户在线，通过Redis发布群聊消息
+                    _redis.publish(user.getId(), (*data).dump());
+                } else {
+                    // 用户不在线，存储离线群聊消息
+                    OfflineMessage message;
+                    message.setUserId(user.getId());
+                    message.setCreateTime(fromTimestamp);
+                    message.setMessage((*data).dump());
+                    _offflineMessageModel.insert(message);
+                }
             }
         }
     }
@@ -384,6 +434,9 @@ void ChatService::loginOut(const TcpConnectionPtr& conn, const shared_ptr<json>&
 
     // 释放互斥锁
     lock.unlock();
+
+    // 往Redis取消订阅Channel
+    _redis.unsubscribe(userId);
 
     // 更新用户的登录状态
     User user;
@@ -420,8 +473,11 @@ void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
     // 释放互斥锁
     lock.unlock();
 
-    // 更新用户的登录状态
     if (user.getId() != -1) {
+        // 往Redis取消订阅Channel
+        _redis.unsubscribe(user.getId());
+
+        // 更新用户的登录状态
         user.setState("offline");
         _userModel.updateState(user);
     }

@@ -17,6 +17,7 @@
 #include "groupusermodel.hpp"
 #include "json.hpp"
 #include "offlinemessagemodel.hpp"
+#include "redis.hpp"
 #include "usermodel.hpp"
 
 using namespace std;
@@ -62,6 +63,9 @@ public:
     // 获取消息对应的处理器
     MsgHandler getMsgHandler(int msgType);
 
+    // 处理Redis订阅通道中发生的消息
+    void handleRedisSubScribeMessage(int userid, string msg);
+
     // 处理用户连接关闭的情况
     void clientConnClose(const TcpConnectionPtr& conn);
 
@@ -104,6 +108,9 @@ private:
 
     // GroupUser 表的数据操作对象
     GroupUserModel _groupUserModel;
+
+    // Redis 操作对象
+    Redis _redis;
 };
 
 #endif  // CHATSERVICE_H

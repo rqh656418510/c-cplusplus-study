@@ -17,14 +17,14 @@ Redis::~Redis() {
 
 // 连接redis服务器
 bool Redis::connect() {
-    // 负责publish发布消息的上下文连接
+    // 负责publish发布消息的上下文对象
     _publish_context = redisConnect("127.0.0.1", 6379);
     if (nullptr == _publish_context) {
         cerr << "connect redis failed!" << endl;
         return false;
     }
 
-    // 负责subscribe订阅消息的上下文连接
+    // 负责subscribe订阅消息的上下文对象
     _subcribe_context = redisConnect("127.0.0.1", 6379);
     if (nullptr == _subcribe_context) {
         cerr << "connect redis failed!" << endl;
