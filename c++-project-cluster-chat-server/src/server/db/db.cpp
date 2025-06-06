@@ -2,6 +2,8 @@
 
 #include <muduo/base/Logging.h>
 
+#include "config.hpp"
+
 // 数据库配置信息
 static string server = "127.0.0.1";
 static string user = "root";
@@ -22,8 +24,8 @@ MySQL::~MySQL() {
 
 // 连接数据库
 bool MySQL::connect() {
-    MYSQL *p =
-        mysql_real_connect(_conn, server.c_str(), user.c_str(), password.c_str(), dbname.c_str(), 3306, nullptr, 0);
+    MYSQL *p = mysql_real_connect(_conn, DB_IP.c_str(), DB_USER.c_str(), DB_PASSWORD.c_str(), DB_NAME.c_str(), DB_PORT,
+                                  nullptr, 0);
     if (p != nullptr) {
         // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示？乱码
         mysql_query(_conn, "set names utf8mb4");
