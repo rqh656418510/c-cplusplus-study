@@ -22,12 +22,13 @@ include_directories(${PROJECT_SOURCE_DIR}/include/client)
 include_directories(${PROJECT_SOURCE_DIR}/include/server)
 include_directories(${PROJECT_SOURCE_DIR}/include/server/db)
 include_directories(${PROJECT_SOURCE_DIR}/include/server/dao)
+include_directories(${PROJECT_SOURCE_DIR}/include/server/redis)
 include_directories(${PROJECT_SOURCE_DIR}/include/server/domain)
 
 # 指定项目的第三方头文件
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty)
 
-# 指定系统的头文件，如 Muduo 头文件
+# 指定系统的头文件，如 Muduo、Hiredis 头文件
 include_directories(/usr/local/include)
 
 # 搜索 MySQL 的静态或动态库

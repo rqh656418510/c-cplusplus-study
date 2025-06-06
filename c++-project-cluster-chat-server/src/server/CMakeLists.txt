@@ -9,5 +9,6 @@ target_link_libraries(chat_server
     muduo_net
     muduo_base
     mysqlclient
+    hiredis
     pthread
 )
