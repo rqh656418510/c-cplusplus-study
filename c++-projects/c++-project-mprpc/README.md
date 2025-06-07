@@ -53,6 +53,8 @@
 
 ## 项目测试
 
+> 注意：在编译项目之前，请务必在本地操作系统中安装好 Muduo 库、Protobuf 库、ZooKeeper C API 库。
+
 - (1) 更改 `conf` 目录下的 `rpc.conf` 配置文件，指定 ZooKeeper 服务器的 IP 和端口号等信息
 
 ``` conf
