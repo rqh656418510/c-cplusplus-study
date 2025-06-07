@@ -37,16 +37,16 @@ vector<User> g_currentUserFriendList;
 // 记录当前登录用户的群组列表信息
 vector<Group> g_currentUserGroupList;
 
-// 用于读写线程之间的通信
+// 用于读/写线程之间的通信
 sem_t rwsem;
 // 控制主菜单程序运行
 bool isMainMenuRunning = false;
-// 记录登录状态
+// 记录用户的登录状态
 atomic_bool g_isLoginSuccess{false};
 
-// 主聊天页面程序
+// 主菜单程序
 void mainMenu(int);
-// 接收到消息后的处理逻辑
+// 子线程接收到消息后的处理逻辑
 void readTaskHandler(int clientfd);
 
 // 显示当前登录用户的基本信息
@@ -301,6 +301,7 @@ void readTaskHandler(int clientfd) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "群聊消息[" << js["groupId"] << "] " << datetime << " [" << js["fromId"] << "] "
                  << js["fromName"].get<string>() << " said: " << js["groupMsg"].get<string>() << endl;
+            continue;
         }
 
         // 处理登录响应的业务逻辑

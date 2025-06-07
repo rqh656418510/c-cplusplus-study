@@ -4,6 +4,19 @@
 
 - 基于 C++ 开发集群聊天服务器
 
+### 项目构建
+
+``` sh
+# 进入项目根目录
+cd c++-project-cluster-chat-server
+
+# 配置项目，生成构建文件
+cmake -S . -B build
+
+# 编译项目，生成可执行文件
+cmake --build build
+```
+
 ### 项目运行
 
 - 1. 启动 MySQL、Nginx、Redis 服务
@@ -13,8 +26,8 @@
     - 第二个聊天服务端程序：`chat_server 127.0.0.1 6002`
 
 - 3. 启动集群聊天客户端程序
-    - 第一个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接 Nginx 的 TCP 负载均衡器
-    - 第二个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接 Nginx 的 TCP 负载均衡器
+    - 第一个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
+    - 第二个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
 
 ### 接口测试
 

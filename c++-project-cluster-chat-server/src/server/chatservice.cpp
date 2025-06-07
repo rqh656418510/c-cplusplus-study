@@ -96,9 +96,6 @@ void ChatService::handleRedisSubScribeMessage(int userid, string msg) {
         OfflineMessage msg(userid, js.dump(), timestamp);
         _offflineMessageModel.insert(msg);
     }
-
-    // 释放互斥锁
-    lock.unlock();
 }
 
 // 处理登录业务
