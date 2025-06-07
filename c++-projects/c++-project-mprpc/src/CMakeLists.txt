@@ -18,6 +18,9 @@ execute_process(COMMAND protoc
 # 指定 Protobuf 自动生成的 C++ 头文件
 include_directories(${PROTO_GEN_DIR})
 
+# 指定项目头文件
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # 指定项目源文件
 file(GLOB_RECURSE SRC_FILES *.cc)
 
@@ -30,4 +33,9 @@ target_link_libraries(mprpc
     muduo_net
     muduo_base
     pthread
+    protobuf
+    absl_hash
+    absl_log_internal_check_op 
+    absl_log_internal_message 
+    absl_log_internal_nullguard
 )
