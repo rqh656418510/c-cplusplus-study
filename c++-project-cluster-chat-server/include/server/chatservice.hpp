@@ -69,7 +69,7 @@ public:
     // 处理用户连接关闭的情况
     void clientConnClose(const TcpConnectionPtr& conn);
 
-    // 处理服务器（Ctrl+C）退出后的业务重置
+    // 处理服务器退出（Ctrl+C）后的业务重置
     void reset();
 
 private:

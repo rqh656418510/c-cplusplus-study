@@ -204,7 +204,7 @@ void doRegResponse(json &responsejs) {
     }
     // 注册成功
     else {
-        cout << "注册成功, 用户 ID: " << responsejs["userId"] << " , 用户名称: " << responsejs["userName"].get<string>()
+        cout << "注册成功, 用户ID: " << responsejs["userId"] << " , 用户名称: " << responsejs["userName"].get<string>()
              << endl;
     }
 }
@@ -288,7 +288,7 @@ void readTaskHandler(int clientfd) {
         // 消息类型
         int msgtype = js["msgType"].get<int>();
 
-        // 处理一对一聊天消息
+        // 处理接收到的一对一聊天消息
         if (SINGLE_CHAT_MSG == msgtype) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "好友消息[" << js["fromId"] << "] " << datetime << " " << js["fromName"].get<string>()
@@ -296,7 +296,7 @@ void readTaskHandler(int clientfd) {
             continue;
         }
 
-        // 处理群组聊天消息
+        // 处理接收到的群组聊天消息
         if (GROUP_CHAT_MSG == msgtype) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "群聊消息[" << js["groupId"] << "] " << datetime << " [" << js["fromId"] << "] "

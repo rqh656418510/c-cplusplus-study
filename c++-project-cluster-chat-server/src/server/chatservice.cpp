@@ -247,7 +247,7 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     if (friendRel.getUserId() == -1 || friendRel.getFriendId() == -1) {
         json response;
         response["errNum"] = ErrorCode::SINGLE_CHAT_FAIL;
-        response["errMsg"] = "未添加对方好友";
+        response["errMsg"] = "未添加对方好友, 无法进行一对一聊天";
         response["msgType"] = MsgType::SINGLE_CHAT_MSG_ACK;
         conn->send(response.dump());
         return;
@@ -410,6 +410,18 @@ void ChatService::groupChat(const TcpConnectionPtr& conn, const shared_ptr<json>
     // 群组消息的内容
     string groupMsg = (*data)["groupMsg"].get<string>();
 
+    // 判断用户是否已经加入群组
+    GroupUser groupUser = _groupUserModel.select(groupId, fromId);
+    if (groupUser.getGroupId() == -1 || groupUser.getUserId() == -1) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = ErrorCode::JOIN_GROUP_FAIL;
+        response["errMsg"] = "未加入该群组, 无法进行群聊";
+        response["msgType"] = MsgType::JOIN_GROUP_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
+
     // 查询群组内的用户（除了发送群组消息的用户）
     vector<User> users = _groupUserModel.selectGroupUsers(groupId, fromId);
 
@@ -515,7 +527,7 @@ void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
     }
 }
 
-// 处理服务器（Ctrl+C）退出后的业务重置
+// 处理服务器退出（Ctrl+C）后的业务重置
 void ChatService::reset() {
     // 重置所有用户的登录状态
     _userModel.resetState();

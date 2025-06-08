@@ -9,7 +9,7 @@
 using namespace std;
 using namespace muduo;
 
-// 处理服务器（Ctrl+C）退出后的业务重置
+// 处理服务器退出（Ctrl+C）后的业务重置
 void resetHandler(int signal) {
     ChatService::instance()->reset();
     exit(0);

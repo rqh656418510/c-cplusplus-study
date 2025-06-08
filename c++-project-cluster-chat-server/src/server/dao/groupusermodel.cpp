@@ -38,6 +38,7 @@ vector<Group> GroupUserModel::select(int userId) {
         // 执行 SQL 语句
         MYSQL_RES* res = mysql.query(sql);
         if (res != nullptr && mysql_num_rows(res) > 0) {
+            // 封装返回的数据
             MYSQL_ROW row;
             while ((row = mysql_fetch_row(res)) != nullptr) {
                 int id = atoi(row[0]);
@@ -61,6 +62,7 @@ vector<Group> GroupUserModel::select(int userId) {
         // 执行 SQL 语句
         MYSQL_RES* res2 = mysql.query(sql);
         if (res2 != nullptr && mysql_num_rows(res2) > 0) {
+            // 封装返回的数据
             MYSQL_ROW row2;
             while ((row2 = mysql_fetch_row(res2)) != nullptr) {
                 int id = atoi(row2[0]);
@@ -71,6 +73,36 @@ vector<Group> GroupUserModel::select(int userId) {
         }
         // 释放资源
         mysql_free_result(res2);
+    }
+
+    return result;
+}
+
+// 查询用户与群组的关联信息
+GroupUser GroupUserModel::select(int groupid, int userid) {
+    char sql[1024] = {0};
+
+    // 查询结果
+    GroupUser result;
+
+    // 拼接 SQL 语句
+    sprintf(sql, "select groupid, userid, grouprole from groupuser where groupid = %d and userid = %d", groupid,
+            userid);
+
+    // 执行查询操作
+    MySQL mysql;
+    if (mysql.connect()) {
+        // 执行 SQL 语句
+        MYSQL_RES* res = mysql.query(sql);
+        if (res != nullptr && mysql_num_rows(res) > 0) {
+            // 封装返回的数据
+            MYSQL_ROW row = mysql_fetch_row(res);
+            result.setGroupId(atoi(row[0]));
+            result.setUserId(atoi(row[1]));
+            result.setGroupRole(row[2]);
+        }
+        // 释放资源
+        mysql_free_result(res);
     }
 
     return result;
@@ -95,6 +127,7 @@ vector<User> GroupUserModel::selectGroupUsers(int groupId, int excludeUserId) {
         // 执行 SQL 语句
         MYSQL_RES* res = mysql.query(sql);
         if (res != nullptr && mysql_num_rows(res) > 0) {
+            // 封装返回的数据
             MYSQL_ROW row;
             while ((row = mysql_fetch_row(res)) != nullptr) {
                 int id = atoi(row[0]);

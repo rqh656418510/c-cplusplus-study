@@ -9,6 +9,9 @@ using namespace std;
 class GroupUser {
 public:
     GroupUser() {
+        this->groupid = -1;
+        this->userid = -1;
+        this->grouprole = "";
     }
 
     GroupUser(int groupid, int userid, string grouprole) {
