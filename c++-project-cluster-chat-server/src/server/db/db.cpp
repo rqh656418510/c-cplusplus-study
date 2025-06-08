@@ -4,12 +4,6 @@
 
 #include "config.hpp"
 
-// 数据库配置信息
-static string server = "127.0.0.1";
-static string user = "root";
-static string password = "Cxx_Chat_12345";
-static string dbname = "chat";
-
 // 初始化数据库连接
 MySQL::MySQL() {
     _conn = mysql_init(nullptr);
