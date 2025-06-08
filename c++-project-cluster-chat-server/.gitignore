@@ -46,4 +46,3 @@ Debug
 ### GCC G++ ###
 *.o
 *.out
-chat_server_test
