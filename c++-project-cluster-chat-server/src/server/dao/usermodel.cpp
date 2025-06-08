@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-#include "db.h"
+#include "db.hpp"
 
 using namespace std;
 

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "db.h"
+#include "db.hpp"
 
 // 新增群组
 bool GroupModel::insert(Group& group) {

@@ -1,9 +1,9 @@
 #include "offlinemessagemodel.hpp"
 
-#include <db.h>
-
 #include <iostream>
 #include <string>
+
+#include "db.hpp"
 
 using namespace std;
 

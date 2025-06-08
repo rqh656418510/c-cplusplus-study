@@ -1,6 +1,6 @@
 #include "groupusermodel.hpp"
 
-#include "db.h"
+#include "db.hpp"
 
 // 添加用户与群组的关联信息
 bool GroupUserModel::insert(const GroupUser& groupUser) {
