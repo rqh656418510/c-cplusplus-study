@@ -77,19 +77,6 @@ void ChatServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
     // 消息类型
     int msgType = jsonObj["msgType"].get<int>();
 
-    // 统一验证用户是否已登录
-    if (msgType != MsgType::LOGIN_MSG && msgType != MsgType::REGISTER_MSG) {
-        int userid = ChatService::instance()->getCurrUserId(conn);
-        if (userid == -1) {
-            // 返回数据给客户端
-            json response;
-            response["errNum"] = ErrorCode::REQUIRE_LOGIN;
-            response["errMsg"] = "请登录客户端";
-            conn->send(response.dump());
-            return;
-        }
-    }
-
     // 获取消息处理器
     auto msgHandler = ChatService::instance()->getMsgHandler(msgType);
 

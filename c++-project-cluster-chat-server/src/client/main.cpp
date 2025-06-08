@@ -317,6 +317,11 @@ void readTaskHandler(int clientfd) {
             sem_post(&rwsem);  // 通知主线程, 注册结果处理完成
             continue;
         }
+
+        // 处理其他业务的响应
+        if (js.contains("errMsg")) {
+            cerr << "操作失败: " << js["errMsg"].get<string>() << endl;
+        }
     }
 }
 

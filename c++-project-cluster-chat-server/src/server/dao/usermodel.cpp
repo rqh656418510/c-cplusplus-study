@@ -16,6 +16,9 @@ User UserModel::select(int id) {
     // 拼接 SQL 语句
     sprintf(sql, "select id, name, password, state from user where id = %d", id);
 
+    // 查询结果
+    User user;
+
     // 执行查询操作
     MySQL mysql;
     if (mysql.connect()) {
@@ -24,19 +27,16 @@ User UserModel::select(int id) {
         if (res != nullptr && mysql_num_rows(res) > 0) {
             // 获取查询结果
             MYSQL_ROW row = mysql_fetch_row(res);
-            // 封装返回的数据
-            User user;
             user.setId(atoi(row[0]));
             user.setName(row[1]);
             user.setPassword(row[2]);
             user.setState(row[3]);
-            // 释放资源
-            mysql_free_result(res);
-            return user;
         }
+        // 释放资源
+        mysql_free_result(res);
     }
 
-    return User();
+    return user;
 }
 
 // 根据用户名查询用户
@@ -46,6 +46,9 @@ User UserModel::selectByName(string name) {
     // 拼接 SQL 语句
     sprintf(sql, "select id, name, password, state from user where name = '%s'", name.c_str());
 
+    // 查询结果
+    User user;
+
     // 执行查询操作
     MySQL mysql;
     if (mysql.connect()) {
@@ -54,19 +57,16 @@ User UserModel::selectByName(string name) {
         if (result != nullptr && mysql_num_rows(result) > 0) {
             // 获取查询结果
             MYSQL_ROW row = mysql_fetch_row(result);
-            // 封装返回的数据
-            User user;
             user.setId(atoi(row[0]));
             user.setName(row[1]);
             user.setPassword(row[2]);
             user.setState(row[3]);
-            // 释放资源
-            mysql_free_result(result);
-            return user;
         }
+        // 释放资源
+        mysql_free_result(result);
     }
 
-    return User();
+    return user;
 }
 
 // 新增用户

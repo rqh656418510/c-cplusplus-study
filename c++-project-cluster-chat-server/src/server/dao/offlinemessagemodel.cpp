@@ -65,9 +65,9 @@ vector<OfflineMessage> OfflineMessageModel::select(int userId) {
                 long createtime = atol(row[2]);
                 results.emplace_back(userid, message, createtime);
             }
-            // 释放资源
-            mysql_free_result(res);
         }
+        // 释放资源
+        mysql_free_result(res);
     }
 
     // 返回查询结果

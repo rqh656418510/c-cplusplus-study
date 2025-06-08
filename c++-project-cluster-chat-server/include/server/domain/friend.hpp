@@ -5,6 +5,8 @@
 class Friend {
 public:
     Friend() {
+        this->userid = -1;
+        this->friendid = -1;
     }
 
     Friend(int userid, int friendid) {

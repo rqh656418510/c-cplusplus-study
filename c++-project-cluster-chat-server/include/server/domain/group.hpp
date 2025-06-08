@@ -12,6 +12,9 @@ using namespace std;
 class Group {
 public:
     Group() {
+        this->id = -1;
+        this->groupname = "";
+        this->groupdesc = "";
     }
 
     Group(string groupname, string groupdesc) {

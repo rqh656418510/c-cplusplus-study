@@ -26,7 +26,7 @@ bool GroupModel::insert(Group& group) {
 }
 
 // 查询所有群组
-vector<Group> GroupModel::select() {
+vector<Group> GroupModel::list() {
     char sql[1024] = {0};
 
     // 查询结果
@@ -54,6 +54,35 @@ vector<Group> GroupModel::select() {
     }
 
     return result;
+}
+
+// 查询指定的群组
+Group GroupModel::select(int id) {
+    char sql[1024] = {0};
+
+    // 查询结果
+    Group group;
+
+    // 拼接 SQL 语句
+    sprintf(sql, "select id, groupname, groupdesc from allgroup where id = %d", id);
+
+    // 执行查询操作
+    MySQL mysql;
+    if (mysql.connect()) {
+        // 执行 SQL 语句
+        MYSQL_RES* res = mysql.query(sql);
+        if (res != nullptr && mysql_num_rows(res) > 0) {
+            // 获取查询结果
+            MYSQL_ROW row = mysql_fetch_row(res);
+            group.setId(atoi(row[0]));
+            group.setGroupName(row[1]);
+            group.setGroupDesc(row[2]);
+        }
+        // 释放资源
+        mysql_free_result(res);
+    }
+
+    return group;
 }
 
 // 删除群组

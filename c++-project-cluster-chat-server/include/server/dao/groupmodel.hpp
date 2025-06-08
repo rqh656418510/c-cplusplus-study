@@ -17,7 +17,10 @@ public:
     bool insert(Group& group);
 
     // 查询所有群组
-    vector<Group> select();
+    vector<Group> list();
+
+    // 查询指定的群组
+    Group select(int id);
 
     // 删除群组
     bool remove(int id);

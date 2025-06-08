@@ -286,12 +286,24 @@ void ChatService::addFriend(const TcpConnectionPtr& conn, const shared_ptr<json>
     // 好友的用户ID
     int friendId = (*data)["friendId"].get<int>();
 
-    // 控制不能添加自己为好友
+    // 控制不允许添加自己为好友
     if (userId == friendId) {
         // 返回数据给客户端
         json response;
         response["errNum"] = ErrorCode::ADD_FRIEND_FAIL;
         response["errMsg"] = "不允许添加自己为好友";
+        response["msgType"] = MsgType::ADD_FRIEND_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
+
+    // 判断好友是否真实存在
+    User friendUser = _userModel.select(friendId);
+    if (friendUser.getId() == -1) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = ErrorCode::ADD_FRIEND_FAIL;
+        response["errMsg"] = "好友ID不存在";
         response["msgType"] = MsgType::ADD_FRIEND_MSG_ACK;
         conn->send(response.dump());
         return;
@@ -346,6 +358,18 @@ void ChatService::joinGroup(const TcpConnectionPtr& conn, const shared_ptr<json>
 
     // 群组ID
     int groupId = (*data)["groupId"].get<int>();
+
+    // 判断群组是否真实存在
+    Group group = _groupModel.select(groupId);
+    if (group.getId() == -1) {
+        // 返回数据给客户端
+        json response;
+        response["errNum"] = ErrorCode::JOIN_GROUP_FAIL;
+        response["errMsg"] = "群组ID不存在";
+        response["msgType"] = MsgType::JOIN_GROUP_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
 
     // 新增群组和用户的关联信息
     GroupUser groupUser(groupId, userId, "normal");
@@ -478,28 +502,6 @@ void ChatService::clientConnClose(const TcpConnectionPtr& conn) {
         user.setState("offline");
         _userModel.updateState(user);
     }
-}
-
-// 获取当前用户的ID（效率较低）
-int ChatService::getCurrUserId(const TcpConnectionPtr& conn) {
-    int userid = -1;
-
-    // 获取互斥锁
-    unique_lock<mutex> lock(_connMapmutex);
-
-    // 从Map表中删除用户对应的连接信息
-    for (auto it = _userConnMap.begin(); it != _userConnMap.end(); ++it) {
-        if (it->second == conn) {
-            // 记录当前连接对应的用户ID
-            userid = it->first;
-            break;
-        }
-    }
-
-    // 释放互斥锁
-    lock.unlock();
-
-    return userid;
 }
 
 // 处理服务器（Ctrl+C）退出后的业务重置

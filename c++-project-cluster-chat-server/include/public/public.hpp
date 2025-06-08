@@ -13,7 +13,8 @@ enum ErrorCode {
     LOGIN_AUTH_FAIL,       // 用户名或密码不正确
     REPEAT_LOGIN,          // 账号在其他设备已登录
     REQUIRE_LOGIN,         // 当前用户未登录
-    ADD_FRIEND_FAIL,       // 不允许添加自己为好友
+    ADD_FRIEND_FAIL,       // 添加好友失败
+    JOIN_GROUP_FAIL,       // 加入群组失败
     INVALID_MESSAGE_TYPE,  // 消息类型无效
 };
 
