@@ -286,10 +286,13 @@ void readTaskHandler(int clientfd) {
         json js = json::parse(buffer);
 
         // 消息类型
-        int msgtype = js["msgType"].get<int>();
+        int msgType = js["msgType"].get<int>();
+
+        // 错误编码
+        int errNum = js.contains("errNum") ? js["errNum"].get<int>() : -1;
 
         // 处理接收到的一对一聊天消息
-        if (SINGLE_CHAT_MSG == msgtype) {
+        if (SINGLE_CHAT_MSG == msgType) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "好友消息[" << js["fromId"] << "] " << datetime << " " << js["fromName"].get<string>()
                  << " said: " << js["fromMsg"].get<string>() << endl;
@@ -297,7 +300,7 @@ void readTaskHandler(int clientfd) {
         }
 
         // 处理接收到的群组聊天消息
-        if (GROUP_CHAT_MSG == msgtype) {
+        if (GROUP_CHAT_MSG == msgType) {
             string datetime = formatTimestampLocal(js["fromTimestamp"].get<long>(), "%Y-%m-%d %H:%M:%S");
             cout << "群聊消息[" << js["groupId"] << "] " << datetime << " [" << js["fromId"] << "] "
                  << js["fromName"].get<string>() << " said: " << js["groupMsg"].get<string>() << endl;
@@ -305,21 +308,39 @@ void readTaskHandler(int clientfd) {
         }
 
         // 处理登录响应的业务逻辑
-        if (LOGIN_MSG_ACK == msgtype) {
+        if (LOGIN_MSG_ACK == msgType) {
             doLoginResponse(js);
             sem_post(&rwsem);  // 通知主线程, 登录结果处理完成
             continue;
         }
 
         // 处理注册响应的业务逻辑
-        if (REGISTER_MSG_ACK == msgtype) {
+        if (REGISTER_MSG_ACK == msgType) {
             doRegResponse(js);
             sem_post(&rwsem);  // 通知主线程, 注册结果处理完成
             continue;
         }
 
-        // 处理其他业务的响应
-        if (js.contains("errMsg")) {
+        // 处理成功创建群组响应的业务逻辑
+        if (CREATE_GROUP_MSG_ACK == msgType && SUCCESS == errNum) {
+            cout << "群组创建成功, 群组ID: " << js["groupId"].get<int>() << endl;
+            continue;
+        }
+
+        // 处理成功加入群组响应的业务逻辑
+        if (JOIN_GROUP_MSG_ACK == msgType && SUCCESS == errNum) {
+            cout << "加入群组成功" << endl;
+            continue;
+        }
+
+        // 处理成功添加好友响应的业务逻辑
+        if (ADD_FRIEND_MSG_ACK == msgType && SUCCESS == errNum) {
+            cout << "好友添加成功" << endl;
+            continue;
+        }
+
+        // 处理其他业务的错误响应
+        if (SUCCESS != errNum && js.contains("errMsg")) {
             cerr << "操作失败: " << js["errMsg"].get<string>() << endl;
             continue;
         }

@@ -358,6 +358,7 @@ void ChatService::createGroup(const TcpConnectionPtr& conn, const shared_ptr<jso
     // 返回数据给客户端
     json response;
     response["errNum"] = ErrorCode::SUCCESS;
+    response["groupId"] = group.getId();
     response["msgType"] = MsgType::CREATE_GROUP_MSG_ACK;
     conn->send(response.dump());
 }
