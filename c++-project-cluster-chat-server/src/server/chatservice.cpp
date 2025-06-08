@@ -242,6 +242,17 @@ void ChatService::singleChat(const TcpConnectionPtr& conn, const shared_ptr<json
     // 消息接收者是否在当前聊天服务器中
     bool toExisted = false;
 
+    // 判断是否已经添加消息接收者为好友
+    Friend friendRel = _friendModel.select(fromId, toId);
+    if (friendRel.getUserId() == -1 || friendRel.getFriendId() == -1) {
+        json response;
+        response["errNum"] = ErrorCode::SINGLE_CHAT_FAIL;
+        response["errMsg"] = "未添加对方好友";
+        response["msgType"] = MsgType::SINGLE_CHAT_MSG_ACK;
+        conn->send(response.dump());
+        return;
+    }
+
     // 获取互斥锁
     unique_lock<mutex> lock(_connMapmutex);
 

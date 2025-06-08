@@ -55,3 +55,31 @@ vector<User> FriendModel::select(int userid) {
     // 返回查询结果
     return result;
 }
+
+// 查找好友关系
+Friend FriendModel::select(int userid, int friendid) {
+    char sql[1024] = {0};
+
+    // 查询结果
+    Friend result;
+
+    // 拼接 SQL 语句
+    sprintf(sql, "select userid, friendid from friend where userid = %d and friendid = %d", userid, friendid);
+
+    // 执行 SQL 语句
+    MySQL mysql;
+    if (mysql.connect()) {
+        MYSQL_RES* res = mysql.query(sql);
+        if (res != nullptr && mysql_num_rows(res) > 0) {
+            // 获取所有查询结果
+            MYSQL_ROW row = mysql_fetch_row(res);
+            result.setUserId(atoi(row[0]));
+            result.setFriendId(atoi(row[1]));
+        }
+        // 释放资源
+        mysql_free_result(res);
+    }
+
+    // 返回查询结果
+    return result;
+}

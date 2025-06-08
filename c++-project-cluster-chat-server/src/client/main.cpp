@@ -321,6 +321,7 @@ void readTaskHandler(int clientfd) {
         // 处理其他业务的响应
         if (js.contains("errMsg")) {
             cerr << "操作失败: " << js["errMsg"].get<string>() << endl;
+            continue;
         }
     }
 }

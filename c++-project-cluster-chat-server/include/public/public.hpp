@@ -12,9 +12,10 @@ enum ErrorCode {
     REPEAT_REGISTER,       // 用户名已被注册
     LOGIN_AUTH_FAIL,       // 用户名或密码不正确
     REPEAT_LOGIN,          // 账号在其他设备已登录
-    REQUIRE_LOGIN,         // 当前用户未登录
     ADD_FRIEND_FAIL,       // 添加好友失败
     JOIN_GROUP_FAIL,       // 加入群组失败
+    SINGLE_CHAT_FAIL,      // 一对一聊天失败
+    GROUP_CHAT_FAIL,       // 群组聊天失败
     INVALID_MESSAGE_TYPE,  // 消息类型无效
 };
 

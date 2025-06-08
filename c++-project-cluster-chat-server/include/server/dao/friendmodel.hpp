@@ -14,6 +14,9 @@ public:
 
     // 查找好友列表
     vector<User> select(int userid);
+
+    // 查找好友关系
+    Friend select(int userid, int friendid);
 };
 
 #endif  // FRIENDMODEL_H
