@@ -18,10 +18,12 @@ message RegRequest {
    string name = 1;
    string pwd = 2;
    int32 age = 3;
+
    enum SEX {
        MAN = 0;
        WOMAN = 1;
    }
+   
    SEX sex = 4;
    string phone = 5;
 }
@@ -41,4 +43,3 @@ service UserServiceRpc {
    // 用户注册函数，接收 RegRequest 请求，返回 Response 响应
    rpc reg(RegRequest) returns (Response);
 }
-
