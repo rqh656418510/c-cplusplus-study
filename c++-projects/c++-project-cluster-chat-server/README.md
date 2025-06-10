@@ -47,7 +47,7 @@ cmake --build build
     - 启动第一个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
     - 启动第二个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
 
-### 项目接口定义
+### 项目接口
 
 - 用户注册
 
@@ -96,7 +96,7 @@ cmake --build build
 - 发送群聊消息
 
 ``` json
-{"msgType": 13, "fromId": 22, "fromName": "jim", "fromTimestamp": 1748926809683, "groupId": 1, "groupMsg": "go to study c++"}
+{"msgType": 13, "fromId": 22, "fromName": "jim", "fromTimestamp": 1748926803682, "groupId": 1, "groupMsg": "go to study c++"}
 
-{"msgType": 13, "fromId": 23, "fromName": "tom", "fromTimestamp": 1748926809383, "groupId": 1, "groupMsg": "go to study rust"}
+{"msgType": 13, "fromId": 23, "fromName": "tom", "fromTimestamp": 1748926805372, "groupId": 1, "groupMsg": "go to study rust"}
 ```
