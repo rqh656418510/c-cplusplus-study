@@ -31,7 +31,7 @@ cd c++-project-cluster-chat-server
 # 配置项目，生成构建文件
 cmake -S . -B build
 
-# 编译项目，生成可执行文件
+# 编译项目，在bin目录下生成可执行文件
 cmake --build build
 ```
 
@@ -40,12 +40,12 @@ cmake --build build
 - 1. 启动 Nginx、Redis、MySQL 服务
 
 - 2. 启动集群聊天服务端程序
-    - 启动第一个聊天服务端程序：`chat_server 127.0.0.1 6000`
-    - 启动第二个聊天服务端程序：`chat_server 127.0.0.1 6002`
+    - 启动第一个聊天服务端程序：`./bin/chat_server 127.0.0.1 6000`
+    - 启动第二个聊天服务端程序：`./bin/chat_server 127.0.0.1 6002`
 
 - 3. 启动集群聊天客户端程序
-    - 启动第一个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
-    - 启动第二个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
+    - 启动第一个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
+    - 启动第二个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
 
 ### 项目接口定义
 
