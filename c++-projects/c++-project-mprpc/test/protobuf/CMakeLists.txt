@@ -31,6 +31,7 @@ add_dependencies(proto_test proto_build)
 # 指定可执行文件链接的静态库或者动态库（必须注意顺序，从上到下链接）
 target_link_libraries(proto_test
     protobuf
+    absl_hash
     absl_log_internal_check_op 
     absl_log_internal_message 
     absl_log_internal_nullguard

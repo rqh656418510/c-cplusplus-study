@@ -1,8 +1,8 @@
 // Protobuf 语法的版本
 syntax = "proto3";
 
-// 定义包名，便于在生成的代码中区分不同模块
-package friends;
+// 定义包名，便于在生成的代码中区分不同模块（类似 C++ 的命名空间）
+package group;
 
 message ResultCode {
    int32 errorno = 1;
@@ -23,12 +23,19 @@ message User {
    SEX sex = 3;
 }
 
-message GetFriendListRequest {
+message Group {
+    uint32 id = 1;
+    string groupName = 2;
+    string groupDesc = 3;
+    // Map 类型
+    map<uint32, User> users = 4;
+}
+
+message GetGroupRequest {
     uint32 userid = 1;
 }
 
-message GetFriendListResponse {
+message GetGroupResponse {
     ResultCode result = 1;
-    // 定义列表
-    repeated User friendList = 2;
+    Group group = 2;
 }
