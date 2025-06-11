@@ -22,7 +22,7 @@ message User {
    SEX sex = 3;
 }
 
-message GetFriendListRquest {
+message GetFriendListRequest {
     uint32 userid = 1;
 }
 

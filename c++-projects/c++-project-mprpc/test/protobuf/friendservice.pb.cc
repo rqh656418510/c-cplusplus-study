@@ -84,30 +84,30 @@ struct ResultCodeDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ResultCodeDefaultTypeInternal _ResultCode_default_instance_;
 
-inline constexpr GetFriendListRquest::Impl_::Impl_(
+inline constexpr GetFriendListRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         userid_{0u} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR GetFriendListRquest::GetFriendListRquest(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR GetFriendListRequest::GetFriendListRequest(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(GetFriendListRquest_class_data_.base()),
+    : ::google::protobuf::Message(GetFriendListRequest_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(),
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct GetFriendListRquestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR GetFriendListRquestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~GetFriendListRquestDefaultTypeInternal() {}
+struct GetFriendListRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR GetFriendListRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~GetFriendListRequestDefaultTypeInternal() {}
   union {
-    GetFriendListRquest _instance;
+    GetFriendListRequest _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetFriendListRquestDefaultTypeInternal _GetFriendListRquest_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetFriendListRequestDefaultTypeInternal _GetFriendListRequest_default_instance_;
 
 inline constexpr GetFriendListResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -161,9 +161,9 @@ const ::uint32_t
         0,
         2,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::friends::GetFriendListRquest, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::friends::GetFriendListRequest, _impl_._has_bits_),
         4, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::friends::GetFriendListRquest, _impl_.userid_),
+        PROTOBUF_FIELD_OFFSET(::friends::GetFriendListRequest, _impl_.userid_),
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::friends::GetFriendListResponse, _impl_._has_bits_),
@@ -178,13 +178,13 @@ static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, sizeof(::friends::ResultCode)},
         {9, sizeof(::friends::User)},
-        {18, sizeof(::friends::GetFriendListRquest)},
+        {18, sizeof(::friends::GetFriendListRequest)},
         {23, sizeof(::friends::GetFriendListResponse)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::friends::_ResultCode_default_instance_._instance,
     &::friends::_User_default_instance_._instance,
-    &::friends::_GetFriendListRquest_default_instance_._instance,
+    &::friends::_GetFriendListRequest_default_instance_._instance,
     &::friends::_GetFriendListResponse_default_instance_._instance,
 };
 const char descriptor_table_protodef_friendservice_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
@@ -193,17 +193,17 @@ const char descriptor_table_protodef_friendservice_2eproto[] ABSL_ATTRIBUTE_SECT
     "Code\022\017\n\007errorno\030\001 \001(\005\022\020\n\010errormsg\030\002 \001(\t\022"
     "\016\n\006result\030\003 \001(\010\"[\n\004User\022\n\n\002id\030\001 \001(\r\022\014\n\004n"
     "ame\030\002 \001(\t\022\036\n\003sex\030\003 \001(\0162\021.friends.User.SE"
-    "X\"\031\n\003SEX\022\007\n\003MAN\020\000\022\t\n\005WOMAN\020\001\"%\n\023GetFrien"
-    "dListRquest\022\016\n\006userid\030\001 \001(\r\"_\n\025GetFriend"
-    "ListResponse\022#\n\006result\030\001 \001(\0132\023.friends.R"
-    "esultCode\022!\n\nfriendList\030\002 \003(\0132\r.friends."
-    "Userb\006proto3"
+    "X\"\031\n\003SEX\022\007\n\003MAN\020\000\022\t\n\005WOMAN\020\001\"&\n\024GetFrien"
+    "dListRequest\022\016\n\006userid\030\001 \001(\r\"_\n\025GetFrien"
+    "dListResponse\022#\n\006result\030\001 \001(\0132\023.friends."
+    "ResultCode\022!\n\nfriendList\030\002 \003(\0132\r.friends"
+    ".Userb\006proto3"
 };
 static ::absl::once_flag descriptor_table_friendservice_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_friendservice_2eproto = {
     false,
     false,
-    332,
+    333,
     descriptor_table_protodef_friendservice_2eproto,
     "friendservice.proto",
     &descriptor_table_friendservice_2eproto_once,
@@ -912,27 +912,27 @@ void User::InternalSwap(User* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
 }
 // ===================================================================
 
-class GetFriendListRquest::_Internal {
+class GetFriendListRequest::_Internal {
  public:
   using HasBits =
-      decltype(::std::declval<GetFriendListRquest>()._impl_._has_bits_);
+      decltype(::std::declval<GetFriendListRequest>()._impl_._has_bits_);
   static constexpr ::int32_t kHasBitsOffset =
-      8 * PROTOBUF_FIELD_OFFSET(GetFriendListRquest, _impl_._has_bits_);
+      8 * PROTOBUF_FIELD_OFFSET(GetFriendListRequest, _impl_._has_bits_);
 };
 
-GetFriendListRquest::GetFriendListRquest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+GetFriendListRequest::GetFriendListRequest(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, GetFriendListRquest_class_data_.base()) {
+    : ::google::protobuf::Message(arena, GetFriendListRequest_class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:friends.GetFriendListRquest)
+  // @@protoc_insertion_point(arena_constructor:friends.GetFriendListRequest)
 }
-GetFriendListRquest::GetFriendListRquest(
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const GetFriendListRquest& from)
+GetFriendListRequest::GetFriendListRequest(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const GetFriendListRequest& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, GetFriendListRquest_class_data_.base()),
+    : ::google::protobuf::Message(arena, GetFriendListRequest_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena),
 #endif  // PROTOBUF_CUSTOM_VTABLE
@@ -940,73 +940,73 @@ GetFriendListRquest::GetFriendListRquest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
 }
-PROTOBUF_NDEBUG_INLINE GetFriendListRquest::Impl_::Impl_(
+PROTOBUF_NDEBUG_INLINE GetFriendListRequest::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0} {}
 
-inline void GetFriendListRquest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+inline void GetFriendListRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   _impl_.userid_ = {};
 }
-GetFriendListRquest::~GetFriendListRquest() {
-  // @@protoc_insertion_point(destructor:friends.GetFriendListRquest)
+GetFriendListRequest::~GetFriendListRequest() {
+  // @@protoc_insertion_point(destructor:friends.GetFriendListRequest)
   SharedDtor(*this);
 }
-inline void GetFriendListRquest::SharedDtor(MessageLite& self) {
-  GetFriendListRquest& this_ = static_cast<GetFriendListRquest&>(self);
+inline void GetFriendListRequest::SharedDtor(MessageLite& self) {
+  GetFriendListRequest& this_ = static_cast<GetFriendListRequest&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.~Impl_();
 }
 
-inline void* PROTOBUF_NONNULL GetFriendListRquest::PlacementNew_(
+inline void* PROTOBUF_NONNULL GetFriendListRequest::PlacementNew_(
     const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
-  return ::new (mem) GetFriendListRquest(arena);
+  return ::new (mem) GetFriendListRequest(arena);
 }
-constexpr auto GetFriendListRquest::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(GetFriendListRquest),
-                                            alignof(GetFriendListRquest));
+constexpr auto GetFriendListRequest::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(GetFriendListRequest),
+                                            alignof(GetFriendListRequest));
 }
-constexpr auto GetFriendListRquest::InternalGenerateClassData_() {
+constexpr auto GetFriendListRequest::InternalGenerateClassData_() {
   return ::google::protobuf::internal::ClassDataFull{
       ::google::protobuf::internal::ClassData{
-          &_GetFriendListRquest_default_instance_._instance,
+          &_GetFriendListRequest_default_instance_._instance,
           &_table_.header,
           nullptr,  // OnDemandRegisterArenaDtor
           nullptr,  // IsInitialized
-          &GetFriendListRquest::MergeImpl,
-          ::google::protobuf::Message::GetNewImpl<GetFriendListRquest>(),
+          &GetFriendListRequest::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<GetFriendListRequest>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-          &GetFriendListRquest::SharedDtor,
-          ::google::protobuf::Message::GetClearImpl<GetFriendListRquest>(), &GetFriendListRquest::ByteSizeLong,
-              &GetFriendListRquest::_InternalSerialize,
+          &GetFriendListRequest::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<GetFriendListRequest>(), &GetFriendListRequest::ByteSizeLong,
+              &GetFriendListRequest::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          PROTOBUF_FIELD_OFFSET(GetFriendListRquest, _impl_._cached_size_),
+          PROTOBUF_FIELD_OFFSET(GetFriendListRequest, _impl_._cached_size_),
           false,
       },
-      &GetFriendListRquest::kDescriptorMethods,
+      &GetFriendListRequest::kDescriptorMethods,
       &descriptor_table_friendservice_2eproto,
       nullptr,  // tracker
   };
 }
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
-    ::google::protobuf::internal::ClassDataFull GetFriendListRquest_class_data_ =
-        GetFriendListRquest::InternalGenerateClassData_();
+    ::google::protobuf::internal::ClassDataFull GetFriendListRequest_class_data_ =
+        GetFriendListRequest::InternalGenerateClassData_();
 
 PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
-GetFriendListRquest::GetClassData() const {
-  ::google::protobuf::internal::PrefetchToLocalCache(&GetFriendListRquest_class_data_);
-  ::google::protobuf::internal::PrefetchToLocalCache(GetFriendListRquest_class_data_.tc_table);
-  return GetFriendListRquest_class_data_.base();
+GetFriendListRequest::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&GetFriendListRequest_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(GetFriendListRequest_class_data_.tc_table);
+  return GetFriendListRequest_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
 const ::_pbi::TcParseTable<0, 1, 0, 0, 2>
-GetFriendListRquest::_table_ = {
+GetFriendListRequest::_table_ = {
   {
-    PROTOBUF_FIELD_OFFSET(GetFriendListRquest, _impl_._has_bits_),
+    PROTOBUF_FIELD_OFFSET(GetFriendListRequest, _impl_._has_bits_),
     0, // no _extensions_
     1, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
@@ -1015,29 +1015,29 @@ GetFriendListRquest::_table_ = {
     1,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
-    GetFriendListRquest_class_data_.base(),
+    GetFriendListRequest_class_data_.base(),
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::friends::GetFriendListRquest>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::friends::GetFriendListRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     // uint32 userid = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetFriendListRquest, _impl_.userid_), 0>(),
-     {8, 0, 0, PROTOBUF_FIELD_OFFSET(GetFriendListRquest, _impl_.userid_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(GetFriendListRequest, _impl_.userid_), 0>(),
+     {8, 0, 0, PROTOBUF_FIELD_OFFSET(GetFriendListRequest, _impl_.userid_)}},
   }}, {{
     65535, 65535
   }}, {{
     // uint32 userid = 1;
-    {PROTOBUF_FIELD_OFFSET(GetFriendListRquest, _impl_.userid_), _Internal::kHasBitsOffset + 0, 0,
+    {PROTOBUF_FIELD_OFFSET(GetFriendListRequest, _impl_.userid_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
   }},
 };
-PROTOBUF_NOINLINE void GetFriendListRquest::Clear() {
-// @@protoc_insertion_point(message_clear_start:friends.GetFriendListRquest)
+PROTOBUF_NOINLINE void GetFriendListRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:friends.GetFriendListRequest)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -1049,17 +1049,17 @@ PROTOBUF_NOINLINE void GetFriendListRquest::Clear() {
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-::uint8_t* PROTOBUF_NONNULL GetFriendListRquest::_InternalSerialize(
+::uint8_t* PROTOBUF_NONNULL GetFriendListRequest::_InternalSerialize(
     const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
     ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
-  const GetFriendListRquest& this_ = static_cast<const GetFriendListRquest&>(base);
+  const GetFriendListRequest& this_ = static_cast<const GetFriendListRequest&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-::uint8_t* PROTOBUF_NONNULL GetFriendListRquest::_InternalSerialize(
+::uint8_t* PROTOBUF_NONNULL GetFriendListRequest::_InternalSerialize(
     ::uint8_t* PROTOBUF_NONNULL target,
     ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-  const GetFriendListRquest& this_ = *this;
+  const GetFriendListRequest& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(serialize_to_array_start:friends.GetFriendListRquest)
+  // @@protoc_insertion_point(serialize_to_array_start:friends.GetFriendListRequest)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
@@ -1077,18 +1077,18 @@ PROTOBUF_NOINLINE void GetFriendListRquest::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:friends.GetFriendListRquest)
+  // @@protoc_insertion_point(serialize_to_array_end:friends.GetFriendListRequest)
   return target;
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-::size_t GetFriendListRquest::ByteSizeLong(const MessageLite& base) {
-  const GetFriendListRquest& this_ = static_cast<const GetFriendListRquest&>(base);
+::size_t GetFriendListRequest::ByteSizeLong(const MessageLite& base) {
+  const GetFriendListRequest& this_ = static_cast<const GetFriendListRequest&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-::size_t GetFriendListRquest::ByteSizeLong() const {
-  const GetFriendListRquest& this_ = *this;
+::size_t GetFriendListRequest::ByteSizeLong() const {
+  const GetFriendListRequest& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:friends.GetFriendListRquest)
+  // @@protoc_insertion_point(message_byte_size_start:friends.GetFriendListRequest)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -1109,10 +1109,10 @@ PROTOBUF_NOINLINE void GetFriendListRquest::Clear() {
                                              &this_._impl_._cached_size_);
 }
 
-void GetFriendListRquest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<GetFriendListRquest*>(&to_msg);
-  auto& from = static_cast<const GetFriendListRquest&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:friends.GetFriendListRquest)
+void GetFriendListRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<GetFriendListRequest*>(&to_msg);
+  auto& from = static_cast<const GetFriendListRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:friends.GetFriendListRequest)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -1127,22 +1127,22 @@ void GetFriendListRquest::MergeImpl(::google::protobuf::MessageLite& to_msg, con
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void GetFriendListRquest::CopyFrom(const GetFriendListRquest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:friends.GetFriendListRquest)
+void GetFriendListRequest::CopyFrom(const GetFriendListRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:friends.GetFriendListRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void GetFriendListRquest::InternalSwap(GetFriendListRquest* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+void GetFriendListRequest::InternalSwap(GetFriendListRequest* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   using ::std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   swap(_impl_.userid_, other->_impl_.userid_);
 }
 
-::google::protobuf::Metadata GetFriendListRquest::GetMetadata() const {
+::google::protobuf::Metadata GetFriendListRequest::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
