@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "friendservice.pb.h"
-#include "userservice.pb.h"
+#include "generated/friendservice.pb.h"
+#include "generated/userservice.pb.h"
 
 // 生成代码命令：protoc *.proto --cpp_out=./
 // 编译代码命令：g++ *.cc -o main $(pkg-config --cflags --libs protobuf)
