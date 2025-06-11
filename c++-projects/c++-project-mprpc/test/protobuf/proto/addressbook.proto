@@ -1,0 +1,51 @@
+// Protobuf 语法的版本
+syntax = "proto3";
+
+// 定义包名，便于在生成的代码中区分不同模块（类似 C++ 的命名空间）
+package address;
+
+// 定义个人信息的消息类型
+message Person {
+
+  // ID
+  int32 id = 2;
+
+  // 姓名
+  string name = 1;
+
+  // 邮箱地址，可选字段
+  optional string email = 3;
+
+   // 定义性别的枚举类型
+   enum SEX {
+       MAN = 0;
+       WOMAN = 1;
+   }
+
+   SEX sex = 4;
+
+  // 定义电话类型的枚举
+  enum PhoneType {
+    PHONE_TYPE_UNSPECIFIED = 0;
+    PHONE_TYPE_MOBILE = 1;
+    PHONE_TYPE_HOME = 2;
+    PHONE_TYPE_WORK = 3;
+  }
+
+  // 定义电话号码的嵌套消息类型
+  message PhoneNumber {
+    // 电话号码
+    string number = 1;
+    // 电话类型
+    PhoneType type = 2;
+  }
+
+  // 电话号码列表（一个人可以有多个电话号码）
+  repeated PhoneNumber phones = 5;
+}
+
+// 定义通讯录
+message AddressBook {
+  // 通讯录中的人列表
+  repeated Person people = 1;
+}
