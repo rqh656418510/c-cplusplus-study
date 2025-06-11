@@ -84,23 +84,23 @@ void test03() {
     group->set_groupname("AI Team");
     group->set_groupdesc("A group for AI");
 
-    // 插入 map 中的 User
+    // Map 中的 User
     group::User user1;
     user1.set_id(1);
     user1.set_name("Jim");
     user1.set_sex(group::User::MAN);
 
-    // 插入 map 中的 User
+    // Map 中的 User
     group::User user2;
     user2.set_id(2);
     user2.set_name("Tom");
     user2.set_sex(group::User::MAN);
 
-    // 向 map 添加成员（注意：这里使用的是指针引用）
+    // 向 Map 添加成员（注意：这里使用的是指针引用）
     (*group->mutable_users())[user1.id()] = user1;
     (*group->mutable_users())[user2.id()] = user2;
 
-    // 获取 map 的大小
+    // 获取 Map 的大小
     cout << "group user map size: " << resp.group().users().size() << endl;
 
     // C++ 对象序列化
