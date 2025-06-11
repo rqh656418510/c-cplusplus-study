@@ -150,6 +150,9 @@ void test04() {
     phone4->set_number("0865 - 123456");
     phone4->set_type(address::Person::PHONE_TYPE_HOME);
 
+    // 获取通讯录里的人数
+    cout << "people size: " << addressBook.people_size() << endl;
+
     // C++ 对象序列化
     string serialize_str;
     if (!addressBook.SerializeToString(&serialize_str)) {
