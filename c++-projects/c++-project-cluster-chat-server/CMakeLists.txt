@@ -36,7 +36,7 @@ find_library(MYSQL_LIBRARY NAMES mysqlclient PATHS
     /usr/lib /usr/local/lib /usr/lib64/mysql /usr/lib/x86_64-linux-gnu
 )
 
-# 指定 MySQL 的静态或动态库
+# 链接 MySQL 的静态或动态库
 if (MYSQL_LIBRARY)
     message(STATUS "Found MySQL library: ${MYSQL_LIBRARY}")
     get_filename_component(MYSQL_LIBRARY_DIR ${MYSQL_LIBRARY} DIRECTORY)

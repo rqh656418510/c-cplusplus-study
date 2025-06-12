@@ -1,0 +1,34 @@
+// Protobuf 语法的版本
+syntax = "proto3";
+
+// 定义包名，便于在生成的代码中区分不同模块
+package friends;
+
+message ResultCode {
+   int32 errorno = 1;
+   string errormsg = 2;
+   bool result = 3;
+}
+
+message User {
+   uint32 id = 1;
+   string name = 2;
+ 
+   // 枚举类型
+   enum SEX {
+       MAN = 0;
+       WOMAN = 1;
+   }
+
+   SEX sex = 3;
+}
+
+message GetFriendListRequest {
+    uint32 userid = 1;
+}
+
+message GetFriendListResponse {
+    ResultCode result = 1;
+    // 定义列表
+    repeated User friendList = 2;
+}

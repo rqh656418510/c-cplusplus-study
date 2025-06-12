@@ -6,21 +6,21 @@
 
 ### 开发工具
 
-| 软件               | 版本        | 说明                                                                                   |
-| ------------------ | ----------- | -------------------------------------------------------------------------------------- |
-| C++ 标准           | `11`        |                                                                                        |
-| Boost              | `1.74.0.3`  | Boost 库                                                                               |
-| Muduo              | `2.0.3`     | [Muduo 库](https://github.com/chenshuo/muduo)，基于 C++ 开发，用于网络编程             |
-| hiredis            | `1.3.0`     | [Reids 库](https://github.com/redis/hiredis) ，基于 C 语言开发，用于操作 Redis         |
-| nlohmann/json      | `3.12.0`    | [Json 库](https://github.com/nlohmann/json)，基于 C++ 开发，用于 Json 序列化和反序列化 |
-| Redis              | `7.0.15`    | Redis 服务器                                                                           |
-| MySQL              | `8.4.5`     | MySQL 服务器                                                                           |
-| Nginx              | `1.28.0`    | Nginx 服务器                                                                           |
-| G++（GCC）         | `12.2.0`    | 建议使用 `5.5`、`7.5` 版本的 G++（GCC） 编译器                                         |
-| CMake              | `3.25.1`    | C/C++ 项目构建工具                                                                     |
-| Linux              | `Debian 12` | Muduo 库不支持 Windows 平台                                                            |
+| 软件          | 版本        | 说明                                                                                   |
+| ------------- | ----------- | -------------------------------------------------------------------------------------- |
+| C++ 标准      | `11`        |                                                                                        |
+| Boost         | `1.74.0.3`  | Muduo 库依赖 Boost 库                                                                  |
+| Muduo         | `2.0.3`     | [Muduo 库](https://github.com/chenshuo/muduo)，基于 C++ 开发，用于网络编程             |
+| hiredis       | `1.3.0`     | [Reids 库](https://github.com/redis/hiredis) ，基于 C 语言开发，用于操作 Redis         |
+| nlohmann/json | `3.12.0`    | [Json 库](https://github.com/nlohmann/json)，基于 C++ 开发，用于 Json 序列化和反序列化 |
+| Redis         | `7.0.15`    | Redis 服务器                                                                           |
+| MySQL         | `8.4.5`     | MySQL 服务器                                                                           |
+| Nginx         | `1.28.0`    | Nginx 服务器                                                                           |
+| G++（GCC）    | `12.2.0`    | 建议使用 `5.5`、`7.5` 版本的 G++（GCC） 编译器                                         |
+| CMake         | `3.25.1`    | C/C++ 项目构建工具                                                                     |
+| Linux         | `Debian 12` | Muduo 库不支持 Windows 平台                                                            |
 
-> 注意：由于使用了 Muduo 库，且 Muduo 库仅支持 Linux 平台；因此本项目提供的所有 C++ 集群聊天服务器代码支持在 Linux 平台运行，不支持 Windows 平台，默认是基于 Debian 12 进行开发。
+> 注意：由于本项目使用了 Muduo 库，且 Muduo 库仅支持 Linux 平台；因此本项目的所有 C++ 集群聊天服务器代码支持在 Linux 平台运行，不支持 Windows 平台，默认是基于 Debian 12 进行开发。
 
 ### 项目构建
 
@@ -31,7 +31,7 @@ cd c++-project-cluster-chat-server
 # 配置项目，生成构建文件
 cmake -S . -B build
 
-# 编译项目，生成可执行文件
+# 编译项目，在bin目录下生成可执行文件
 cmake --build build
 ```
 
@@ -40,14 +40,14 @@ cmake --build build
 - 1. 启动 Nginx、Redis、MySQL 服务
 
 - 2. 启动集群聊天服务端程序
-    - 启动第一个聊天服务端程序：`chat_server 127.0.0.1 6000`
-    - 启动第二个聊天服务端程序：`chat_server 127.0.0.1 6002`
+    - 启动第一个聊天服务端程序：`./bin/chat_server 127.0.0.1 6000`
+    - 启动第二个聊天服务端程序：`./bin/chat_server 127.0.0.1 6002`
 
 - 3. 启动集群聊天客户端程序
-    - 启动第一个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
-    - 启动第二个聊天客户端程序：`chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
+    - 启动第一个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
+    - 启动第二个聊天客户端程序：`./bin/chat_client 127.0.0.1 8000`，连接的是 Nginx 的 TCP 负载均衡器
 
-### 项目接口定义
+### 项目接口
 
 - 用户注册
 
@@ -96,7 +96,7 @@ cmake --build build
 - 发送群聊消息
 
 ``` json
-{"msgType": 13, "fromId": 22, "fromName": "jim", "fromTimestamp": 1748926809683, "groupId": 1, "groupMsg": "go to study c++"}
+{"msgType": 13, "fromId": 22, "fromName": "jim", "fromTimestamp": 1748926803682, "groupId": 1, "groupMsg": "go to study c++"}
 
-{"msgType": 13, "fromId": 23, "fromName": "tom", "fromTimestamp": 1748926809383, "groupId": 1, "groupMsg": "go to study rust"}
+{"msgType": 13, "fromId": 23, "fromName": "tom", "fromTimestamp": 1748926805372, "groupId": 1, "groupMsg": "go to study rust"}
 ```
