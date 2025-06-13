@@ -1,6 +1,3 @@
-# 指定项目名称
-project(example_rpc)
-
 # 查找并加载 Protobuf 动态库
 find_package(Protobuf REQUIRED)
 
