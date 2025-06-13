@@ -4,7 +4,7 @@
 class MprpcApplication {
 public:
     // 获取单例对象
-    static MprpcApplication& GetInstance();
+    static MprpcApplication* GetInstance();
 
     // 初始化 RPC 框架
     static void Init(int argc, char** argv);

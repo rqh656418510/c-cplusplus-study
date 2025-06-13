@@ -64,16 +64,16 @@ public:
 
 int main(int argc, char** argv) {
     // 调用 RPC 框架的初始化操作
-    MprpcApplication::Init(argc, argv);
+    // MprpcApplication::Init(argc, argv);
 
     // 用来发布 RPC 服务的网络对象类
     RpcProvider provider;
 
     // 发布 RPC 服务
-    // provider.NotifyService(new UserService());
+    provider.NotifyService(new UserService());
 
     // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
-    // provider.Run();
+    provider.Run();
 
     return 0;
 }

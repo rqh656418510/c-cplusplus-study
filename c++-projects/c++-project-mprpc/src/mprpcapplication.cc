@@ -11,10 +11,10 @@ MprpcApplication::~MprpcApplication() {
 }
 
 // 获取单例对象
-MprpcApplication& MprpcApplication::GetInstance() {
+MprpcApplication* MprpcApplication::GetInstance() {
     // 局部静态变量（线程安全）
     static MprpcApplication singleton;
-    return singleton;
+    return &singleton;
 }
 
 // 初始化 RPC 框架
