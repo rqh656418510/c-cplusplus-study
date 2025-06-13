@@ -24,9 +24,6 @@ include_directories(/usr/local/include)
 # 指定项目头文件
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
 
-# 指定项目源文件
-file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
-
 # 查找并加载 Protobuf 动态库
 find_package(Protobuf REQUIRED)
 

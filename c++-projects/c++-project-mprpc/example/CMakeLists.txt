@@ -21,9 +21,6 @@ execute_process(COMMAND protoc
 # 指定 Protobuf 自动生成的 C++ 头文件
 include_directories(${PROTO_GEN_DIR})
 
-# 指定 Protobuf 自动生成的 C++ 源文件
-file(GLOB_RECURSE SRC_FILES ${PROTO_GEN_DIR}/*.cc)
-
 # 加载 CMake 子目录
 add_subdirectory(callee)
 add_subdirectory(caller)
