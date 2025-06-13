@@ -1,5 +1,9 @@
-# 指定项目源文件
-file(GLOB_RECURSE SRC_FILES *.cc)
+# 指定项目的源文件
+file(GLOB_RECURSE SRC_FILES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cc
+    ${PROJECT_SOURCE_DIR}/src/*.cc
+    ${PROJECT_SOURCE_DIR}/example/generated/*.cc
+)
 
 # 编译生成可执行文件
 add_executable(example_rpc_consumer ${SRC_FILES})
