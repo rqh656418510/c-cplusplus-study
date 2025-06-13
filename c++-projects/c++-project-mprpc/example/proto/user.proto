@@ -7,27 +7,32 @@ package user;
 // 允许生成通用的 C++ 服务接口（可选项）
 option cc_generic_services = true;
 
+// 请求结果
 message ResultCode {
     int32 errcode = 1; 
     bytes errmsg = 2;
 }
 
+// 登录请求
 message LoginRequest {
     bytes name = 1;
     bytes password = 2;
 }
 
+// 登录响应
 message LoginResponse {
     ResultCode result = 1;
     bool success = 2;
 }
 
+// 注册请求
 message RegisterRequest {
     uint32 id = 1;
     bytes name = 2;
     bytes password = 3;
 }
 
+// 注册响应
 message RegisterResponse {
     ResultCode result = 1;
     bool success = 2;
