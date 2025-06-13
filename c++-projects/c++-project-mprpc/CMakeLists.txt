@@ -35,3 +35,4 @@ link_directories(${Protobuf_LIBRARIES})
 # 加载 CMake 子目录
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(example)
