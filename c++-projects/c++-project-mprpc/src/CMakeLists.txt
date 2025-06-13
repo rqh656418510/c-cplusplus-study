@@ -1,3 +1,6 @@
+# 指定项目的头文件
+include_directories(${PROJECT_SOURCE_DIR}/src)
+
 # 指定项目源文件
 file(GLOB_RECURSE SRC_FILES *.cc)
 

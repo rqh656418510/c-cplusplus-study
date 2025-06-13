@@ -439,7 +439,7 @@ class RegisterRequest final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kNameFieldNumber = 2,
-    kPwdFieldNumber = 3,
+    kPasswordFieldNumber = 3,
     kIdFieldNumber = 1,
   };
   // bytes name = 2;
@@ -457,19 +457,19 @@ class RegisterRequest final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // bytes pwd = 3;
-  void clear_pwd() ;
-  const ::std::string& pwd() const;
+  // bytes password = 3;
+  void clear_password() ;
+  const ::std::string& password() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_pwd(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_pwd();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_pwd();
-  void set_allocated_pwd(::std::string* PROTOBUF_NULLABLE value);
+  void set_password(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_password();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_password();
+  void set_allocated_password(::std::string* PROTOBUF_NULLABLE value);
 
   private:
-  const ::std::string& _internal_pwd() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_pwd(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_pwd();
+  const ::std::string& _internal_password() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_password(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_password();
 
   public:
   // uint32 id = 1;
@@ -509,7 +509,7 @@ class RegisterRequest final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
-    ::google::protobuf::internal::ArenaStringPtr pwd_;
+    ::google::protobuf::internal::ArenaStringPtr password_;
     ::uint32_t id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -664,7 +664,7 @@ class LoginRequest final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kNameFieldNumber = 1,
-    kPwdFieldNumber = 2,
+    kPasswordFieldNumber = 2,
   };
   // bytes name = 1;
   void clear_name() ;
@@ -681,19 +681,19 @@ class LoginRequest final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // bytes pwd = 2;
-  void clear_pwd() ;
-  const ::std::string& pwd() const;
+  // bytes password = 2;
+  void clear_password() ;
+  const ::std::string& password() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_pwd(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_pwd();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_pwd();
-  void set_allocated_pwd(::std::string* PROTOBUF_NULLABLE value);
+  void set_password(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_password();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_password();
+  void set_allocated_password(::std::string* PROTOBUF_NULLABLE value);
 
   private:
-  const ::std::string& _internal_pwd() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_pwd(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_pwd();
+  const ::std::string& _internal_password() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_password(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_password();
 
   public:
   // @@protoc_insertion_point(class_scope:user.LoginRequest)
@@ -723,7 +723,7 @@ class LoginRequest final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
-    ::google::protobuf::internal::ArenaStringPtr pwd_;
+    ::google::protobuf::internal::ArenaStringPtr password_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -877,7 +877,7 @@ class RegisterResponse final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kResultFieldNumber = 1,
-    kSucessFieldNumber = 2,
+    kSuccessFieldNumber = 2,
   };
   // .user.ResultCode result = 1;
   bool has_result() const;
@@ -894,14 +894,14 @@ class RegisterResponse final : public ::google::protobuf::Message
   ::user::ResultCode* PROTOBUF_NONNULL _internal_mutable_result();
 
   public:
-  // bool sucess = 2;
-  void clear_sucess() ;
-  bool sucess() const;
-  void set_sucess(bool value);
+  // bool success = 2;
+  void clear_success() ;
+  bool success() const;
+  void set_success(bool value);
 
   private:
-  bool _internal_sucess() const;
-  void _internal_set_sucess(bool value);
+  bool _internal_success() const;
+  void _internal_set_success(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:user.RegisterResponse)
@@ -931,7 +931,7 @@ class RegisterResponse final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::user::ResultCode* PROTOBUF_NULLABLE result_;
-    bool sucess_;
+    bool success_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1085,7 +1085,7 @@ class LoginResponse final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kResultFieldNumber = 1,
-    kSucessFieldNumber = 2,
+    kSuccessFieldNumber = 2,
   };
   // .user.ResultCode result = 1;
   bool has_result() const;
@@ -1102,14 +1102,14 @@ class LoginResponse final : public ::google::protobuf::Message
   ::user::ResultCode* PROTOBUF_NONNULL _internal_mutable_result();
 
   public:
-  // bool sucess = 2;
-  void clear_sucess() ;
-  bool sucess() const;
-  void set_sucess(bool value);
+  // bool success = 2;
+  void clear_success() ;
+  bool success() const;
+  void set_success(bool value);
 
   private:
-  bool _internal_sucess() const;
-  void _internal_set_sucess(bool value);
+  bool _internal_success() const;
+  void _internal_set_success(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:user.LoginResponse)
@@ -1139,7 +1139,7 @@ class LoginResponse final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::user::ResultCode* PROTOBUF_NULLABLE result_;
-    bool sucess_;
+    bool success_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1393,69 +1393,69 @@ inline void LoginRequest::set_allocated_name(::std::string* PROTOBUF_NULLABLE va
   // @@protoc_insertion_point(field_set_allocated:user.LoginRequest.name)
 }
 
-// bytes pwd = 2;
-inline void LoginRequest::clear_pwd() {
+// bytes password = 2;
+inline void LoginRequest::clear_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.pwd_.ClearToEmpty();
+  _impl_.password_.ClearToEmpty();
   _impl_._has_bits_[0] &= ~0x00000002u;
 }
-inline const ::std::string& LoginRequest::pwd() const
+inline const ::std::string& LoginRequest::password() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:user.LoginRequest.pwd)
-  return _internal_pwd();
+  // @@protoc_insertion_point(field_get:user.LoginRequest.password)
+  return _internal_password();
 }
 template <typename Arg_, typename... Args_>
-PROTOBUF_ALWAYS_INLINE void LoginRequest::set_pwd(Arg_&& arg, Args_... args) {
+PROTOBUF_ALWAYS_INLINE void LoginRequest::set_password(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  _impl_.pwd_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:user.LoginRequest.pwd)
+  _impl_.password_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:user.LoginRequest.password)
 }
-inline ::std::string* PROTOBUF_NONNULL LoginRequest::mutable_pwd()
+inline ::std::string* PROTOBUF_NONNULL LoginRequest::mutable_password()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::std::string* _s = _internal_mutable_pwd();
-  // @@protoc_insertion_point(field_mutable:user.LoginRequest.pwd)
+  ::std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:user.LoginRequest.password)
   return _s;
 }
-inline const ::std::string& LoginRequest::_internal_pwd() const {
+inline const ::std::string& LoginRequest::_internal_password() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.pwd_.Get();
+  return _impl_.password_.Get();
 }
-inline void LoginRequest::_internal_set_pwd(const ::std::string& value) {
+inline void LoginRequest::_internal_set_password(const ::std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  _impl_.pwd_.Set(value, GetArena());
+  _impl_.password_.Set(value, GetArena());
 }
-inline ::std::string* PROTOBUF_NONNULL LoginRequest::_internal_mutable_pwd() {
+inline ::std::string* PROTOBUF_NONNULL LoginRequest::_internal_mutable_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  return _impl_.pwd_.Mutable( GetArena());
+  return _impl_.password_.Mutable( GetArena());
 }
-inline ::std::string* PROTOBUF_NULLABLE LoginRequest::release_pwd() {
+inline ::std::string* PROTOBUF_NULLABLE LoginRequest::release_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:user.LoginRequest.pwd)
+  // @@protoc_insertion_point(field_release:user.LoginRequest.password)
   if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
   _impl_._has_bits_[0] &= ~0x00000002u;
-  auto* released = _impl_.pwd_.Release();
+  auto* released = _impl_.password_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
-    _impl_.pwd_.Set("", GetArena());
+    _impl_.password_.Set("", GetArena());
   }
   return released;
 }
-inline void LoginRequest::set_allocated_pwd(::std::string* PROTOBUF_NULLABLE value) {
+inline void LoginRequest::set_allocated_password(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
     _impl_._has_bits_[0] |= 0x00000002u;
   } else {
     _impl_._has_bits_[0] &= ~0x00000002u;
   }
-  _impl_.pwd_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.pwd_.IsDefault()) {
-    _impl_.pwd_.Set("", GetArena());
+  _impl_.password_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.password_.IsDefault()) {
+    _impl_.password_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:user.LoginRequest.pwd)
+  // @@protoc_insertion_point(field_set_allocated:user.LoginRequest.password)
 }
 
 // -------------------------------------------------------------------
@@ -1560,28 +1560,28 @@ inline void LoginResponse::set_allocated_result(::user::ResultCode* PROTOBUF_NUL
   // @@protoc_insertion_point(field_set_allocated:user.LoginResponse.result)
 }
 
-// bool sucess = 2;
-inline void LoginResponse::clear_sucess() {
+// bool success = 2;
+inline void LoginResponse::clear_success() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sucess_ = false;
+  _impl_.success_ = false;
   _impl_._has_bits_[0] &= ~0x00000002u;
 }
-inline bool LoginResponse::sucess() const {
-  // @@protoc_insertion_point(field_get:user.LoginResponse.sucess)
-  return _internal_sucess();
+inline bool LoginResponse::success() const {
+  // @@protoc_insertion_point(field_get:user.LoginResponse.success)
+  return _internal_success();
 }
-inline void LoginResponse::set_sucess(bool value) {
-  _internal_set_sucess(value);
+inline void LoginResponse::set_success(bool value) {
+  _internal_set_success(value);
   _impl_._has_bits_[0] |= 0x00000002u;
-  // @@protoc_insertion_point(field_set:user.LoginResponse.sucess)
+  // @@protoc_insertion_point(field_set:user.LoginResponse.success)
 }
-inline bool LoginResponse::_internal_sucess() const {
+inline bool LoginResponse::_internal_success() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.sucess_;
+  return _impl_.success_;
 }
-inline void LoginResponse::_internal_set_sucess(bool value) {
+inline void LoginResponse::_internal_set_success(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sucess_ = value;
+  _impl_.success_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1677,69 +1677,69 @@ inline void RegisterRequest::set_allocated_name(::std::string* PROTOBUF_NULLABLE
   // @@protoc_insertion_point(field_set_allocated:user.RegisterRequest.name)
 }
 
-// bytes pwd = 3;
-inline void RegisterRequest::clear_pwd() {
+// bytes password = 3;
+inline void RegisterRequest::clear_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.pwd_.ClearToEmpty();
+  _impl_.password_.ClearToEmpty();
   _impl_._has_bits_[0] &= ~0x00000002u;
 }
-inline const ::std::string& RegisterRequest::pwd() const
+inline const ::std::string& RegisterRequest::password() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:user.RegisterRequest.pwd)
-  return _internal_pwd();
+  // @@protoc_insertion_point(field_get:user.RegisterRequest.password)
+  return _internal_password();
 }
 template <typename Arg_, typename... Args_>
-PROTOBUF_ALWAYS_INLINE void RegisterRequest::set_pwd(Arg_&& arg, Args_... args) {
+PROTOBUF_ALWAYS_INLINE void RegisterRequest::set_password(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  _impl_.pwd_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:user.RegisterRequest.pwd)
+  _impl_.password_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:user.RegisterRequest.password)
 }
-inline ::std::string* PROTOBUF_NONNULL RegisterRequest::mutable_pwd()
+inline ::std::string* PROTOBUF_NONNULL RegisterRequest::mutable_password()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::std::string* _s = _internal_mutable_pwd();
-  // @@protoc_insertion_point(field_mutable:user.RegisterRequest.pwd)
+  ::std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:user.RegisterRequest.password)
   return _s;
 }
-inline const ::std::string& RegisterRequest::_internal_pwd() const {
+inline const ::std::string& RegisterRequest::_internal_password() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.pwd_.Get();
+  return _impl_.password_.Get();
 }
-inline void RegisterRequest::_internal_set_pwd(const ::std::string& value) {
+inline void RegisterRequest::_internal_set_password(const ::std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  _impl_.pwd_.Set(value, GetArena());
+  _impl_.password_.Set(value, GetArena());
 }
-inline ::std::string* PROTOBUF_NONNULL RegisterRequest::_internal_mutable_pwd() {
+inline ::std::string* PROTOBUF_NONNULL RegisterRequest::_internal_mutable_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  return _impl_.pwd_.Mutable( GetArena());
+  return _impl_.password_.Mutable( GetArena());
 }
-inline ::std::string* PROTOBUF_NULLABLE RegisterRequest::release_pwd() {
+inline ::std::string* PROTOBUF_NULLABLE RegisterRequest::release_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:user.RegisterRequest.pwd)
+  // @@protoc_insertion_point(field_release:user.RegisterRequest.password)
   if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
     return nullptr;
   }
   _impl_._has_bits_[0] &= ~0x00000002u;
-  auto* released = _impl_.pwd_.Release();
+  auto* released = _impl_.password_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
-    _impl_.pwd_.Set("", GetArena());
+    _impl_.password_.Set("", GetArena());
   }
   return released;
 }
-inline void RegisterRequest::set_allocated_pwd(::std::string* PROTOBUF_NULLABLE value) {
+inline void RegisterRequest::set_allocated_password(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
     _impl_._has_bits_[0] |= 0x00000002u;
   } else {
     _impl_._has_bits_[0] &= ~0x00000002u;
   }
-  _impl_.pwd_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.pwd_.IsDefault()) {
-    _impl_.pwd_.Set("", GetArena());
+  _impl_.password_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.password_.IsDefault()) {
+    _impl_.password_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:user.RegisterRequest.pwd)
+  // @@protoc_insertion_point(field_set_allocated:user.RegisterRequest.password)
 }
 
 // -------------------------------------------------------------------
@@ -1844,28 +1844,28 @@ inline void RegisterResponse::set_allocated_result(::user::ResultCode* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:user.RegisterResponse.result)
 }
 
-// bool sucess = 2;
-inline void RegisterResponse::clear_sucess() {
+// bool success = 2;
+inline void RegisterResponse::clear_success() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sucess_ = false;
+  _impl_.success_ = false;
   _impl_._has_bits_[0] &= ~0x00000002u;
 }
-inline bool RegisterResponse::sucess() const {
-  // @@protoc_insertion_point(field_get:user.RegisterResponse.sucess)
-  return _internal_sucess();
+inline bool RegisterResponse::success() const {
+  // @@protoc_insertion_point(field_get:user.RegisterResponse.success)
+  return _internal_success();
 }
-inline void RegisterResponse::set_sucess(bool value) {
-  _internal_set_sucess(value);
+inline void RegisterResponse::set_success(bool value) {
+  _internal_set_success(value);
   _impl_._has_bits_[0] |= 0x00000002u;
-  // @@protoc_insertion_point(field_set:user.RegisterResponse.sucess)
+  // @@protoc_insertion_point(field_set:user.RegisterResponse.success)
 }
-inline bool RegisterResponse::_internal_sucess() const {
+inline bool RegisterResponse::_internal_success() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.sucess_;
+  return _impl_.success_;
 }
-inline void RegisterResponse::_internal_set_sucess(bool value) {
+inline void RegisterResponse::_internal_set_success(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sucess_ = value;
+  _impl_.success_ = value;
 }
 
 #ifdef __GNUC__

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "generated/addressbook.pb.h"
-#include "generated/friendservice.pb.h"
-#include "generated/groupservice.pb.h"
-#include "generated/userservice.pb.h"
+#include "addressbook.pb.h"
+#include "friendservice.pb.h"
+#include "groupservice.pb.h"
+#include "userservice.pb.h"
 
 using namespace std;
 

@@ -12,14 +12,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
-# 指定可执行文件的输出目录
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+# 指定项目库文件的输出目录
+set(LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
-# 指定项目的头文件
-include_directories(${PROJECT_SOURCE_DIR}/include)
+# 指定项目可执行文件的输出目录
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # 指定系统的头文件，如 Muduo、Protobuf 头文件
 include_directories(/usr/local/include)
+
+# 指定项目头文件
+include_directories(${PROJECT_SOURCE_DIR}/src/include)
 
 # 查找并加载 Protobuf 动态库
 find_package(Protobuf REQUIRED)

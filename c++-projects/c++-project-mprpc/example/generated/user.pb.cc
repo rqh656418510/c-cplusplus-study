@@ -60,7 +60,7 @@ inline constexpr RegisterRequest::Impl_::Impl_(
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        pwd_(
+        password_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         id_{0u} {}
@@ -91,7 +91,7 @@ inline constexpr LoginRequest::Impl_::Impl_(
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        pwd_(
+        password_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()) {}
 
@@ -119,7 +119,7 @@ inline constexpr RegisterResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         result_{nullptr},
-        sucess_{false} {}
+        success_{false} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR RegisterResponse::RegisterResponse(::_pbi::ConstantInitialized)
@@ -145,7 +145,7 @@ inline constexpr LoginResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         result_{nullptr},
-        sucess_{false} {}
+        success_{false} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR LoginResponse::LoginResponse(::_pbi::ConstantInitialized)
@@ -185,14 +185,14 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::user::LoginRequest, _impl_._has_bits_),
         5, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::user::LoginRequest, _impl_.name_),
-        PROTOBUF_FIELD_OFFSET(::user::LoginRequest, _impl_.pwd_),
+        PROTOBUF_FIELD_OFFSET(::user::LoginRequest, _impl_.password_),
         0,
         1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::user::LoginResponse, _impl_._has_bits_),
         5, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::user::LoginResponse, _impl_.result_),
-        PROTOBUF_FIELD_OFFSET(::user::LoginResponse, _impl_.sucess_),
+        PROTOBUF_FIELD_OFFSET(::user::LoginResponse, _impl_.success_),
         0,
         1,
         0x081, // bitmap
@@ -200,7 +200,7 @@ const ::uint32_t
         6, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.name_),
-        PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.pwd_),
+        PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.password_),
         2,
         0,
         1,
@@ -208,7 +208,7 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::user::RegisterResponse, _impl_._has_bits_),
         5, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::user::RegisterResponse, _impl_.result_),
-        PROTOBUF_FIELD_OFFSET(::user::RegisterResponse, _impl_.sucess_),
+        PROTOBUF_FIELD_OFFSET(::user::RegisterResponse, _impl_.success_),
         0,
         1,
 };
@@ -231,23 +231,23 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
 const char descriptor_table_protodef_user_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\nuser.proto\022\004user\"-\n\nResultCode\022\017\n\007errc"
-    "ode\030\001 \001(\005\022\016\n\006errmsg\030\002 \001(\014\")\n\014LoginReques"
-    "t\022\014\n\004name\030\001 \001(\014\022\013\n\003pwd\030\002 \001(\014\"A\n\rLoginRes"
-    "ponse\022 \n\006result\030\001 \001(\0132\020.user.ResultCode\022"
-    "\016\n\006sucess\030\002 \001(\010\"8\n\017RegisterRequest\022\n\n\002id"
-    "\030\001 \001(\r\022\014\n\004name\030\002 \001(\014\022\013\n\003pwd\030\003 \001(\014\"D\n\020Reg"
-    "isterResponse\022 \n\006result\030\001 \001(\0132\020.user.Res"
-    "ultCode\022\016\n\006sucess\030\002 \001(\0102}\n\016UserServiceRp"
-    "c\0220\n\005Login\022\022.user.LoginRequest\032\023.user.Lo"
-    "ginResponse\0229\n\010Register\022\025.user.RegisterR"
-    "equest\032\026.user.RegisterResponseB\003\200\001\001b\006pro"
-    "to3"
+    "ode\030\001 \001(\005\022\016\n\006errmsg\030\002 \001(\014\".\n\014LoginReques"
+    "t\022\014\n\004name\030\001 \001(\014\022\020\n\010password\030\002 \001(\014\"B\n\rLog"
+    "inResponse\022 \n\006result\030\001 \001(\0132\020.user.Result"
+    "Code\022\017\n\007success\030\002 \001(\010\"=\n\017RegisterRequest"
+    "\022\n\n\002id\030\001 \001(\r\022\014\n\004name\030\002 \001(\014\022\020\n\010password\030\003"
+    " \001(\014\"E\n\020RegisterResponse\022 \n\006result\030\001 \001(\013"
+    "2\020.user.ResultCode\022\017\n\007success\030\002 \001(\0102}\n\016U"
+    "serServiceRpc\0220\n\005Login\022\022.user.LoginReque"
+    "st\032\023.user.LoginResponse\0229\n\010Register\022\025.us"
+    "er.RegisterRequest\032\026.user.RegisterRespon"
+    "seB\003\200\001\001b\006proto3"
 };
 static ::absl::once_flag descriptor_table_user_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_user_2eproto = {
     false,
     false,
-    443,
+    455,
     descriptor_table_protodef_user_2eproto,
     "user.proto",
     &descriptor_table_user_2eproto_once,
@@ -578,7 +578,7 @@ PROTOBUF_NDEBUG_INLINE LoginRequest::Impl_::Impl_(
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         name_(arena, from.name_),
-        pwd_(arena, from.pwd_) {}
+        password_(arena, from.password_) {}
 
 LoginRequest::LoginRequest(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -601,7 +601,7 @@ PROTOBUF_NDEBUG_INLINE LoginRequest::Impl_::Impl_(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         name_(arena),
-        pwd_(arena) {}
+        password_(arena) {}
 
 inline void LoginRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -615,7 +615,7 @@ inline void LoginRequest::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
-  this_._impl_.pwd_.Destroy();
+  this_._impl_.password_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -681,9 +681,9 @@ LoginRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::user::LoginRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bytes pwd = 2;
+    // bytes password = 2;
     {::_pbi::TcParser::FastBS1,
-     {18, 1, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.pwd_)}},
+     {18, 1, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.password_)}},
     // bytes name = 1;
     {::_pbi::TcParser::FastBS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.name_)}},
@@ -693,8 +693,8 @@ LoginRequest::_table_ = {
     // bytes name = 1;
     {PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
-    // bytes pwd = 2;
-    {PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.pwd_), _Internal::kHasBitsOffset + 1, 0,
+    // bytes password = 2;
+    {PROTOBUF_FIELD_OFFSET(LoginRequest, _impl_.password_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -714,7 +714,7 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
       _impl_.name_.ClearNonDefaultToEmpty();
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      _impl_.pwd_.ClearNonDefaultToEmpty();
+      _impl_.password_.ClearNonDefaultToEmpty();
     }
   }
   _impl_._has_bits_.Clear();
@@ -744,10 +744,10 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
     }
   }
 
-  // bytes pwd = 2;
+  // bytes password = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
-    if (!this_._internal_pwd().empty()) {
-      const ::std::string& _s = this_._internal_pwd();
+    if (!this_._internal_password().empty()) {
+      const ::std::string& _s = this_._internal_password();
       target = stream->WriteBytesMaybeAliased(2, _s, target);
     }
   }
@@ -785,11 +785,11 @@ PROTOBUF_NOINLINE void LoginRequest::Clear() {
                                         this_._internal_name());
       }
     }
-    // bytes pwd = 2;
+    // bytes password = 2;
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (!this_._internal_pwd().empty()) {
+      if (!this_._internal_password().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                        this_._internal_pwd());
+                                        this_._internal_password());
       }
     }
   }
@@ -817,11 +817,11 @@ void LoginRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::go
       }
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (!from._internal_pwd().empty()) {
-        _this->_internal_set_pwd(from._internal_pwd());
+      if (!from._internal_password().empty()) {
+        _this->_internal_set_password(from._internal_password());
       } else {
-        if (_this->_impl_.pwd_.IsDefault()) {
-          _this->_internal_set_pwd("");
+        if (_this->_impl_.password_.IsDefault()) {
+          _this->_internal_set_password("");
         }
       }
     }
@@ -845,7 +845,7 @@ void LoginRequest::InternalSwap(LoginRequest* PROTOBUF_RESTRICT PROTOBUF_NONNULL
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.pwd_, &other->_impl_.pwd_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.password_, &other->_impl_.password_, arena);
 }
 
 ::google::protobuf::Metadata LoginRequest::GetMetadata() const {
@@ -894,7 +894,7 @@ LoginResponse::LoginResponse(
   _impl_.result_ = ((cached_has_bits & 0x00000001u) != 0)
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_)
                 : nullptr;
-  _impl_.sucess_ = from._impl_.sucess_;
+  _impl_.success_ = from._impl_.success_;
 
   // @@protoc_insertion_point(copy_constructor:user.LoginResponse)
 }
@@ -908,9 +908,9 @@ inline void LoginResponse::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, result_),
            0,
-           offsetof(Impl_, sucess_) -
+           offsetof(Impl_, success_) -
                offsetof(Impl_, result_) +
-               sizeof(Impl_::sucess_));
+               sizeof(Impl_::success_));
 }
 LoginResponse::~LoginResponse() {
   // @@protoc_insertion_point(destructor:user.LoginResponse)
@@ -986,9 +986,9 @@ LoginResponse::_table_ = {
     ::_pbi::TcParser::GetTable<::user::LoginResponse>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool sucess = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(LoginResponse, _impl_.sucess_), 1>(),
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.sucess_)}},
+    // bool success = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(LoginResponse, _impl_.success_), 1>(),
+     {16, 1, 0, PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.success_)}},
     // .user.ResultCode result = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.result_)}},
@@ -998,8 +998,8 @@ LoginResponse::_table_ = {
     // .user.ResultCode result = 1;
     {PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.result_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // bool sucess = 2;
-    {PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.sucess_), _Internal::kHasBitsOffset + 1, 0,
+    // bool success = 2;
+    {PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.success_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBool)},
   }},
   {{
@@ -1020,7 +1020,7 @@ PROTOBUF_NOINLINE void LoginResponse::Clear() {
     ABSL_DCHECK(_impl_.result_ != nullptr);
     _impl_.result_->Clear();
   }
-  _impl_.sucess_ = false;
+  _impl_.success_ = false;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1048,12 +1048,12 @@ PROTOBUF_NOINLINE void LoginResponse::Clear() {
         stream);
   }
 
-  // bool sucess = 2;
+  // bool success = 2;
   if ((cached_has_bits & 0x00000002u) != 0) {
-    if (this_._internal_sucess() != 0) {
+    if (this_._internal_success() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
-          2, this_._internal_sucess(), target);
+          2, this_._internal_success(), target);
     }
   }
 
@@ -1088,9 +1088,9 @@ PROTOBUF_NOINLINE void LoginResponse::Clear() {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_);
     }
-    // bool sucess = 2;
+    // bool success = 2;
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (this_._internal_sucess() != 0) {
+      if (this_._internal_success() != 0) {
         total_size += 2;
       }
     }
@@ -1119,8 +1119,8 @@ void LoginResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::g
       }
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (from._internal_sucess() != 0) {
-        _this->_impl_.sucess_ = from._impl_.sucess_;
+      if (from._internal_success() != 0) {
+        _this->_impl_.success_ = from._impl_.success_;
       }
     }
   }
@@ -1141,8 +1141,8 @@ void LoginResponse::InternalSwap(LoginResponse* PROTOBUF_RESTRICT PROTOBUF_NONNU
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.sucess_)
-      + sizeof(LoginResponse::_impl_.sucess_)
+      PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.success_)
+      + sizeof(LoginResponse::_impl_.success_)
       - PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.result_)>(
           reinterpret_cast<char*>(&_impl_.result_),
           reinterpret_cast<char*>(&other->_impl_.result_));
@@ -1177,7 +1177,7 @@ PROTOBUF_NDEBUG_INLINE RegisterRequest::Impl_::Impl_(
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         name_(arena, from.name_),
-        pwd_(arena, from.pwd_) {}
+        password_(arena, from.password_) {}
 
 RegisterRequest::RegisterRequest(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -1201,7 +1201,7 @@ PROTOBUF_NDEBUG_INLINE RegisterRequest::Impl_::Impl_(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         name_(arena),
-        pwd_(arena) {}
+        password_(arena) {}
 
 inline void RegisterRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -1216,7 +1216,7 @@ inline void RegisterRequest::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
-  this_._impl_.pwd_.Destroy();
+  this_._impl_.password_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -1289,9 +1289,9 @@ RegisterRequest::_table_ = {
     // bytes name = 2;
     {::_pbi::TcParser::FastBS1,
      {18, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.name_)}},
-    // bytes pwd = 3;
+    // bytes password = 3;
     {::_pbi::TcParser::FastBS1,
-     {26, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.pwd_)}},
+     {26, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -1301,8 +1301,8 @@ RegisterRequest::_table_ = {
     // bytes name = 2;
     {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
-    // bytes pwd = 3;
-    {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.pwd_), _Internal::kHasBitsOffset + 1, 0,
+    // bytes password = 3;
+    {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -1322,7 +1322,7 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
       _impl_.name_.ClearNonDefaultToEmpty();
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      _impl_.pwd_.ClearNonDefaultToEmpty();
+      _impl_.password_.ClearNonDefaultToEmpty();
     }
   }
   _impl_.id_ = 0u;
@@ -1362,10 +1362,10 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
     }
   }
 
-  // bytes pwd = 3;
+  // bytes password = 3;
   if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
-    if (!this_._internal_pwd().empty()) {
-      const ::std::string& _s = this_._internal_pwd();
+    if (!this_._internal_password().empty()) {
+      const ::std::string& _s = this_._internal_password();
       target = stream->WriteBytesMaybeAliased(3, _s, target);
     }
   }
@@ -1403,11 +1403,11 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
                                         this_._internal_name());
       }
     }
-    // bytes pwd = 3;
+    // bytes password = 3;
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (!this_._internal_pwd().empty()) {
+      if (!this_._internal_password().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                        this_._internal_pwd());
+                                        this_._internal_password());
       }
     }
     // uint32 id = 1;
@@ -1442,11 +1442,11 @@ void RegisterRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
       }
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (!from._internal_pwd().empty()) {
-        _this->_internal_set_pwd(from._internal_pwd());
+      if (!from._internal_password().empty()) {
+        _this->_internal_set_password(from._internal_password());
       } else {
-        if (_this->_impl_.pwd_.IsDefault()) {
-          _this->_internal_set_pwd("");
+        if (_this->_impl_.password_.IsDefault()) {
+          _this->_internal_set_password("");
         }
       }
     }
@@ -1475,7 +1475,7 @@ void RegisterRequest::InternalSwap(RegisterRequest* PROTOBUF_RESTRICT PROTOBUF_N
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.pwd_, &other->_impl_.pwd_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.password_, &other->_impl_.password_, arena);
   swap(_impl_.id_, other->_impl_.id_);
 }
 
@@ -1525,7 +1525,7 @@ RegisterResponse::RegisterResponse(
   _impl_.result_ = ((cached_has_bits & 0x00000001u) != 0)
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_)
                 : nullptr;
-  _impl_.sucess_ = from._impl_.sucess_;
+  _impl_.success_ = from._impl_.success_;
 
   // @@protoc_insertion_point(copy_constructor:user.RegisterResponse)
 }
@@ -1539,9 +1539,9 @@ inline void RegisterResponse::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) 
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, result_),
            0,
-           offsetof(Impl_, sucess_) -
+           offsetof(Impl_, success_) -
                offsetof(Impl_, result_) +
-               sizeof(Impl_::sucess_));
+               sizeof(Impl_::success_));
 }
 RegisterResponse::~RegisterResponse() {
   // @@protoc_insertion_point(destructor:user.RegisterResponse)
@@ -1617,9 +1617,9 @@ RegisterResponse::_table_ = {
     ::_pbi::TcParser::GetTable<::user::RegisterResponse>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool sucess = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(RegisterResponse, _impl_.sucess_), 1>(),
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.sucess_)}},
+    // bool success = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(RegisterResponse, _impl_.success_), 1>(),
+     {16, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.success_)}},
     // .user.ResultCode result = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.result_)}},
@@ -1629,8 +1629,8 @@ RegisterResponse::_table_ = {
     // .user.ResultCode result = 1;
     {PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.result_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // bool sucess = 2;
-    {PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.sucess_), _Internal::kHasBitsOffset + 1, 0,
+    // bool success = 2;
+    {PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.success_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBool)},
   }},
   {{
@@ -1651,7 +1651,7 @@ PROTOBUF_NOINLINE void RegisterResponse::Clear() {
     ABSL_DCHECK(_impl_.result_ != nullptr);
     _impl_.result_->Clear();
   }
-  _impl_.sucess_ = false;
+  _impl_.success_ = false;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1679,12 +1679,12 @@ PROTOBUF_NOINLINE void RegisterResponse::Clear() {
         stream);
   }
 
-  // bool sucess = 2;
+  // bool success = 2;
   if ((cached_has_bits & 0x00000002u) != 0) {
-    if (this_._internal_sucess() != 0) {
+    if (this_._internal_success() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
-          2, this_._internal_sucess(), target);
+          2, this_._internal_success(), target);
     }
   }
 
@@ -1719,9 +1719,9 @@ PROTOBUF_NOINLINE void RegisterResponse::Clear() {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_);
     }
-    // bool sucess = 2;
+    // bool success = 2;
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (this_._internal_sucess() != 0) {
+      if (this_._internal_success() != 0) {
         total_size += 2;
       }
     }
@@ -1750,8 +1750,8 @@ void RegisterResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const 
       }
     }
     if ((cached_has_bits & 0x00000002u) != 0) {
-      if (from._internal_sucess() != 0) {
-        _this->_impl_.sucess_ = from._impl_.sucess_;
+      if (from._internal_success() != 0) {
+        _this->_impl_.success_ = from._impl_.success_;
       }
     }
   }
@@ -1772,8 +1772,8 @@ void RegisterResponse::InternalSwap(RegisterResponse* PROTOBUF_RESTRICT PROTOBUF
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.sucess_)
-      + sizeof(RegisterResponse::_impl_.sucess_)
+      PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.success_)
+      + sizeof(RegisterResponse::_impl_.success_)
       - PROTOBUF_FIELD_OFFSET(RegisterResponse, _impl_.result_)>(
           reinterpret_cast<char*>(&_impl_.result_),
           reinterpret_cast<char*>(&other->_impl_.result_));

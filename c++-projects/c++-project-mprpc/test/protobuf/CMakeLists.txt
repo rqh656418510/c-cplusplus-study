@@ -12,12 +12,17 @@ file(GLOB_RECURSE PROTO_FILES *.proto)
 
 # 编译 .proto 文件，自动生成 C++ 源文件
 add_custom_target(proto_test_build ALL
+    COMMENT "Cleaning Protobuf C++ files"
+    COMMAND rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/generated/*
+    COMMENT "Generating Protobuf C++ files"
     COMMAND protoc
         --proto_path=${CMAKE_CURRENT_SOURCE_DIR}/proto
         ${PROTO_FILES}
         --cpp_out=${CMAKE_CURRENT_SOURCE_DIR}/generated
-    COMMENT "Generating Protobuf C++ files"
 )
+
+# 指定项目头文件
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/generated)
 
 # 指定项目源文件
 file(GLOB_RECURSE SRC_FILES *.cc)
