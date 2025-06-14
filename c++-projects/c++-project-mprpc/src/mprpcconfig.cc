@@ -1,4 +1,6 @@
 #include "mprpcconfig.h"
+#include <cstdlib>
+#include <cstdio>
 
 // 加载配置文件
 void MprpcConfig::LoadConfigFile(const char* config_file) {

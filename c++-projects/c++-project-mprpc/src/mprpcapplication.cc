@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 // 初始化类静态成员变量
 MprpcConfig MprpcApplication::m_config;
