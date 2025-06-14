@@ -24,17 +24,6 @@ include_directories(/usr/local/include)
 # 指定项目头文件
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
 
-# 查找并加载 Protobuf 动态库
-find_package(Protobuf REQUIRED)
-
-# 打印 Protobuf 信息
-message(STATUS "Using Protobuf ${Protobuf_VERSION}")
-message(STATUS "Protobuf include dir: ${Protobuf_INCLUDE_DIRS}")
-message(STATUS "Protobuf libraries: ${Protobuf_LIBRARIES}")
-
-# 链接 Protobuf 动态库
-link_directories(${Protobuf_LIBRARIES})
-
 # 加载 CMake 子目录
 add_subdirectory(src)
 add_subdirectory(test)
