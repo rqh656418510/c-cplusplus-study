@@ -63,7 +63,7 @@ public:
 };
 
 // 测试 RPC 服务的发布
-int test(int argc, char** argv) {
+int main(int argc, char** argv) {
     // 调用 RPC 框架的初始化操作
     MprpcApplication::Init(argc, argv);
 

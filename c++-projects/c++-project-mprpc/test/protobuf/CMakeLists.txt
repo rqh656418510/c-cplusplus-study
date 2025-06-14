@@ -22,10 +22,10 @@ include_directories(${PROTO_GEN_DIR})
 file(GLOB_RECURSE SRC_FILES *.cc)
 
 # 编译生成可执行文件
-add_executable(proto_test ${SRC_FILES})
+add_executable(protobuf_test ${SRC_FILES})
 
 # 指定可执行文件链接的静态库或者动态库（必须注意顺序，从上到下链接）
-target_link_libraries(proto_test
+target_link_libraries(protobuf_test
     protobuf
     absl_hash
     absl_log_internal_check_op 
