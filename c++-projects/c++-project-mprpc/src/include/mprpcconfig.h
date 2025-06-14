@@ -13,6 +13,9 @@ public:
     std::string Load(const std::string& key);
 
 private:
-    // 配置信息（Key-Value）
+    // 配置信息（无需考虑线程安全问题）
     std::unordered_map<std::string, std::string> m_configMap;
+
+    // 去掉字符串前后的空格字符
+    void Trim(std::string& str);
 };

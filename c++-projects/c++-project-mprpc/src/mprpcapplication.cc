@@ -59,6 +59,6 @@ void MprpcApplication::Init(int argc, char** argv) {
 
     std::cout << "loading rpc config file: " << config_file << std::endl;
 
-    // 开始读取配置文件
+    // 读取配置文件内容
     m_config.LoadConfigFile(config_file.c_str());
 }
