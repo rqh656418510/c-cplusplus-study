@@ -9,20 +9,19 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
     FILE* pf = fopen(config_file, "r");
     if (nullptr == pf) {
         std::cout << config_file << " is not exist!" << std::endl;
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // 解析配置文件
-    while (!feof(pf)) {
-        char buf[1024] = {0};
-        fgets(buf, 1024, pf);
+    char buf[1024];
+    while (fgets(buf, sizeof(buf), pf)) {
         std::string src_buf(buf);
 
         // 去掉字符串前后的空格字符
         Trim(src_buf);
 
         // 判断注释内容
-        if (src_buf[0] == '#' || src_buf.empty()) {
+        if (src_buf.empty() || src_buf[0] == '#') {
             continue;
         }
 
@@ -38,9 +37,19 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
         Trim(key);
 
         // 获取配置项的 Value
+        std::string value;
         int endIdx = src_buf.find('\n', idx);
-        std::string value = src_buf.substr(idx + 1, endIdx - idx - 1);
+        if (endIdx == -1) {
+            value = src_buf.substr(idx + 1);
+        } else {
+            value = src_buf.substr(idx + 1, endIdx - idx - 1);
+        }
         Trim(value);
+
+        // 检查配置项的合法性
+        if (key.empty() || value.empty()) {
+            continue;
+        }
 
         // 存储配置项
         m_configMap.insert({key, value});
@@ -48,6 +57,9 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
         // 打印日志信息
         std::cout << key << "=" << value << std::endl;
     }
+
+    // 关闭文件
+    fclose(pf);
 }
 
 // 获取配置项信息
