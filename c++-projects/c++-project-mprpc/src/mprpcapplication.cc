@@ -63,3 +63,8 @@ void MprpcApplication::Init(int argc, char** argv) {
     // 读取配置文件内容
     m_config.LoadConfigFile(config_file.c_str());
 }
+
+// 获取配置信息
+MprpcConfig& MprpcApplication::GetConfig() {
+    return m_config;
+}

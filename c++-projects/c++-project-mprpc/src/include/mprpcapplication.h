@@ -11,6 +11,9 @@ public:
     // 初始化 RPC 框架
     static void Init(int argc, char** argv);
 
+    // 获取配置信息
+    static MprpcConfig& GetConfig();
+
 private:
     // 配置内容
     static MprpcConfig m_config;
