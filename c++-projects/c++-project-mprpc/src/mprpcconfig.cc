@@ -17,7 +17,7 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
     while (fgets(buf, sizeof(buf), pf)) {
         std::string src_buf(buf);
 
-        // 去掉字符串前后的空格字符
+        // 去掉字符串前后的空白字符
         Trim(src_buf);
 
         // 判断注释内容
@@ -37,13 +37,7 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
         Trim(key);
 
         // 获取配置项的 Value
-        std::string value;
-        int endIdx = src_buf.find('\n', idx);
-        if (endIdx == -1) {
-            value = src_buf.substr(idx + 1);
-        } else {
-            value = src_buf.substr(idx + 1, endIdx - idx - 1);
-        }
+        std::string value = src_buf.substr(idx + 1);
         Trim(value);
 
         // 检查配置项的合法性
@@ -68,17 +62,24 @@ std::string MprpcConfig::Load(const std::string& key) {
     return it != m_configMap.end() ? it->second : "";
 }
 
-// 去掉字符串前后的空格字符
+// 去掉字符串前后的空白字符
 void MprpcConfig::Trim(std::string& str) {
-    // 去除字符串前面多余的空格字符
-    int idx = str.find_first_not_of(' ');
-    if (idx != -1) {
-        str = str.substr(idx, str.size() - idx);
+    // 定义空白字符
+    const std::string whitespace = " \n\r\t";
+
+    // 去除字符串前面多余的空白字符
+    size_t start = str.find_first_not_of(whitespace);
+    if (start != std::string::npos) {
+        str = str.substr(start);
+    } else {
+        // 字符串全是空白字符
+        str.clear();
+        return;
     }
 
-    // 去除字符串后面多余的空格字符
-    idx = str.find_last_not_of(' ');
-    if (idx != -1) {
-        str = str.substr(0, idx + 1);
+    // 去除字符串后面多余的空白字符
+    size_t end = str.find_last_not_of(whitespace);
+    if (end != std::string::npos) {
+        str = str.substr(0, end + 1);
     }
 }

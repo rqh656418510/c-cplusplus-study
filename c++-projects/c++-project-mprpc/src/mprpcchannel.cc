@@ -50,9 +50,9 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // 网络发送的数据，格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
+    // 通过网络发送的数据，格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
     std::string rpc_send_str;
-    rpc_header_str.insert(0, std::string((char*)&header_size, 4));
+    rpc_send_str.insert(0, std::string((char*)&header_size, 4));
     rpc_send_str += rpc_header_str;
     rpc_send_str += rpc_args_str;
 
@@ -86,7 +86,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     // 连接 RPC 服务节点
     if (-1 == connect(clientfd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
         // 打印日志信息
-        std::cout << "connect rpc server failed, errno is" << errno << std::endl;
+        std::cout << "connect rpc server failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
         exit(EXIT_FAILURE);
@@ -95,7 +95,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     // 发送 RPC 调用的请求参数
     if (-1 == send(clientfd, rpc_send_str.c_str(), rpc_send_str.size(), 0)) {
         // 打印日志信息
-        std::cout << "send rpc rquest failed, errno is" << errno << std::endl;
+        std::cout << "send rpc rquest failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
         return;
@@ -106,18 +106,16 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     char recv_buf[1024] = {0};
     if (-1 == (recv_size = recv(clientfd, recv_buf, 1024, 0))) {
         // 打印日志信息
-        std::cout << "receive rpc response failed, errno is" << errno << std::endl;
+        std::cout << "receive rpc response failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
         return;
     }
 
-    std::string response_str(recv_buf, 0, recv_size);
-
     // 反序列化 RPC 调用的响应结果
-    if (!response->ParseFromString(response_str)) {
+    if (!response->ParseFromArray(recv_buf, recv_size)) {
         // 打印日志信息
-        std::cout << "rpc response unserialize failed, response_str: " << response_str << std::endl;
+        std::cout << "rpc response unserialize failed!" << std::endl;
         // 关闭连接
         close(clientfd);
         return;

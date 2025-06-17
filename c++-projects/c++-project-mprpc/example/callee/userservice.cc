@@ -9,8 +9,7 @@ class UserService : public user::UserServiceRpc {
 public:
     // 本地的登录函数
     bool Login(std::string name, std::string password) {
-        std::cout << "invoke local Login function" << std::endl;
-        std::cout << "name: " << name << ", password: " << password << std::endl;
+        std::cout << "invoke local Login function, name: " << name << ", password: " << password << std::endl;
         return true;
     }
 
@@ -37,7 +36,7 @@ public:
         result->set_errmsg("");
         response->set_success(success);
 
-        // 执行回调操作，返回响应结果给RPC服务调用者
+        // 执行回调操作，返回响应结果给 RPC 服务调用者
         done->Run();
     }
 

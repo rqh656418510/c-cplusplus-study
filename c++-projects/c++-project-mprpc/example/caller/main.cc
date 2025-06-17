@@ -28,9 +28,9 @@ int main(int argc, char** argv) {
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc login reponse correct: " << response.success() << std::endl;
+        std::cout << "rpc Login function invoke success" << std::endl;
     } else {
-        std::cout << "rpc login reponse error: " << response.result().errmsg() << std::endl;
+        std::cout << "rpc Login function invoke error: " << response.result().errmsg() << std::endl;
     }
 
     return 0;

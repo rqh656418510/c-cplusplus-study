@@ -26,7 +26,7 @@ void RpcProvider::NotifyService(google::protobuf::Service* service) {
         // 存储 RPC 服务的方法的描述信息
         servcieInfo.m_methodMap.insert({methodName, pmethodDesc});
         // 打印日志信息
-        std::cout << "rpc register, service: " << serviceName << ", method: " << methodName << std::endl;
+        std::cout << "register rpc service " << serviceName << ":" << methodName << std::endl;
     }
 
     // 存储 RPC 服务的信息
