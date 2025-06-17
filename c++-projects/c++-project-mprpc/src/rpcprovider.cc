@@ -72,7 +72,8 @@ void RpcProvider::onConnection(const muduo::net::TcpConnectionPtr& conn) {
 
 // 处理 TCP 连接的读写事件（比如接收客户端发送的数据）
 void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buf, muduo::Timestamp time) {
-    // RPC 请求发送的字符流，数据格式：header_size（4 字节） + header_str + args_str
+    // RPC 请求发送的字符流
+    // 字符流的数据格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
     std::string recv_buf = buf->retrieveAllAsString();
 
     // 从字符流中读取前 4 个字节的内容
@@ -99,8 +100,8 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
         return;
     }
 
-    // 获取 RPC 方法参数的字符流数据
-    std::string args_str = recv_buf.substr(4 + header_size, args_size);
+    // 获取 RPC 调用的参数的字符流数据
+    std::string rpc_args_str = recv_buf.substr(4 + header_size, args_size);
 
     // 打印日志信息
     std::cout << "===========================================" << std::endl;
@@ -109,7 +110,7 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     std::cout << "service_name: " << service_name << std::endl;
     std::cout << "method_name: " << method_name << std::endl;
     std::cout << "args_size: " << args_size << std::endl;
-    std::cout << "args_str: " << args_str << std::endl;
+    std::cout << "args_str: " << rpc_args_str << std::endl;
     std::cout << "===========================================" << std::endl;
 
     auto sit = m_serviceMap.find(service_name);
@@ -126,15 +127,15 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
         return;
     }
 
-    // RPC 调用的服务和方法
+    // 获取 RPC 调用的服务和方法
     google::protobuf::Service* service = sit->second.m_service;
     const google::protobuf::MethodDescriptor* method = mit->second;
 
     // 生成 RPC 方法调用的请求参数
     google::protobuf::Message* request = service->GetRequestPrototype(method).New();
-    if (!request->ParseFromString(args_str)) {
+    if (!request->ParseFromString(rpc_args_str)) {
         // 打印日志信息
-        std::cout << "rpc request args '" << args_str << "' unserialize error!" << std::endl;
+        std::cout << "rpc request args '" << rpc_args_str << "' unserialize error!" << std::endl;
         return;
     }
 
