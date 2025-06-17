@@ -74,7 +74,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         exit(EXIT_FAILURE);
     }
 
-    // TCP 客户端的连接信息
+    // 定义 TCP 客户端的连接信息
     std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-ip");
     std::string port = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-port");
 
@@ -92,7 +92,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         exit(EXIT_FAILURE);
     }
 
-    // 发送 RPC 调用的请求参数
+    // 通过网络发送 RPC 调用的请求参数
     if (-1 == send(clientfd, rpc_send_str.c_str(), rpc_send_str.size(), 0)) {
         // 打印日志信息
         std::cout << "send rpc rquest failed, errno is " << errno << std::endl;
@@ -101,7 +101,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // 接收 RPC 调用的响应结果
+    // 通过网络接收 RPC 调用的响应结果
     int recv_size = 0;
     char recv_buf[1024] = {0};
     if (-1 == (recv_size = recv(clientfd, recv_buf, 1024, 0))) {

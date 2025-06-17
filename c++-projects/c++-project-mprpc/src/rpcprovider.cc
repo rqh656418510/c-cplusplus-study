@@ -72,17 +72,17 @@ void RpcProvider::onConnection(const muduo::net::TcpConnectionPtr& conn) {
 
 // 处理 TCP 连接的读写事件（比如接收客户端发送的数据）
 void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buf, muduo::Timestamp time) {
-    // RPC 请求发送的字符流
-    // 字符流的数据格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
+    // 接收到的字符流，数据格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
     std::string recv_buf = buf->retrieveAllAsString();
 
     // 从字符流中读取前 4 个字节的内容
     uint32_t header_size = 0;
     recv_buf.copy((char*)&header_size, 4, 0);
 
-    // 根据 header_size 读取数据头的原始字符流
+    // 根据 header_size 读取请求数据头的原始字符流
     std::string rpc_header_str = recv_buf.substr(4, header_size);
 
+    // RPC 调用的基础信息
     std::string service_name;
     std::string method_name;
     uint32_t args_size;
@@ -113,17 +113,19 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     std::cout << "args_str: " << rpc_args_str << std::endl;
     std::cout << "===========================================" << std::endl;
 
+    // 查找 RPC 服务
     auto sit = m_serviceMap.find(service_name);
     if (sit == m_serviceMap.end()) {
         // 打印日志信息
-        std::cout << service_name << " service is not exist!" << std::endl;
+        std::cout << "rpc service " << service_name << " is not exist!" << std::endl;
         return;
     }
 
+    // 查找 RPC 服务的方法
     auto mit = sit->second.m_methodMap.find(method_name);
     if (mit == sit->second.m_methodMap.end()) {
         // 打印日志信息
-        std::cout << service_name << ":" << method_name << " method is not exist!" << std::endl;
+        std::cout << "rpc method " << service_name << ":" << method_name << " is not exist!" << std::endl;
         return;
     }
 
@@ -131,7 +133,7 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     google::protobuf::Service* service = sit->second.m_service;
     const google::protobuf::MethodDescriptor* method = mit->second;
 
-    // 生成 RPC 方法调用的请求参数
+    // 通过反序列化生成本地 RPC 方法调用的请求参数
     google::protobuf::Message* request = service->GetRequestPrototype(method).New();
     if (!request->ParseFromString(rpc_args_str)) {
         // 打印日志信息
@@ -139,10 +141,10 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
         return;
     }
 
-    // 生成 RPC 方法调用的响应结果
+    // 生成本地 RPC 方法调用的响应结果
     google::protobuf::Message* response = service->GetResponsePrototype(method).New();
 
-    // RPC 方法调用的回调
+    // 本地 RPC 方法调用的回调，实际上调用的是 RpcProvider::SendRpcResponse()
     google::protobuf::Closure* done =
         google::protobuf::NewCallback<RpcProvider, const muduo::net::TcpConnectionPtr&, google::protobuf::Message*>(
             this, &RpcProvider::SendRpcResponse, conn, response);
@@ -151,12 +153,12 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     service->CallMethod(method, nullptr, request, response, done);
 }
 
-// 用于序列化 RPC 响应结果和发送网络响应数据
+// 用于序列化 RPC 调用的响应结果和发送网络响应数据
 void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, google::protobuf::Message* response) {
-    // RPC 响应结果的序列化
+    // 序列化 RPC 调用的响应结果
     std::string response_str;
     if (response->SerializeToString(&response_str)) {
-        // 通过网络将 RPC 方法的执行结果发送给 RPC 服务调用方
+        // 通过网络将本地 RPC 方法的执行结果发送给 RPC 服务调用方
         conn->send(response_str);
     } else {
         // 打印日志信息

@@ -44,6 +44,6 @@ private:
     // 处理已建立 TCP 连接的读写事件（比如接收客户端发送的数据）
     void onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buf, muduo::Timestamp time);
 
-    // 用于序列化 RPC 响应结果和发送网络响应数据
+    // 用于序列化 RPC 调用的响应结果和发送网络响应数据
     void SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, google::protobuf::Message* response);
 };
