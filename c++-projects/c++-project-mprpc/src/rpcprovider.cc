@@ -1,13 +1,37 @@
 #include "rpcprovider.h"
 
-#include <functional>
-#include <iostream>
-#include <string>
-
 #include "mprpcapplication.h"
+#include "rpcheader.pb.h"
 
 // 发布 RPC 服务
 void RpcProvider::NotifyService(google::protobuf::Service* service) {
+    // RPC 服务的信息
+    ServiceInfo servcieInfo;
+
+    // 获取 RPC 服务的描述信息
+    const google::protobuf::ServiceDescriptor* pserviceDesc = service->GetDescriptor();
+
+    // 获取 RPC 服务的名称
+    const std::string serviceName(pserviceDesc->name());
+
+    // 获取 RPC 服务的方法数量
+    int methodCount = pserviceDesc->method_count();
+
+    // 遍历 RPC 服务的所有方法
+    for (int i = 0; i < methodCount; i++) {
+        // 获取 RPC 服务的方法的描述信息
+        const google::protobuf::MethodDescriptor* pmethodDesc = pserviceDesc->method(i);
+        // 获取 RPC 服务的方法的名称
+        const std::string methodName(pmethodDesc->name());
+        // 存储 RPC 服务的方法的描述信息
+        servcieInfo.m_methodMap.insert({methodName, pmethodDesc});
+        // 打印日志信息
+        std::cout << "rpc register, service: " << serviceName << ", method: " << methodName << std::endl;
+    }
+
+    // 存储 RPC 服务的信息
+    servcieInfo.m_service = service;
+    m_serviceMap.insert({serviceName, servcieInfo});
 }
 
 // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
@@ -40,8 +64,103 @@ void RpcProvider::Run() {
 
 // 处理 TCP 连接的创建和断开
 void RpcProvider::onConnection(const muduo::net::TcpConnectionPtr& conn) {
+    if (!conn->connected()) {
+        // 断开连接（释放资源）
+        conn->shutdown();
+    }
 }
 
 // 处理 TCP 连接的读写事件（比如接收客户端发送的数据）
 void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buf, muduo::Timestamp time) {
+    // RPC 请求发送的字符流，数据格式：header_size（4 字节） + header_str + args_str
+    std::string recv_buf = buf->retrieveAllAsString();
+
+    // 从字符流中读取前 4 个字节的内容
+    uint32_t header_size = 0;
+    recv_buf.copy((char*)&header_size, 4, 0);
+
+    // 根据 header_size 读取数据头的原始字符流
+    std::string rpc_header_str = recv_buf.substr(4, header_size);
+
+    std::string service_name;
+    std::string method_name;
+    uint32_t args_size;
+
+    // RPC 请求数据头的反序列化
+    mprpc::RpcHeader rpcHeader;
+    if (rpcHeader.ParseFromString(rpc_header_str)) {
+        // 数据反序列化成功
+        service_name = rpcHeader.service_name();
+        method_name = rpcHeader.method_name();
+        args_size = rpcHeader.args_size();
+    } else {
+        // 数据反序列化失败
+        std::cout << "rpc_header_str " << rpc_header_str << " unserialize error!" << std::endl;
+        return;
+    }
+
+    // 获取 RPC 方法参数的字符流数据
+    std::string args_str = recv_buf.substr(4 + header_size, args_size);
+
+    // 打印日志信息
+    std::cout << "===========================================" << std::endl;
+    std::cout << "header_size: " << header_size << std::endl;
+    std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
+    std::cout << "service_name: " << service_name << std::endl;
+    std::cout << "method_name: " << method_name << std::endl;
+    std::cout << "args_size: " << args_size << std::endl;
+    std::cout << "args_str: " << args_str << std::endl;
+    std::cout << "===========================================" << std::endl;
+
+    auto sit = m_serviceMap.find(service_name);
+    if (sit == m_serviceMap.end()) {
+        // 打印日志信息
+        std::cout << service_name << " service is not exist!" << std::endl;
+        return;
+    }
+
+    auto mit = sit->second.m_methodMap.find(method_name);
+    if (mit == sit->second.m_methodMap.end()) {
+        // 打印日志信息
+        std::cout << service_name << ":" << method_name << " method is not exist!" << std::endl;
+        return;
+    }
+
+    // RPC 调用的服务和方法
+    google::protobuf::Service* service = sit->second.m_service;
+    const google::protobuf::MethodDescriptor* method = mit->second;
+
+    // 生成 RPC 方法调用的请求参数
+    google::protobuf::Message* request = service->GetRequestPrototype(method).New();
+    if (!request->ParseFromString(args_str)) {
+        // 打印日志信息
+        std::cout << "rpc request args '" << args_str << "' unserialize error!" << std::endl;
+        return;
+    }
+
+    // 生成 RPC 方法调用的响应结果
+    google::protobuf::Message* response = service->GetResponsePrototype(method).New();
+
+    // RPC 方法调用的回调
+    google::protobuf::Closure* done =
+        google::protobuf::NewCallback<RpcProvider, const muduo::net::TcpConnectionPtr&, google::protobuf::Message*>(
+            this, &RpcProvider::SendRpcResponse, conn, response);
+
+    // 调用 RPC 节点的本地方法
+    service->CallMethod(method, nullptr, request, response, done);
+}
+
+// 用于序列化 RPC 响应结果和发送网络响应数据
+void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, google::protobuf::Message* response) {
+    // RPC 响应结果的序列化
+    std::string response_str;
+    if (response->SerializeToString(&response_str)) {
+        // 通过网络将 RPC 方法的执行结果发送给 RPC 服务调用方
+        conn->send(response_str);
+    } else {
+        // 打印日志信息
+        std::cout << "rpc response serialize error!" << std::endl;
+    }
+    // 模拟 HTTP 的短连接服务，由 RPC 服务提供方主动断开连接
+    conn->shutdown();
 }

@@ -1,0 +1,11 @@
+// Protobuf 语法的版本
+syntax = "proto3";
+
+// 定义包名，便于在生成的代码中区分不同模块（类似 C++ 的命名空间）
+package mprpc;
+
+message RpcHeader {
+    string service_name = 1;
+    string method_name = 2;
+    uint32 args_size = 3;
+}

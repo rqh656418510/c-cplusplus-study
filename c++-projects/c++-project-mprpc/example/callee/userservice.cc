@@ -28,7 +28,7 @@ public:
         std::string name = request->name();
         std::string password = request->password();
 
-        // 调用本地业务逻辑
+        // 调用本地业务函数
         bool success = Login(name, password);
 
         // 设置响应结果
@@ -48,7 +48,7 @@ public:
         std::string name = request->name();
         std::string password = request->password();
 
-        // 调用本地业务逻辑
+        // 调用本地业务函数
         bool success = Register(name, password);
 
         // 设置响应结果
@@ -64,7 +64,7 @@ public:
 
 // 测试 RPC 服务的发布
 int main(int argc, char** argv) {
-    // 调用 RPC 框架的初始化操作
+    // 调用 RPC 框架的初始化操作（比如加载 RPC 配置文件）
     MprpcApplication::GetInstance().Init(argc, argv);
 
     // 用来发布 RPC 服务的网络对象类
