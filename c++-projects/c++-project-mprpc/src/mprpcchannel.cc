@@ -27,8 +27,8 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     if (request->SerializeToString(&rpc_args_str)) {
         args_size = rpc_args_str.size();
     } else {
-        // 打印日志信息
-        std::cout << "rpc request serialize error!" << std::endl;
+        // 设置 RPC 调用状态
+        controller->SetFailed("rpc request serialize error!");
         return;
     }
 
@@ -44,8 +44,8 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     if (rpcHeader.SerializeToString(&rpc_header_str)) {
         header_size = rpc_header_str.size();
     } else {
-        // 打印日志信息
-        std::cout << "rpc header serialize error!" << std::endl;
+        // 设置 RPC 调用状态
+        controller->SetFailed("rpc header serialize error!");
         return;
     }
 
@@ -68,14 +68,16 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     // 本地启动一个 TCP 客户端
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == clientfd) {
-        // 打印日志信息
-        std::cout << "create socket failed, errno is " << errno << std::endl;
-        exit(EXIT_FAILURE);
+        // 设置 RPC 调用状态
+        char errtxt[512] = {0};
+        sprintf(errtxt, "create socket failed, errno is %d", errno);
+        controller->SetFailed(errtxt);
+        return;
     }
 
     // 定义 TCP 客户端的连接信息
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-ip");
-    std::string port = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-port");
+    std::string ip = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_IP_KEY);
+    std::string port = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_PORT_KEY);
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
@@ -84,19 +86,23 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
 
     // 连接 RPC 服务节点
     if (-1 == connect(clientfd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
-        // 打印日志信息
-        std::cout << "connect rpc server failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
-        exit(EXIT_FAILURE);
+        // 设置 RPC 调用状态
+        char errtxt[512] = {0};
+        sprintf(errtxt, "connect server failed, errno is %d", errno);
+        controller->SetFailed(errtxt);
+        return;
     }
 
     // 通过网络发送 RPC 调用的请求参数
     if (-1 == send(clientfd, rpc_send_str.c_str(), rpc_send_str.size(), 0)) {
-        // 打印日志信息
-        std::cout << "send rpc rquest failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
+        // 设置 RPC 调用状态
+        char errtxt[512] = {0};
+        sprintf(errtxt, "send rpc rquest failed, errno is %d", errno);
+        controller->SetFailed(errtxt);
         return;
     }
 
@@ -104,19 +110,23 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     int recv_size = 0;
     char recv_buf[1024] = {0};
     if (-1 == (recv_size = recv(clientfd, recv_buf, 1024, 0))) {
-        // 打印日志信息
-        std::cout << "receive rpc response failed, errno is " << errno << std::endl;
         // 关闭连接
         close(clientfd);
+        // 设置 RPC 调用状态
+        char errtxt[512] = {0};
+        sprintf(errtxt, "receive rpc response failed, errno is %d", errno);
+        controller->SetFailed(errtxt);
         return;
     }
 
     // 反序列化 RPC 调用的响应结果
     if (!response->ParseFromArray(recv_buf, recv_size)) {
-        // 打印日志信息
-        std::cout << "rpc response unserialize failed!" << std::endl;
         // 关闭连接
         close(clientfd);
+        // 设置 RPC 调用状态
+        char errtxt[1024] = {0};
+        sprintf(errtxt, "rpc response unserialize failed, response content is %s", recv_buf);
+        controller->SetFailed(errtxt);
         return;
     }
 

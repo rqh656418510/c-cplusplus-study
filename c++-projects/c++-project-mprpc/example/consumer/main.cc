@@ -2,12 +2,14 @@
 
 #include "friend.pb.h"
 #include "mprpcapplication.h"
-#include "mprpcchannel.h"
 #include "user.pb.h"
 
 void Register() {
     // RPC 调用的通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
+
+    // RPC 调用的状态控制器
+    google::protobuf::RpcController* controller = new MprpcController();
 
     // RPC 调用的代理对象
     user::UserServiceRpc_Stub stub(channel);
@@ -21,7 +23,14 @@ void Register() {
     user::RegisterResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.Register(nullptr, &request, &response, nullptr);
+    stub.Register(controller, &request, &response, nullptr);
+
+    // 判断 RPC 调用是否成功
+    if (controller->Failed()) {
+        // 打印日志信息
+        std::cout << controller->ErrorText() << std::endl;
+        return;
+    }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
@@ -35,6 +44,9 @@ void Login() {
     // RPC 调用的通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
 
+    // RPC 调用的状态控制器
+    google::protobuf::RpcController* controller = new MprpcController();
+
     // RPC 调用的代理对象
     user::UserServiceRpc_Stub stub(channel);
 
@@ -47,7 +59,14 @@ void Login() {
     user::LoginResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.Login(nullptr, &request, &response, nullptr);
+    stub.Login(controller, &request, &response, nullptr);
+
+    // 判断 RPC 调用是否成功
+    if (controller->Failed()) {
+        // 打印日志信息
+        std::cout << controller->ErrorText() << std::endl;
+        return;
+    }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
@@ -61,6 +80,9 @@ void GetFriendList() {
     // RPC 调用通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
 
+    // RPC 调用的状态控制器
+    google::protobuf::RpcController* controller = new MprpcController();
+
     // RPC 调用的代理对象
     friends::FriendServiceRpc_Stub stub(channel);
 
@@ -72,7 +94,14 @@ void GetFriendList() {
     friends::GetFriendListResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.GetFriendList(nullptr, &request, &response, nullptr);
+    stub.GetFriendList(controller, &request, &response, nullptr);
+
+    // 判断 RPC 调用是否成功
+    if (controller->Failed()) {
+        // 打印日志信息
+        std::cout << controller->ErrorText() << std::endl;
+        return;
+    }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
