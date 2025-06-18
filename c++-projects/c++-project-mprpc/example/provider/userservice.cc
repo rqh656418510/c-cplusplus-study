@@ -67,7 +67,7 @@ public:
 class FriendServcie : public friends::FriendServiceRpc {
     // 本地获取好友列表的函数
     std::vector<friends::Friend> GetFriendList(uint32_t userid) {
-        LOG_INFO("invoke local GetFriendList function, userid: %d", userid);
+        LOG_INFO("invoke local GetFriendList function, userid: %u", userid);
 
         // 返回结果
         std::vector<friends::Friend> result;

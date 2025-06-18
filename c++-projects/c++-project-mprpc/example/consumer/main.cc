@@ -111,7 +111,7 @@ void GetFriendList() {
         // 获取返回的数据
         auto friends = response.friends();
         for (auto& item : friends) {
-            LOG_INFO("userid: %d, username: %s, sex: %d", item.userid(), item.username().c_str(), item.sex());
+            LOG_INFO("userid: %u, username: %s, sex: %d", item.userid(), item.username().c_str(), item.sex());
         }
     } else {
         LOG_ERROR("rpc function GetFriendList invoke error: %s", response.result().errmsg().c_str());
@@ -138,6 +138,9 @@ int main(int argc, char** argv) {
     // 调用 RPC 获取好友列表方法
     GetFriendList();
     std::cout << std::endl;
+
+    // 阻塞等待一段时间，在程序结束之前，尽量让日志信息都被写入日志文件
+    sleep(1);
 
     return 0;
 }

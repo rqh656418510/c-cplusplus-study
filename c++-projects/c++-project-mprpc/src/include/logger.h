@@ -5,37 +5,40 @@
 #include "lockqueue.h"
 
 // 定义宏
-#define LOG_INFO(logmsgformat, ...)                         \
-    do {                                                    \
-        Logger& logger = Logger::GetInstance();             \
-        if (logger.GetLogLevel() <= INFO) {                 \
-            char c[1024] = {0};                             \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
-            LogMessage msg = {c, INFO};                     \
-            logger.Log(msg);                                \
-        }                                                   \
+#define LOG_INFO(logmsgformat, ...)                                 \
+    do {                                                            \
+        Logger& logger = Logger::GetInstance();                     \
+        if (logger.GetLogLevel() <= INFO) {                         \
+            char c[1024] = {0};                                     \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
+            std::thread::id thread_id = std::this_thread::get_id(); \
+            LogMessage msg = {INFO, c, thread_id};                  \
+            logger.Log(msg);                                        \
+        }                                                           \
     } while (0)
 
-#define LOG_WARN(logmsgformat, ...)                         \
-    do {                                                    \
-        Logger& logger = Logger::GetInstance();             \
-        if (logger.GetLogLevel() <= WARN) {                 \
-            char c[1024] = {0};                             \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
-            LogMessage msg = {c, WARN};                     \
-            logger.Log(msg);                                \
-        }                                                   \
+#define LOG_WARN(logmsgformat, ...)                                 \
+    do {                                                            \
+        Logger& logger = Logger::GetInstance();                     \
+        if (logger.GetLogLevel() <= WARN) {                         \
+            char c[1024] = {0};                                     \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
+            std::thread::id thread_id = std::this_thread::get_id(); \
+            LogMessage msg = {WARN, c, thread_id};                  \
+            logger.Log(msg);                                        \
+        }                                                           \
     } while (0)
 
-#define LOG_ERROR(logmsgformat, ...)                        \
-    do {                                                    \
-        Logger& logger = Logger::GetInstance();             \
-        if (logger.GetLogLevel() <= ERROR) {                \
-            char c[1024] = {0};                             \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
-            LogMessage msg = {c, ERROR};                    \
-            logger.Log(msg);                                \
-        }                                                   \
+#define LOG_ERROR(logmsgformat, ...)                                \
+    do {                                                            \
+        Logger& logger = Logger::GetInstance();                     \
+        if (logger.GetLogLevel() <= ERROR) {                        \
+            char c[1024] = {0};                                     \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
+            std::thread::id thread_id = std::this_thread::get_id(); \
+            LogMessage msg = {ERROR, c, thread_id};                 \
+            logger.Log(msg);                                        \
+        }                                                           \
     } while (0)
 
 // 日志级别（INFO < WARN < ERROR）
@@ -47,8 +50,9 @@ enum LogLevel {
 
 // 日志信息
 struct LogMessage {
-    std::string m_content;  // 日志内容
-    LogLevel m_loglevel;    // 日志级别
+    LogLevel m_loglevel;         // 日志级别
+    std::string m_logcontent;    // 日志内容
+    std::thread::id m_threadid;  // 打印日志的线程的 ID
 };
 
 // Mprpc 框架提供的日志系统（单例对象，异步写入日志文件）
@@ -68,10 +72,14 @@ public:
 
 private:
     LogLevel m_loglevel;             // 记录日志级别
+    std::thread m_writeThread;       // 日志写入线程
     LockQueue<LogMessage> m_lckQue;  // 日志缓冲队列
 
     // 构造函数
     Logger();
+
+    // 析构函数
+    ~Logger();
 
     // 删除拷贝构造函数
     Logger(const Logger&) = delete;
