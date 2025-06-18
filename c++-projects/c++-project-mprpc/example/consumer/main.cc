@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "friend.pb.h"
+#include "logger.h"
 #include "mprpcapplication.h"
 #include "user.pb.h"
 
@@ -28,15 +29,15 @@ void Register() {
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
         // 打印日志信息
-        std::cout << controller->ErrorText() << std::endl;
+        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc function Register invoke success" << std::endl;
+        LOG_INFO("rpc function Register invoke success");
     } else {
-        std::cout << "rpc function Register invoke error: " << response.result().errmsg() << std::endl;
+        LOG_ERROR("rpc function Register invoke error: %s", response.result().errmsg().c_str());
     }
 }
 
@@ -64,15 +65,15 @@ void Login() {
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
         // 打印日志信息
-        std::cout << controller->ErrorText() << std::endl;
+        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc function Login invoke success" << std::endl;
+        LOG_INFO("rpc function Login invoke success");
     } else {
-        std::cout << "rpc function Login invoke error: " << response.result().errmsg() << std::endl;
+        LOG_ERROR("rpc function Login invoke error: %s", response.result().errmsg().c_str());
     }
 }
 
@@ -99,27 +100,31 @@ void GetFriendList() {
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
         // 打印日志信息
-        std::cout << controller->ErrorText() << std::endl;
+        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc function GetFriendList invoke success" << std::endl;
+        LOG_INFO("rpc function GetFriendList invoke success");
+
         // 获取返回的数据
         auto friends = response.friends();
         for (auto& item : friends) {
-            std::cout << "userid: " << item.userid() << ", username: " << item.username() << ", sex: " << item.sex()
-                      << std::endl;
+            LOG_INFO("userid: %d, username: %s, sex: %d", item.userid(), item.username().c_str(), item.sex());
         }
     } else {
-        std::cout << "rpc function GetFriendList invoke error: " << response.result().errmsg() << std::endl;
+        LOG_ERROR("rpc function GetFriendList invoke error: %s", response.result().errmsg().c_str());
     }
 }
 
 // 测试 RPC 服务的调用
 int main(int argc, char** argv) {
+    // 设置日志级别
+    Logger::GetInstance().SetLogLevel(INFO);
+
     // 调用 RPC 框架的初始化操作（比如加载 RPC 配置文件）
+    LOG_INFO("init rpc framework...");
     MprpcApplication::GetInstance().Init(argc, argv);
 
     // 调用 RPC 注册方法

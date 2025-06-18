@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "friend.pb.h"
+#include "logger.h"
 #include "mprpcapplication.h"
 #include "rpcprovider.h"
 #include "user.pb.h"
@@ -11,13 +12,13 @@ class UserService : public user::UserServiceRpc {
 public:
     // 本地的登录函数
     bool Login(std::string name, std::string password) {
-        std::cout << "invoke local Login function, name: " << name << ", password: " << password << std::endl;
+        LOG_INFO("invoke local Login function, name: %s, password: %s", name.c_str(), password.c_str());
         return true;
     }
 
     // 本地的注册函数
     bool Register(std::string name, std::string password) {
-        std::cout << "invoke local Register function, name: " << name << ", password: " << password << std::endl;
+        LOG_INFO("invoke local Register function, name: %s, password: %s", name.c_str(), password.c_str());
         return true;
     }
 
@@ -66,7 +67,7 @@ public:
 class FriendServcie : public friends::FriendServiceRpc {
     // 本地获取好友列表的函数
     std::vector<friends::Friend> GetFriendList(uint32_t userid) {
-        std::cout << "invoke local GetFriendList function, userid: " << userid << std::endl;
+        LOG_INFO("invoke local GetFriendList function, userid: %d", userid);
 
         // 返回结果
         std::vector<friends::Friend> result;
@@ -115,14 +116,20 @@ class FriendServcie : public friends::FriendServiceRpc {
 
 // 测试 RPC 服务的发布
 int main(int argc, char** argv) {
+    // 设置日志级别
+    Logger::GetInstance().SetLogLevel(INFO);
+
     // 调用 RPC 框架的初始化操作（比如加载 RPC 配置文件）
+    LOG_INFO("init rpc framework...");
     MprpcApplication::GetInstance().Init(argc, argv);
 
-    // 用来发布 RPC 服务的网络对象类
+    // 创建用来发布 RPC 服务的网络对象类
     RpcProvider provider;
 
     // 发布 RPC 服务
     provider.NotifyService(new UserService());
+
+    // 发布 RPC 服务
     provider.NotifyService(new FriendServcie());
 
     // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <condition_variable>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -25,10 +26,10 @@ public:
     // 往队头弹出数据
     T Pop() {
         // 获取互斥锁
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(m_mutex);
 
         // 阻塞等待，直到队列不为空
-        m_condvariable.wait([this]() { return !m_queue.empty(); });
+        m_condvariable.wait(lock, [this]() { return !m_queue.empty(); });
 
         // 获取队头元素
         T data = m_queue.front();
