@@ -20,14 +20,14 @@ void Register() {
     // RPC 调用的响应结果
     user::RegisterResponse response;
 
-    // 发起 RPC 调用，底层实际上调用的是 RpcChannel::CallMethod()
+    // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
     stub.Register(nullptr, &request, &response, nullptr);
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc Register function invoke success" << std::endl;
+        std::cout << "rpc function Register invoke success" << std::endl;
     } else {
-        std::cout << "rpc Register function invoke error: " << response.result().errmsg() << std::endl;
+        std::cout << "rpc function Register invoke error: " << response.result().errmsg() << std::endl;
     }
 }
 
@@ -46,14 +46,14 @@ void Login() {
     // RPC 调用的响应结果
     user::LoginResponse response;
 
-    // 发起 RPC 调用，底层实际上调用的是 RpcChannel::CallMethod()
+    // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
     stub.Login(nullptr, &request, &response, nullptr);
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc Login function invoke success" << std::endl;
+        std::cout << "rpc function Login invoke success" << std::endl;
     } else {
-        std::cout << "rpc Login function invoke error: " << response.result().errmsg() << std::endl;
+        std::cout << "rpc function Login invoke error: " << response.result().errmsg() << std::endl;
     }
 }
 
@@ -71,12 +71,12 @@ void GetFriendList() {
     // RPC 调用的响应结果
     friends::GetFriendListResponse response;
 
-    // 发起 RPC 调用，底层实际上调用的是 RpcChannel::CallMethod()
+    // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
     stub.GetFriendList(nullptr, &request, &response, nullptr);
 
     // 获取 RPC 调用的响应结果
     if (0 == response.result().errcode()) {
-        std::cout << "rpc GetFriendList function invoke success" << std::endl;
+        std::cout << "rpc function GetFriendList invoke success" << std::endl;
         // 获取返回的数据
         auto friends = response.friends();
         for (auto& item : friends) {
@@ -84,7 +84,7 @@ void GetFriendList() {
                       << std::endl;
         }
     } else {
-        std::cout << "rpc GetFriendList function invoke error: " << response.result().errmsg() << std::endl;
+        std::cout << "rpc function GetFriendList invoke error: " << response.result().errmsg() << std::endl;
     }
 }
 
