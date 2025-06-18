@@ -5,6 +5,7 @@
 #include "mprpcapplication.h"
 #include "user.pb.h"
 
+// 调用 RPC 注册方法
 void Register() {
     // RPC 调用的通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
@@ -41,6 +42,7 @@ void Register() {
     }
 }
 
+// 调用 RPC 登录方法
 void Login() {
     // RPC 调用的通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
@@ -77,6 +79,7 @@ void Login() {
     }
 }
 
+// 调用 RPC 获取好友列表方法
 void GetFriendList() {
     // RPC 调用通道
     google::protobuf::RpcChannel* channel = new MprpcChannel();
