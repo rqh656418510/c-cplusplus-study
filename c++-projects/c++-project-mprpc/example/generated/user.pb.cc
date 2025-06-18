@@ -32,7 +32,7 @@ inline constexpr ResultCode::Impl_::Impl_(
         errmsg_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        errcode_{0} {}
+        errcode_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR ResultCode::ResultCode(::_pbi::ConstantInitialized)
@@ -62,8 +62,7 @@ inline constexpr RegisterRequest::Impl_::Impl_(
             ::_pbi::ConstantInitialized()),
         password_(
             &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        id_{0u} {}
+            ::_pbi::ConstantInitialized()) {}
 
 template <typename>
 PROTOBUF_CONSTEXPR RegisterRequest::RegisterRequest(::_pbi::ConstantInitialized)
@@ -197,11 +196,9 @@ const ::uint32_t
         1,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_._has_bits_),
-        6, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.id_),
+        5, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::user::RegisterRequest, _impl_.password_),
-        2,
         0,
         1,
         0x081, // bitmap
@@ -219,7 +216,7 @@ static const ::_pbi::MigrationSchema
         {7, sizeof(::user::LoginRequest)},
         {14, sizeof(::user::LoginResponse)},
         {21, sizeof(::user::RegisterRequest)},
-        {30, sizeof(::user::RegisterResponse)},
+        {28, sizeof(::user::RegisterResponse)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::user::_ResultCode_default_instance_._instance,
@@ -231,23 +228,23 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
 const char descriptor_table_protodef_user_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\nuser.proto\022\004user\"-\n\nResultCode\022\017\n\007errc"
-    "ode\030\001 \001(\005\022\016\n\006errmsg\030\002 \001(\014\".\n\014LoginReques"
+    "ode\030\001 \001(\r\022\016\n\006errmsg\030\002 \001(\014\".\n\014LoginReques"
     "t\022\014\n\004name\030\001 \001(\014\022\020\n\010password\030\002 \001(\014\"B\n\rLog"
     "inResponse\022 \n\006result\030\001 \001(\0132\020.user.Result"
-    "Code\022\017\n\007success\030\002 \001(\010\"=\n\017RegisterRequest"
-    "\022\n\n\002id\030\001 \001(\r\022\014\n\004name\030\002 \001(\014\022\020\n\010password\030\003"
-    " \001(\014\"E\n\020RegisterResponse\022 \n\006result\030\001 \001(\013"
-    "2\020.user.ResultCode\022\017\n\007success\030\002 \001(\0102}\n\016U"
-    "serServiceRpc\0220\n\005Login\022\022.user.LoginReque"
-    "st\032\023.user.LoginResponse\0229\n\010Register\022\025.us"
-    "er.RegisterRequest\032\026.user.RegisterRespon"
-    "seB\003\200\001\001b\006proto3"
+    "Code\022\017\n\007success\030\002 \001(\010\"1\n\017RegisterRequest"
+    "\022\014\n\004name\030\001 \001(\014\022\020\n\010password\030\002 \001(\014\"E\n\020Regi"
+    "sterResponse\022 \n\006result\030\001 \001(\0132\020.user.Resu"
+    "ltCode\022\017\n\007success\030\002 \001(\0102}\n\016UserServiceRp"
+    "c\0229\n\010Register\022\025.user.RegisterRequest\032\026.u"
+    "ser.RegisterResponse\0220\n\005Login\022\022.user.Log"
+    "inRequest\032\023.user.LoginResponseB\003\200\001\001b\006pro"
+    "to3"
 };
 static ::absl::once_flag descriptor_table_user_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_user_2eproto = {
     false,
     false,
-    455,
+    443,
     descriptor_table_protodef_user_2eproto,
     "user.proto",
     &descriptor_table_user_2eproto_once,
@@ -392,15 +389,15 @@ ResultCode::_table_ = {
     // bytes errmsg = 2;
     {::_pbi::TcParser::FastBS1,
      {18, 0, 0, PROTOBUF_FIELD_OFFSET(ResultCode, _impl_.errmsg_)}},
-    // int32 errcode = 1;
+    // uint32 errcode = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ResultCode, _impl_.errcode_), 1>(),
      {8, 1, 0, PROTOBUF_FIELD_OFFSET(ResultCode, _impl_.errcode_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 errcode = 1;
+    // uint32 errcode = 1;
     {PROTOBUF_FIELD_OFFSET(ResultCode, _impl_.errcode_), _Internal::kHasBitsOffset + 1, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // bytes errmsg = 2;
     {PROTOBUF_FIELD_OFFSET(ResultCode, _impl_.errmsg_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
@@ -420,7 +417,7 @@ PROTOBUF_NOINLINE void ResultCode::Clear() {
   if ((cached_has_bits & 0x00000001u) != 0) {
     _impl_.errmsg_.ClearNonDefaultToEmpty();
   }
-  _impl_.errcode_ = 0;
+  _impl_.errcode_ = 0u;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -440,12 +437,12 @@ PROTOBUF_NOINLINE void ResultCode::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 errcode = 1;
+  // uint32 errcode = 1;
   if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (this_._internal_errcode() != 0) {
-      target =
-          ::google::protobuf::internal::WireFormatLite::WriteInt32ToArrayWithField<1>(
-              stream, this_._internal_errcode(), target);
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          1, this_._internal_errcode(), target);
     }
   }
 
@@ -490,10 +487,10 @@ PROTOBUF_NOINLINE void ResultCode::Clear() {
                                         this_._internal_errmsg());
       }
     }
-    // int32 errcode = 1;
+    // uint32 errcode = 1;
     if ((cached_has_bits & 0x00000002u) != 0) {
       if (this_._internal_errcode() != 0) {
-        total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
             this_._internal_errcode());
       }
     }
@@ -1192,7 +1189,6 @@ RegisterRequest::RegisterRequest(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.id_ = from._impl_.id_;
 
   // @@protoc_insertion_point(copy_constructor:user.RegisterRequest)
 }
@@ -1205,7 +1201,6 @@ PROTOBUF_NDEBUG_INLINE RegisterRequest::Impl_::Impl_(
 
 inline void RegisterRequest::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
 }
 RegisterRequest::~RegisterRequest() {
   // @@protoc_insertion_point(destructor:user.RegisterRequest)
@@ -1263,16 +1258,16 @@ RegisterRequest::GetClassData() const {
   return RegisterRequest_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 0, 2>
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2>
 RegisterRequest::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    2, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    2,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     RegisterRequest_class_data_.base(),
@@ -1282,26 +1277,19 @@ RegisterRequest::_table_ = {
     ::_pbi::TcParser::GetTable<::user::RegisterRequest>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // uint32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RegisterRequest, _impl_.id_), 2>(),
-     {8, 2, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.id_)}},
-    // bytes name = 2;
+    // bytes password = 2;
     {::_pbi::TcParser::FastBS1,
-     {18, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.name_)}},
-    // bytes password = 3;
+     {18, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_)}},
+    // bytes name = 1;
     {::_pbi::TcParser::FastBS1,
-     {26, 1, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_)}},
+     {10, 0, 0, PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.id_), _Internal::kHasBitsOffset + 2, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
-    // bytes name = 2;
+    // bytes name = 1;
     {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
-    // bytes password = 3;
+    // bytes password = 2;
     {PROTOBUF_FIELD_OFFSET(RegisterRequest, _impl_.password_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
@@ -1325,7 +1313,6 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
       _impl_.password_.ClearNonDefaultToEmpty();
     }
   }
-  _impl_.id_ = 0u;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -1345,28 +1332,19 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // uint32 id = 1;
-  if ((this_._impl_._has_bits_[0] & 0x00000004u) != 0) {
-    if (this_._internal_id() != 0) {
-      target = stream->EnsureSpace(target);
-      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-          1, this_._internal_id(), target);
-    }
-  }
-
-  // bytes name = 2;
+  // bytes name = 1;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
-      target = stream->WriteBytesMaybeAliased(2, _s, target);
+      target = stream->WriteBytesMaybeAliased(1, _s, target);
     }
   }
 
-  // bytes password = 3;
+  // bytes password = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal_password().empty()) {
       const ::std::string& _s = this_._internal_password();
-      target = stream->WriteBytesMaybeAliased(3, _s, target);
+      target = stream->WriteBytesMaybeAliased(2, _s, target);
     }
   }
 
@@ -1395,26 +1373,19 @@ PROTOBUF_NOINLINE void RegisterRequest::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000007u) != 0) {
-    // bytes name = 2;
+  if ((cached_has_bits & 0x00000003u) != 0) {
+    // bytes name = 1;
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                         this_._internal_name());
       }
     }
-    // bytes password = 3;
+    // bytes password = 2;
     if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal_password().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                         this_._internal_password());
-      }
-    }
-    // uint32 id = 1;
-    if ((cached_has_bits & 0x00000004u) != 0) {
-      if (this_._internal_id() != 0) {
-        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-            this_._internal_id());
       }
     }
   }
@@ -1431,7 +1402,7 @@ void RegisterRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if ((cached_has_bits & 0x00000007u) != 0) {
+  if ((cached_has_bits & 0x00000003u) != 0) {
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!from._internal_name().empty()) {
         _this->_internal_set_name(from._internal_name());
@@ -1448,11 +1419,6 @@ void RegisterRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
         if (_this->_impl_.password_.IsDefault()) {
           _this->_internal_set_password("");
         }
-      }
-    }
-    if ((cached_has_bits & 0x00000004u) != 0) {
-      if (from._internal_id() != 0) {
-        _this->_impl_.id_ = from._impl_.id_;
       }
     }
   }
@@ -1476,7 +1442,6 @@ void RegisterRequest::InternalSwap(RegisterRequest* PROTOBUF_RESTRICT PROTOBUF_N
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.password_, &other->_impl_.password_, arena);
-  swap(_impl_.id_, other->_impl_.id_);
 }
 
 ::google::protobuf::Metadata RegisterRequest::GetMetadata() const {
@@ -1793,18 +1758,18 @@ const ::google::protobuf::ServiceDescriptor* PROTOBUF_NONNULL UserServiceRpc::Ge
   return descriptor();
 }
 
-void UserServiceRpc::Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
-                         const ::user::LoginRequest* PROTOBUF_NONNULL,
-                         ::user::LoginResponse* PROTOBUF_NONNULL,
-                         ::google::protobuf::Closure* PROTOBUF_NULLABLE done) {
-  controller->SetFailed("Method Login() not implemented.");
-  done->Run();
-}
 void UserServiceRpc::Register(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
                          const ::user::RegisterRequest* PROTOBUF_NONNULL,
                          ::user::RegisterResponse* PROTOBUF_NONNULL,
                          ::google::protobuf::Closure* PROTOBUF_NULLABLE done) {
   controller->SetFailed("Method Register() not implemented.");
+  done->Run();
+}
+void UserServiceRpc::Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
+                         const ::user::LoginRequest* PROTOBUF_NONNULL,
+                         ::user::LoginResponse* PROTOBUF_NONNULL,
+                         ::google::protobuf::Closure* PROTOBUF_NULLABLE done) {
+  controller->SetFailed("Method Login() not implemented.");
   done->Run();
 }
 
@@ -1816,12 +1781,12 @@ void UserServiceRpc::CallMethod(
   ABSL_DCHECK_EQ(method->service(), file_level_service_descriptors_user_2eproto[0]);
   switch (method->index()) {
     case 0:
-      this->Login(controller, ::google::protobuf::DownCastMessage<::user::LoginRequest>(request),
-                   ::google::protobuf::DownCastMessage<::user::LoginResponse>(response), done);
-      break;
-    case 1:
       this->Register(controller, ::google::protobuf::DownCastMessage<::user::RegisterRequest>(request),
                    ::google::protobuf::DownCastMessage<::user::RegisterResponse>(response), done);
+      break;
+    case 1:
+      this->Login(controller, ::google::protobuf::DownCastMessage<::user::LoginRequest>(request),
+                   ::google::protobuf::DownCastMessage<::user::LoginResponse>(response), done);
       break;
 
     default:
@@ -1835,9 +1800,9 @@ const ::google::protobuf::Message& UserServiceRpc::GetRequestPrototype(
   ABSL_DCHECK_EQ(method->service(), descriptor());
   switch (method->index()) {
     case 0:
-      return ::user::LoginRequest::default_instance();
-    case 1:
       return ::user::RegisterRequest::default_instance();
+    case 1:
+      return ::user::LoginRequest::default_instance();
 
     default:
       ABSL_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -1851,9 +1816,9 @@ const ::google::protobuf::Message& UserServiceRpc::GetResponsePrototype(
   ABSL_DCHECK_EQ(method->service(), descriptor());
   switch (method->index()) {
     case 0:
-      return ::user::LoginResponse::default_instance();
-    case 1:
       return ::user::RegisterResponse::default_instance();
+    case 1:
+      return ::user::LoginResponse::default_instance();
 
     default:
       ABSL_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -1875,16 +1840,16 @@ UserServiceRpc_Stub::~UserServiceRpc_Stub() {
   if (owns_channel_) delete channel_;
 }
 
-void UserServiceRpc_Stub::Login(
+void UserServiceRpc_Stub::Register(
     ::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
-    const ::user::LoginRequest* PROTOBUF_NONNULL request, ::user::LoginResponse* PROTOBUF_NONNULL response,
+    const ::user::RegisterRequest* PROTOBUF_NONNULL request, ::user::RegisterResponse* PROTOBUF_NONNULL response,
     ::google::protobuf::Closure* PROTOBUF_NULLABLE done) {
   channel_->CallMethod(descriptor()->method(0), controller,
                        request, response, done);
 }
-void UserServiceRpc_Stub::Register(
+void UserServiceRpc_Stub::Login(
     ::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
-    const ::user::RegisterRequest* PROTOBUF_NONNULL request, ::user::RegisterResponse* PROTOBUF_NONNULL response,
+    const ::user::LoginRequest* PROTOBUF_NONNULL request, ::user::LoginResponse* PROTOBUF_NONNULL response,
     ::google::protobuf::Closure* PROTOBUF_NULLABLE done) {
   channel_->CallMethod(descriptor()->method(1), controller,
                        request, response, done);

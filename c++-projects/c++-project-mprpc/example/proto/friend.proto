@@ -1,0 +1,45 @@
+// Protobuf 语法的版本
+syntax = "proto3";
+
+// 定义包名，便于在生成的代码中区分不同模块（类似 C++ 的命名空间）
+package friends;
+
+// 允许生成通用的 C++ 服务接口（可选项）
+option cc_generic_services = true;
+
+// 请求结果
+message ResultCode {
+    uint32 errcode = 1; 
+    bytes errmsg = 2;
+}
+
+// 好友信息
+message Friend {
+    uint32 userid = 1;
+    bytes username = 2;
+
+    // 枚举类型
+    enum SEX {
+        MAN = 0;
+        WOMAN = 1;
+    }
+
+    SEX sex = 3;
+}
+
+// 获取好友列表的请求
+message GetFriendListRequest {
+    uint32 userid = 1;
+}
+
+// 获取好友列表的响应
+message GetFriendListResponse {
+    ResultCode result = 1;
+    // 好友列表
+    repeated Friend friends = 2;
+}
+
+// 定义RPC服务接口类和服务函数
+service FriendServiceRpc {
+    rpc GetFriendList(GetFriendListRequest) returns (GetFriendListResponse);
+}

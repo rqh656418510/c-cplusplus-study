@@ -1,8 +1,10 @@
 #include <iostream>
 
+#include "friend.pb.h"
 #include "mprpcapplication.h"
 #include "rpcprovider.h"
 #include "user.pb.h"
+#include "vector"
 
 // RPC 服务提供者，继承基类 UserServiceRpc（由 Protobuf 自动生成）
 class UserService : public user::UserServiceRpc {
@@ -15,8 +17,7 @@ public:
 
     // 本地的注册函数
     bool Register(std::string name, std::string password) {
-        std::cout << "invoke local Register function" << std::endl;
-        std::cout << "name: " << name << ", password: " << password << std::endl;
+        std::cout << "invoke local Register function, name: " << name << ", password: " << password << std::endl;
         return true;
     }
 
@@ -30,7 +31,7 @@ public:
         // 调用本地业务函数
         bool success = Login(name, password);
 
-        // 设置响应结果
+        // 设置 RPC 响应结果
         user::ResultCode* result = response->mutable_result();
         result->set_errcode(0);
         result->set_errmsg("");
@@ -50,11 +51,62 @@ public:
         // 调用本地业务函数
         bool success = Register(name, password);
 
-        // 设置响应结果
+        // 设置 RPC 响应结果
         user::ResultCode* result = response->mutable_result();
         result->set_errcode(0);
         result->set_errmsg("");
         response->set_success(success);
+
+        // 执行回调操作，返回响应结果给RPC服务调用者
+        done->Run();
+    }
+};
+
+// RPC 服务提供者，继承基类 FriendServiceRpc（由 Protobuf 自动生成）
+class FriendServcie : public friends::FriendServiceRpc {
+    // 本地获取好友列表的函数
+    std::vector<friends::Friend> GetFriendList(uint32_t userid) {
+        std::cout << "invoke local GetFriendList function, userid: " << userid << std::endl;
+
+        // 返回结果
+        std::vector<friends::Friend> result;
+
+        friends::Friend f1;
+        f1.set_userid(1);
+        f1.set_username("Jim");
+        f1.set_sex(friends::Friend::MAN);
+        result.push_back(f1);
+
+        friends::Friend f2;
+        f2.set_userid(2);
+        f2.set_username("Tom");
+        f2.set_sex(friends::Friend::MAN);
+        result.push_back(f2);
+
+        return result;
+    }
+
+    // 重写基类 FriendServiceRpc（由 Protobuf 自动生成）的虚函数
+    void GetFriendList(::google::protobuf::RpcController* controller, const ::friends::GetFriendListRequest* request,
+                       ::friends::GetFriendListResponse* response, ::google::protobuf::Closure* done) {
+        // 获取 RPC 请求参数
+        uint32_t userid = request->userid();
+
+        // 调用本地业务函数
+        std::vector<friends::Friend> friends = GetFriendList(userid);
+
+        // 设置 RPC 响应结果
+        friends::ResultCode* result = response->mutable_result();
+        result->set_errcode(0);
+        result->set_errmsg("");
+
+        // 设置响应的数据
+        for (friends::Friend& item : friends) {
+            friends::Friend* f = response->add_friends();
+            f->set_sex(item.sex());
+            f->set_userid(item.userid());
+            f->set_username(item.username());
+        }
 
         // 执行回调操作，返回响应结果给RPC服务调用者
         done->Run();
@@ -71,6 +123,7 @@ int main(int argc, char** argv) {
 
     // 发布 RPC 服务
     provider.NotifyService(new UserService());
+    provider.NotifyService(new FriendServcie());
 
     // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
     provider.Run();

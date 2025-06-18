@@ -5,6 +5,11 @@
 
 // 加载配置文件
 void MprpcConfig::LoadConfigFile(const char* config_file) {
+    // 判断是否已经加载过配置文件
+    if (!m_configMap.empty()) {
+        return;
+    }
+
     // 打开配置文件
     FILE* pf = fopen(config_file, "r");
     if (nullptr == pf) {

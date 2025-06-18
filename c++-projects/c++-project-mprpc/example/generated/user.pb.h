@@ -248,14 +248,14 @@ class ResultCode final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_errmsg();
 
   public:
-  // int32 errcode = 1;
+  // uint32 errcode = 1;
   void clear_errcode() ;
-  ::int32_t errcode() const;
-  void set_errcode(::int32_t value);
+  ::uint32_t errcode() const;
+  void set_errcode(::uint32_t value);
 
   private:
-  ::int32_t _internal_errcode() const;
-  void _internal_set_errcode(::int32_t value);
+  ::uint32_t _internal_errcode() const;
+  void _internal_set_errcode(::uint32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:user.ResultCode)
@@ -285,7 +285,7 @@ class ResultCode final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr errmsg_;
-    ::int32_t errcode_;
+    ::uint32_t errcode_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -438,11 +438,10 @@ class RegisterRequest final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kNameFieldNumber = 2,
-    kPasswordFieldNumber = 3,
-    kIdFieldNumber = 1,
+    kNameFieldNumber = 1,
+    kPasswordFieldNumber = 2,
   };
-  // bytes name = 2;
+  // bytes name = 1;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -457,7 +456,7 @@ class RegisterRequest final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // bytes password = 3;
+  // bytes password = 2;
   void clear_password() ;
   const ::std::string& password() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -472,21 +471,11 @@ class RegisterRequest final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_password();
 
   public:
-  // uint32 id = 1;
-  void clear_id() ;
-  ::uint32_t id() const;
-  void set_id(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_id() const;
-  void _internal_set_id(::uint32_t value);
-
-  public:
   // @@protoc_insertion_point(class_scope:user.RegisterRequest)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 3,
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
                                    0, 0,
                                    2>
       _table_;
@@ -510,7 +499,6 @@ class RegisterRequest final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::google::protobuf::internal::ArenaStringPtr password_;
-    ::uint32_t id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1167,13 +1155,13 @@ class UserServiceRpc : public ::google::protobuf::Service {
 
   static const ::google::protobuf::ServiceDescriptor* PROTOBUF_NONNULL descriptor();
 
-  virtual void Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
-                        const ::user::LoginRequest* PROTOBUF_NONNULL request,
-                        ::user::LoginResponse* PROTOBUF_NONNULL response,
-                        ::google::protobuf::Closure* PROTOBUF_NULLABLE done);
   virtual void Register(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
                         const ::user::RegisterRequest* PROTOBUF_NONNULL request,
                         ::user::RegisterResponse* PROTOBUF_NONNULL response,
+                        ::google::protobuf::Closure* PROTOBUF_NULLABLE done);
+  virtual void Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
+                        const ::user::LoginRequest* PROTOBUF_NONNULL request,
+                        ::user::LoginResponse* PROTOBUF_NONNULL response,
                         ::google::protobuf::Closure* PROTOBUF_NULLABLE done);
 
   // implements Service ----------------------------------------------
@@ -1207,13 +1195,13 @@ class UserServiceRpc_Stub final : public UserServiceRpc {
   inline ::google::protobuf::RpcChannel* PROTOBUF_NULLABLE channel() { return channel_; }
 
   // implements UserServiceRpc ------------------------------------------
-  void Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
-                        const ::user::LoginRequest* PROTOBUF_NONNULL request,
-                        ::user::LoginResponse* PROTOBUF_NONNULL response,
-                        ::google::protobuf::Closure* PROTOBUF_NULLABLE done) override;
   void Register(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
                         const ::user::RegisterRequest* PROTOBUF_NONNULL request,
                         ::user::RegisterResponse* PROTOBUF_NONNULL response,
+                        ::google::protobuf::Closure* PROTOBUF_NULLABLE done) override;
+  void Login(::google::protobuf::RpcController* PROTOBUF_NULLABLE controller,
+                        const ::user::LoginRequest* PROTOBUF_NONNULL request,
+                        ::user::LoginResponse* PROTOBUF_NONNULL response,
                         ::google::protobuf::Closure* PROTOBUF_NULLABLE done) override;
 
  private:
@@ -1235,26 +1223,26 @@ class UserServiceRpc_Stub final : public UserServiceRpc {
 
 // ResultCode
 
-// int32 errcode = 1;
+// uint32 errcode = 1;
 inline void ResultCode::clear_errcode() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.errcode_ = 0;
+  _impl_.errcode_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000002u;
 }
-inline ::int32_t ResultCode::errcode() const {
+inline ::uint32_t ResultCode::errcode() const {
   // @@protoc_insertion_point(field_get:user.ResultCode.errcode)
   return _internal_errcode();
 }
-inline void ResultCode::set_errcode(::int32_t value) {
+inline void ResultCode::set_errcode(::uint32_t value) {
   _internal_set_errcode(value);
   _impl_._has_bits_[0] |= 0x00000002u;
   // @@protoc_insertion_point(field_set:user.ResultCode.errcode)
 }
-inline ::int32_t ResultCode::_internal_errcode() const {
+inline ::uint32_t ResultCode::_internal_errcode() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.errcode_;
 }
-inline void ResultCode::_internal_set_errcode(::int32_t value) {
+inline void ResultCode::_internal_set_errcode(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.errcode_ = value;
 }
@@ -1588,31 +1576,7 @@ inline void LoginResponse::_internal_set_success(bool value) {
 
 // RegisterRequest
 
-// uint32 id = 1;
-inline void RegisterRequest::clear_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0u;
-  _impl_._has_bits_[0] &= ~0x00000004u;
-}
-inline ::uint32_t RegisterRequest::id() const {
-  // @@protoc_insertion_point(field_get:user.RegisterRequest.id)
-  return _internal_id();
-}
-inline void RegisterRequest::set_id(::uint32_t value) {
-  _internal_set_id(value);
-  _impl_._has_bits_[0] |= 0x00000004u;
-  // @@protoc_insertion_point(field_set:user.RegisterRequest.id)
-}
-inline ::uint32_t RegisterRequest::_internal_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
-}
-inline void RegisterRequest::_internal_set_id(::uint32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
-}
-
-// bytes name = 2;
+// bytes name = 1;
 inline void RegisterRequest::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -1677,7 +1641,7 @@ inline void RegisterRequest::set_allocated_name(::std::string* PROTOBUF_NULLABLE
   // @@protoc_insertion_point(field_set_allocated:user.RegisterRequest.name)
 }
 
-// bytes password = 3;
+// bytes password = 2;
 inline void RegisterRequest::clear_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.password_.ClearToEmpty();
