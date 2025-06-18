@@ -19,5 +19,5 @@ execute_process(COMMAND protoc
 include_directories(${PROTO_GEN_DIR})
 
 # 加载 CMake 子目录
-add_subdirectory(callee)
-add_subdirectory(caller)
+add_subdirectory(provider)
+add_subdirectory(consumer)
