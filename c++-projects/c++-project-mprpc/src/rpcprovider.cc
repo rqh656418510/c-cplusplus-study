@@ -3,8 +3,8 @@
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
 
-// 发布 RPC 服务
-void RpcProvider::NotifyService(google::protobuf::Service* service) {
+// 注册 RPC 服务
+void RpcProvider::RegisterService(google::protobuf::Service* service) {
     // RPC 服务的信息
     ServiceInfo servcieInfo;
 

@@ -76,7 +76,7 @@ Logger::Logger() {
 
 // 析构函数
 Logger::~Logger() {
-    // 关闭队列，通知日志写入线程停止运行
+    // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
     this->m_lckQue.Stop();
     // 等待日志线程安全退出
     if (m_writeThread.joinable()) {

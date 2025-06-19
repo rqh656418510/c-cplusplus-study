@@ -31,7 +31,7 @@ public:
         // 阻塞等待，直到队列不为空或者已退出
         m_condvariable.wait(lock, [this]() { return !m_queue.empty() || m_exit; });
 
-        // 视业务逻辑而定，返回空数据或者抛出异常
+        // 视业务逻辑而定，可以返回空数据或者抛出异常
         if (m_exit && m_queue.empty()) {
             return {};
         }
@@ -64,5 +64,5 @@ private:
     std::mutex m_mutex;                      // 互斥锁
     std::queue<T> m_queue;                   // 队列
     std::condition_variable m_condvariable;  // 条件变量
-    bool m_exit = false;                     // 退出标志
+    bool m_exit = false;                     // 退出标志，用于避免发生线程死锁
 };

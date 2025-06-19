@@ -123,14 +123,14 @@ int main(int argc, char** argv) {
     LOG_INFO("init rpc framework...");
     MprpcApplication::GetInstance().Init(argc, argv);
 
-    // 创建用来发布 RPC 服务的网络对象类
+    // 创建用来注册 RPC 服务的网络对象类
     RpcProvider provider;
 
-    // 发布 RPC 服务
-    provider.NotifyService(new UserService());
+    // 注册 RPC 服务
+    provider.RegisterService(new UserService());
 
-    // 发布 RPC 服务
-    provider.NotifyService(new FriendServcie());
+    // 注册 RPC 服务
+    provider.RegisterService(new FriendServcie());
 
     // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
     provider.Run();
