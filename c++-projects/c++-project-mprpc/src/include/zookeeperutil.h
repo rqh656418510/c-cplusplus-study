@@ -10,7 +10,7 @@
 #include "logger.h"
 #include "mprpcapplication.h"
 
-// ZooKeeper 的客户端封装类
+// ZooKeeper 客户端的封装类
 class ZkClient {
 public:
     // 构造函数
