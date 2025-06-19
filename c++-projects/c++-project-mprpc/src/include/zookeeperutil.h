@@ -20,13 +20,16 @@ public:
     ~ZkClient();
 
     // 启动 ZK 客户端
-    void Start();
+    void Start(const std::string &host, const int port);
 
     // 在 ZK 服务器上，根据指定的 Path 创建 ZNode 节点
-    void Create(const char *path, const char *data, int datalen, int mode = 0);
+    std::string Create(const char *path, const char *data, int datalen, int mode = 0);
 
-    // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的值
+    // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据
     std::string GetData(const char *path);
+
+    // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的状态
+    Stat GetStat(const char *path);
 
 private:
     zhandle_t *m_zhandle;  // ZK 的客户端句柄

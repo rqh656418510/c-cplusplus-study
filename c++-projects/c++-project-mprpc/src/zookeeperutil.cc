@@ -106,7 +106,7 @@ int zoo_create_sync(zhandle_t *zh, const char *path, const char *data, int datal
     return ctx.rc;
 }
 
-// 同步获取 ZNode 节点数据的上下文结构
+// 同步获取 ZNode 节点数据和状态的上下文结构
 struct SyncGetContext {
     sem_t sem;                    // 信号量
     int rc = ZSYSTEMERROR;        // 操作结果
@@ -115,7 +115,7 @@ struct SyncGetContext {
     struct Stat *stat = nullptr;  // ZNode 节点的状态
 };
 
-// 异步获取 ZNode 节点数据的回调
+// 异步获取 ZNode 节点数据和状态的回调
 void znode_get_completion(int rc, const char *value, int value_len, const struct Stat *stat, const void *data) {
     // 上下文信息
     SyncGetContext *ctx = (SyncGetContext *)data;
@@ -129,7 +129,7 @@ void znode_get_completion(int rc, const char *value, int value_len, const struct
     }
 
     // 存储 ZNode 节点的数据
-    if (ZOK == rc && value && value_len > 0 && ctx->buf) {
+    if (ZOK == rc && value && value_len > 0 && ctx->buf && ctx->buf_len > 0) {
         int copy_len = (value_len < ctx->buf_len - 1) ? value_len : ctx->buf_len - 1;
         memcpy(ctx->buf, value, copy_len);
         ctx->buf[copy_len] = '\0';
@@ -139,7 +139,7 @@ void znode_get_completion(int rc, const char *value, int value_len, const struct
     sem_post(&ctx->sem);
 }
 
-// 同步获取 ZNode 节点的数据
+// 同步获取 ZNode 节点的数据和状态
 int zoo_get_sync(zhandle_t *zh, const char *path, int watch, char *buf_out, int buf_out_len, struct Stat *stat_out) {
     // 上下文信息
     SyncGetContext ctx;
@@ -208,11 +208,9 @@ ZkClient::~ZkClient() {
 }
 
 // 启动 ZK 客户端
-void ZkClient::Start() {
-    // 获取 ZK 客户端的连接信息
-    std::string host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
-    std::string port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
-    std::string conn_str = host + ":" + port;
+void ZkClient::Start(const std::string &host, const int port) {
+    // 拼接 ZK 客户端的连接信息
+    std::string conn_str = host + ":" + std::to_string(port);
 
     /**
      * 初始化 ZK 的客户端句柄（特别注意：这里是异步初始化）
@@ -253,13 +251,14 @@ void ZkClient::Start() {
 }
 
 // 在 ZK 服务器上根据指定的 Path 创建 ZNode 节点
-void ZkClient::Create(const char *path, const char *data, int datalen, int mode) {
+std::string ZkClient::Create(const char *path, const char *data, int datalen, int mode) {
     // 同步判断 ZNode 节点是否存在
     int flag = zoo_exists_sync(m_zhandle, path, 0);
 
     // ZNode 节点已存在
     if (ZOK == flag) {
-        LOG_ERROR("znode %s create failed, because existed", path);
+        LOG_ERROR("znode %s create failed, because it existed", path);
+        return path;
     }
     // ZNode 节点不存在
     else if (ZNONODE == flag) {
@@ -272,6 +271,8 @@ void ZkClient::Create(const char *path, const char *data, int datalen, int mode)
         if (ZOK == flag) {
             // 节点创建成功
             LOG_INFO("znode %s create success", path_buf);
+            // 返回实际创建的节点路径
+            return path_buf;
         } else {
             // 节点创建失败
             LOG_ERROR("znode %s create failed", path);
@@ -285,23 +286,37 @@ void ZkClient::Create(const char *path, const char *data, int datalen, int mode)
     }
 }
 
-// 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的值
+// 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据
 std::string ZkClient::GetData(const char *path) {
-    // 节点状态
-    struct Stat stat;
-
     // 节点数据
-    const int data_buf_len = 1024;
+    const int data_buf_len = 2048;
     char data_buf[data_buf_len] = {0};
 
     // 同步获取 ZNode 节点的数据
-    int flag = zoo_get_sync(m_zhandle, path, 0, data_buf, data_buf_len, &stat);
+    int flag = zoo_get_sync(m_zhandle, path, 0, data_buf, data_buf_len, nullptr);
     if (ZOK == flag) {
-        // 获取数据成功
+        // 获取节点数据成功
         return data_buf;
     } else {
-        // 获取数据失败
-        LOG_ERROR("get znode data failed, path:%s", path);
+        // 获取节点数据失败
+        LOG_ERROR("get znode data failed, path: %s", path);
         return "";
+    }
+}
+
+// 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的状态
+Stat ZkClient::GetStat(const char *path) {
+    // 节点状态
+    struct Stat stat;
+
+    // 同步获取 ZNode 节点的状态
+    int flag = zoo_get_sync(m_zhandle, path, 0, nullptr, 0, &stat);
+    if (ZOK == flag) {
+        // 获取节点状态成功
+        return stat;
+    } else {
+        // 获取节点状态失败
+        LOG_ERROR("get znode stat failed, path: %s", path);
+        return {};
     }
 }
