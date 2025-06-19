@@ -3,7 +3,11 @@
 #include <semaphore.h>
 #include <zookeeper/zookeeper.h>
 
+#include <cstdlib>
 #include <string>
+
+#include "logger.h"
+#include "mprpcapplication.h"
 
 // ZooKeeper 的客户端封装类
 class ZkClient {

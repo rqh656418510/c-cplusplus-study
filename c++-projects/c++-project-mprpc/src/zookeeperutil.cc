@@ -1,11 +1,6 @@
 #include "zookeeperutil.h"
 
-#include <cstdlib>
-
-#include "logger.h"
-#include "mprpcapplication.h"
-
-////////////////////////////////////////////////// ZK 扩展代码 //////////////////////////////////////////////////
+////////////////////////////////////////////////// ZK 同步扩展代码 //////////////////////////////////////////////////
 
 // 同步检查 ZNode 节点是否存在的上下文结构
 struct SyncExistsContext {
@@ -33,7 +28,7 @@ int zoo_exists_sync(zhandle_t *zh, const char *path, int watch) {
     // 发起 ZK 异步请求的调用
     int ret = zoo_aexists(zh, path, watch, znode_exists_completion, &ctx);
 
-    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未发出，导致回调永不执行，最终造成线程死锁
+    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未正常发出，导致回调永不执行，最终造成线程死锁
     if (ret != ZOK) {
         // 销毁信号量
         sem_destroy(&ctx.sem);
@@ -76,7 +71,7 @@ void znode_create_completion(int rc, const char *path, const void *data) {
 }
 
 // 同步创建 ZNode 节点
-int zoo_create_sync(zhandle_t *zh, const char *path, const char *value, int valuelen, const struct ACL_vector *acl,
+int zoo_create_sync(zhandle_t *zh, const char *path, const char *data, int datalen, const struct ACL_vector *acl,
                     int mode, char *path_buf_out, int path_buf_out_len) {
     // 上下文信息
     SyncCreateContext ctx;
@@ -85,9 +80,9 @@ int zoo_create_sync(zhandle_t *zh, const char *path, const char *value, int valu
     sem_init(&ctx.sem, 0, 0);
 
     // 发起 ZK 异步请求的调用
-    int ret = zoo_acreate(zh, path, value, valuelen, acl, mode, znode_create_completion, &ctx);
+    int ret = zoo_acreate(zh, path, data, datalen, acl, mode, znode_create_completion, &ctx);
 
-    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未发出，导致回调永不执行，最终造成线程死锁
+    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未正常发出，导致回调永不执行，最终造成线程死锁
     if (ret != ZOK) {
         // 销毁信号量
         sem_destroy(&ctx.sem);
@@ -108,6 +103,71 @@ int zoo_create_sync(zhandle_t *zh, const char *path, const char *value, int valu
     }
 
     // 返回检查结果
+    return ctx.rc;
+}
+
+// 同步获取 ZNode 节点数据的上下文结构
+struct SyncGetContext {
+    sem_t sem;                    // 信号量
+    int rc = ZSYSTEMERROR;        // 操作结果
+    char *buf = nullptr;          // 数据缓冲区
+    int buf_len = 0;              // 数据缓冲区的大小
+    struct Stat *stat = nullptr;  // ZNode 节点的状态
+};
+
+// 异步获取 ZNode 节点数据的回调
+void znode_get_completion(int rc, const char *value, int value_len, const struct Stat *stat, const void *data) {
+    // 上下文信息
+    SyncGetContext *ctx = (SyncGetContext *)data;
+
+    // 存储操作结果
+    ctx->rc = rc;
+
+    // 存储 ZNode 节点的状态
+    if (rc == ZOK && stat && ctx->stat) {
+        *ctx->stat = *stat;
+    }
+
+    // 存储 ZNode 节点的数据
+    if (ZOK == rc && value && value_len > 0 && ctx->buf) {
+        int copy_len = (value_len < ctx->buf_len - 1) ? value_len : ctx->buf_len - 1;
+        memcpy(ctx->buf, value, copy_len);
+        ctx->buf[copy_len] = '\0';
+    }
+
+    // 唤醒正在等待获取结果的线程
+    sem_post(&ctx->sem);
+}
+
+// 同步获取 ZNode 节点的数据
+int zoo_get_sync(zhandle_t *zh, const char *path, int watch, char *buf_out, int buf_out_len, struct Stat *stat_out) {
+    // 上下文信息
+    SyncGetContext ctx;
+    ctx.stat = stat_out;
+    ctx.buf = buf_out;
+    ctx.buf_len = buf_out_len;
+
+    // 初始化信号量
+    sem_init(&ctx.sem, 0, 0);
+
+    // 发起 ZK 异步请求的调用
+    int ret = zoo_aget(zh, path, watch, znode_get_completion, &ctx);
+
+    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未正常发出，导致回调永不执行，最终造成线程死锁
+    if (ret != ZOK) {
+        // 销毁信号量
+        sem_destroy(&ctx.sem);
+        // ZK 的异步请求发出失败
+        return ret;
+    }
+
+    // 阻塞等待获取结果
+    sem_wait(&ctx.sem);
+
+    // 销毁信号量
+    sem_destroy(&ctx.sem);
+
+    // 返回操作结果
     return ctx.rc;
 }
 
@@ -191,22 +251,40 @@ void ZkClient::Create(const char *path, const char *data, int datalen, int mode)
         char path_buf[path_buf_len] = {0};
 
         // 同步创建 ZNode 节点
-        flag = zoo_create_sync(m_zhandle, path, data, strlen(data), &ZOO_OPEN_ACL_UNSAFE, mode, path_buf, path_buf_len);
+        flag = zoo_create_sync(m_zhandle, path, data, datalen, &ZOO_OPEN_ACL_UNSAFE, mode, path_buf, path_buf_len);
         if (ZOK == flag) {
             // 节点创建成功
             LOG_INFO("znode %s create success", path_buf);
         } else {
             // 节点创建失败
             LOG_ERROR("znode %s create failed!", path);
+            exit(EXIT_FAILURE);
         }
     }
     // 发生错误，比如会话过期、身份认证失败等
     else {
         LOG_ERROR("znode %s create failed!", path);
+        exit(EXIT_FAILURE);
     }
 }
 
 // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的值
 std::string ZkClient::GetData(const char *path) {
-    return "";
+    // 节点状态
+    struct Stat stat;
+
+    // 节点数据
+    const int data_buf_len = 1024;
+    char data_buf[data_buf_len] = {0};
+
+    // 同步获取 ZNode 节点的数据
+    int flag = zoo_get_sync(m_zhandle, path, 0, data_buf, data_buf_len, &stat);
+    if (ZOK == flag) {
+        // 获取数据成功
+        return data_buf;
+    } else {
+        // 获取数据失败
+        LOG_ERROR("get znode data failed, path:%s", path);
+        return "";
+    }
 }
