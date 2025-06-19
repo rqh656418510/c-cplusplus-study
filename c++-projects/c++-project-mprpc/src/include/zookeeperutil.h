@@ -4,6 +4,7 @@
 #include <zookeeper/zookeeper.h>
 
 #include <cstdlib>
+#include <ctime>
 #include <string>
 
 #include "logger.h"

@@ -175,12 +175,20 @@ int zoo_get_sync(zhandle_t *zh, const char *path, int watch, char *buf_out, int 
 void global_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx) {
     // 判断接收到的事件类型是不是会话事件类型
     if (type == ZOO_SESSION_EVENT) {
-        // 判断是不是 ZK 客户端连接成功
+        // ZK 客户端连接成功
         if (state == ZOO_CONNECTED_STATE) {
             // 从 ZK 客户端的上下文中获取预设置的信号量
             sem_t *init_sem = (sem_t *)zoo_get_context(zh);
             // 唤醒正在等待 ZK 客户端初始化完成的线程
             sem_post(init_sem);
+        }
+        // ZK 客户端身份认证失败
+        else if (state == ZOO_AUTH_FAILED_STATE) {
+            LOG_ERROR("zookeeper auth failed");
+        }
+        // ZK 客户端会话过期
+        else if (state == ZOO_EXPIRED_SESSION_STATE) {
+            LOG_ERROR("zookeeper session expired");
         }
     }
 }
@@ -215,7 +223,7 @@ void ZkClient::Start() {
      */
     m_zhandle = zookeeper_init(conn_str.c_str(), global_watcher, 30000, nullptr, nullptr, 0);
     if (nullptr == m_zhandle) {
-        LOG_ERROR("zookeeper client init failed!");
+        LOG_ERROR("zookeeper client init failed");
         exit(EXIT_FAILURE);
     }
 
@@ -226,13 +234,22 @@ void ZkClient::Start() {
     // 将信号量存放到 ZK 客户端的上下文中
     zoo_set_context(m_zhandle, &init_sem);
 
+    // 设置等待 ZK 客户端连接的超时时间
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += 10;
+
     // 阻塞等待 ZK 客户端初始化完成
-    sem_wait(&init_sem);
+    if (sem_timedwait(&init_sem, &ts) != 0) {
+        // 销毁信号量
+        sem_destroy(&init_sem);
+        LOG_ERROR("zookeeper client connect timeout");
+        exit(EXIT_FAILURE);
+    }
 
     // 销毁信号量
     sem_destroy(&init_sem);
-
-    LOG_INFO("zookeeper client init success!");
+    LOG_INFO("zookeeper client init success");
 }
 
 // 在 ZK 服务器上根据指定的 Path 创建 ZNode 节点
@@ -242,7 +259,7 @@ void ZkClient::Create(const char *path, const char *data, int datalen, int mode)
 
     // ZNode 节点已存在
     if (ZOK == flag) {
-        LOG_ERROR("znode %s create failed, because existed!", path);
+        LOG_ERROR("znode %s create failed, because existed", path);
     }
     // ZNode 节点不存在
     else if (ZNONODE == flag) {
@@ -257,13 +274,13 @@ void ZkClient::Create(const char *path, const char *data, int datalen, int mode)
             LOG_INFO("znode %s create success", path_buf);
         } else {
             // 节点创建失败
-            LOG_ERROR("znode %s create failed!", path);
+            LOG_ERROR("znode %s create failed", path);
             exit(EXIT_FAILURE);
         }
     }
     // 发生错误，比如会话过期、身份认证失败等
     else {
-        LOG_ERROR("znode %s create failed!", path);
+        LOG_ERROR("znode %s create failed", path);
         exit(EXIT_FAILURE);
     }
 }
