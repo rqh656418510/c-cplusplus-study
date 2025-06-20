@@ -90,13 +90,13 @@ void RpcProvider::Run() {
         const std::string created_path =
             zkClient.CreateRecursive(node_full_path.c_str(), node_data, node_data_len, ZOO_EPHEMERAL);
 
-        // 判断 ZNode 节点是否创建成功
+        // 判断 ZNode 节点是否创建成功（即 RPC 服务是否注册成功）
         if (!created_path.empty()) {
-            // 打印日志信息
+            // ZNode 节点创建成功
             LOG_INFO("success to register rpc service, name: %s, path: %s, data: %s", service_name.c_str(),
                      node_full_path.c_str(), node_data);
         } else {
-            // 打印日志信息
+            // ZNode 节点创建失败
             LOG_ERROR("failed to register rpc service, name: %s, path: %s, data: %s", service_name.c_str(),
                       node_full_path.c_str(), node_data);
         }
