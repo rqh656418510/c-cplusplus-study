@@ -2,6 +2,7 @@
 
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
+#include "zookeeperutil.h"
 
 // 注册 RPC 服务
 void RpcProvider::RegisterService(google::protobuf::Service* service) {
@@ -36,10 +37,14 @@ void RpcProvider::RegisterService(google::protobuf::Service* service) {
 
 // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
 void RpcProvider::Run() {
+    // 获取配置信息
+    const std::string rpc_server_ip = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_IP_KEY);
+    const std::string rpc_server_port = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_PORT_KEY);
+    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
+    const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
+
     // 创建 TCP 服务器
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-ip");
-    std::string port = MprpcApplication::GetInstance().GetConfig().Load("rpc-server-port");
-    muduo::net::InetAddress address(ip, atoi(port.c_str()));
+    muduo::net::InetAddress address(rpc_server_ip, atoi(rpc_server_port.c_str()));
     muduo::net::TcpServer tcpServer(&m_eventloop, address, "RpcProvider");
 
     // 设置 TCP 连接创建和断开的回调
@@ -52,8 +57,39 @@ void RpcProvider::Run() {
     // 设置 EventLoop 的线程数量（比如：1 个 I/O 线程，3 个 Worker 线程）
     tcpServer.setThreadNum(4);
 
+    // 创建 ZK 客户端
+    ZkClient zkClient;
+
+    // 启动 ZK 客户端
+    bool started = zkClient.Start(zk_server_host, atoi(zk_server_port.c_str()));
+    // ZK 服务端连接失败
+    if (!started) {
+        // 停止往下继续执行，直接返回
+        return;
+    }
+
+    // 将所有 RPC 服务注册进 ZK 服务端
+    for (auto& service : m_serviceMap) {
+        // 获取 RPC 服务的描述信息
+        const google::protobuf::ServiceDescriptor* serviceDesc = service.second.m_service->GetDescriptor();
+
+        // 获取 RPC 服务的完整名称（包括包名）
+        const std::string service_full_name(serviceDesc->full_name());
+
+        // 父节点路径的前缀
+        std::string path_prefix = "/mprpc/services/" + service_full_name;
+
+        // 创建父节点（持久化节点），比如 /UserServiceRpc
+        std::string service_path = "/" + service.first;
+        std::string real_path = zkClient.Create(service_path.c_str(), nullptr, 0, ZOO_PERSISTENT);
+        // 创建父节点失败
+        if (real_path == "") {
+            continue;
+        }
+    }
+
     // 打印日志信息
-    std::cout << "RpcProvider start service at " << ip << ":" << port << std::endl;
+    std::cout << "rpc provider start service at " << rpc_server_ip << ":" << rpc_server_port << std::endl;
 
     // 启动 TCP 服务器
     tcpServer.start();

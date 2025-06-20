@@ -260,6 +260,12 @@ bool ZkClient::Start(const std::string &host, const int port) {
 
 // 在 ZK 服务器上根据指定的 Path 创建 ZNode 节点
 std::string ZkClient::Create(const char *path, const char *data, int datalen, int mode) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        // 返回空字符串
+        return "";
+    }
+
     // 同步判断 ZNode 节点是否存在
     int flag = zoo_exists_sync(m_zhandle, path, 0);
 
@@ -302,8 +308,75 @@ std::string ZkClient::Create(const char *path, const char *data, int datalen, in
     }
 }
 
+// 在 ZK 服务器上，根据指定的 Path 递归创建 ZNode 节点
+std::string ZkClient::CreateRecursive(const char *path, const char *data, int datalen, int mode) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        // 返回空字符串
+        return "";
+    }
+
+    // 拷贝节点路径，避免修改原始字符串
+    std::string full_path(path);
+
+    std::string current_path;
+    std::string result_path;
+    size_t current_pos = 1;  // 跳过第一个 '/'
+
+    while (current_pos <= full_path.size()) {
+        size_t next_pos = full_path.find('/', current_pos);
+        if (next_pos == std::string::npos) {
+            // 最后一级路径（完整路径）
+            current_path = full_path;
+        } else {
+            current_path = full_path.substr(0, next_pos);
+        }
+
+        bool is_last_path = (next_pos == std::string::npos);   // 是否为最后一级路径
+        const char *path_data = is_last_path ? data : "";      // 父路径不写入数据
+        int path_data_len = is_last_path ? datalen : 0;        // 父路径的数据长度为零
+        int path_mode = is_last_path ? mode : ZOO_PERSISTENT;  // 父路径为持久节点
+
+        // 创建节点
+        std::string created_path = Create(current_path.c_str(), path_data, path_data_len, path_mode);
+
+        // 如果节点创建失败
+        if (created_path.empty()) {
+            // 判断节点是否存在
+            int rc = zoo_exists_sync(m_zhandle, current_path.c_str(), 0);
+            // 如果节点不存在，直接返回空字符串
+            if (ZOK != rc) {
+                // 打印日志信息
+                LOG_ERROR("znode %s create failed", current_path.c_str());
+                // 返回空字符串
+                return "";
+            }
+            // 如果节点存在，使用（兼容）已存在的节点
+            else {
+                created_path = current_path;
+            }
+        }
+
+        // 如果是最后一级路径，则跳出 While 循环
+        if (is_last_path) {
+            result_path = created_path;
+            break;
+        }
+
+        current_pos = next_pos + 1;
+    }
+
+    return result_path;
+}
+
 // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据
 std::string ZkClient::GetData(const char *path) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        // 返回空字符串
+        return "";
+    }
+
     // 节点数据
     const int data_buf_len = 2048;
     char data_buf[data_buf_len] = {0};
@@ -326,6 +399,12 @@ std::string ZkClient::GetData(const char *path) {
 
 // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的状态
 Stat ZkClient::GetStat(const char *path) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        // 返回空数据
+        return {};
+    }
+
     // 节点状态
     struct Stat stat;
 
@@ -347,6 +426,11 @@ Stat ZkClient::GetStat(const char *path) {
 
 // 在 ZK 服务器上，根据指定的 Path 判断 ZNode 节点是否存在
 ZNodeStatus ZkClient::Exist(const char *path) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        return UNKNOWN;
+    }
+
     // 同步判断 ZNode 节点是否存在
     int flag = zoo_exists_sync(m_zhandle, path, 0);
 
@@ -362,4 +446,14 @@ ZNodeStatus ZkClient::Exist(const char *path) {
     else {
         return UNKNOWN;
     }
+}
+
+// 检查节点路径是否合法
+bool ZkClient::checkPath(const char *path) {
+    if (path == nullptr || path[0] != '/') {
+        // 打印日志信息
+        LOG_ERROR("invalid node path: %s", path);
+        return false;
+    }
+    return true;
 }

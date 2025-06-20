@@ -30,7 +30,10 @@ public:
     bool Start(const std::string &host, const int port);
 
     // 在 ZK 服务器上，根据指定的 Path 创建 ZNode 节点
-    std::string Create(const char *path, const char *data, int datalen, int mode = 0);
+    std::string Create(const char *path, const char *data, int datalen = 0, int mode = ZOO_PERSISTENT);
+
+    // 在 ZK 服务器上，根据指定的 Path 递归创建 ZNode 节点
+    std::string CreateRecursive(const char *path, const char *data, int datalen = 0, int mode = ZOO_PERSISTENT);
 
     // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据
     std::string GetData(const char *path);
@@ -43,4 +46,7 @@ public:
 
 private:
     zhandle_t *m_zhandle;  // ZK 的客户端句柄
+
+    // 检查节点路径是否合法
+    bool checkPath(const char *path);
 };

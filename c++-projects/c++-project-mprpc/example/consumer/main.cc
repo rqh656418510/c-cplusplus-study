@@ -137,6 +137,8 @@ void ZkApiTest() {
         return;
     }
 
+    //////////////////////////////////// 创建节点 ////////////////////////////////////
+
     std::string path1 = "/cat";
     // 判断节点是否存在
     if (zkCli.Exist(path1.c_str()) == NOTEXIST) {
@@ -154,6 +156,14 @@ void ZkApiTest() {
     path2 = zkCli.Create(path2.c_str(), data2.c_str(), data2.length(), ZOO_EPHEMERAL_SEQUENTIAL);
     LOG_INFO(path2.c_str());
 
+    // 递归创建临时节点
+    std::string path3 = "/pig/pinkpig";
+    std::string data3 = "hello pig";
+    path3 = zkCli.Create(path3.c_str(), data3.c_str(), data3.length(), ZOO_EPHEMERAL);
+    LOG_INFO(path3.c_str());
+
+    //////////////////////////////////// 获取节点数据 ////////////////////////////////////
+
     // 获取节点的数据（持久化节点）
     std::string resultData1 = zkCli.GetData(path1.c_str());
     LOG_INFO("the data of node %s ==> %s", path1.c_str(), resultData1.c_str());
@@ -161,6 +171,12 @@ void ZkApiTest() {
     // 获取节点的数据（临时顺序节点）
     std::string resultData2 = zkCli.GetData(path2.c_str());
     LOG_INFO("the data of node %s ==> %s", path2.c_str(), resultData2.c_str());
+
+    // 获取节点的数据（临时节点）
+    std::string resultData3 = zkCli.GetData(path3.c_str());
+    LOG_INFO("the data of node %s ==> %s", path3.c_str(), resultData3.c_str());
+
+    //////////////////////////////////// 获取节点状态 ////////////////////////////////////
 
     // 获取节点的状态（持久化节点）
     Stat resultStat1 = zkCli.GetStat(path1.c_str());
@@ -171,6 +187,11 @@ void ZkApiTest() {
     Stat resultStat2 = zkCli.GetStat(path2.c_str());
     LOG_INFO("the stat of node %s ==> version: %u, ephemeralOwner: %u, numChildren: %u, dataLength: %u", path2.c_str(),
              resultStat2.version, resultStat2.ephemeralOwner, resultStat2.numChildren, resultStat2.dataLength);
+
+    // 获取节点的状态（临时节点）
+    Stat resultStat3 = zkCli.GetStat(path3.c_str());
+    LOG_INFO("the stat of node %s ==> version: %u, ephemeralOwner: %u, numChildren: %u, dataLength: %u", path3.c_str(),
+             resultStat3.version, resultStat3.ephemeralOwner, resultStat3.numChildren, resultStat3.dataLength);
 }
 
 // 测试 RPC 服务的调用
