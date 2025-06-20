@@ -12,8 +12,8 @@ void RpcProvider::PublishService(google::protobuf::Service* service) {
     // 获取 RPC 服务的描述信息
     const google::protobuf::ServiceDescriptor* pserviceDesc = service->GetDescriptor();
 
-    // 获取 RPC 服务的名称
-    const std::string serviceName(pserviceDesc->name());
+    // 获取 RPC 服务的完整名称（加上包名），比如 user.UserServiceRpc
+    const std::string serviceName(pserviceDesc->full_name());
 
     // 获取 RPC 服务的方法数量
     int methodCount = pserviceDesc->method_count();
@@ -66,19 +66,16 @@ void RpcProvider::Run() {
         return;
     }
 
-    // 将所有 RPC 服务注册进 ZK 服务端
+    // 将所有已发布的 RPC 服务注册进 ZK 服务端
     for (auto& service : m_serviceMap) {
-        // RPC 服务的描述信息
-        const google::protobuf::ServiceDescriptor* serviceDesc = service.second.m_service->GetDescriptor();
-
         // RPC 服务的 IP 和端口信息
         const std::string rpc_address = rpc_server_ip + ":" + rpc_server_port;
 
-        // RPC 服务的完整名称（加上包名），比如 user.UserServiceRpc
-        const std::string service_full_name(serviceDesc->full_name());
+        // RPC 服务的名称（加上包名），比如 user.UserServiceRpc
+        const std::string service_name = service.first;
 
         // ZNode 节点的路径前缀，比如 /mprpc/services/user.UserServiceRpc
-        const std::string path_prefix = ZNODE_PATH_PREFIX + "/" + service_full_name;
+        const std::string path_prefix = ZNODE_PATH_PREFIX + "/" + service_name;
 
         // ZNode 节点的完整路径，比如 /mprpc/services/user.UserServiceRpc/127.0.0.1:7070
         const std::string node_full_path = path_prefix + "/" + rpc_address;
@@ -96,17 +93,17 @@ void RpcProvider::Run() {
         // 判断 ZNode 节点是否创建成功
         if (!created_path.empty()) {
             // 打印日志信息
-            LOG_INFO("success to register rpc service, name: %s, path: %s, data: %s", service_full_name.c_str(),
+            LOG_INFO("success to register rpc service, name: %s, path: %s, data: %s", service_name.c_str(),
                      node_full_path.c_str(), node_data);
         } else {
             // 打印日志信息
-            LOG_ERROR("failed to register rpc service, name: %s, path: %s, data: %s", service_full_name.c_str(),
+            LOG_ERROR("failed to register rpc service, name: %s, path: %s, data: %s", service_name.c_str(),
                       node_full_path.c_str(), node_data);
         }
     }
 
     // 打印日志信息
-    std::cout << "rpc provider start service at " << rpc_server_ip << ":" << rpc_server_port << std::endl;
+    LOG_INFO("rpc provider start at %s:%s", rpc_server_ip.c_str(), rpc_server_port.c_str());
 
     // 启动 TCP 服务器
     tcpServer.start();
@@ -126,14 +123,14 @@ void RpcProvider::onConnection(const muduo::net::TcpConnectionPtr& conn) {
 // 处理 TCP 连接的读写事件（比如接收客户端发送的数据）
 void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net::Buffer* buf, muduo::Timestamp time) {
     // 接收到的字符流，数据格式：header_size（4 字节） + header_str（service_name + method_name + args_size） + args_str
-    std::string recv_buf = buf->retrieveAllAsString();
+    const std::string recv_buf = buf->retrieveAllAsString();
 
     // 从字符流中读取前 4 个字节的内容
     uint32_t header_size = 0;
     recv_buf.copy((char*)&header_size, 4, 0);
 
     // 根据 header_size 读取请求数据头的原始字符流
-    std::string rpc_header_str = recv_buf.substr(4, header_size);
+    const std::string rpc_header_str = recv_buf.substr(4, header_size);
 
     // RPC 调用的基础信息
     std::string service_name;
@@ -149,28 +146,29 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
         args_size = rpcHeader.args_size();
     } else {
         // 数据反序列化失败
-        std::cout << "rpc_header_str " << rpc_header_str << " unserialize error!" << std::endl;
+        LOG_ERROR("rpc header string %s unserialize error!", rpc_header_str.c_str());
         return;
     }
 
     // 获取 RPC 调用的参数的字符流数据
-    std::string rpc_args_str = recv_buf.substr(4 + header_size, args_size);
+    const std::string rpc_args_str = recv_buf.substr(4 + header_size, args_size);
 
     // 打印日志信息
-    std::cout << "===========================================" << std::endl;
-    std::cout << "header_size: " << header_size << std::endl;
-    std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
-    std::cout << "service_name: " << service_name << std::endl;
-    std::cout << "method_name: " << method_name << std::endl;
-    std::cout << "args_size: " << args_size << std::endl;
-    std::cout << "args_str: " << rpc_args_str << std::endl;
-    std::cout << "===========================================" << std::endl;
+    LOG_DEBUG("===========================================");
+    LOG_DEBUG("header_size: %u", header_size);
+    LOG_DEBUG("rpc_header_str: %s", rpc_header_str.c_str());
+    LOG_DEBUG("service_name: %s", service_name.c_str());
+    LOG_DEBUG("method_name: %s", method_name.c_str());
+    LOG_DEBUG("args_size: %u", args_size);
+    LOG_DEBUG("args_str: %s", rpc_args_str.c_str());
+    LOG_DEBUG("===========================================");
 
     // 查找 RPC 服务
     auto sit = m_serviceMap.find(service_name);
+    // 如果找不到对应的 RPC 服务
     if (sit == m_serviceMap.end()) {
         // 打印日志信息
-        std::cout << "rpc service " << service_name << " is not exist!" << std::endl;
+        LOG_ERROR("rpc service %s is not exist!", service_name.c_str());
         return;
     }
 
@@ -178,7 +176,7 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     auto mit = sit->second.m_methodMap.find(method_name);
     if (mit == sit->second.m_methodMap.end()) {
         // 打印日志信息
-        std::cout << "rpc method " << service_name << ":" << method_name << " is not exist!" << std::endl;
+        LOG_ERROR("rpc method %s::%s is not exist!", service_name.c_str(), method_name.c_str());
         return;
     }
 
@@ -190,7 +188,7 @@ void RpcProvider::onMessage(const muduo::net::TcpConnectionPtr& conn, muduo::net
     google::protobuf::Message* request = service->GetRequestPrototype(method).New();
     if (!request->ParseFromString(rpc_args_str)) {
         // 打印日志信息
-        std::cout << "rpc request args '" << rpc_args_str << "' unserialize error!" << std::endl;
+        LOG_ERROR("rpc request args '%s' unserialize error!", rpc_args_str.c_str());
         return;
     }
 
@@ -215,7 +213,7 @@ void RpcProvider::SendRpcResponse(const muduo::net::TcpConnectionPtr& conn, goog
         conn->send(response_str);
     } else {
         // 打印日志信息
-        std::cout << "rpc response serialize error!" << std::endl;
+        LOG_ERROR("rpc response serialize error!");
     }
     // 模拟 HTTP 的短连接服务，由 RPC 服务提供方主动断开连接
     conn->shutdown();

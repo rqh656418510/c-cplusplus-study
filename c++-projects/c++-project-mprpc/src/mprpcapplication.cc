@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+#include "logger.h"
+
 // 初始化类静态成员变量
 MprpcConfig MprpcApplication::m_config;
 
@@ -58,7 +60,8 @@ void MprpcApplication::Init(int argc, char** argv) {
         }
     }
 
-    std::cout << "loading rpc config file: " << config_file << std::endl;
+    // 打印日志信息
+    LOG_DEBUG("loading rpc config file %s", config_file.c_str());
 
     // 读取配置文件内容
     m_config.LoadConfigFile(config_file.c_str());

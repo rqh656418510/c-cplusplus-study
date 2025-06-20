@@ -110,6 +110,8 @@ LogLevel Logger::GetLogLevel() {
 // 获取日志级别的名称
 std::string Logger::LogLevelToString(LogLevel level) {
     switch (level) {
+        case DEBUG:
+            return "DEBUG";
         case INFO:
             return "INFO";
         case WARN:

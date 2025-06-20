@@ -5,6 +5,18 @@
 #include "lockqueue.h"
 
 // 定义宏
+#define LOG_DEBUG(logmsgformat, ...)                                \
+    do {                                                            \
+        Logger& logger = Logger::GetInstance();                     \
+        if (logger.GetLogLevel() <= DEBUG) {                        \
+            char c[1024] = {0};                                     \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
+            std::thread::id thread_id = std::this_thread::get_id(); \
+            LogMessage msg = {DEBUG, c, thread_id};                 \
+            logger.Log(msg);                                        \
+        }                                                           \
+    } while (0)
+
 #define LOG_INFO(logmsgformat, ...)                                 \
     do {                                                            \
         Logger& logger = Logger::GetInstance();                     \
@@ -41,8 +53,9 @@
         }                                                           \
     } while (0)
 
-// 日志级别（INFO < WARN < ERROR）
+// 日志级别（DEBUG < INFO < WARN < ERROR）
 enum LogLevel {
+    DEBUG,  // 调试日志信息
     INFO,   // 普通日志信息
     WARN,   // 警告日志信息
     ERROR,  // 错误日志信息

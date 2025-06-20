@@ -28,8 +28,8 @@ int MprpcChannel::randomInt(int range) {
 void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                               google::protobuf::RpcController* controller, const google::protobuf::Message* request,
                               google::protobuf::Message* response, google::protobuf::Closure* done) {
-    // 获取 RPC 调用的服务名称
-    const std::string service_name(method->service()->name());
+    // 获取 RPC 服务的完整名称（加上包名），比如 user.UserServiceRpc
+    const std::string service_name(method->service()->full_name());
 
     // 获取 RPC 调用的方法名称
     const std::string method_name(method->name());
@@ -69,14 +69,14 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     rpc_send_str += rpc_args_str;
 
     // 打印日志信息
-    std::cout << "===========================================" << std::endl;
-    std::cout << "header_size: " << header_size << std::endl;
-    std::cout << "rpc_header_str: " << rpc_header_str << std::endl;
-    std::cout << "service_name: " << service_name << std::endl;
-    std::cout << "method_name: " << method_name << std::endl;
-    std::cout << "args_size: " << args_size << std::endl;
-    std::cout << "args_str: " << rpc_args_str << std::endl;
-    std::cout << "===========================================" << std::endl;
+    LOG_DEBUG("===========================================");
+    LOG_DEBUG("header_size: %u", header_size);
+    LOG_DEBUG("rpc_header_str: %s", rpc_header_str.c_str());
+    LOG_DEBUG("service_name: %s", service_name.c_str());
+    LOG_DEBUG("method_name: %s", method_name.c_str());
+    LOG_DEBUG("args_size: %u", args_size);
+    LOG_DEBUG("args_str: %s", rpc_args_str.c_str());
+    LOG_DEBUG("===========================================");
 
     // 本地创建一个 TCP 客户端
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);

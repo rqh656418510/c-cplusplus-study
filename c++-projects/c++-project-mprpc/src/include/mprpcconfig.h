@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "logger.h"
+
 static const std::string RPC_SERVER_IP_KEY = "rpc-server-ip";
 static const std::string RPC_SERVER_PORT_KEY = "rpc-server-port";
 static const std::string ZK_SERVER_IP_KEY = "zk-server-ip";

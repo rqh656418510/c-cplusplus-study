@@ -54,7 +54,7 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
         m_configMap.insert({key, value});
 
         // 打印日志信息
-        std::cout << key << "=" << value << std::endl;
+        LOG_DEBUG("%s=%s", key.c_str(), value.c_str());
     }
 
     // 关闭文件
