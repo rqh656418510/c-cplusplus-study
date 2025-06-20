@@ -29,10 +29,10 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                               google::protobuf::RpcController* controller, const google::protobuf::Message* request,
                               google::protobuf::Message* response, google::protobuf::Closure* done) {
     // 获取 RPC 调用的服务名称
-    std::string service_name(method->service()->name());
+    const std::string service_name(method->service()->name());
 
     // 获取 RPC 调用的方法名称
-    std::string method_name(method->name());
+    const std::string method_name(method->name());
 
     // 获取 RPC 调用参数的序列化字符串的长度
     uint32_t args_size = 0;
@@ -121,11 +121,11 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }
 
     // 随机获取一个 RPC 服务提供者的地址，比如 127.0.0.1:7070
-    int index = child_list.size() == 1 ? 0 : randomInt(child_list.size());
+    const int index = child_list.size() == 1 ? 0 : randomInt(child_list.size());
     const std::string rpc_provider_addr = child_list[index];
 
     // 解析 PRC 服务提供者的 IP 和端口号
-    size_t pos = rpc_provider_addr.find(":");
+    const size_t pos = rpc_provider_addr.find(":");
     // 如果 RPC 服务提供者的地址无效
     if (std::string::npos == pos) {
         char errtxt[512] = {0};
@@ -134,8 +134,8 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         controller->SetFailed(errtxt);
         return;
     }
-    std::string rpc_provider_ip = rpc_provider_addr.substr(0, pos);
-    std::string rpc_provider_port = rpc_provider_addr.substr(pos + 1);
+    const std::string rpc_provider_ip = rpc_provider_addr.substr(0, pos);
+    const std::string rpc_provider_port = rpc_provider_addr.substr(pos + 1);
 
     // 打印日志信息
     LOG_INFO("ready to invoke rpc service, name: %s, address: %s", service_name.c_str(), rpc_provider_addr.c_str());

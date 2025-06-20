@@ -78,26 +78,30 @@ void RpcProvider::Run() {
         const std::string service_full_name(serviceDesc->full_name());
 
         // ZNode 节点的路径前缀，比如 /mprpc/services/user.UserServiceRpc
-        std::string path_prefix = ZNODE_PATH_PREFIX + "/" + service_full_name;
+        const std::string path_prefix = ZNODE_PATH_PREFIX + "/" + service_full_name;
 
         // ZNode 节点的完整路径，比如 /mprpc/services/user.UserServiceRpc/127.0.0.1:7070
-        std::string node_full_path = path_prefix + "/" + rpc_address;
+        const std::string node_full_path = path_prefix + "/" + rpc_address;
+
+        // ZNode 节点的数据，比如 127.0.0.1:7070
+        const char* node_data = rpc_address.c_str();
+
+        // ZNode 节点的数据长度
+        const int node_data_len = rpc_address.length();
 
         // 创建 ZNode 节点（临时节点）
-        const char* node_data = rpc_address.c_str();     // ZNode 节点的数据，比如 127.0.0.1:7070
-        const int node_data_len = rpc_address.length();  // ZNode 节点的数据长度
-        std::string create_path =
+        const std::string created_path =
             zkClient.CreateRecursive(node_full_path.c_str(), node_data, node_data_len, ZOO_EPHEMERAL);
 
         // 判断 ZNode 节点是否创建成功
-        if (!create_path.empty()) {
+        if (!created_path.empty()) {
             // 打印日志信息
-            LOG_INFO("success to register rpc service, name: %s, path: %s", service_full_name.c_str(),
-                     node_full_path.c_str());
+            LOG_INFO("success to register rpc service, name: %s, path: %s, data: %s", service_full_name.c_str(),
+                     node_full_path.c_str(), node_data);
         } else {
             // 打印日志信息
-            LOG_ERROR("failed to register rpc service, name: %s, path: %s", service_full_name.c_str(),
-                      node_full_path.c_str());
+            LOG_ERROR("failed to register rpc service, name: %s, path: %s, data: %s", service_full_name.c_str(),
+                      node_full_path.c_str(), node_data);
         }
     }
 
