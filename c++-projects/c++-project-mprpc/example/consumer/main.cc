@@ -192,6 +192,14 @@ void ZkApiTest() {
     Stat resultStat3 = zkCli.GetStat(path3.c_str());
     LOG_INFO("the stat of node %s ==> version: %u, ephemeralOwner: %u, numChildren: %u, dataLength: %u", path3.c_str(),
              resultStat3.version, resultStat3.ephemeralOwner, resultStat3.numChildren, resultStat3.dataLength);
+
+    //////////////////////////////////// 获取子节点列表 ////////////////////////////////////
+
+    std::string path4 = "/pig";
+    std::vector<std::string> resultList1 = zkCli.GetChildren(path4.c_str());
+    for (std::string& child : resultList1) {
+        LOG_INFO("%s is child node of %s", child.c_str(), path4.c_str());
+    }
 }
 
 // 测试 RPC 服务的调用

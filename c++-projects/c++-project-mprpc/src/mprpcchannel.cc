@@ -65,7 +65,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     std::cout << "args_str: " << rpc_args_str << std::endl;
     std::cout << "===========================================" << std::endl;
 
-    // 本地启动一个 TCP 客户端
+    // 本地创建一个 TCP 客户端
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == clientfd) {
         // 设置 RPC 调用状态
@@ -84,7 +84,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     server_addr.sin_port = htons(atoi(port.c_str()));
     server_addr.sin_addr.s_addr = inet_addr(ip.c_str());
 
-    // 连接 RPC 服务节点
+    // 通过 TCP 客户端连接 RPC 服务节点
     if (-1 == connect(clientfd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {
         // 关闭连接
         close(clientfd);

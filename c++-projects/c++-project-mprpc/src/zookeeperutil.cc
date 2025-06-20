@@ -171,6 +171,75 @@ int zoo_get_sync(zhandle_t *zh, const char *path, int watch, char *buf_out, int 
     return ctx.rc;
 }
 
+// 同步获取 ZNode 子节点列表的上下文结构
+struct SyncGetChildrenContext {
+    sem_t sem;                          // 信号量
+    int rc = ZSYSTEMERROR;              // 操作结果
+    std::vector<std::string> children;  // 子节点列表
+};
+
+// 异步获取 ZNode 子节点列表的回调
+void zoo_get_children_completion(int rc, const struct String_vector *strings, const void *data) {
+    // 上下文信息
+    SyncGetChildrenContext *ctx = (SyncGetChildrenContext *)data;
+
+    // 存储操作结果
+    ctx->rc = rc;
+
+    // 存储子节点列表
+    if (ZOK == rc && strings) {
+        for (int i = 0; i < strings->count; i++) {
+            ctx->children.emplace_back(strings->data[i]);
+        }
+    }
+
+    // 唤醒正在等待获取结果的线程
+    sem_post(&ctx->sem);
+}
+
+// 同步获取 ZNode 子节点列表
+std::vector<std::string> zoo_get_children_sync(zhandle_t *zh, const char *path, int watch) {
+    // 子节点列表
+    std::vector<std::string> result;
+
+    // 上下文信息
+    SyncGetChildrenContext ctx;
+
+    // 初始化信号量
+    sem_init(&ctx.sem, 0, 0);
+
+    // 发起 ZK 异步请求的调用
+    int ret = zoo_aget_children(zh, path, watch, zoo_get_children_completion, &ctx);
+
+    // 这里必须判断 ZK 的异步请求调用是否正常，否则可能因为异步请求未正常发出，导致回调永不执行，最终造成线程死锁
+    if (ret != ZOK) {
+        // 销毁信号量
+        sem_destroy(&ctx.sem);
+        // ZK 的异步请求发出失败
+        return result;
+    }
+
+    // 阻塞等待获取结果
+    sem_wait(&ctx.sem);
+
+    // 销毁信号量
+    sem_destroy(&ctx.sem);
+
+    // 获取子节点列表成功
+    if (ZOK == ctx.rc) {
+        // 直接转移 children 所有权给 result
+        result = std::move(ctx.children);
+    }
+    // 获取子节点列表失败
+    else {
+        // 打印日志信息
+        LOG_ERROR("failed to get children of node %s", path);
+    }
+
+    // 返回子节点列表
+    return result;
+}
+
 // 全局的 Watcher 监听器，接收 ZkServer 给 ZkClient 发送的通知
 void global_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx) {
     // 判断接收到的事件类型是不是会话事件类型
@@ -365,6 +434,18 @@ std::string ZkClient::CreateRecursive(const char *path, const char *data, int da
     }
 
     return result_path;
+}
+
+// 在 ZK 服务器上，根据指定的 Path 获取子节点列表
+std::vector<std::string> ZkClient::GetChildren(const char *path) {
+    // 检查节点路径是否合法
+    if (!checkPath(path)) {
+        // 返回空列表
+        return {};
+    }
+
+    // 同步获取子节点列表
+    return zoo_get_children_sync(m_zhandle, path, 0);
 }
 
 // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据

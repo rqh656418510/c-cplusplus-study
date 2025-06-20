@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <vector>
 
 #include "logger.h"
 #include "mprpcapplication.h"
@@ -34,6 +35,9 @@ public:
 
     // 在 ZK 服务器上，根据指定的 Path 递归创建 ZNode 节点
     std::string CreateRecursive(const char *path, const char *data, int datalen = 0, int mode = ZOO_PERSISTENT);
+
+    // 在 ZK 服务器上，根据指定的 Path 获取子节点列表
+    std::vector<std::string> GetChildren(const char *path);
 
     // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的数据
     std::string GetData(const char *path);
