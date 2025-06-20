@@ -159,7 +159,7 @@ void ZkApiTest() {
     // 递归创建临时节点
     std::string path3 = "/pig/pinkpig";
     std::string data3 = "hello pig";
-    path3 = zkCli.Create(path3.c_str(), data3.c_str(), data3.length(), ZOO_EPHEMERAL);
+    path3 = zkCli.CreateRecursive(path3.c_str(), data3.c_str(), data3.length(), ZOO_EPHEMERAL);
     LOG_INFO(path3.c_str());
 
     //////////////////////////////////// 获取节点数据 ////////////////////////////////////

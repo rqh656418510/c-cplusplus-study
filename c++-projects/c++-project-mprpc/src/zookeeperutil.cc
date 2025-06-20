@@ -316,12 +316,10 @@ std::string ZkClient::CreateRecursive(const char *path, const char *data, int da
         return "";
     }
 
-    // 拷贝节点路径，避免修改原始字符串
-    std::string full_path(path);
-
     std::string current_path;
     std::string result_path;
-    size_t current_pos = 1;  // 跳过第一个 '/'
+    size_t current_pos = 1;       // 跳过第一个 '/'
+    std::string full_path(path);  // 拷贝节点路径，避免修改原始字符串
 
     while (current_pos <= full_path.size()) {
         size_t next_pos = full_path.find('/', current_pos);
@@ -343,17 +341,17 @@ std::string ZkClient::CreateRecursive(const char *path, const char *data, int da
         // 如果节点创建失败
         if (created_path.empty()) {
             // 判断节点是否存在
-            int rc = zoo_exists_sync(m_zhandle, current_path.c_str(), 0);
-            // 如果节点不存在，直接返回空字符串
-            if (ZOK != rc) {
+            int flag = zoo_exists_sync(m_zhandle, current_path.c_str(), 0);
+            // 如果节点存在，使用（兼容）已存在的节点
+            if (ZOK == flag) {
+                created_path = current_path;
+            }
+            // 如果节点不存在或者发生错误，则直接返回空字符串
+            else {
                 // 打印日志信息
-                LOG_ERROR("znode %s create failed", current_path.c_str());
+                LOG_ERROR("znode %s create failed", path);
                 // 返回空字符串
                 return "";
-            }
-            // 如果节点存在，使用（兼容）已存在的节点
-            else {
-                created_path = current_path;
             }
         }
 
