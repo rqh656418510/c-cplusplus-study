@@ -26,6 +26,7 @@ Logger::Logger() {
             FILE* pf = fopen(file_name, "a+");
             if (pf == nullptr) {
                 std::cout << "logger file " << file_name << " open failed!" << std::endl;
+                // 退出程序
                 exit(EXIT_FAILURE);
             }
 

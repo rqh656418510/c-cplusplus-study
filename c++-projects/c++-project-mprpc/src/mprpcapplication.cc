@@ -35,7 +35,9 @@ void ShowArgsHelp() {
 void MprpcApplication::Init(int argc, char** argv) {
     // 校验命令行参数
     if (argc < 2) {
+        // 打印命令帮助内容
         ShowArgsHelp();
+        // 退出程序
         exit(EXIT_FAILURE);
     }
 
@@ -48,12 +50,16 @@ void MprpcApplication::Init(int argc, char** argv) {
                 config_file = optarg;
                 break;
             case '?':
-                std::cout << "invalid args!" << std::endl;
+                std::cout << "invalid command line args!" << std::endl;
+                // 打印命令帮助内容
                 ShowArgsHelp();
+                // 退出程序
                 exit(EXIT_FAILURE);
             case ':':
                 std::cout << "need <configfile>" << std::endl;
+                // 打印命令帮助内容
                 ShowArgsHelp();
+                // 退出程序
                 exit(EXIT_FAILURE);
             default:
                 break;

@@ -13,8 +13,9 @@ void MprpcConfig::LoadConfigFile(const char* config_file) {
     // 打开配置文件
     FILE* pf = fopen(config_file, "r");
     if (nullptr == pf) {
-        std::cout << config_file << " is not exist!" << std::endl;
-        exit(1);
+        std::cout << "config file " << config_file << " is not exist!" << std::endl;
+        // 退出程序
+        exit(EXIT_FAILURE);
     }
 
     // 解析配置文件
