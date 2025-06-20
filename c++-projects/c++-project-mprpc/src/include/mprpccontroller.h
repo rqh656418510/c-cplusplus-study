@@ -2,6 +2,8 @@
 
 #include <google/protobuf/service.h>
 
+#include "logger.h"
+
 // RPC 调用的状态控制器
 class MprpcController : public google::protobuf::RpcController {
 public:

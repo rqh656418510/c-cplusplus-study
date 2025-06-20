@@ -4,6 +4,9 @@
 #include "mprpcconfig.h"
 #include "mprpccontroller.h"
 
+// ZooKeeper 节点的路径前缀
+const static std::string ZNODE_PATH_PREFIX = "/mprpc/services";
+
 // MPRPC 框架的初始化类（单例对象）
 class MprpcApplication {
 public:

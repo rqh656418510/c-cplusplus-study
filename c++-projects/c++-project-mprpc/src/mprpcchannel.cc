@@ -6,10 +6,23 @@
 
 #include <cerrno>
 #include <cstdlib>
+#include <random>
 #include <string>
 
+#include "logger.h"
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
+#include "zookeeperutil.h"
+
+// 随机生成一个整数，范围 [0, range-1]
+int MprpcChannel::randomInt(int range) {
+    if (range > 0) {
+        static thread_local std::mt19937 gen(std::random_device{}());
+        std::uniform_int_distribution<> dis(0, range - 1);
+        return dis(gen);
+    }
+    return 0;
+}
 
 // 统一实现 RPC 方法调用的数据序列化和网络数据发送
 void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
@@ -68,21 +81,70 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     // 本地创建一个 TCP 客户端
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == clientfd) {
-        // 设置 RPC 调用状态
         char errtxt[512] = {0};
         sprintf(errtxt, "create socket failed, errno is %d", errno);
+        // 设置 RPC 调用状态
         controller->SetFailed(errtxt);
         return;
     }
 
-    // 定义 TCP 客户端的连接信息
-    std::string ip = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_IP_KEY);
-    std::string port = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_PORT_KEY);
+    // 获取 ZK 服务端的连接信息
+    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
+    const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
 
+    // 创建 ZK 客户端
+    ZkClient zkClient;
+
+    // 启动 ZK 客户端
+    bool started = zkClient.Start(zk_server_host, atoi(zk_server_port.c_str()));
+
+    // 如果 ZK 服务端启动失败
+    if (!started) {
+        // 设置 RPC 调用状态
+        controller->SetFailed("zookeeper client connect failed");
+        return;
+    }
+
+    // RPC 服务对应的 ZNode 节点的路径，比如 /mprpc/services/user.UserServiceRpc
+    const std::string node_path = ZNODE_PATH_PREFIX + "/" + service_name;
+
+    // 获取 ZNode 子节点列表（即已注册的 RPC 服务列表），比如 127.0.0.1:7070
+    std::vector<std::string> child_list = zkClient.GetChildren(node_path.c_str());
+
+    // 如果 ZNode 子节点列表为空（即查找不到已注册的 RPC 服务）
+    if (child_list.empty()) {
+        char errtxt[512] = {0};
+        sprintf(errtxt, "not found rpc service %s", service_name.c_str());
+        // 设置 RPC 调用状态
+        controller->SetFailed(errtxt);
+        return;
+    }
+
+    // 随机获取一个 RPC 服务提供者的地址，比如 127.0.0.1:7070
+    int index = child_list.size() == 1 ? 0 : randomInt(child_list.size());
+    const std::string rpc_provider_addr = child_list[index];
+
+    // 解析 PRC 服务提供者的 IP 和端口号
+    size_t pos = rpc_provider_addr.find(":");
+    // 如果 RPC 服务提供者的地址无效
+    if (std::string::npos == pos) {
+        char errtxt[512] = {0};
+        sprintf(errtxt, "invalid rpc service address %s", rpc_provider_addr.c_str());
+        // 设置 RPC 调用状态
+        controller->SetFailed(errtxt);
+        return;
+    }
+    std::string rpc_provider_ip = rpc_provider_addr.substr(0, pos);
+    std::string rpc_provider_port = rpc_provider_addr.substr(pos + 1);
+
+    // 打印日志信息
+    LOG_INFO("ready to invoke rpc service, name: %s, address: %s", service_name.c_str(), rpc_provider_addr.c_str());
+
+    // 封装 TCP 客户端的连接信息
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(atoi(port.c_str()));
-    server_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    server_addr.sin_port = htons(atoi(rpc_provider_port.c_str()));
+    server_addr.sin_addr.s_addr = inet_addr(rpc_provider_ip.c_str());
 
     // 通过 TCP 客户端连接 RPC 服务节点
     if (-1 == connect(clientfd, (struct sockaddr*)&server_addr, sizeof(server_addr))) {

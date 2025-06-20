@@ -21,6 +21,7 @@ std::string MprpcController::ErrorText() const {
 void MprpcController::SetFailed(const std::string& reason) {
     m_failed = true;
     m_errText = reason;
+    LOG_ERROR(reason.c_str());
 }
 
 void MprpcController::StartCancel() {
