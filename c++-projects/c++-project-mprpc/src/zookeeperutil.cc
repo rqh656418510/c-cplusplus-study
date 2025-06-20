@@ -1,6 +1,6 @@
 #include "zookeeperutil.h"
 
-////////////////////////////////////////////////// ZK 同步扩展代码 //////////////////////////////////////////////////
+/////////////////////////////////////////// ZK 客户端同步操作扩展代码 ///////////////////////////////////////////
 
 // 同步检查 ZNode 节点是否存在的上下文结构
 struct SyncExistsContext {
@@ -184,16 +184,18 @@ void global_watcher(zhandle_t *zh, int type, int state, const char *path, void *
         }
         // ZK 客户端身份认证失败
         else if (state == ZOO_AUTH_FAILED_STATE) {
+            // 打印日志信息
             LOG_ERROR("zookeeper auth failed");
         }
         // ZK 客户端会话过期
         else if (state == ZOO_EXPIRED_SESSION_STATE) {
+            // 打印日志信息
             LOG_ERROR("zookeeper session expired");
         }
     }
 }
 
-////////////////////////////////////////////////// 类实现代码 //////////////////////////////////////////////////
+/////////////////////////////////////////// ZK 客户端实现代码 ///////////////////////////////////////////
 
 // 构造函数
 ZkClient::ZkClient() : m_zhandle(nullptr) {
@@ -208,21 +210,22 @@ ZkClient::~ZkClient() {
 }
 
 // 启动 ZK 客户端
-void ZkClient::Start(const std::string &host, const int port) {
-    // 拼接 ZK 客户端的连接信息
+bool ZkClient::Start(const std::string &host, const int port) {
+    // 拼接 ZK 服务端的连接信息
     std::string conn_str = host + ":" + std::to_string(port);
 
     /**
-     * 初始化 ZK 的客户端句柄（特别注意：这里是异步初始化）
-     * ZooKeeper C API 的多线程版本提供了三个线程，包括：
+     * 初始化 ZK 的客户端句柄，连接 ZK 服务端（特别注意：这里是异步初始化）
+     * ZooKeeper C API 的多线程版本有三个线程，包括：
      * (1) API 调用线程（当前调用 ZK API 的线程）
      * (2) 网络 I/O 线程，基于 pthread_create() + poll 实现
      * (3) Watcher 回调线程，基于 pthread_create() 实现
      */
     m_zhandle = zookeeper_init(conn_str.c_str(), global_watcher, 30000, nullptr, nullptr, 0);
     if (nullptr == m_zhandle) {
+        // 打印日志信息
         LOG_ERROR("zookeeper client init failed");
-        exit(EXIT_FAILURE);
+        return false;
     }
 
     // 创建并初始化信号量
@@ -232,7 +235,7 @@ void ZkClient::Start(const std::string &host, const int port) {
     // 将信号量存放到 ZK 客户端的上下文中
     zoo_set_context(m_zhandle, &init_sem);
 
-    // 设置等待 ZK 客户端连接的超时时间
+    // 设置等待 ZK 客户端连接的超时时间（10 秒）
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
     ts.tv_sec += 10;
@@ -241,13 +244,18 @@ void ZkClient::Start(const std::string &host, const int port) {
     if (sem_timedwait(&init_sem, &ts) != 0) {
         // 销毁信号量
         sem_destroy(&init_sem);
+        // 打印日志信息
         LOG_ERROR("zookeeper client connect timeout");
-        exit(EXIT_FAILURE);
+        return false;
     }
 
     // 销毁信号量
     sem_destroy(&init_sem);
+
+    // 打印日志信息
     LOG_INFO("zookeeper client init success");
+
+    return true;
 }
 
 // 在 ZK 服务器上根据指定的 Path 创建 ZNode 节点
@@ -257,8 +265,10 @@ std::string ZkClient::Create(const char *path, const char *data, int datalen, in
 
     // ZNode 节点已存在
     if (ZOK == flag) {
+        // 打印日志信息
         LOG_ERROR("znode %s create failed, because it existed", path);
-        return path;
+        // 返回空字符串
+        return "";
     }
     // ZNode 节点不存在
     else if (ZNONODE == flag) {
@@ -268,21 +278,27 @@ std::string ZkClient::Create(const char *path, const char *data, int datalen, in
 
         // 同步创建 ZNode 节点
         flag = zoo_create_sync(m_zhandle, path, data, datalen, &ZOO_OPEN_ACL_UNSAFE, mode, path_buf, path_buf_len);
+        // 节点创建成功
         if (ZOK == flag) {
-            // 节点创建成功
+            // 打印日志信息
             LOG_INFO("znode %s create success", path_buf);
             // 返回实际创建的节点路径
             return path_buf;
-        } else {
-            // 节点创建失败
+        }
+        // 节点创建失败
+        else {
+            // 打印日志信息
             LOG_ERROR("znode %s create failed", path);
-            exit(EXIT_FAILURE);
+            // 返回空字符串
+            return "";
         }
     }
     // 发生错误，比如会话过期、身份认证失败等
     else {
+        // 打印日志信息
         LOG_ERROR("znode %s create failed", path);
-        exit(EXIT_FAILURE);
+        // 返回空字符串
+        return "";
     }
 }
 
@@ -294,12 +310,16 @@ std::string ZkClient::GetData(const char *path) {
 
     // 同步获取 ZNode 节点的数据
     int flag = zoo_get_sync(m_zhandle, path, 0, data_buf, data_buf_len, nullptr);
+    // 获取节点数据成功
     if (ZOK == flag) {
-        // 获取节点数据成功
+        // 返回节点数据
         return data_buf;
-    } else {
-        // 获取节点数据失败
+    }
+    // 获取节点数据失败
+    else {
+        // 打印日志信息
         LOG_ERROR("get znode data failed, path: %s", path);
+        // 返回空字符串
         return "";
     }
 }
@@ -311,12 +331,35 @@ Stat ZkClient::GetStat(const char *path) {
 
     // 同步获取 ZNode 节点的状态
     int flag = zoo_get_sync(m_zhandle, path, 0, nullptr, 0, &stat);
+    // 获取节点状态成功
     if (ZOK == flag) {
-        // 获取节点状态成功
+        // 返回节点状态
         return stat;
-    } else {
-        // 获取节点状态失败
+    }
+    // 获取节点状态失败
+    else {
+        // 打印日志信息
         LOG_ERROR("get znode stat failed, path: %s", path);
+        // 返回空数据
         return {};
+    }
+}
+
+// 在 ZK 服务器上，根据指定的 Path 判断 ZNode 节点是否存在
+ZNodeStatus ZkClient::Exist(const char *path) {
+    // 同步判断 ZNode 节点是否存在
+    int flag = zoo_exists_sync(m_zhandle, path, 0);
+
+    // ZNode 节点已存在
+    if (ZOK == flag) {
+        return EXIST;
+    }
+    // ZNode 节点不存在
+    else if (ZNONODE == flag) {
+        return NOTEXIST;
+    }
+    // 发生错误，比如会话过期、身份认证失败等
+    else {
+        return UNKNOWN;
     }
 }

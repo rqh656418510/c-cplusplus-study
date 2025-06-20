@@ -10,6 +10,13 @@
 #include "logger.h"
 #include "mprpcapplication.h"
 
+// ZNode 节点的状态
+enum ZNodeStatus {
+    EXIST,     // 已存在
+    NOTEXIST,  // 不存在
+    UNKNOWN    // 未知状态
+};
+
 // ZooKeeper 客户端的封装类
 class ZkClient {
 public:
@@ -20,7 +27,7 @@ public:
     ~ZkClient();
 
     // 启动 ZK 客户端
-    void Start(const std::string &host, const int port);
+    bool Start(const std::string &host, const int port);
 
     // 在 ZK 服务器上，根据指定的 Path 创建 ZNode 节点
     std::string Create(const char *path, const char *data, int datalen, int mode = 0);
@@ -30,6 +37,9 @@ public:
 
     // 在 ZK 服务器上，根据指定的 Path 获取 ZNode 节点的状态
     Stat GetStat(const char *path);
+
+    // 在 ZK 服务器上，根据指定的 Path 判断 ZNode 节点是否存在
+    ZNodeStatus Exist(const char *path);
 
 private:
     zhandle_t *m_zhandle;  // ZK 的客户端句柄

@@ -123,7 +123,7 @@ void GetFriendList() {
 }
 
 // 测试 ZooKeeper 的 API
-void ZkTest() {
+void ZkApiTest() {
     // 获取 ZK 客户端的连接信息
     std::string host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
     std::string port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
@@ -132,13 +132,21 @@ void ZkTest() {
     ZkClient zkCli;
 
     // 启动 ZK 客户端
-    zkCli.Start(host, atoi(port.c_str()));
+    bool started = zkCli.Start(host, atoi(port.c_str()));
+    if (!started) {
+        return;
+    }
 
-    // 创建持久化节点
     std::string path1 = "/cat";
-    std::string data1 = "hello cat";
-    path1 = zkCli.Create(path1.c_str(), data1.c_str(), data1.length(), ZOO_PERSISTENT);
-    LOG_INFO(path1.c_str());
+    // 判断节点是否存在
+    if (zkCli.Exist(path1.c_str()) == NOTEXIST) {
+        // 创建持久化节点
+        std::string data1 = "hello cat";
+        path1 = zkCli.Create(path1.c_str(), data1.c_str(), data1.length(), ZOO_PERSISTENT);
+        LOG_INFO(path1.c_str());
+    } else {
+        LOG_WARN("node %s existed or error occurred", path1.c_str());
+    }
 
     // 创建临时顺序节点
     std::string path2 = "/dog";
