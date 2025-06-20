@@ -14,11 +14,14 @@
 
 #include "google/protobuf/service.h"
 
-// RPC 框架专门提供用来注册 RPC 服务的网络对象类
+// ZooKeeper 节点的路径前缀
+const static std::string ZNODE_PATH_PREFIX = "/mprpc/services";
+
+// RPC 框架专门提供用来发布 RPC 服务的网络对象类
 class RpcProvider {
 public:
-    // 注册 RPC 服务
-    void RegisterService(google::protobuf::Service* service);
+    // 发布 RPC 服务
+    void PublishService(google::protobuf::Service* service);
 
     // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
     void Run();

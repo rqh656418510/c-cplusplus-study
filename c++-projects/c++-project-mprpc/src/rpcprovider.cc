@@ -4,8 +4,8 @@
 #include "rpcheader.pb.h"
 #include "zookeeperutil.h"
 
-// 注册 RPC 服务
-void RpcProvider::RegisterService(google::protobuf::Service* service) {
+// 发布 RPC 服务
+void RpcProvider::PublishService(google::protobuf::Service* service) {
     // RPC 服务的信息
     ServiceInfo servcieInfo;
 
@@ -26,8 +26,6 @@ void RpcProvider::RegisterService(google::protobuf::Service* service) {
         const std::string methodName(pmethodDesc->name());
         // 存储 RPC 服务的方法的描述信息
         servcieInfo.m_methodMap.insert({methodName, pmethodDesc});
-        // 打印日志信息
-        std::cout << "register rpc service " << serviceName << ":" << methodName << std::endl;
     }
 
     // 存储 RPC 服务的信息
@@ -70,21 +68,36 @@ void RpcProvider::Run() {
 
     // 将所有 RPC 服务注册进 ZK 服务端
     for (auto& service : m_serviceMap) {
-        // 获取 RPC 服务的描述信息
+        // RPC 服务的描述信息
         const google::protobuf::ServiceDescriptor* serviceDesc = service.second.m_service->GetDescriptor();
 
-        // 获取 RPC 服务的完整名称（包括包名）
+        // RPC 服务的 IP 和端口信息
+        const std::string rpc_address = rpc_server_ip + ":" + rpc_server_port;
+
+        // RPC 服务的完整名称（加上包名），比如 user.UserServiceRpc
         const std::string service_full_name(serviceDesc->full_name());
 
-        // 父节点路径的前缀
-        std::string path_prefix = "/mprpc/services/" + service_full_name;
+        // ZNode 节点的路径前缀，比如 /mprpc/services/user.UserServiceRpc
+        std::string path_prefix = ZNODE_PATH_PREFIX + "/" + service_full_name;
 
-        // 创建父节点（持久化节点），比如 /UserServiceRpc
-        std::string service_path = "/" + service.first;
-        std::string real_path = zkClient.Create(service_path.c_str(), nullptr, 0, ZOO_PERSISTENT);
-        // 创建父节点失败
-        if (real_path == "") {
-            continue;
+        // ZNode 节点的完整路径，比如 /mprpc/services/user.UserServiceRpc/127.0.0.1:7070
+        std::string node_full_path = path_prefix + "/" + rpc_address;
+
+        // 创建 ZNode 节点（临时节点）
+        const char* node_data = rpc_address.c_str();     // ZNode 节点的数据，比如 127.0.0.1:7070
+        const int node_data_len = rpc_address.length();  // ZNode 节点的数据长度
+        std::string create_path =
+            zkClient.CreateRecursive(node_full_path.c_str(), node_data, node_data_len, ZOO_EPHEMERAL);
+
+        // 判断 ZNode 节点是否创建成功
+        if (!create_path.empty()) {
+            // 打印日志信息
+            LOG_INFO("success to register rpc service, name: %s, path: %s", service_full_name.c_str(),
+                     node_full_path.c_str());
+        } else {
+            // 打印日志信息
+            LOG_ERROR("failed to register rpc service, name: %s, path: %s", service_full_name.c_str(),
+                      node_full_path.c_str());
         }
     }
 

@@ -272,7 +272,7 @@ std::string ZkClient::Create(const char *path, const char *data, int datalen, in
     // ZNode 节点已存在
     if (ZOK == flag) {
         // 打印日志信息
-        LOG_ERROR("znode %s create failed, because it existed", path);
+        LOG_WARN("znode %s create failed, because it existed", path);
         // 返回空字符串
         return "";
     }
