@@ -1,0 +1,14 @@
+2025-6-20 12:55:29 => -140387584 [INFO] zookeeper client init success
+2025-6-20 12:55:29 => -140387584 [WARN] node /cat existed or error occurred
+2025-6-20 12:55:29 => -140387584 [INFO] znode /dog0000000034 create success
+2025-6-20 12:55:29 => -140387584 [INFO] /dog0000000034
+2025-6-20 12:55:29 => -140387584 [WARN] znode /pig create failed, because it existed
+2025-6-20 12:55:29 => -140387584 [INFO] znode /pig/pinkpig create success
+2025-6-20 12:55:29 => -140387584 [INFO] /pig/pinkpig
+2025-6-20 12:55:29 => -140387584 [INFO] the data of node /cat ==> hello cat
+2025-6-20 12:55:29 => -140387584 [INFO] the data of node /dog0000000034 ==> hello dog
+2025-6-20 12:55:29 => -140387584 [INFO] the data of node /pig/pinkpig ==> hello pig
+2025-6-20 12:55:29 => -140387584 [INFO] the stat of node /cat ==> version: 0, ephemeralOwner: 0, numChildren: 0, dataLength: 9
+2025-6-20 12:55:29 => -140387584 [INFO] the stat of node /dog0000000034 ==> version: 0, ephemeralOwner: 1117257761, numChildren: 0, dataLength: 9
+2025-6-20 12:55:29 => -140387584 [INFO] the stat of node /pig/pinkpig ==> version: 0, ephemeralOwner: 1117257761, numChildren: 0, dataLength: 9
+2025-6-20 12:55:29 => -140387584 [INFO] pinkpig is child node of /pig
