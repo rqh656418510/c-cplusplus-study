@@ -11,6 +11,7 @@
 
 #include "logger.h"
 #include "mprpcapplication.h"
+#include "mprpccontroller.h"
 #include "rpcheader.pb.h"
 #include "zookeeperclient.h"
 

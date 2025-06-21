@@ -3,6 +3,7 @@
 #include "friend.pb.h"
 #include "logger.h"
 #include "mprpcapplication.h"
+#include "mprpccontroller.h"
 #include "user.pb.h"
 
 // 调用 RPC 注册方法
