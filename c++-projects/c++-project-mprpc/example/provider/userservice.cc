@@ -3,7 +3,7 @@
 #include "friend.pb.h"
 #include "logger.h"
 #include "mprpcapplication.h"
-#include "rpcprovider.h"
+#include "mprpcprovider.h"
 #include "user.pb.h"
 #include "vector"
 

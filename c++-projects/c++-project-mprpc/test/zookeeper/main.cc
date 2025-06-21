@@ -2,7 +2,7 @@
 #include <string>
 
 #include "logger.h"
-#include "zookeeperutil.h"
+#include "zookeeperclient.h"
 
 // 测试 ZooKeeper 的 API
 int main(int argc, char** argv) {

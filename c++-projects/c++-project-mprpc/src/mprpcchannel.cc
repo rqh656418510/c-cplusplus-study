@@ -12,7 +12,7 @@
 #include "logger.h"
 #include "mprpcapplication.h"
 #include "rpcheader.pb.h"
-#include "zookeeperutil.h"
+#include "zookeeperclient.h"
 
 // 随机生成一个整数，范围 [0, range-1]
 int MprpcChannel::randomInt(int range) {
