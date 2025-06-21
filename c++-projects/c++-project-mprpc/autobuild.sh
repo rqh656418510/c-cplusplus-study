@@ -2,10 +2,6 @@
 
 set -x
 
-# 清理文件
-rm -rf `pwd`/bin
-rm -rf `pwd`/build
-
 # 配置项目，生成构建文件
 cmake -S . -B build
 

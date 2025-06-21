@@ -34,7 +34,7 @@ void RpcProvider::PublishService(google::protobuf::Service* service) {
     m_serviceMap.insert({serviceName, servcieInfo});
 }
 
-// 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
+// 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务（针对 RPC 服务提供者）
 void RpcProvider::Run() {
     // 获取配置信息
     const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);

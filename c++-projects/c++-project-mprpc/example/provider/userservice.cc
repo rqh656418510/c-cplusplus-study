@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
     // 发布 RPC 服务
     provider.PublishService(new FriendServcie());
 
-    // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
+    // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务（针对 RPC 服务提供者）
     provider.Run();
 
     return 0;
