@@ -89,7 +89,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }
 
     // 获取 ZK 服务端的连接信息
-    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
+    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
     const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
 
     // 创建 ZK 客户端
@@ -124,7 +124,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     const int index = child_list.size() == 1 ? 0 : randomInt(child_list.size());
     const std::string rpc_provider_addr = child_list[index];
 
-    // 解析 PRC 服务提供者的 IP 和端口号
+    // 解析 PRC 服务提供者的 IP 和端口
     const size_t pos = rpc_provider_addr.find(":");
     // 如果 RPC 服务提供者的地址无效
     if (std::string::npos == pos) {

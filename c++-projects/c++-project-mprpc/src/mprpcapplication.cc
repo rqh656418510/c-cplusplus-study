@@ -50,7 +50,7 @@ void MprpcApplication::Init(int argc, char** argv) {
                 config_file = optarg;
                 break;
             case '?':
-                std::cout << "invalid command line args!" << std::endl;
+                std::cout << "invalid command args!" << std::endl;
                 // 打印命令帮助内容
                 ShowArgsHelp();
                 // 退出程序

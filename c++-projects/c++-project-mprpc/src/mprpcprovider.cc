@@ -1,6 +1,7 @@
 #include "mprpcprovider.h"
 
 #include "mprpcapplication.h"
+#include "networkutil.h"
 #include "rpcheader.pb.h"
 #include "zookeeperclient.h"
 
@@ -36,13 +37,17 @@ void RpcProvider::PublishService(google::protobuf::Service* service) {
 // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务
 void RpcProvider::Run() {
     // 获取配置信息
-    const std::string rpc_server_ip = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_IP_KEY);
-    const std::string rpc_server_port = MprpcApplication::GetInstance().GetConfig().Load(RPC_SERVER_PORT_KEY);
-    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_IP_KEY);
+    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
     const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
+    const std::string rpc_network_interface =
+        MprpcApplication::GetInstance().GetConfig().Load(RPC_NETWORK_INTERFACE_KEY);
+
+    // 获取 RPC 服务提供者的 IP 和端口
+    const std::string rpc_server_ip = NetworkUtil::GetInstance().FindLocalIp(rpc_network_interface);
+    const int rpc_server_port = NetworkUtil::GetInstance().FindAvailablePort();
 
     // 创建 TCP 服务器
-    muduo::net::InetAddress address(rpc_server_ip, atoi(rpc_server_port.c_str()));
+    muduo::net::InetAddress address(rpc_server_ip, rpc_server_port);
     muduo::net::TcpServer tcpServer(&m_eventloop, address, "RpcProvider");
 
     // 设置 TCP 连接创建和断开的回调
@@ -69,7 +74,7 @@ void RpcProvider::Run() {
     // 将所有已发布的 RPC 服务注册进 ZK 服务端
     for (auto& service : m_serviceMap) {
         // RPC 服务的 IP 和端口信息
-        const std::string rpc_address = rpc_server_ip + ":" + rpc_server_port;
+        const std::string rpc_address = rpc_server_ip + ":" + std::to_string(rpc_server_port);
 
         // RPC 服务的名称（加上包名），比如 user.UserServiceRpc
         const std::string service_name = service.first;
@@ -103,7 +108,7 @@ void RpcProvider::Run() {
     }
 
     // 打印日志信息
-    LOG_INFO("rpc provider start at %s:%s", rpc_server_ip.c_str(), rpc_server_port.c_str());
+    LOG_INFO("rpc provider start at %s:%d", rpc_server_ip.c_str(), rpc_server_port);
 
     // 启动 TCP 服务器
     tcpServer.start();

@@ -6,10 +6,9 @@
 
 #include "logger.h"
 
-static const std::string RPC_SERVER_IP_KEY = "rpc-server-ip";
-static const std::string RPC_SERVER_PORT_KEY = "rpc-server-port";
-static const std::string ZK_SERVER_IP_KEY = "zk-server-ip";
-static const std::string ZK_SERVER_PORT_KEY = "zk-server-port";
+static const std::string ZK_SERVER_HOST_KEY = "zk_server_host";
+static const std::string ZK_SERVER_PORT_KEY = "zk_server_port";
+static const std::string RPC_NETWORK_INTERFACE_KEY = "rpc_network_interface";
 
 // RPC 框架读取配置文件的类
 class MprpcConfig {

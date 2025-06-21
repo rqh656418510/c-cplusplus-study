@@ -281,7 +281,7 @@ ZkClient::~ZkClient() {
 // 启动 ZK 客户端
 bool ZkClient::Start(const std::string &host, const int port) {
     // 拼接 ZK 服务端的连接信息
-    std::string conn_str = host + ":" + std::to_string(port);
+    const std::string conn_str = host + ":" + std::to_string(port);
 
     /**
      * 初始化 ZK 的客户端句柄，连接 ZK 服务端（特别注意：这里是异步初始化）
