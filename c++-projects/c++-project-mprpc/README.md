@@ -92,7 +92,7 @@ sudo systemctl status zookeeper
 # 进入项目的 bin 目录
 cd c++-project-mprpc/bin
 
-# 启动 RPC 服务提供者的案例程序（可使用相同的命令启动多个 RCP 服务提供者，不需要考虑端口冲突问题）
+# 启动 RPC 服务提供者的案例程序（可使用相同的命令启动多个 RPC 服务提供者，不需要考虑端口冲突问题）
 ./example_rpc_provider -i rpc.conf
 ```
 
@@ -102,7 +102,7 @@ cd c++-project-mprpc/bin
 # 进入项目的 bin 目录
 cd c++-project-mprpc/bin
 
-# 启动 RPC 服务调用者的案例程序（可使用相同的命令启动多个 RCP 服务调用者，不需要考虑端口冲突问题）
+# 启动 RPC 服务调用者的案例程序（可使用相同的命令启动多个 RPC 服务调用者，不需要考虑端口冲突问题）
 ./example_rpc_consumer -i rpc.conf
 ```
 
