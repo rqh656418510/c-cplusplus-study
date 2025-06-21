@@ -130,15 +130,15 @@ int main(int argc, char** argv) {
     LOG_INFO("init rpc framework...");
     MprpcApplication::GetInstance().Init(argc, argv);
 
-    // 调用 RPC 注册方法
+    // 调用远程的 RPC 注册方法
     Register();
     std::cout << std::endl;
 
-    // 调用 RPC 登录方法
+    // 调用远程的 RPC 登录方法
     Login();
     std::cout << std::endl;
 
-    // 调用 RPC 获取好友列表方法
+    // 调用远程的 RPC 获取好友列表方法
     GetFriendList();
     std::cout << std::endl;
 
