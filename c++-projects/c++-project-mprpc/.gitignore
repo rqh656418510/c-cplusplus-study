@@ -3,6 +3,7 @@ HELP.md
 .gradle
 /bin/
 /out/
+/lib/
 /build/
 cmake-build-debug
 !gradle/wrapper/gradle-wrapper.jar
