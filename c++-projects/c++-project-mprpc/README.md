@@ -25,6 +25,7 @@
 | `example`          | RPC 框架的使用案例代码                              |
 | `example/provider` | RPC 框架（服务提供者）的使用案例代码                |
 | `example/consumer` | RPC 框架（服务调用者）的使用案例代码                |
+| `autobuild.sh`     | 项目一键编译构建的脚本文件                          |
 
 ### 项目技术栈
 
