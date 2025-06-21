@@ -18,6 +18,22 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # 指定项目可执行文件的输出路径
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
+# 自定义目标，每次编译之前清理可执行文件的输出目录
+add_custom_target(clean_bin ALL
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${EXECUTABLE_OUTPUT_PATH}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_PATH}
+    COMMENT "Cleaning bin directory before build"
+)
+
+# 自定义命令，每次编译之前拷贝所有配置文件到可执行文件的输出目录
+add_custom_command(
+    TARGET clean_bin POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/config
+    ${EXECUTABLE_OUTPUT_PATH}
+    COMMENT "Copying all config files to bin directory before build"
+)
+
 # 指定系统的头文件，如 ZooKeeper、Muduo、Protobuf 头文件
 include_directories(/usr/include)
 include_directories(/usr/local/include)
