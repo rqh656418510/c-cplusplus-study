@@ -112,6 +112,6 @@ cd c++-project-mprpc/bin
 # 进入项目的 bin 目录
 cd c++-project-mprpc/bin
 
-# 查看 RPC 框架运行输出的日志文件
+# 查看 RPC 框架运行输出的日志文件（请自行更改日志文件名）
 vim 2025-06-12-log.txt
 ```
