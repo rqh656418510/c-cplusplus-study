@@ -46,6 +46,12 @@ void RpcProvider::Run() {
     const std::string rpc_server_ip = NetworkUtil::GetInstance().FindLocalIp(rpc_network_interface);
     const int rpc_server_port = NetworkUtil::GetInstance().FindAvailablePort();
 
+    // 判断 RPC 服务提供者的端口是否有效
+    if (-1 == rpc_server_port) {
+        LOG_ERROR("not found available port for rpc server!");
+        return;
+    }
+
     // 创建 TCP 服务器
     muduo::net::InetAddress address(rpc_server_ip, rpc_server_port);
     muduo::net::TcpServer tcpServer(&m_eventloop, address, "RpcProvider");
