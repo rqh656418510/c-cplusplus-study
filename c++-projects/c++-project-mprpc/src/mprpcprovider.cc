@@ -1,6 +1,6 @@
 #include "mprpcprovider.h"
 
-#include "mprpcapplication.h"
+#include "mprpccontext.h"
 #include "networkutil.h"
 #include "rpcheader.pb.h"
 #include "zookeeperclient.h"
@@ -37,10 +37,9 @@ void RpcProvider::PublishService(google::protobuf::Service* service) {
 // 启动 RPC 服务节点，开始对外提供 RPC 远程网络调用服务（针对 RPC 服务提供者）
 void RpcProvider::Run() {
     // 获取配置信息
-    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
-    const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
-    const std::string rpc_network_interface =
-        MprpcApplication::GetInstance().GetConfig().Load(RPC_NETWORK_INTERFACE_KEY);
+    const std::string zk_server_host = MprpcContext::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
+    const std::string zk_server_port = MprpcContext::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
+    const std::string rpc_network_interface = MprpcContext::GetInstance().GetConfig().Load(RPC_NETWORK_INTERFACE_KEY);
 
     // 获取 RPC 服务提供者的 IP 和端口
     const std::string rpc_server_ip = NetworkUtil::GetInstance().FindLocalIp(rpc_network_interface);

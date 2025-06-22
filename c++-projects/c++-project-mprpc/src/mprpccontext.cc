@@ -1,4 +1,4 @@
-#include "mprpcapplication.h"
+#include "mprpccontext.h"
 
 #include <unistd.h>
 
@@ -9,20 +9,20 @@
 #include "logger.h"
 
 // 初始化类静态成员变量
-MprpcConfig MprpcApplication::m_config;
+MprpcConfig MprpcContext::m_config;
 
 // 构造函数
-MprpcApplication::MprpcApplication() {
+MprpcContext::MprpcContext() {
 }
 
 // 析构函数
-MprpcApplication::~MprpcApplication() {
+MprpcContext::~MprpcContext() {
 }
 
 // 获取单例对象
-MprpcApplication& MprpcApplication::GetInstance() {
+MprpcContext& MprpcContext::GetInstance() {
     // 局部静态变量（线程安全）
-    static MprpcApplication singleton;
+    static MprpcContext singleton;
     return singleton;
 }
 
@@ -32,7 +32,7 @@ void ShowArgsHelp() {
 }
 
 // 初始化 RPC 框架
-void MprpcApplication::Init(int argc, char** argv) {
+void MprpcContext::Init(int argc, char** argv) {
     // 校验命令行参数
     if (argc < 2) {
         // 打印命令帮助内容
@@ -74,6 +74,6 @@ void MprpcApplication::Init(int argc, char** argv) {
 }
 
 // 获取配置信息
-MprpcConfig& MprpcApplication::GetConfig() {
+MprpcConfig& MprpcContext::GetConfig() {
     return m_config;
 }

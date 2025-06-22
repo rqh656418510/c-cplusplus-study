@@ -10,7 +10,7 @@
 #include <string>
 
 #include "logger.h"
-#include "mprpcapplication.h"
+#include "mprpccontext.h"
 #include "mprpccontroller.h"
 #include "rpcheader.pb.h"
 #include "zookeeperclient.h"
@@ -90,8 +90,8 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     }
 
     // 获取 ZK 服务端的连接信息
-    const std::string zk_server_host = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
-    const std::string zk_server_port = MprpcApplication::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
+    const std::string zk_server_host = MprpcContext::GetInstance().GetConfig().Load(ZK_SERVER_HOST_KEY);
+    const std::string zk_server_port = MprpcContext::GetInstance().GetConfig().Load(ZK_SERVER_PORT_KEY);
 
     // 创建 ZK 客户端
     ZkClient zkClient;

@@ -6,11 +6,11 @@
 // ZooKeeper 节点的路径前缀
 const static std::string ZNODE_PATH_PREFIX = "/mprpc/services";
 
-// MPRPC 框架的初始化类（单例对象）
-class MprpcApplication {
+// MPRPC 框架的上下文类（单例对象）
+class MprpcContext {
 public:
     // 获取单例对象
-    static MprpcApplication& GetInstance();
+    static MprpcContext& GetInstance();
 
     // 初始化 RPC 框架
     static void Init(int argc, char** argv);
@@ -19,18 +19,18 @@ public:
     static MprpcConfig& GetConfig();
 
 private:
-    // 配置内容
+    // 配置信息
     static MprpcConfig m_config;
 
     // 私有构造函数
-    MprpcApplication();
+    MprpcContext();
 
     // 私有析构函数
-    ~MprpcApplication();
+    ~MprpcContext();
 
     // 删除拷贝构造函数
-    MprpcApplication(const MprpcApplication&) = delete;
+    MprpcContext(const MprpcContext&) = delete;
 
     // 删除赋值运算符
-    MprpcApplication& operator=(const MprpcApplication&) = delete;
+    MprpcContext& operator=(const MprpcContext&) = delete;
 };

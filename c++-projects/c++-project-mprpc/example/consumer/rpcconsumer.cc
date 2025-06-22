@@ -2,7 +2,7 @@
 
 #include "friend.pb.h"
 #include "logger.h"
-#include "mprpcapplication.h"
+#include "mprpccontext.h"
 #include "mprpccontroller.h"
 #include "user.pb.h"
 
@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
 
     // 调用 RPC 框架的初始化操作（比如加载 RPC 配置文件）
     LOG_INFO("init rpc framework...");
-    MprpcApplication::GetInstance().Init(argc, argv);
+    MprpcContext::GetInstance().Init(argc, argv);
 
     // 调用远程的 RPC 注册方法
     Register();
