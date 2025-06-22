@@ -29,7 +29,7 @@ add_custom_target(clean_bin ALL
 add_custom_command(
     TARGET clean_bin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/config
+    ${CMAKE_SOURCE_DIR}/conf
     ${EXECUTABLE_OUTPUT_PATH}
     COMMENT "Copying config files to bin directory"
 )

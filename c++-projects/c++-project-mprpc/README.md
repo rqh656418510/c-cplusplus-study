@@ -15,7 +15,7 @@
 | `build`            | CMake 编译构建项目的目录                            |
 | `bin`              | 存放项目编译生成的可执行文件                        |
 | `lib`              | 存放项目编译生成的 RPC 框架头文件和静态库           |
-| `config`           | 存放 RPC 框架的配置文件                             |
+| `conf`           | 存放 RPC 框架的配置文件                             |
 | `generated`        | 存放根据 `.proto` 协议文件生成的 C++ 头文件和源文件 |
 | `proto`            | 存放 Protobuf 的 `.proto` 协议文件                  |
 | `src`              | RPC 框架源码                                        |
@@ -52,7 +52,7 @@
 
 ## 项目测试
 
-- (1) 更改 `config` 目录下的 `rpc.conf` 配置文件，指定 ZooKeeper 服务器的 IP 和端口号等信息
+- (1) 更改 `conf` 目录下的 `rpc.conf` 配置文件，指定 ZooKeeper 服务器的 IP 和端口号等信息
 
 ``` conf
 # ZooKeeper的IP地址（必填）
