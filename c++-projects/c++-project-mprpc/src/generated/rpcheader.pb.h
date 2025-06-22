@@ -217,7 +217,7 @@ class RpcHeader final : public ::google::protobuf::Message
     kMethodNameFieldNumber = 2,
     kArgsSizeFieldNumber = 3,
   };
-  // string service_name = 1;
+  // bytes service_name = 1;
   void clear_service_name() ;
   const ::std::string& service_name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -232,7 +232,7 @@ class RpcHeader final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_service_name();
 
   public:
-  // string method_name = 2;
+  // bytes method_name = 2;
   void clear_method_name() ;
   const ::std::string& method_name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -262,7 +262,7 @@ class RpcHeader final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<2, 3,
-                                   0, 47,
+                                   0, 0,
                                    2>
       _table_;
 
@@ -310,7 +310,7 @@ extern const ::google::protobuf::internal::ClassDataFull RpcHeader_class_data_;
 
 // RpcHeader
 
-// string service_name = 1;
+// bytes service_name = 1;
 inline void RpcHeader::clear_service_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.service_name_.ClearToEmpty();
@@ -325,7 +325,7 @@ template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void RpcHeader::set_service_name(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000001u;
-  _impl_.service_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  _impl_.service_name_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:mprpc.RpcHeader.service_name)
 }
 inline ::std::string* PROTOBUF_NONNULL RpcHeader::mutable_service_name()
@@ -375,7 +375,7 @@ inline void RpcHeader::set_allocated_service_name(::std::string* PROTOBUF_NULLAB
   // @@protoc_insertion_point(field_set_allocated:mprpc.RpcHeader.service_name)
 }
 
-// string method_name = 2;
+// bytes method_name = 2;
 inline void RpcHeader::clear_method_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.method_name_.ClearToEmpty();
@@ -390,7 +390,7 @@ template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void RpcHeader::set_method_name(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_._has_bits_[0] |= 0x00000002u;
-  _impl_.method_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  _impl_.method_name_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:mprpc.RpcHeader.method_name)
 }
 inline ::std::string* PROTOBUF_NONNULL RpcHeader::mutable_method_name()

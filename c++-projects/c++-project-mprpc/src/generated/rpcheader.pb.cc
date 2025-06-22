@@ -85,7 +85,7 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
 const char descriptor_table_protodef_rpcheader_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\017rpcheader.proto\022\005mprpc\"I\n\tRpcHeader\022\024\n"
-    "\014service_name\030\001 \001(\t\022\023\n\013method_name\030\002 \001(\t"
+    "\014service_name\030\001 \001(\014\022\023\n\013method_name\030\002 \001(\014"
     "\022\021\n\targs_size\030\003 \001(\rb\006proto3"
 };
 static ::absl::once_flag descriptor_table_rpcheader_2eproto_once;
@@ -218,7 +218,7 @@ RpcHeader::GetClassData() const {
   return RpcHeader_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 47, 2>
+const ::_pbi::TcParseTable<2, 3, 0, 0, 2>
 RpcHeader::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_._has_bits_),
@@ -238,11 +238,11 @@ RpcHeader::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string service_name = 1;
-    {::_pbi::TcParser::FastUS1,
+    // bytes service_name = 1;
+    {::_pbi::TcParser::FastBS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_.service_name_)}},
-    // string method_name = 2;
-    {::_pbi::TcParser::FastUS1,
+    // bytes method_name = 2;
+    {::_pbi::TcParser::FastBS1,
      {18, 1, 0, PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_.method_name_)}},
     // uint32 args_size = 3;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RpcHeader, _impl_.args_size_), 2>(),
@@ -250,22 +250,18 @@ RpcHeader::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // string service_name = 1;
+    // bytes service_name = 1;
     {PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_.service_name_), _Internal::kHasBitsOffset + 0, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string method_name = 2;
+    (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
+    // bytes method_name = 2;
     {PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_.method_name_), _Internal::kHasBitsOffset + 1, 0,
-    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
     // uint32 args_size = 3;
     {PROTOBUF_FIELD_OFFSET(RpcHeader, _impl_.args_size_), _Internal::kHasBitsOffset + 2, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   // no aux_entries
   {{
-    "\17\14\13\0\0\0\0\0"
-    "mprpc.RpcHeader"
-    "service_name"
-    "method_name"
   }},
 };
 PROTOBUF_NOINLINE void RpcHeader::Clear() {
@@ -304,23 +300,19 @@ PROTOBUF_NOINLINE void RpcHeader::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string service_name = 1;
+  // bytes service_name = 1;
   if ((this_._impl_._has_bits_[0] & 0x00000001u) != 0) {
     if (!this_._internal_service_name().empty()) {
       const ::std::string& _s = this_._internal_service_name();
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "mprpc.RpcHeader.service_name");
-      target = stream->WriteStringMaybeAliased(1, _s, target);
+      target = stream->WriteBytesMaybeAliased(1, _s, target);
     }
   }
 
-  // string method_name = 2;
+  // bytes method_name = 2;
   if ((this_._impl_._has_bits_[0] & 0x00000002u) != 0) {
     if (!this_._internal_method_name().empty()) {
       const ::std::string& _s = this_._internal_method_name();
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "mprpc.RpcHeader.method_name");
-      target = stream->WriteStringMaybeAliased(2, _s, target);
+      target = stream->WriteBytesMaybeAliased(2, _s, target);
     }
   }
 
@@ -359,17 +351,17 @@ PROTOBUF_NOINLINE void RpcHeader::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if ((cached_has_bits & 0x00000007u) != 0) {
-    // string service_name = 1;
+    // bytes service_name = 1;
     if ((cached_has_bits & 0x00000001u) != 0) {
       if (!this_._internal_service_name().empty()) {
-        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                         this_._internal_service_name());
       }
     }
-    // string method_name = 2;
+    // bytes method_name = 2;
     if ((cached_has_bits & 0x00000002u) != 0) {
       if (!this_._internal_method_name().empty()) {
-        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                         this_._internal_method_name());
       }
     }

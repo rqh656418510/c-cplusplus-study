@@ -7,7 +7,7 @@
 #include "user.pb.h"
 #include "vector"
 
-// RPC 服务提供者，继承基类 UserServiceRpc（由 Protobuf 自动生成）
+// RPC 服务，继承基类 UserServiceRpc（由 Protobuf 自动生成）
 class UserService : public user::UserServiceRpc {
 public:
     // 本地的登录函数
@@ -63,7 +63,7 @@ public:
     }
 };
 
-// RPC 服务提供者，继承基类 FriendServiceRpc（由 Protobuf 自动生成）
+// RPC 服务，继承基类 FriendServiceRpc（由 Protobuf 自动生成）
 class FriendServcie : public friends::FriendServiceRpc {
     // 本地获取好友列表的函数
     std::vector<friends::Friend> GetFriendList(uint32_t userid) {

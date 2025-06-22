@@ -56,7 +56,7 @@ std::string NetworkUtil::FindLocalIp(const std::string& network_interface) {
     return result.empty() ? "127.0.0.1" : result;
 }
 
-// 获取一个未被占用的端口（可指定端口区间，比如 [7000, 9000]）
+// 获取一个未被占用的端口，可指定端口区间（比如 [7000, 9000]）
 int NetworkUtil::FindAvailablePort(int low, int high) {
     // 遍历指定区间内的所有端口
     for (int port = low; port <= high; ++port) {
