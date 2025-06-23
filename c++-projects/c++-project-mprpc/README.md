@@ -10,22 +10,22 @@
 
 ### 项目结构
 
-| 目录名称           | 目录说明                                            |
-| ------------------ | --------------------------------------------------- |
-| `build`            | CMake 编译构建项目的目录                            |
-| `bin`              | 存放项目编译生成的可执行文件                        |
-| `lib`              | 存放项目编译生成的 RPC 框架头文件和静态库           |
-| `conf`           | 存放 RPC 框架的配置文件                             |
-| `generated`        | 存放根据 `.proto` 协议文件生成的 C++ 头文件和源文件 |
-| `proto`            | 存放 Protobuf 的 `.proto` 协议文件                  |
-| `src`              | RPC 框架源码                                        |
-| `test`             | 第三方库的测试代码                                  |
-| `test/protobuf/`   | Protobuf 的测试代码                                 |
-| `test/zookeeper/`  | ZooKeeper 的测试代码                                |
-| `example`          | RPC 框架的使用案例代码                              |
-| `example/provider` | RPC 框架（服务提供者）的使用案例代码                |
-| `example/consumer` | RPC 框架（服务调用者）的使用案例代码                |
-| `autobuild.sh`     | 项目一键编译构建的脚本文件                          |
+| 目录名称           | 目录说明                                                                |
+| ------------------ | ----------------------------------------------------------------------- |
+| `build`            | CMake 编译构建项目的目录（项目首次编译后才会有）                        |
+| `bin`              | 存放项目编译生成的可执行文件的目录（项目首次编译后才会有）              |
+| `lib`              | 存放项目编译生成的 RPC 框架头文件和静态库的目录（项目首次编译后才会有） |
+| `conf`             | 存放 RPC 框架的配置文件                                                 |
+| `proto`            | 存放 Protobuf 的 `.proto` 协议文件                                      |
+| `generated`        | 存放根据 `.proto` 协议文件生成的 C++ 头文件和源文件                     |
+| `src`              | RPC 框架源码                                                            |
+| `test`             | 第三方库的测试代码                                                      |
+| `test/protobuf/`   | Protobuf 的测试代码                                                     |
+| `test/zookeeper/`  | ZooKeeper 的测试代码                                                    |
+| `example`          | RPC 框架的使用案例代码                                                  |
+| `example/provider` | RPC 框架（服务提供者）的使用案例代码                                    |
+| `example/consumer` | RPC 框架（服务调用者）的使用案例代码                                    |
+| `autobuild.sh`     | 项目一键编译构建的脚本文件                                              |
 
 ### 项目技术栈
 
@@ -39,17 +39,17 @@
 
 ### 项目开发工具
 
-| 软件               | 版本        | 说明                                                                                  |
-| ------------------ | ----------- | ------------------------------------------------------------------------------------- |
-| C++ 标准           | `17`        | 高版本的 Protobuf 库依赖 C++ 17                                                       |
-| Boost              | `1.74.0.3`  | Muduo 库依赖 Boost 库                                                                 |
-| Muduo              | `2.0.3`     | [Muduo 库](https://github.com/chenshuo/muduo)，基于 C++ 开发，用于网络编程            |
-| Protobuf           | `31.1`      | [Protobuf 库](https://github.com/protocolbuffers/protobuf)，核心代码主要是用 C++ 开发 |
-| ZooKeeper C API    | `3.8.0`     | ZooKeeper 提供的原生 C API，基于 C 语言开发                                           |
-| G++（GCC）         | `12.2.0`    | 建议使用 `9` 版本的 G++（GCC） 编译器                                                 |
-| CMake              | `3.25.1`    | C/C++ 项目构建工具                                                                    |
-| ZooKeeper          | `3.8.0`     | ZooKeeper 服务器                                                                      |
-| Linux              | `Debian 12` | Muduo 库不支持 Windows 平台                                                           |
+| 软件            | 版本        | 说明                                                                                  |
+| --------------- | ----------- | ------------------------------------------------------------------------------------- |
+| C++ 标准        | `17`        | 高版本的 Protobuf 库依赖 C++ 17                                                       |
+| Boost           | `1.74.0.3`  | Muduo 库依赖 Boost 库                                                                 |
+| Muduo           | `2.0.3`     | [Muduo 库](https://github.com/chenshuo/muduo)，基于 C++ 开发，用于网络编程            |
+| Protobuf        | `31.1`      | [Protobuf 库](https://github.com/protocolbuffers/protobuf)，核心代码主要是用 C++ 开发 |
+| ZooKeeper C API | `3.8.0`     | ZooKeeper 提供的原生 C API，基于 C 语言开发                                           |
+| G++（GCC）      | `12.2.0`    | 建议使用 `9` 版本的 G++（GCC） 编译器                                                 |
+| CMake           | `3.25.1`    | C/C++ 项目构建工具                                                                    |
+| ZooKeeper       | `3.8.0`     | ZooKeeper 服务器                                                                      |
+| Linux           | `Debian 12` | Muduo 库不支持 Windows 平台                                                           |
 
 ## 项目测试
 
