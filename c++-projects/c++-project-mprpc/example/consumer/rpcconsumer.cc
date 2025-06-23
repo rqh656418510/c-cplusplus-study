@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "friend.pb.h"
 #include "logger.h"
@@ -9,13 +10,13 @@
 // 调用 RPC 注册方法
 void Register() {
     // RPC 调用的通道
-    google::protobuf::RpcChannel* channel = new MprpcChannel();
+    std::unique_ptr<google::protobuf::RpcChannel> channel = std::make_unique<MprpcChannel>();
 
     // RPC 调用的状态控制器
-    google::protobuf::RpcController* controller = new MprpcController();
+    std::unique_ptr<google::protobuf::RpcController> controller = std::make_unique<MprpcController>();
 
     // RPC 调用的代理对象
-    user::UserServiceRpc_Stub stub(channel);
+    user::UserServiceRpc_Stub stub(channel.get());
 
     // RPC 调用的请求参数
     user::RegisterRequest request;
@@ -26,12 +27,10 @@ void Register() {
     user::RegisterResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.Register(controller, &request, &response, nullptr);
+    stub.Register(controller.get(), &request, &response, nullptr);
 
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
-        // 打印日志信息
-        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
@@ -46,13 +45,13 @@ void Register() {
 // 调用 RPC 登录方法
 void Login() {
     // RPC 调用的通道
-    google::protobuf::RpcChannel* channel = new MprpcChannel();
+    std::unique_ptr<google::protobuf::RpcChannel> channel = std::make_unique<MprpcChannel>();
 
     // RPC 调用的状态控制器
-    google::protobuf::RpcController* controller = new MprpcController();
+    std::unique_ptr<google::protobuf::RpcController> controller = std::make_unique<MprpcController>();
 
     // RPC 调用的代理对象
-    user::UserServiceRpc_Stub stub(channel);
+    user::UserServiceRpc_Stub stub(channel.get());
 
     // RPC 调用的请求参数
     user::LoginRequest request;
@@ -63,12 +62,10 @@ void Login() {
     user::LoginResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.Login(controller, &request, &response, nullptr);
+    stub.Login(controller.get(), &request, &response, nullptr);
 
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
-        // 打印日志信息
-        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
@@ -82,14 +79,14 @@ void Login() {
 
 // 调用 RPC 获取好友列表方法
 void GetFriendList() {
-    // RPC 调用通道
-    google::protobuf::RpcChannel* channel = new MprpcChannel();
+    // RPC 调用的通道
+    std::unique_ptr<google::protobuf::RpcChannel> channel = std::make_unique<MprpcChannel>();
 
     // RPC 调用的状态控制器
-    google::protobuf::RpcController* controller = new MprpcController();
+    std::unique_ptr<google::protobuf::RpcController> controller = std::make_unique<MprpcController>();
 
     // RPC 调用的代理对象
-    friends::FriendServiceRpc_Stub stub(channel);
+    friends::FriendServiceRpc_Stub stub(channel.get());
 
     // RPC 调用的请求参数
     friends::GetFriendListRequest request;
@@ -99,12 +96,10 @@ void GetFriendList() {
     friends::GetFriendListResponse response;
 
     // 发起 RPC 调用，底层实际上调用的是 MprpcChannel::CallMethod()
-    stub.GetFriendList(controller, &request, &response, nullptr);
+    stub.GetFriendList(controller.get(), &request, &response, nullptr);
 
     // 判断 RPC 调用是否成功
     if (controller->Failed()) {
-        // 打印日志信息
-        LOG_ERROR(controller->ErrorText().c_str());
         return;
     }
 
