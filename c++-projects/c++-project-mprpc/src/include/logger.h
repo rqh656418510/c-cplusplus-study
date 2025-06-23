@@ -75,7 +75,7 @@ public:
     static Logger& GetInstance();
 
     // 写入日志信息
-    void Log(LogMessage message);
+    void Log(const LogMessage& message);
 
     // 获取日志级别
     LogLevel GetLogLevel();

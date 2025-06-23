@@ -93,7 +93,7 @@ Logger& Logger::GetInstance() {
 }
 
 // 写入日志信息
-void Logger::Log(LogMessage message) {
+void Logger::Log(const LogMessage& message) {
     // 将日志信息写入缓冲队列中
     this->m_lckQue.Push(message);
 }
