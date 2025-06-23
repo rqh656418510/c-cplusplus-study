@@ -34,15 +34,6 @@ add_custom_command(
     COMMENT "Copying config files to bin directory"
 )
 
-# 每次编译之后拷贝所有项目头文件到 lib 目录下
-add_custom_command(
-    TARGET clean_bin POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/src/include
-            ${LIBRARY_OUTPUT_PATH}/include
-    COMMENT "Copying header files to lib directory"
-)
-
 # 指定系统的头文件，如 ZooKeeper、Muduo、Protobuf 头文件
 include_directories(/usr/include)
 include_directories(/usr/local/include)
