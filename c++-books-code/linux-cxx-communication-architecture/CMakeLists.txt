@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # 指定项目名称，并设定使用 C 语言
-project(linux_c_commu_arch C)
+project(linux_c_comm_arch C)
 
 # 指定 C 标准版本
 set(CMAKE_C_STANDARD 11)
@@ -22,4 +22,4 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 
 # 编译生成可执行文件
-add_executable(linux_c_commu_arch ${SRC_FILES})
+add_executable(linux_c_comm_arch ${SRC_FILES})
