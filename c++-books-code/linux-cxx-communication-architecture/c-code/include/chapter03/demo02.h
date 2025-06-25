@@ -6,7 +6,7 @@
 /**
  * Fork 子进程，并创建新的会话，实现 bash 进程关闭后，其他应用进程也不会被关闭
  */
-int demo02_test01() {
+int chapter03_demo02_fun01() {
     // SIG_IGN 表示要忽略该信号，请求操作系统不要执行对应信号的默认处理动作（杀死进程）
     // signal(SIGHUP, SIG_IGN);
 

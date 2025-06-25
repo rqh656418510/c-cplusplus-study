@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#include "demo01.h"
-#include "demo02.h"
+#include "chapter03/demo01.h"
+#include "chapter03/demo02.h"
 
 int main() {
-    demo01_test01();
-    // demo02_test01();
+    chapter03_demo01_fun01();
+    // chapter03_demo02_fun01();
     return 0;
 }

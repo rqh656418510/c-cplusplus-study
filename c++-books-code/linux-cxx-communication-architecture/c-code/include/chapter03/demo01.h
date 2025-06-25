@@ -5,7 +5,7 @@
 /**
  * 一个简单的 C 语言程序
  */
-int demo01_test01() {
+int chapter03_demo01_fun01() {
     for (;;) {
         sleep(1);
         printf("进程休息 1 秒\n");
