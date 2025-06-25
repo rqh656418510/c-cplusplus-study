@@ -25,6 +25,8 @@
 
 ### 项目构建
 
+> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 Boost、Muduo、Hiredis、MySQL C API 库，否则项目编译会失败。
+
 ``` sh
 # 进入项目根目录
 cd c++-project-cluster-chat-server
