@@ -1,11 +1,11 @@
 # 指定项目的源文件
 file(GLOB_RECURSE SRC_FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cc
-    ${PROJECT_SOURCE_DIR}/example/generated/*.cc
+    ${CMAKE_SOURCE_DIR}/example/generated/*.cc
 )
 
 # 指定项目库文件的搜索路径
-link_directories(${PROJECT_SOURCE_DIR}/lib)
+link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 # 编译生成可执行文件
 add_executable(example_rpc_consumer ${SRC_FILES})

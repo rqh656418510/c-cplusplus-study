@@ -2,6 +2,14 @@
 
 set -x
 
+# 清理 lib 输出目录下的所有文件
+rm -rf `pwd`/lib/*
+
+# 清理 Protobuf 自动生成的源文件
+rm -rf `pwd`/src/generated/*
+rm -rf `pwd`/example/generated/*
+rm -rf `pwd`/test/protobuf/generated/*
+
 # 配置项目，生成构建文件
 cmake -S . -B build
 

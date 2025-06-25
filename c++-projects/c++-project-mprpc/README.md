@@ -51,7 +51,7 @@
 | ZooKeeper       | `3.8.0`     | ZooKeeper 服务器                                                                      |
 | Linux           | `Debian 12` | Muduo 库不支持 Windows 平台                                                           |
 
-## 项目测试
+## 项目运行
 
 > 注意：在编译项目之前，请务必在本地操作系统中安装好 Muduo 库、Protobuf 库、ZooKeeper C API 库。
 
