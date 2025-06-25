@@ -7,7 +7,7 @@
 #include <queue>
 #include <thread>
 
-// 异步写日志的日志队列（线程安全）
+// 无界阻塞队列（生产者/消费者队列），线程安全
 template <typename T>
 class LockQueue {
 public:
