@@ -40,7 +40,7 @@ chmod +x autobuild.sh
 
 ### 项目运行
 
-- 1. 启动 Nginx、Redis、MySQL 服务
+- 1. 启动 Nginx、Redis、MySQL 服务，并配置 Nginx 的 TCP 负载均衡器
 
 - 2. 启动集群聊天服务端程序
     - 启动第一个聊天服务端程序：`./bin/chat_server 127.0.0.1 6000`
