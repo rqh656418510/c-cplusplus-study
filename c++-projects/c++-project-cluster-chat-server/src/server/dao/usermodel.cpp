@@ -110,7 +110,7 @@ bool UserModel::updateState(User& user) {
 bool UserModel::resetState() {
     char sql[1024] = {0};
 
-    // 拼接 SQL 语句
+    // 拼接 SQL 语句（待优化，只重置当前聊天服务器内的用户的在线状态）
     sprintf(sql, "update user set state = 'offline' where state = 'online'");
 
     // 执行 SQL 语句

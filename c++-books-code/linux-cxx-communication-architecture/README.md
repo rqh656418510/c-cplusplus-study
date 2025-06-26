@@ -16,7 +16,7 @@ find / -iname "signal.h" | xargs grep -in "SIGHUP"
 ps la
 
 # 查看某些进程的指定信息
-ps -eo pid,ppid,sid,tty,pgrp,comm | grep -E 'bash|PID|linux'
+ps -eo pid,ppid,sid,tty,pgrp,comm,stat | grep -E 'bash|PID|linux'
 ```
 
 ### 进程信号

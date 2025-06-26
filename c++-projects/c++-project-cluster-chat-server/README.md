@@ -23,7 +23,7 @@
 
 > 注意：由于本项目使用了 Muduo 库，且 Muduo 库仅支持 Linux 平台；因此本项目的所有 C++ 集群聊天服务器代码支持在 Linux 平台运行，不支持 Windows 平台，默认是基于 Debian 12 进行开发。
 
-### 项目构建
+### 项目编译
 
 > 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 Boost、Muduo、Hiredis、MySQL C API 库，否则项目编译会失败。
 
@@ -31,11 +31,11 @@
 # 进入项目根目录
 cd c++-project-cluster-chat-server
 
-# 配置项目，生成构建文件
-cmake -S . -B build
+# 脚本文件授权执行
+chmod +x autobuild.sh
 
-# 编译项目，在bin目录下生成可执行文件
-cmake --build build
+# 执行一键编译构建脚本
+./autobuild.sh
 ```
 
 ### 项目运行
