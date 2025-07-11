@@ -1,5 +1,5 @@
 /**
- * 命名空间简介、基本输入输出精解
+ * 范围for、new内存动态分配、nullptr
  */
 
 #include <iostream>
