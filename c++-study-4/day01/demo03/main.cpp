@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 // 范围 for
 void test01() {
@@ -34,10 +35,31 @@ void test01() {
     for (const int &item : v) {
         std::cout << item << " ";
     }
+
+    std::cout << std::endl;
 }
 
 // 动态内存分配
 void test02() {
+    // malloc() 与 free()
+    int *p = nullptr;
+    p = (int *) malloc(sizeof(int));
+    if (p != nullptr) {
+        *p = 5;
+        std::cout << *p << std::endl;
+        free(p);
+    }
+
+    // malloc() 与 free()
+    char *c = nullptr;
+    const int size = sizeof(char) * 20;
+    c = (char *) malloc(size);
+    if (c != nullptr) {
+        memset(c, 0, size);    // 建议初始化内存（防止访问越界），char 类型值为 0 时，就等于 '\0' 字符
+        strcpy(c, "hello world");
+        std::cout << c << std::endl;
+        free(c);
+    }
 
 }
 
