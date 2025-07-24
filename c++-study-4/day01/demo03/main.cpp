@@ -39,7 +39,7 @@ void test01() {
     std::cout << std::endl;
 }
 
-// 动态内存分配
+// 动态内存分配，malloc() 与 free()
 void test02() {
     // malloc() 与 free()
     int *p = nullptr;
@@ -60,11 +60,48 @@ void test02() {
         std::cout << c << std::endl;
         free(c);
     }
+}
 
+// 动态内存分配，new 与 delete
+void test03() {
+    // new 与 delete
+    int *intptr1 = new int;
+    if (intptr1 != nullptr) {
+        *intptr1 = 3;
+        std::cout << *intptr1 << std::endl;
+        delete intptr1;
+        intptr1 = nullptr; // 避免悬空指针
+    }
+
+    // new 与 delete
+    int *intptr2 = new int(5);
+    if (intptr2 != nullptr) {
+        std::cout << *intptr2 << std::endl;
+        delete intptr2;
+        intptr2 = nullptr; // 避免悬空指针
+    }
+
+    // new 与 delete
+    int *arrptr = new int[5];
+    if (arrptr != nullptr) {
+        for (int i = 0; i < 5; i++) {
+            arrptr[i] = i * 10;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            std::cout << arrptr[i] << " ";
+        }
+
+        delete[] arrptr;  // 必须用 delete[] 释放数组内存
+        arrptr = nullptr; // 避免悬空指针
+
+        std::cout << std::endl;
+    }
 }
 
 int main() {
     test01();
     test02();
+    test03();
     return 0;
 }
