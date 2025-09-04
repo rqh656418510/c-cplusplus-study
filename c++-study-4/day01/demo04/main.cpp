@@ -10,6 +10,10 @@ using namespace std;
 struct student {
     int id;
     char name[50];
+
+    void show() {
+        cout << "id = " << id << ", name = " << name << endl;
+    }
 };
 
 // 结构体作为形参（效率低，会发生数据拷贝）
@@ -35,16 +39,16 @@ void test01() {
     student student1;
     student1.id = 1;
     strcpy(student1.name, "Peter");
-    cout << "id = " << student1.id << ", name = " << student1.name << endl;
+    student1.show();
 
     func1(student1);
-    cout << "id = " << student1.id << ", name = " << student1.name << endl;
+    student1.show();
 
     func2(student1);
-    cout << "id = " << student1.id << ", name = " << student1.name << endl;
+    student1.show();
 
     func3(&student1);
-    cout << "id = " << student1.id << ", name = " << student1.name << endl;
+    student1.show();
 }
 
 int main() {
