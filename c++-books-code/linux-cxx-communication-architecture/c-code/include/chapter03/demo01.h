@@ -1,10 +1,11 @@
+/**
+ * 一个简单的 C 语言程序
+ */
+
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 
-/**
- * 一个简单的 C 语言程序
- */
 int chapter03_demo01_fun01() {
     for (;;) {
         sleep(1);
