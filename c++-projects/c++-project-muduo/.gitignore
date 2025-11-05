@@ -1,0 +1,50 @@
+HELP.md
+*.exe
+.gradle
+/bin/
+/out/
+/lib/
+/build/
+cmake-build-debug
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*/target/
+*/logs/
+logs/*
+*/tmp/
+tmp/*
+/data
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Visual Studio ###
+.vs
+*.obj
+Debug
+
+### VS Code ###
+.vscode/
+
+### GCC G++ ###
+*.o
+*.out
+main
