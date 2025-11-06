@@ -1,24 +1,25 @@
 /**
  * 一个简单的基于 epoll 的 C++ 回声（echo）服务器示例（level-triggered，非阻塞 socket）。
  * 包含创建监听 socket、将 socket 设置为非阻塞、将监听 socket 和客户端 socket 注册到 epoll、以及基本的读写和关闭处理。
- * 
- * 在 Linux 上运行程序：./epoll_echo 8080
+ *
+ * 在 Linux 上运行程序：./epoll_example 8080
  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <sys/epoll.h>
 #include <fcntl.h>
+#include <netinet/in.h>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
+
 #include <cerrno>
-#include <cstring>
 #include <cstdio>
 #include <cstdlib>
-#include <vector>
-#include <string>
+#include <cstring>
 #include <iostream>
+#include <string>
+#include <vector>
 
 static int set_nonblocking(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
@@ -34,12 +35,15 @@ int main(int argc, char* argv[]) {
     int port = std::atoi(argv[1]);
 
     int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (listen_fd < 0) { perror("socket"); return 1; }
+    if (listen_fd < 0) {
+        perror("socket");
+        return 1;
+    }
 
     int opt = 1;
     setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
-    struct sockaddr_in addr{};
+    struct sockaddr_in addr {};
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
@@ -63,10 +67,14 @@ int main(int argc, char* argv[]) {
     }
 
     int epfd = epoll_create1(0);
-    if (epfd < 0) { perror("epoll_create1"); close(listen_fd); return 1; }
+    if (epfd < 0) {
+        perror("epoll_create1");
+        close(listen_fd);
+        return 1;
+    }
 
     epoll_event ev{};
-    ev.events = EPOLLIN; // level-triggered（水平触发）
+    ev.events = EPOLLIN;  // level-triggered（水平触发）
     ev.data.fd = listen_fd;
     if (epoll_ctl(epfd, EPOLL_CTL_ADD, listen_fd, &ev) < 0) {
         perror("epoll_ctl: listen_fd");
@@ -96,7 +104,7 @@ int main(int argc, char* argv[]) {
             if (fd == listen_fd) {
                 // accept 循环（非阻塞）
                 while (true) {
-                    struct sockaddr_in cli_addr{};
+                    struct sockaddr_in cli_addr {};
                     socklen_t cli_len = sizeof(cli_addr);
                     int conn = accept(listen_fd, (struct sockaddr*)&cli_addr, &cli_len);
                     if (conn < 0) {
@@ -106,7 +114,7 @@ int main(int argc, char* argv[]) {
                     }
                     set_nonblocking(conn);
                     epoll_event cev{};
-                    cev.events = EPOLLIN; // 可以添加 EPOLLRDHUP 来检测远端关闭
+                    cev.events = EPOLLIN;  // 可以添加 EPOLLRDHUP 来检测远端关闭
                     cev.data.fd = conn;
                     if (epoll_ctl(epfd, EPOLL_CTL_ADD, conn, &cev) < 0) {
                         perror("epoll_ctl: conn");
@@ -114,8 +122,8 @@ int main(int argc, char* argv[]) {
                     } else {
                         char addrstr[INET_ADDRSTRLEN];
                         inet_ntop(AF_INET, &cli_addr.sin_addr, addrstr, sizeof(addrstr));
-                        std::cout << "accepted " << addrstr << ":" << ntohs(cli_addr.sin_port)
-                                  << " fd=" << conn << "\n";
+                        std::cout << "accepted " << addrstr << ":" << ntohs(cli_addr.sin_port) << " fd=" << conn
+                                  << "\n";
                     }
                 }
             } else {
@@ -169,8 +177,8 @@ int main(int argc, char* argv[]) {
                     }
                 }
 
-                // 标签：在嵌套循环中关闭连接后用于继续外层循环
-                next_event:
+            // 标签：在嵌套循环中关闭连接后用于继续外层循环
+            next_event:
                 continue;
             }
         }
