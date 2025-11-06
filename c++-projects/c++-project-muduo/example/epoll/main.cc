@@ -2,9 +2,7 @@
  * 一个简单的基于 epoll 的 C++ 回声（echo）服务器示例（level-triggered，非阻塞 socket）。
  * 包含创建监听 socket、将 socket 设置为非阻塞、将监听 socket 和客户端 socket 注册到 epoll、以及基本的读写和关闭处理。
  * 
- * 编译与运行（在 Linux 上）：
- * 编译：g++ -std=c++11 -O2 -Wall -o epoll_echo server.cpp
- * 运行：./epoll_echo 8080
+ * 在 Linux 上运行程序：./epoll_echo 8080
  */
 
 #include <sys/types.h>

@@ -18,7 +18,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 # 指定项目可执行文件的输出路径
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-# 指定系统的头文件，如 Protobuf 头文件
+# 指定系统的头文件
 include_directories(/usr/include)
 include_directories(/usr/local/include)
 
