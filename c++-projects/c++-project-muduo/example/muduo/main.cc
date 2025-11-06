@@ -13,7 +13,7 @@
 #include "chat_server.h"
 #include "multi_thread_counter.h"
 
-// 测试TCP服务端
+// 测试 TCP 服务端
 void testChatServer() {
     // 创建服务端
     muduo::net::EventLoop loop;
@@ -27,7 +27,7 @@ void testChatServer() {
     loop.loop();
 }
 
-// 测试TCP客户端
+// 测试 TCP 客户端
 void testChatClient() {
     // 创建客户端
     muduo::net::EventLoop loop;
