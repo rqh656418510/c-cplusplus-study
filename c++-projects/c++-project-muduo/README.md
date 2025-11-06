@@ -6,7 +6,7 @@
 
 ## 项目介绍
 
-改造 C++ 高性能网络库 Muduo，比如去掉 Boost 依赖，并使用 C++ 11 进行代码重构，重点是学习 Muduo 的底层设计思想。
+基于 C++ 开发一个类似 [Muduo](https://github.com/chenshuo/muduo) 的高性能网络库，项目代码大部分是从 Muduo 移值过来，同时去掉 Boost 依赖，并使用 C++ 11 进行代码重构，重点是学习 Muduo 的底层设计思想。
 
 ### 项目结构
 
