@@ -52,8 +52,8 @@ void testThreadPool() {
 }
 
 int main() {
-    testChatServer();
+    // testChatServer();
     // testChatClient();
-    // testThreadPool();
+    testThreadPool();
     return 0;
 }

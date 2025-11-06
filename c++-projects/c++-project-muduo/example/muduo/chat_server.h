@@ -1,3 +1,7 @@
+/**
+ * 基于 Muduo 官方网络库开发 TCP 服务端程序
+ */
+
 #pragma once
 
 #include <muduo/net/EventLoop.h>
@@ -7,7 +11,6 @@
 #include <iostream>
 #include <string>
 
-// 基于Muduo开发服务端程序
 class ChatServer {
 public:
     // 构造函数

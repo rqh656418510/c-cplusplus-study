@@ -1,3 +1,7 @@
+/**
+ * 基于 Muduo 官方网络库的线程池实现并行计算
+ */
+
 #pragma once
 
 #include <muduo/base/CountDownLatch.h>
