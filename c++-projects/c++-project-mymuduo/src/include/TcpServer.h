@@ -2,8 +2,10 @@
 
 #include <iostream>
 
+#include "noncopyable.h"
+
 // TCP 服务器
-class TcpServer {
+class TcpServer : noncopyable {
 public:
     // 构造函数
     TcpServer();
