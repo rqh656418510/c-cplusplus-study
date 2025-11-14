@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include "Timestamp.h"
+
 // 私有构造函数，防止外部创建对象
 Logger::Logger() {
 }
@@ -37,4 +39,5 @@ void Logger::log(std::string msg) {
             std::cout << "[FATAL]";
             break;
     }
+    std::cout << " " << Timestamp::now().toString() << " : " << msg << std::endl;
 }
