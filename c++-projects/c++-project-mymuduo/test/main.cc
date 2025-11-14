@@ -1,10 +1,16 @@
 #include <iostream>
 
+#include "InetAddress.h"
 #include "TcpServer.h"
 
-using namespace std;
+void inetAddress() {
+    InetAddress addr(8080, "192.168.1.1");
+    std::cout << "ip = " + addr.toIp() << std::endl;
+    std::cout << "port = " + std::to_string(addr.toPort()) << std::endl;
+    std::cout << "address = " + addr.toIpPort() << std::endl;
+}
 
 int main() {
-    TcpServer server;
+    inetAddress();
     return 0;
 }
