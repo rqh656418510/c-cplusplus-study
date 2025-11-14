@@ -6,6 +6,7 @@
 
 #include "copyable.h"
 
+// 网络地址类
 class InetAddress : public copyable {
 public:
     explicit InetAddress(uint16_t port = 0, std::string ip = "127.0.0.1");

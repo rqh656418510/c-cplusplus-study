@@ -4,6 +4,7 @@
 
 #include "copyable.h"
 
+// 时间戳类
 class Timestamp : public copyable {
 public:
     Timestamp();
