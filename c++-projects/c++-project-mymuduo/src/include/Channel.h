@@ -51,14 +51,17 @@ public:
 
     /********** 获取和设置 fd 和 events **********/
 
+    // 获取 socket 的 fd
     int fd() const {
         return fd_;
     }
 
+    // 获取 fd 感兴趣的事件
     int events() {
         return events_;
     }
 
+    // 设置 fd 上发生的具体事件
     void set_revents(int revent) {
         revents_ = revent;
     }
@@ -131,16 +134,16 @@ private:
 
     EventLoop* loop_;  // Channel 所属的事件循环
     const int fd_;     // fd，Poller 监听的对象
-    int events_;       // 注册 fd 感兴趣的事件
-    int revents_;      // poller 返回的具体发生的事件
+    int events_;       // 注册 fd 上感兴趣的事件
+    int revents_;      // poller 返回的 fd 上具体发生的事件
     int index_;        // 标记 Channel 在 Poller 中的状态
 
     std::weak_ptr<void> tie_;  // 用于防止 channel 被手动 remove 掉后，channel 还在执行事件的回调操作
     bool tied_;                // 标记是否已绑定
 
-    // Channel 里面能够获知 fd 最终发生的具体事件（revents_），所以它负责调用具体事件的回调操作（即事件分发）
-    ReadEventCallback readCallback_;
-    EventCallback writeCallback_;
-    EventCallback closeCallback_;
-    EventCallback errorCallback_;
+    // Channel 里面能够获知 fd 上最终发生的具体事件（revents_），所以它负责调用具体事件的回调操作（即事件分发）
+    ReadEventCallback readCallback_;  // 读事件的回调函数
+    EventCallback writeCallback_;     // 写事件的回调函数
+    EventCallback closeCallback_;     // 关闭事件的回调函数
+    EventCallback errorCallback_;     // 错误事件的回调函数
 };

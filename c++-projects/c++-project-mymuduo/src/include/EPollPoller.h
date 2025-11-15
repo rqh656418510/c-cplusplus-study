@@ -28,7 +28,7 @@ private:
     // Epoll 事件列表的初始大小
     static const int kInitEventListSize = 16;
 
-    // 填充活跃的 Channels 列表
+    // 填充活跃的 Channel 列表
     void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
 
     /**
