@@ -16,7 +16,10 @@ class EventLoop;
  */
 class Channel : noncopyable {
 public:
+    // 事件回调函数类型定义
     using EventCallback = std::function<void()>;
+
+    // 读事件的回调函数类型定义
     using ReadEventCallback = std::function<void(Timestamp)>;
 
     // 构造函数
@@ -126,7 +129,7 @@ private:
     static const int kReadEvent;
     static const int kWriteEvent;
 
-    EventLoop* loop_;  // 事件循环
+    EventLoop* loop_;  // Channel 所属的事件循环
     const int fd_;     // fd，Poller 监听的对象
     int events_;       // 注册 fd 感兴趣的事件
     int revents_;      // poller 返回的具体发生的事件

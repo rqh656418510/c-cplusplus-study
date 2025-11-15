@@ -19,7 +19,7 @@ void timestamp() {
 
 void logger() {
     LOG_INFO("%s %d", "result =", 33);
-    LOG_DEBUG("%s", "debug log msg");
+    LOG_DEBUG("%s", "output debug log msg");
 }
 
 int main() {
