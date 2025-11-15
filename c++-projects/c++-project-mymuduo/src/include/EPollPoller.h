@@ -25,18 +25,23 @@ public:
     void removeChannel(Channel* channel) override;
 
 private:
-    // epoll 事件列表的初始大小
+    // Epoll 事件列表的初始大小
     static const int kInitEventListSize = 16;
 
     // 填充活跃的 Channels 列表
     void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
 
-    // 更新 Channel
+    /**
+     * 更新 Channel，其中 operation 参数的值有以下几种
+     * EPOLL_CTL_ADD   添加 fd 到 Epoll 实例
+     * EPOLL_CTL_DEL   从 Epoll 实例中删除 fd
+     * EPOLL_CTL_MOD   修改 fd 的监听事件
+     */
     void update(int operation, Channel* channel);
 
-    // epoll 事件列表类型定义
+    // Epoll 事件列表类型定义
     using EventList = std::vector<::epoll_event>;
 
-    int epollfd_;       // epoll 文件描述符
-    EventList events_;  // epoll 事件列表
+    int epollfd_;       // Epoll 文件描述符
+    EventList events_;  // Epoll 事件列表
 };

@@ -133,7 +133,7 @@ private:
     const int fd_;     // fd，Poller 监听的对象
     int events_;       // 注册 fd 感兴趣的事件
     int revents_;      // poller 返回的具体发生的事件
-    int index_;
+    int index_;        // 标记 Channel 在 Poller 中的状态
 
     std::weak_ptr<void> tie_;  // 用于防止 channel 被手动 remove 掉后，channel 还在执行事件的回调操作
     bool tied_;                // 标记是否已绑定

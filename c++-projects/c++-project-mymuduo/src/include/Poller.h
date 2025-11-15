@@ -12,7 +12,7 @@ class Channel;
 class EventLoop;
 
 /**
- * 基于 epoll 实现的 I/O 多路复用器
+ * 基于 Epoll 实现的 I/O 多路复用器
  */
 class Poller : noncopyable {
 public:
