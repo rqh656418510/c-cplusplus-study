@@ -31,4 +31,6 @@ int chapter03_demo03_fun01() {
         sleep(1);
         printf("休息 1 秒\n");
     }
+
+    return 0;
 }

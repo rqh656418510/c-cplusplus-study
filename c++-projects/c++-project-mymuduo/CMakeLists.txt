@@ -1,0 +1,36 @@
+# 指定 CMake 最低版本
+cmake_minimum_required(VERSION 3.15)
+
+# 指定项目名称
+project(mymuduo)
+
+# 指定 C++ 版本
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 指定构建模式（Debug模式可用于GDB调试程序）
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+
+# 指定项目开启DEBUG日志输出支持
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DMYMUDUO_DEBUG)
+endif()
+
+# 指定项目库文件的输出路径
+set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+
+# 指定项目可执行文件的输出路径
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
+# 指定系统的头文件
+include_directories(/usr/include)
+include_directories(/usr/local/include)
+
+# 指定项目头文件
+include_directories(${CMAKE_SOURCE_DIR}/src/include)
+
+# 加载 CMake 子目录
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(example)
