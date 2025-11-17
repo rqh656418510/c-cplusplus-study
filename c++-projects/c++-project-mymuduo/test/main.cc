@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "CurrentThread.h"
 #include "InetAddress.h"
 #include "Logger.h"
 #include "TcpServer.h"
@@ -23,10 +24,16 @@ void logger() {
     LOG_ERROR("%s", "output error log msg");
 }
 
+void threadid() {
+    int tid = CurrentThread::tid();
+    std::cout << "current thread is " << tid << std::endl;
+}
+
 int main() {
     // inetAddress();
     // timestamp();
     logger();
+    threadid();
 
     // 等待退出程序
     getchar();
