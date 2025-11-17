@@ -82,9 +82,9 @@ enum LogLevel {
 
 // 日志信息
 struct LogMessage {
-    LogLevel m_loglevel;       // 日志级别
-    std::string m_logcontent;  // 日志内容
-    int m_threadid;            // 打印日志的线程的 ID
+    LogLevel logLevel_;       // 日志级别
+    std::string logContent_;  // 日志内容
+    int threadId_;            // 打印日志的线程的 ID
 };
 
 // 日志系统（单例对象，负责异步写入日志文件）
@@ -103,14 +103,14 @@ public:
     void setLogLevel(LogLevel level);
 
 private:
-    LogLevel m_loglevel;             // 记录日志级别
-    std::thread m_writeThread;       // 日志写入线程
-    LockQueue<LogMessage> m_lckQue;  // 日志缓冲队列
+    LogLevel logLevel_;             // 记录日志级别
+    std::thread writeThread_;       // 日志写入线程
+    LockQueue<LogMessage> lckQue_;  // 日志缓冲队列
 
-    // 构造函数
+    // 私有构造函数
     Logger();
 
-    // 析构函数
+    // 私有析构函数
     ~Logger();
 
     // 获取日志级别的名称

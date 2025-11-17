@@ -16,33 +16,33 @@ public:
     // 往队尾插入数据
     void Push(const T& data) {
         // 获取互斥锁
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
 
         // 插入数据
-        m_queue.push(data);
+        queue_.push(data);
 
         // 唤醒日志写入线程去消费队列中的数据
-        m_condvariable.notify_all();
+        condvariable_.notify_all();
     }
 
     // 往队头弹出数据
     T Pop() {
         // 获取互斥锁
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::unique_lock<std::mutex> lock(mutex_);
 
         // 阻塞等待，直到队列不为空或者已退出
-        m_condvariable.wait(lock, [this]() { return !m_queue.empty() || m_exit; });
+        condvariable_.wait(lock, [this]() { return !queue_.empty() || exit_; });
 
         // 视业务逻辑而定，可以返回空数据或者抛出异常
-        if (m_exit && m_queue.empty()) {
+        if (exit_ && queue_.empty()) {
             return {};
         }
 
         // 获取队头元素
-        T data = m_queue.front();
+        T data = queue_.front();
 
         // 弹出队头元素
-        m_queue.pop();
+        queue_.pop();
 
         return data;
     }
@@ -50,21 +50,21 @@ public:
     // 关闭队列
     void Stop() {
         // 获取互斥锁
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
         // 设置退出标志
-        m_exit = true;
+        exit_ = true;
         // 唤醒正在等待的日志写入线程
-        m_condvariable.notify_all();
+        condvariable_.notify_all();
     }
 
     // 获取退出标志
     bool isExit() const {
-        return m_exit;
+        return exit_;
     }
 
 private:
-    std::mutex m_mutex;                      // 互斥锁
-    std::queue<T> m_queue;                   // 队列
-    std::condition_variable m_condvariable;  // 条件变量
-    bool m_exit = false;                     // 退出标志，用于避免发生线程死锁
+    std::mutex mutex_;                      // 互斥锁
+    std::queue<T> queue_;                   // 队列
+    std::condition_variable condvariable_;  // 条件变量
+    bool exit_ = false;                     // 退出标志，用于避免发生线程死锁
 };

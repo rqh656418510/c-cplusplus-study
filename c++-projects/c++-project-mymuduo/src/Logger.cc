@@ -16,10 +16,10 @@ constexpr bool kIsDebugMode = false;
 // 构造函数
 Logger::Logger() {
     // 设置默认的日志级别
-    this->m_loglevel = !kIsDebugMode ? INFO : DEBUG;
+    this->logLevel_ = !kIsDebugMode ? INFO : DEBUG;
 
     // 启动专门写日志文件的线程
-    m_writeThread = std::thread([this]() {
+    writeThread_ = std::thread([this]() {
         for (;;) {
             // 获取当前日期
             time_t now = time(nullptr);
@@ -38,30 +38,27 @@ Logger::Logger() {
             }
 
             // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
-            LogMessage message = m_lckQue.Pop();
+            LogMessage message = lckQue_.Pop();
 
             // 检查退出标志
-            if (m_lckQue.isExit()) {
+            if (lckQue_.isExit()) {
                 // 关闭日志文件
                 fclose(pf);
                 // 跳出外层 For 循环，结束日志写入线程的运行（会丢失未被写入的日志信息）
                 break;
             }
 
-            // 获取打印日志信息的线程的 ID（可能为负数）
-            int real_thread_id = CurrentThread::tid();
-            std::ostringstream oss;
-            oss << real_thread_id;
-            std::string log_thread_id = oss.str();
+            // 获取真正打印日志信息的线程的 ID
+            int real_thread_id = message.threadId_;
 
             // 获取日志内容和日志级别的名称
-            std::string& log_content = message.m_logcontent;
-            std::string log_level_name = LogLevelToString(message.m_loglevel);
+            std::string& log_content = message.logContent_;
+            std::string log_level_name = LogLevelToString(message.logLevel_);
 
             // 获取当前时间
             char time_buf[128] = {0};
             sprintf(time_buf, "%d-%d-%d %d:%d:%d => %d [%s] ", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
-                    now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec, log_thread_id.c_str(),
+                    now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec, real_thread_id,
                     log_level_name.c_str());
 
             // 添加当前时间到日志内容的最前面
@@ -85,10 +82,10 @@ Logger::Logger() {
 // 析构函数
 Logger::~Logger() {
     // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
-    this->m_lckQue.Stop();
+    this->lckQue_.Stop();
     // 等待日志线程安全退出
-    if (m_writeThread.joinable()) {
-        m_writeThread.join();
+    if (writeThread_.joinable()) {
+        writeThread_.join();
     }
 }
 
@@ -102,17 +99,17 @@ Logger& Logger::instance() {
 // 写入日志信息
 void Logger::log(const LogMessage& message) {
     // 将日志信息写入缓冲队列中
-    this->m_lckQue.Push(message);
+    this->lckQue_.Push(message);
 }
 
 // 设置日志级别
 void Logger::setLogLevel(LogLevel level) {
-    this->m_loglevel = level;
+    this->logLevel_ = level;
 }
 
 // 获取日志级别
 LogLevel Logger::getLogLevel() {
-    return this->m_loglevel;
+    return this->logLevel_;
 }
 
 // 获取日志级别的名称

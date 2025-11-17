@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include "CurrentThread.h"
 #include "InetAddress.h"
@@ -24,16 +25,18 @@ void logger() {
     LOG_ERROR("%s", "output error log msg");
 }
 
-void threadid() {
-    int tid = CurrentThread::tid();
-    std::cout << "current thread is " << tid << std::endl;
+void threadId() {
+    std::thread t1([] { LOG_INFO("I'm thread 1"); });
+    std::thread t2([] { LOG_INFO("I'm thread 2"); });
+    t1.join();
+    t2.join();
 }
 
 int main() {
     // inetAddress();
     // timestamp();
-    logger();
-    threadid();
+    // logger();
+    threadId();
 
     // 等待退出程序
     getchar();
