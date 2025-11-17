@@ -18,13 +18,18 @@ void timestamp() {
 }
 
 void logger() {
-    LOG_INFO("%s %d", "result =", 33);
     LOG_DEBUG("%s", "output debug log msg");
+    LOG_INFO("%s", "output info log msg");
+    LOG_ERROR("%s", "output error log msg");
 }
 
 int main() {
     // inetAddress();
     // timestamp();
     logger();
+
+    // 等待退出程序
+    getchar();
+
     return 0;
 }
