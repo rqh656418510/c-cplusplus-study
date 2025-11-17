@@ -27,12 +27,16 @@ public:
 
     /********** 统一定义所有 I/O 多路复用器的接口 **********/
 
+    // 监听就绪事件，返回活跃的 Channel 列表
     virtual Timestamp poll(int timeoutMs, ChannelList* activeChannels) = 0;
 
+    // 更新 Channel
     virtual void updateChannel(Channel* channel) = 0;
 
+    // 移除 Channel
     virtual void removeChannel(Channel* channel) = 0;
 
+    // 判断 Poller 中是否存在某个 Channel
     virtual bool hasChannel(Channel* channel) const;
 
     /********** 创建 I/O 多路复用器实例 **********/
@@ -40,7 +44,7 @@ public:
     static Poller* newDefaultPoller(EventLoop* loop);
 
 protected:
-    // ChannelMap 类型定义，key 是 fd，而 value 是 fd 所属的 Channel
+    // Channel 集合的类型定义，key 是 fd，而 value 是 fd 所属的 Channel
     using ChannelMap = std::unordered_map<int, Channel*>;
 
     ChannelMap channels_;  // 保存所有的 Channel

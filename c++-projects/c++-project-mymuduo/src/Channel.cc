@@ -5,6 +5,7 @@
 #include "EventLoop.h"
 #include "Logger.h"
 
+// 定义 Channel 支持的事件类型（与 Epoll 兼容）
 const int Channel::kNoneEvent = 0;
 const int Channel::kReadEvent = EPOLLIN | EPOLLPRI;
 const int Channel::kWriteEvent = EPOLLOUT;
