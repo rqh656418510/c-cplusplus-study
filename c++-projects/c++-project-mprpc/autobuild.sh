@@ -2,6 +2,9 @@
 
 set -x
 
+# 清理 bin 输出目录下的所有文件
+rm -rf `pwd`/bin/*
+
 # 清理 lib 输出目录下的所有文件
 rm -rf `pwd`/lib/*
 
