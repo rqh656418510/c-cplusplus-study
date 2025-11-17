@@ -21,3 +21,6 @@ ColumnLimit: 120
 
 # 强制所有函数体换行，即使只有一行
 AllowShortFunctionsOnASingleLine: None
+
+# 所有 namespace 内代码都缩进
+NamespaceIndentation: All

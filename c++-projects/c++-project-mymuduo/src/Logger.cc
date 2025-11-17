@@ -49,7 +49,7 @@ Logger::Logger() {
             }
 
             // 获取打印日志信息的线程的 ID（可能为负数）
-            std::thread::id real_thread_id = message.m_threadid;
+            int real_thread_id = CurrentThread::tid();
             std::ostringstream oss;
             oss << real_thread_id;
             std::string log_thread_id = oss.str();

@@ -4,70 +4,71 @@
 #include <string>
 #include <thread>
 
+#include "CurrentThread.h"
 #include "LockQueue.h"
 #include "noncopyable.h"
 
 // 定义宏
-#define LOG_DEBUG(logmsgformat, ...)                                \
-    do {                                                            \
-        Logger& logger = Logger::instance();                        \
-        if (logger.getLogLevel() <= DEBUG) {                        \
-            char c[1024] = {0};                                     \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
-            std::thread::id thread_id = std::this_thread::get_id(); \
-            LogMessage msg = {DEBUG, c, thread_id};                 \
-            logger.log(msg);                                        \
-        }                                                           \
+#define LOG_DEBUG(logmsgformat, ...)                        \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= DEBUG) {                \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {DEBUG, c, tid};               \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_INFO(logmsgformat, ...)                                 \
-    do {                                                            \
-        Logger& logger = Logger::instance();                        \
-        if (logger.getLogLevel() <= INFO) {                         \
-            char c[1024] = {0};                                     \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
-            std::thread::id thread_id = std::this_thread::get_id(); \
-            LogMessage msg = {INFO, c, thread_id};                  \
-            logger.log(msg);                                        \
-        }                                                           \
+#define LOG_INFO(logmsgformat, ...)                         \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= INFO) {                 \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {INFO, c, tid};                \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_WARN(logmsgformat, ...)                                 \
-    do {                                                            \
-        Logger& logger = Logger::instance();                        \
-        if (logger.getLogLevel() <= WARN) {                         \
-            char c[1024] = {0};                                     \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
-            std::thread::id thread_id = std::this_thread::get_id(); \
-            LogMessage msg = {WARN, c, thread_id};                  \
-            logger.log(msg);                                        \
-        }                                                           \
+#define LOG_WARN(logmsgformat, ...)                         \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= WARN) {                 \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {WARN, c, tid};                \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_ERROR(logmsgformat, ...)                                \
-    do {                                                            \
-        Logger& logger = Logger::instance();                        \
-        if (logger.getLogLevel() <= ERROR) {                        \
-            char c[1024] = {0};                                     \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
-            std::thread::id thread_id = std::this_thread::get_id(); \
-            LogMessage msg = {ERROR, c, thread_id};                 \
-            logger.log(msg);                                        \
-        }                                                           \
+#define LOG_ERROR(logmsgformat, ...)                        \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= ERROR) {                \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {ERROR, c, tid};               \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_FATAL(logmsgformat, ...)                                \
-    do {                                                            \
-        Logger& logger = Logger::instance();                        \
-        if (logger.getLogLevel() <= FATAL) {                        \
-            char c[1024] = {0};                                     \
-            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);         \
-            std::thread::id thread_id = std::this_thread::get_id(); \
-            LogMessage msg = {FATAL, c, thread_id};                 \
-            logger.log(msg);                                        \
-            std::this_thread::sleep_for(std::chrono::seconds(1));   \
-            exit(-1);                                               \
-        }                                                           \
+#define LOG_FATAL(logmsgformat, ...)                              \
+    do {                                                          \
+        Logger& logger = Logger::instance();                      \
+        if (logger.getLogLevel() <= FATAL) {                      \
+            char c[1024] = {0};                                   \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);       \
+            int tid = CurrentThread::tid();                       \
+            LogMessage msg = {FATAL, c, tid};                     \
+            logger.log(msg);                                      \
+            std::this_thread::sleep_for(std::chrono::seconds(1)); \
+            exit(-1);                                             \
+        }                                                         \
     } while (0)
 
 // 日志级别（DEBUG < INFO < WARN < ERROR < FATAL）
@@ -81,9 +82,9 @@ enum LogLevel {
 
 // 日志信息
 struct LogMessage {
-    LogLevel m_loglevel;         // 日志级别
-    std::string m_logcontent;    // 日志内容
-    std::thread::id m_threadid;  // 打印日志的线程的 ID
+    LogLevel m_loglevel;       // 日志级别
+    std::string m_logcontent;  // 日志内容
+    int m_threadid;            // 打印日志的线程的 ID
 };
 
 // 日志系统（单例对象，负责异步写入日志文件）
