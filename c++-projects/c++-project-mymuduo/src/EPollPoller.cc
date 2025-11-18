@@ -7,24 +7,27 @@
 #include "error.h"
 #include "unistd.h"
 
-// Channel 在 Epoll 中的状态
+// 定义 Channel 在 Epoll 中的状态
 const int kNew = -1;     // 新创建的 Channel
 const int kAdded = 1;    // 已经添加到 Epoll 中的 Channel
-const int kDeleted = 2;  // 已经从 Epoll 中删除的 Channel
+const int kDeleted = 2;  // 已经从 Epoll 中移除的 Channel
 
+// 构造函数
 EPollPoller::EPollPoller(EventLoop* loop)
     : Poller(loop), epollfd_(::epoll_create1(EPOLL_CLOEXEC)), events_(kInitEventListSize) {
-    // 创建 Epoll 文件描述符失败，则记录日志并终止程序
+    // 如果创建 Epoll 文件描述符失败，则记录日志并终止程序
     if (epollfd_ < 0) {
         LOG_FATAL("func=%s => epoll_create1() error:%d \n", __FUNCTION__, errno);
     }
 }
 
+// 析构函数
 EPollPoller::~EPollPoller() {
     // 关闭 Epoll 文件描述符
     ::close(epollfd_);
 }
 
+// 监听就绪事件，返回活跃的 Channel 列表
 Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     // 打印日志信息
     LOG_DEBUG("func=%s => fd total count:%lu \n", __FUNCTION__, channels_.size());
@@ -82,6 +85,7 @@ void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels)
 }
 
 void EPollPoller::updateChannel(Channel* channel) {
+    // 获取 Channel 在 Epoll 中的状态
     const int index = channel->index();
 
     // 打印日志信息
@@ -91,7 +95,7 @@ void EPollPoller::updateChannel(Channel* channel) {
         if (index == kNew) {
             // 获取 socket 的 fd
             int fd = channel->fd();
-            // 将 Channel 添加到 channels_ 中
+            // 将 Channel 添加到 Channel 集合中
             channels_[fd] = channel;
         }
         // 更新 Channel 在 Epoll 中的状态
@@ -112,6 +116,7 @@ void EPollPoller::updateChannel(Channel* channel) {
     }
 }
 
+// 更新 Channel
 void EPollPoller::update(int operation, Channel* channel) {
     // 获取 socket 的 fd
     int fd = channel->fd();
@@ -125,18 +130,19 @@ void EPollPoller::update(int operation, Channel* channel) {
     // 设置 fd 相应的 Epoll 事件
     if (::epoll_ctl(epollfd_, operation, fd, &event) < 0) {
         if (operation == EPOLL_CTL_DEL) {
-            LOG_ERROR("epoll_ctl del error:%d \n", errno);
+            LOG_ERROR("epoll_ctl delete error:%d \n", errno);
         } else {
             LOG_FATAL("epoll_ctl add or mod error:%d \n", errno);
         }
     }
 }
 
+// 移除 Channel
 void EPollPoller::removeChannel(Channel* channel) {
     // 获取 socket 的 fd
     int fd = channel->fd();
 
-    // 从 channels_ 中将 fd 对应的 Channel 移除掉
+    // 从 Channel 集合中将 fd 对应的 Channel 移除掉
     channels_.erase(fd);
 
     // 打印日志信息

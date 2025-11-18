@@ -11,11 +11,13 @@
 // 基于 Epoll 的 I/O 多路复用器
 class EPollPoller : public Poller {
 public:
+    // 构造函数
     EPollPoller(EventLoop* loop);
 
+    // 析构函数
     ~EPollPoller() override;
 
-    // 监听就绪事件，返回活跃的 Channels 列表
+    // 监听就绪事件，返回活跃的 Channel 列表
     Timestamp poll(int timeoutMs, ChannelList* activeChannels) override;
 
     // 更新 Channel
@@ -42,6 +44,6 @@ private:
     // Epoll 事件列表类型定义
     using EventList = std::vector<::epoll_event>;
 
-    int epollfd_;       // Epoll 文件描述符
+    int epollfd_;       // Epoll 文件描述符（Epoll 监听的对象）
     EventList events_;  // Epoll 事件列表
 };

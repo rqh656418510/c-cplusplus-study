@@ -41,7 +41,7 @@ Logger::Logger() {
                 break;
             }
 
-            // 获取打印日志信息的线程的 ID（可能为负数）
+            // 获取打印日志信息的线程的 ID（由外部传入，不一定是 Linux 内核线程 ID）
             std::thread::id real_thread_id = message.m_threadid;
             std::ostringstream oss;
             oss << real_thread_id;
@@ -53,7 +53,7 @@ Logger::Logger() {
 
             // 获取当前时间
             char time_buf[128] = {0};
-            sprintf(time_buf, "%d-%d-%d %d:%d:%d => %d [%s] ", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
+            sprintf(time_buf, "%d-%d-%d %d:%d:%d => %s [%s] ", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
                     now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec, log_thread_id.c_str(),
                     log_level_name.c_str());
 

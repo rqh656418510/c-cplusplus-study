@@ -1,86 +1,118 @@
 #pragma once
 
-#include <iostream>
+#include <chrono>
 #include <string>
+#include <thread>
 
+#include "CurrentThread.h"
+#include "LockQueue.h"
 #include "noncopyable.h"
 
 // 定义宏
-#ifdef MYMUDUO_DEBUG
-#define LOG_DEBUG(logmsgFormat, ...)                      \
-    do {                                                  \
-        Logger& logger = Logger::instance();              \
-        logger.setLogLevel(DEBUG);                        \
-        char buf[1024] = {0};                             \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf);                                  \
-    } while (0)
-#else
-#define LOG_DEBUG(format, ...)
-#endif
-
-#define LOG_INFO(logmsgFormat, ...)                       \
-    do {                                                  \
-        Logger& logger = Logger::instance();              \
-        logger.setLogLevel(INFO);                         \
-        char buf[1024] = {0};                             \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf);                                  \
+#define LOG_DEBUG(logmsgformat, ...)                        \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= DEBUG) {                \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {DEBUG, c, tid};               \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_WARN(logmsgFormat, ...)                       \
-    do {                                                  \
-        Logger& logger = Logger::instance();              \
-        logger.setLogLevel(WARN);                         \
-        char buf[1024] = {0};                             \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf);                                  \
+#define LOG_INFO(logmsgformat, ...)                         \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= INFO) {                 \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {INFO, c, tid};                \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_ERROR(logmsgFormat, ...)                      \
-    do {                                                  \
-        Logger& logger = Logger::instance();              \
-        logger.setLogLevel(ERROR);                        \
-        char buf[1024] = {0};                             \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf);                                  \
+#define LOG_WARN(logmsgformat, ...)                         \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= WARN) {                 \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {WARN, c, tid};                \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-#define LOG_FATAL(logmsgFormat, ...)                      \
-    do {                                                  \
-        Logger& logger = Logger::instance();              \
-        logger.setLogLevel(FATAL);                        \
-        char buf[1024] = {0};                             \
-        snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-        logger.log(buf);                                  \
-        exit(-1);                                         \
+#define LOG_ERROR(logmsgformat, ...)                        \
+    do {                                                    \
+        Logger& logger = Logger::instance();                \
+        if (logger.getLogLevel() <= ERROR) {                \
+            char c[1024] = {0};                             \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
+            int tid = CurrentThread::tid();                 \
+            LogMessage msg = {ERROR, c, tid};               \
+            logger.log(msg);                                \
+        }                                                   \
     } while (0)
 
-// 日志级别
+#define LOG_FATAL(logmsgformat, ...)                              \
+    do {                                                          \
+        Logger& logger = Logger::instance();                      \
+        if (logger.getLogLevel() <= FATAL) {                      \
+            char c[1024] = {0};                                   \
+            snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);       \
+            int tid = CurrentThread::tid();                       \
+            LogMessage msg = {FATAL, c, tid};                     \
+            logger.log(msg);                                      \
+            std::this_thread::sleep_for(std::chrono::seconds(1)); \
+            exit(-1);                                             \
+        }                                                         \
+    } while (0)
+
+// 日志级别（DEBUG < INFO < WARN < ERROR < FATAL）
 enum LogLevel {
-    DEBUG,  // 调试信息
-    INFO,   // 普通信息
-    WARN,   // 警告信息
-    ERROR,  // 错误信息
+    DEBUG,  // 调试日志信息
+    INFO,   // 普通日志信息
+    WARN,   // 警告日志信息
+    ERROR,  // 错误日志信息
     FATAL   // 致命错误信息
 };
 
-// 日志类
+// 日志信息
+struct LogMessage {
+    LogLevel logLevel_;       // 日志级别
+    std::string logContent_;  // 日志内容
+    int threadId_;            // 打印日志的线程的 ID
+};
+
+// 日志系统（单例对象，负责异步写入日志文件）
 class Logger : noncopyable {
 public:
     // 获取单例对象
     static Logger& instance();
 
-    // 设置日志级别
-    void setLogLevel(int logLevel);
+    // 写入日志信息
+    void log(const LogMessage& message);
 
-    // 记录日志
-    void log(std::string msg);
+    // 获取日志级别
+    LogLevel getLogLevel();
+
+    // 设置日志级别
+    void setLogLevel(LogLevel level);
 
 private:
-    // 日志级别
-    int logLevel_;
+    LogLevel logLevel_;             // 记录日志级别
+    std::thread writeThread_;       // 日志写入线程
+    LockQueue<LogMessage> lckQue_;  // 日志缓冲队列
 
-    // 私有构造函数，防止外部创建对象
+    // 私有构造函数
     Logger();
+
+    // 私有析构函数
+    ~Logger();
+
+    // 获取日志级别的名称
+    std::string LogLevelToString(LogLevel level);
 };

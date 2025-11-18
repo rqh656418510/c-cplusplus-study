@@ -1,43 +1,131 @@
 #include "Logger.h"
 
-#include "Timestamp.h"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <sstream>
+#include <thread>
 
-// 私有构造函数，防止外部创建对象
+// 定义宏
+#ifdef MYMUDUO_DEBUG
+constexpr bool kIsDebugMode = true;
+#else
+constexpr bool kIsDebugMode = false;
+#endif
+
+// 构造函数
 Logger::Logger() {
+    // 设置默认的日志级别
+    this->logLevel_ = !kIsDebugMode ? INFO : DEBUG;
+
+    // 启动专门写日志文件的线程
+    writeThread_ = std::thread([this]() {
+        for (;;) {
+            // 获取当前日期
+            time_t now = time(nullptr);
+            tm* now_tm = localtime(&now);
+
+            // 获取日志文件的名称
+            char file_name[128];
+            sprintf(file_name, "%d-%d-%d-log.txt", now_tm->tm_year + 1900, now_tm->tm_mon + 1, now_tm->tm_mday);
+
+            // 打开日志文件
+            FILE* pf = fopen(file_name, "a+");
+            if (pf == nullptr) {
+                std::cout << "logger file " << file_name << " open failed!" << std::endl;
+                // 退出程序
+                exit(EXIT_FAILURE);
+            }
+
+            // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
+            LogMessage message = lckQue_.Pop();
+
+            // 检查退出标志
+            if (lckQue_.isExit()) {
+                // 关闭日志文件
+                fclose(pf);
+                // 跳出外层 For 循环，结束日志写入线程的运行（会丢失未被写入的日志信息）
+                break;
+            }
+
+            // 获取真正打印日志信息的线程的 ID
+            int real_thread_id = message.threadId_;
+
+            // 获取日志内容和日志级别的名称
+            std::string& log_content = message.logContent_;
+            std::string log_level_name = LogLevelToString(message.logLevel_);
+
+            // 获取当前时间
+            char time_buf[128] = {0};
+            sprintf(time_buf, "%d-%d-%d %d:%d:%d => %d [%s] ", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
+                    now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec, real_thread_id,
+                    log_level_name.c_str());
+
+            // 添加当前时间到日志内容的最前面
+            log_content.insert(0, time_buf);
+
+            // 添加换行符到日志内容的最后面
+            log_content.append("\n");
+
+            // 打印日志内容到控制台
+            std::cout << log_content;
+
+            // 将日志内容写入日志文件
+            fputs(log_content.c_str(), pf);
+
+            // 关闭日志文件
+            fclose(pf);
+        }
+    });
+}
+
+// 析构函数
+Logger::~Logger() {
+    // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
+    this->lckQue_.Stop();
+    // 等待日志线程安全退出
+    if (writeThread_.joinable()) {
+        writeThread_.join();
+    }
 }
 
 // 获取单例对象
 Logger& Logger::instance() {
-    // 静态局部变量，确保只创建一次（单例对象）
+    // 局部静态变量（线程安全）
     static Logger logger;
-    // 设置默认日志级别
-    logger.setLogLevel(INFO);
     return logger;
 }
 
-// 设置日志级别
-void Logger::setLogLevel(int logLevel) {
-    this->logLevel_ = logLevel;
+// 写入日志信息
+void Logger::log(const LogMessage& message) {
+    // 将日志信息写入缓冲队列中
+    this->lckQue_.Push(message);
 }
 
-// 记录日志
-void Logger::log(std::string msg) {
-    switch (this->logLevel_) {
+// 设置日志级别
+void Logger::setLogLevel(LogLevel level) {
+    this->logLevel_ = level;
+}
+
+// 获取日志级别
+LogLevel Logger::getLogLevel() {
+    return this->logLevel_;
+}
+
+// 获取日志级别的名称
+std::string Logger::LogLevelToString(LogLevel level) {
+    switch (level) {
         case DEBUG:
-            std::cout << "[DEBUG]";
-            break;
+            return "DEBUG";
         case INFO:
-            std::cout << "[INFO]";
-            break;
+            return "INFO";
         case WARN:
-            std::cout << "[WARN]";
-            break;
+            return "WARN";
         case ERROR:
-            std::cout << "[ERROR]";
-            break;
+            return "ERROR";
         case FATAL:
-            std::cout << "[FATAL]";
-            break;
+            return "FATAL";
+        default:
+            return "UNKNOWN";
     }
-    std::cout << " " << Timestamp::now().toString() << " : " << msg << std::endl;
 }

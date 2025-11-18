@@ -125,23 +125,24 @@ private:
     // 更新 Channel 状态到 Poller 中
     void update();
 
-    // 处理事件，有了 guard 之后，Channel 就不会在被手动 remove 掉后还继续执行事件的回调操作了
+    // 处理事件，有了 guard 之后，Channel 就不会在被手动 remove 掉后还继续执行事件的回调操作
     void handleEventWithGuard(Timestamp receiveTime);
 
-    static const int kNoneEvent;
-    static const int kReadEvent;
-    static const int kWriteEvent;
+    // 定义 Channel 支持的事件类型
+    static const int kNoneEvent;   // 无事件
+    static const int kReadEvent;   // 读事件
+    static const int kWriteEvent;  // 写事件
 
     EventLoop* loop_;  // Channel 所属的事件循环
-    const int fd_;     // fd，Poller 监听的对象
+    const int fd_;     // fd，是 Poller 监听的对象
     int events_;       // 注册 fd 上感兴趣的事件
     int revents_;      // poller 返回的 fd 上具体发生的事件
     int index_;        // 标记 Channel 在 Poller 中的状态
 
-    std::weak_ptr<void> tie_;  // 用于防止 channel 被手动 remove 掉后，channel 还在执行事件的回调操作
-    bool tied_;                // 标记是否已绑定
+    std::weak_ptr<void> tie_;  // 用于防止 Channel 被手动 remove 掉后，Channel 还在执行事件的回调操作
+    bool tied_;                // 标记是否已绑定 tie_
 
-    // Channel 里面能够获知 fd 上最终发生的具体事件（revents_），所以它负责调用具体事件的回调操作（即事件分发）
+    // Channel 里面能够获知 fd 上最终发生的具体事件（revents_），所以由它负责调用具体事件的回调操作（即事件分发）
     ReadEventCallback readCallback_;  // 读事件的回调函数
     EventCallback writeCallback_;     // 写事件的回调函数
     EventCallback closeCallback_;     // 关闭事件的回调函数
