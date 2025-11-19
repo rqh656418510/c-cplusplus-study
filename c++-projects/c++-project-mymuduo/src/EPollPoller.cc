@@ -72,6 +72,7 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     return now;
 }
 
+// 填充活跃的 Channel 列表
 void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels) const {
     // 遍历所有就绪的事件
     for (int i = 0; i < numEvents; ++i) {
@@ -84,6 +85,7 @@ void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels)
     }
 }
 
+// 更新 Channel
 void EPollPoller::updateChannel(Channel* channel) {
     // 获取 Channel 在 Epoll 中的状态
     const int index = channel->index();
