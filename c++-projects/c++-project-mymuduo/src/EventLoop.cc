@@ -3,6 +3,8 @@
 #include <sys/eventfd.h>
 #include <unistd.h>
 
+#include <memory>
+
 #include "Channel.h"
 #include "CurrentThread.h"
 #include "Logger.h"
@@ -98,13 +100,13 @@ void EventLoop::quit() {
     // 标记退出事件循环的状态
     quit_ = true;
 
-    // 如果不是在当前 EventLoop 所在线程上调用的 quit() 方法，则需要唤醒 EventLoop 所在线程
+    // 如果不是在当前 EventLoop 所在的线程上调用的 quit() 方法，则需要唤醒 EventLoop 所在的线程
     if (!isInLoopThread()) {
         wakeup();
     }
 }
 
-// 唤醒 EventLoop 所在线程
+// 唤醒 EventLoop 所在的线程
 void EventLoop::wakeup() {
     uint64_t one = 1;
     ssize_t n = ::write(wakeupFd_, &one, sizeof one);
@@ -118,30 +120,51 @@ Timestamp EventLoop::pollReturnTime() const {
     return pollReturnTime_;
 }
 
-// 判断当前线程是否是 EventLoop 所在线程
+// 判断当前线程是否是 EventLoop 所在的线程
 bool EventLoop::isInLoopThread() const {
     return threadId_ == CurrentThread::tid();
 }
 
-// 在当前 EventLoop 所在线程执行回调操作
+// 在当前 EventLoop 所在的线程上执行回调操作
 void EventLoop::runInLoop(Functor cb) {
+    // 如果在 EventLoop 所在的线程上执行回调操作
+    if (isInLoopThread()) {
+        // 则直接执行回调操作
+        cb();
+    } else {
+        // 否则，将回调操作添加到队列中，并唤醒 EventLoop 所在的线程执行回调操作
+        queueInLoop(std::move(cb));
+    }
 }
 
-// 将回调操作添加到队列中，唤醒 EventLoop 所在线程执行回调操作
+// 将回调操作添加到队列中，并唤醒 EventLoop 所在的线程执行回调操作
 void EventLoop::queueInLoop(Functor cb) {
+    {
+        // 将回调操作添加到队列中（需要保证线程安全）
+        std::unique_lock<std::mutex> lock(mutex_);
+        pendingFunctors_.emplace_back(cb);
+    }
+
+    // 如果不是在当前 EventLoop 所在的线程上执行回调操作，或者当前 EventLoop 正在执行回调操作
+    if (!isInLoopThread() || callingPendingFunctors_) {
+        // 则唤醒当前 EventLoop 所在的线程去执行回调操作
+        wakeup();
+    }
 }
 
 // 更新 Channel
 void EventLoop::updateChannel(Channel* channel) {
+    poller_->updateChannel(channel);
 }
 
 // 移除 Channel
 void EventLoop::removeChannel(Channel* channel) {
+    poller_->removeChannel(channel);
 }
 
 // 判断 EventLoop 中是否存在某个 Channel
 bool EventLoop::hasChannel(Channel* channel) {
-    return false;
+    return poller_->hasChannel(channel);
 }
 
 // 处理 Wakeup Channel 的读事件

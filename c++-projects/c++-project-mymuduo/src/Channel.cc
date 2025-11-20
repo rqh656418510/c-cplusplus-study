@@ -26,14 +26,14 @@ void Channel::tie(const std::shared_ptr<void>& obj) {
 
 // 从 Poller 中删除自己
 void Channel::remove() {
-    // 通过 channel 所属的 EventLoop，将当前的 channel 删除掉
-    // loop_.removeChannel(this);
+    // 通过 Channel 所属的 EventLoop，将当前的 Channel 删除掉
+    loop_->removeChannel(this);
 }
 
 // 更新 Channel 状态到 Poller 中
 void Channel::update() {
-    // 通过 channel 所属的 EventLoop，调用 poller 相应的方法，注册 fd 的感兴趣的事件（events）
-    // loop_.updateChannel(this);
+    // 通过 Channel 所属的 EventLoop，调用 Poller 相应的方法，注册 fd 的感兴趣的事件（events_）
+    loop_->updateChannel(this);
 }
 
 // fd 得到 poller 通知以后，处理事件的函数
