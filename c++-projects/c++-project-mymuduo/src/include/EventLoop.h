@@ -59,7 +59,7 @@ private:
     // 处理 Wakeup Channel 的读事件
     void handleRead();
 
-    // 执行所有回调操作
+    // 执行当前 EventLoop 的所有回调操作
     void doPendingFunctors();
 
     // Channel 列表的类型定义
@@ -72,12 +72,12 @@ private:
     Timestamp pollReturnTime_;        // 记录 Poller 返回发生事件的时间点
     std::unique_ptr<Poller> poller_;  // EventLoop 使用的 Poller（I/O 多路复用器）
 
-    int wakeupFd_;                            // 用于唤醒 EventLoop 所在线程的 fd（非常重要）
-    std::unique_ptr<Channel> wakeupChannel_;  // 用于唤醒 EventLoop 所在线程的 Channel（非常重要）
+    int wakeupFd_;                            // 用于唤醒 EventLoop 所在线程的 fd
+    std::unique_ptr<Channel> wakeupChannel_;  // 用于唤醒 EventLoop 所在线程的 Channel
 
     ChannelList activeChannels_;  // 保存 Poller 返回的活跃的 Channel 列表
 
     std::atomic_bool callingPendingFunctors_;  // 标识当前 EventLoop 是否有需要执行的回调操作
     std::vector<Functor> pendingFunctors_;     // 保存当前 EventLoop 需要执行的所有回调操作
-    std::mutex mutex_;                         // 保护 pendingFunctors_ 容器线程安全的互斥锁
+    std::mutex mutex_;                         // 保证 pendingFunctors_ 容器线程安全的互斥锁
 };

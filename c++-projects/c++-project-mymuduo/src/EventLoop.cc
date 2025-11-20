@@ -93,10 +93,6 @@ void EventLoop::loop() {
     looping_ = false;
 }
 
-// 执行所有回调操作
-void EventLoop::doPendingFunctors() {
-}
-
 // 退出事件循环
 void EventLoop::quit() {
     // 标记退出事件循环的状态
@@ -110,14 +106,10 @@ void EventLoop::quit() {
 
 // 唤醒 EventLoop 所在线程
 void EventLoop::wakeup() {
-}
-
-// 处理 Wakeup Channel 的读事件
-void EventLoop::handleRead() {
     uint64_t one = 1;
-    ssize_t n = ::read(wakeupFd_, &one, sizeof one);
+    ssize_t n = ::write(wakeupFd_, &one, sizeof one);
     if (n != sizeof one) {
-        LOG_ERROR("%s reads %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
+        LOG_ERROR("%s write %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
     }
 }
 
@@ -129,4 +121,37 @@ Timestamp EventLoop::pollReturnTime() const {
 // 判断当前线程是否是 EventLoop 所在线程
 bool EventLoop::isInLoopThread() const {
     return threadId_ == CurrentThread::tid();
+}
+
+// 在当前 EventLoop 所在线程执行回调操作
+void EventLoop::runInLoop(Functor cb) {
+}
+
+// 将回调操作添加到队列中，唤醒 EventLoop 所在线程执行回调操作
+void EventLoop::queueInLoop(Functor cb) {
+}
+
+// 更新 Channel
+void EventLoop::updateChannel(Channel* channel) {
+}
+
+// 移除 Channel
+void EventLoop::removeChannel(Channel* channel) {
+}
+
+// 判断 EventLoop 中是否存在某个 Channel
+bool EventLoop::hasChannel(Channel* channel) {
+}
+
+// 处理 Wakeup Channel 的读事件
+void EventLoop::handleRead() {
+    uint64_t one = 1;
+    ssize_t n = ::read(wakeupFd_, &one, sizeof one);
+    if (n != sizeof one) {
+        LOG_ERROR("%s reads %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
+    }
+}
+
+// 执行当前 EventLoop 的所有回调操作
+void EventLoop::doPendingFunctors() {
 }
