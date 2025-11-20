@@ -79,7 +79,7 @@ void EventLoop::loop() {
 
     while (!quit_) {
         activeChannels_.clear();
-        // Poller 监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
+        // Poller 会监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
         pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
         for (Channel* channel : activeChannels_) {
             channel->handleEvent(pollReturnTime_);
@@ -109,6 +109,7 @@ void EventLoop::quit() {
 // 唤醒 EventLoop 所在的线程
 void EventLoop::wakeup() {
     uint64_t one = 1;
+    // 向 wakeupFd_ 写一个数据，wakeupChannel_ 就会发生读事件，当前的 EventLoop 就会被唤醒
     ssize_t n = ::write(wakeupFd_, &one, sizeof one);
     if (n != sizeof one) {
         LOG_ERROR("%s write %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
@@ -176,6 +177,24 @@ void EventLoop::handleRead() {
     }
 }
 
-// 执行当前 EventLoop 的所有回调操作
+// 执行当前 EventLoop 需要执行的回调操作
 void EventLoop::doPendingFunctors() {
+    std::vector<Functor> functors;
+
+    // 标记当前 EventLoop 正在执行回调操作
+    callingPendingFunctors_ = true;
+
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        // 将需要执行的回调操作交换到局部变量 functors 中，以减少锁的持有时间，提高运行效率
+        functors.swap(pendingFunctors_);
+    }
+
+    // 执行当前 EventLoop 需要执行的回调操作
+    for (const Functor& functor : functors) {
+        functor();
+    }
+
+    // 标记当前 EventLoop 已经执行完回调操作
+    callingPendingFunctors_ = false;
 }

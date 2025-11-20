@@ -59,7 +59,7 @@ private:
     // 处理 Wakeup Channel 的读事件
     void handleRead();
 
-    // 执行当前 EventLoop 的所有回调操作
+    // 执行当前 EventLoop 需要执行的回调操作
     void doPendingFunctors();
 
     // Channel 列表的类型定义
