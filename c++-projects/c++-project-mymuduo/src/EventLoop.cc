@@ -14,7 +14,7 @@ __thread EventLoop* t_loopInThisThread = nullptr;
 // 定义 Poller（I/O 多路复用器）默认的超时时间
 const int kPollTimeMs = 10000;
 
-// 创建 wakeupFd，用于线程间的事件通知（notify）
+// 创建 wakeupFd，用来 Notify（唤醒）SubReactor 处理新来的 Channel
 int createEventFd() {
     int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     if (evtfd < 0) {
@@ -44,18 +44,28 @@ EventLoop::EventLoop()
         t_loopInThisThread = this;
     }
 
-    // 设置 wakeupChannel_ 的读事件回调函数
+    // 设置 Wakeup Channel 的读事件回调函数
     wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
 
-    // 启用 wakeupChannel_ 的读事件监听
+    // 启用 Wakeup Channel 的读事件监听
     wakeupChannel_->enableReading();
 }
 
 // 析构函数
 EventLoop::~EventLoop() {
+    LOG_DEBUG("%s => EventLoop %p of thread %d destructs in thread \n", __PRETTY_FUNCTION__, this,
+              CurrentThread::tid());
+    // 关闭 Wakeup Channel
+    wakeupChannel_->disableAll();
+    // 移除 Wakeup Channel
+    wakeupChannel_->remove();
+    // 关闭 wakeupFd_
+    ::close(wakeupFd_);
+    // 重置线程局部变量
+    t_loopInThisThread = nullptr;
 }
 
-// 处理唤醒事件
+// 处理 Wakeup Channel 的读事件
 void EventLoop::handleRead() {
     uint64_t one = 1;
     ssize_t n = ::read(wakeupFd_, &one, sizeof one);
