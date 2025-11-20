@@ -141,6 +141,7 @@ void EventLoop::removeChannel(Channel* channel) {
 
 // 判断 EventLoop 中是否存在某个 Channel
 bool EventLoop::hasChannel(Channel* channel) {
+    return false;
 }
 
 // 处理 Wakeup Channel 的读事件
