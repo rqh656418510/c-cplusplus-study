@@ -78,6 +78,6 @@ private:
     ChannelList activeChannels_;  // 保存 Poller 返回的活跃的 Channel 列表
 
     std::atomic_bool callingPendingFunctors_;  // 标识当前 EventLoop 是否有需要执行的回调操作
-    std::vector<Functor> pendingFunctors_;     // 保存需要执行的所有回调操作
+    std::vector<Functor> pendingFunctors_;     // 保存当前 EventLoop 需要执行的所有回调操作
     std::mutex mutex_;                         // 保护 pendingFunctors_ 容器线程安全的互斥锁
 };

@@ -73,14 +73,13 @@ void EventLoop::loop() {
     quit_ = false;
 
     // 打印日志信息
-    LOG_DEBUG("%s => EventLoop %p start looping\n", __PRETTY_FUNCTION__, this);
+    LOG_DEBUG("%s => EventLoop %p start looping \n", __PRETTY_FUNCTION__, this);
 
     while (!quit_) {
         activeChannels_.clear();
-        // 监听就绪事件，返回活跃的 Channel 列表
+        // Poller 监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
         pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
         for (Channel* channel : activeChannels_) {
-            // Poller 监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
             channel->handleEvent(pollReturnTime_);
         }
         // 执行当前 EventLoop 需要处理的回调操作
@@ -88,7 +87,7 @@ void EventLoop::loop() {
     }
 
     // 打印日志信息
-    LOG_DEBUG("%s => EventLoop %p stop looping\n", __PRETTY_FUNCTION__, this);
+    LOG_DEBUG("%s => EventLoop %p stop looping \n", __PRETTY_FUNCTION__, this);
 
     // 标记事件循环结束
     looping_ = false;
