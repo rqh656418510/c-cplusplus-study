@@ -18,7 +18,7 @@ const int kPollTimeMs = 10000;
 int createEventFd() {
     int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     if (evtfd < 0) {
-        LOG_FATAL("func=%s => eventfd error:%d \n", __PRETTY_FUNCTION__, errno);
+        LOG_FATAL("%s => eventfd error:%d \n", __PRETTY_FUNCTION__, errno);
     }
     return evtfd;
 }
@@ -34,11 +34,11 @@ EventLoop::EventLoop()
       wakeupChannel_(new Channel(this, wakeupFd_)),
       currentActiveChannel_(nullptr) {
     // 打印日志信息
-    LOG_DEBUG("func=%s => EventLoop created %p in thread %d \n", __PRETTY_FUNCTION__, this, threadId_);
+    LOG_DEBUG("%s => EventLoop created %p in thread %d \n", __PRETTY_FUNCTION__, this, threadId_);
 
     // 防止一个线程创建多个 EventLoop
     if (t_loopInThisThread) {
-        LOG_FATAL("func=%s => Another EventLoop existed in this thread %d \n", __PRETTY_FUNCTION__, threadId_);
+        LOG_FATAL("%s => Another EventLoop existed in this thread %d \n", __PRETTY_FUNCTION__, threadId_);
     } else {
         // 将当前 EventLoop 对象赋值给线程局部变量
         t_loopInThisThread = this;
@@ -60,7 +60,7 @@ void EventLoop::handleRead() {
     uint64_t one = 1;
     ssize_t n = ::read(wakeupFd_, &one, sizeof one);
     if (n != sizeof one) {
-        LOG_ERROR("func=%s reads %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
+        LOG_ERROR("%s reads %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
     }
 }
 

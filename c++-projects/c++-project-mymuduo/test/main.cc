@@ -7,6 +7,15 @@
 #include "TcpServer.h"
 #include "Timestamp.h"
 
+class LoggerTest {
+public:
+    void log() {
+        LOG_DEBUG("%s => %s", __PRETTY_FUNCTION__, "output debug log msg");
+        LOG_INFO("%s => %s", __PRETTY_FUNCTION__, "output info log msg");
+        LOG_ERROR("%s => %s", __PRETTY_FUNCTION__, "output error log msg");
+    }
+};
+
 void inetAddress() {
     InetAddress addr(8080, "192.168.1.1");
     std::cout << "ip = " + addr.toIp() << std::endl;
@@ -20,9 +29,8 @@ void timestamp() {
 }
 
 void logger() {
-    LOG_DEBUG("%s", "output debug log msg");
-    LOG_INFO("%s", "output info log msg");
-    LOG_ERROR("%s", "output error log msg");
+    LoggerTest logger;
+    logger.log();
 }
 
 void threadId() {
