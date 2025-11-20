@@ -56,7 +56,7 @@ public:
     bool isInLoopThread() const;
 
 private:
-    // 处理唤醒事件
+    // 处理 Wakeup Channel 的读事件
     void handleRead();
 
     // 执行所有回调操作
@@ -75,8 +75,7 @@ private:
     int wakeupFd_;                            // 用于唤醒 EventLoop 所在线程的 fd（非常重要）
     std::unique_ptr<Channel> wakeupChannel_;  // 用于唤醒 EventLoop 所在线程的 Channel（非常重要）
 
-    ChannelList activeChannels_;     // 保存 Poller 返回的活跃的 Channel 列表
-    Channel* currentActiveChannel_;  // 当前正在处理的 Channel
+    ChannelList activeChannels_;  // 保存 Poller 返回的活跃的 Channel 列表
 
     std::atomic_bool callingPendingFunctors_;  // 标识当前 EventLoop 是否有需要执行的回调操作
     std::vector<Functor> pendingFunctors_;     // 保存需要执行的所有回调操作

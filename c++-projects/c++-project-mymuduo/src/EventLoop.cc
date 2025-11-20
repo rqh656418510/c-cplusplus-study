@@ -31,8 +31,7 @@ EventLoop::EventLoop()
       threadId_(CurrentThread::tid()),
       poller_(Poller::newDefaultPoller(this)),
       wakeupFd_(createEventFd()),
-      wakeupChannel_(new Channel(this, wakeupFd_)),
-      currentActiveChannel_(nullptr) {
+      wakeupChannel_(new Channel(this, wakeupFd_)) {
     // 打印日志信息
     LOG_DEBUG("%s => EventLoop created %p in thread %d \n", __PRETTY_FUNCTION__, this, threadId_);
 
@@ -63,6 +62,55 @@ EventLoop::~EventLoop() {
     ::close(wakeupFd_);
     // 重置线程局部变量
     t_loopInThisThread = nullptr;
+}
+
+// 开启事件循环
+void EventLoop::loop() {
+    // 标记事件循环开始
+    looping_ = true;
+
+    // 标记退出事件循环的状态
+    quit_ = false;
+
+    // 打印日志信息
+    LOG_DEBUG("%s => EventLoop %p start looping\n", __PRETTY_FUNCTION__, this);
+
+    while (!quit_) {
+        activeChannels_.clear();
+        // 监听就绪事件，返回活跃的 Channel 列表
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
+        for (Channel* channel : activeChannels_) {
+            // Poller 监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
+            channel->handleEvent(pollReturnTime_);
+        }
+        // 执行当前 EventLoop 需要处理的回调操作
+        doPendingFunctors();
+    }
+
+    // 打印日志信息
+    LOG_DEBUG("%s => EventLoop %p stop looping\n", __PRETTY_FUNCTION__, this);
+
+    // 标记事件循环结束
+    looping_ = false;
+}
+
+// 执行所有回调操作
+void EventLoop::doPendingFunctors() {
+}
+
+// 退出事件循环
+void EventLoop::quit() {
+    // 标记退出事件循环的状态
+    quit_ = true;
+
+    // 如果不是在当前 EventLoop 所在线程上调用的 quit() 方法，则需要唤醒 EventLoop 所在线程
+    if (!isInLoopThread()) {
+        wakeup();
+    }
+}
+
+// 唤醒 EventLoop 所在线程
+void EventLoop::wakeup() {
 }
 
 // 处理 Wakeup Channel 的读事件
