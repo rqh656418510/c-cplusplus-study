@@ -6,12 +6,25 @@
 #include <sstream>
 #include <thread>
 
-// 定义宏
+// clang-format off
+
+// 定义宏（设置 Debug 模式）
 #ifdef MYMUDUO_DEBUG
-constexpr bool kIsDebugMode = true;
+    constexpr bool kIsDebugMode = true;
 #else
-constexpr bool kIsDebugMode = false;
+    constexpr bool kIsDebugMode = false;
 #endif
+
+// 定义宏（跨平台获取当前函数名）
+#if defined(__GNUC__) || defined(__clang__)
+    #define FUNC_NAME __PRETTY_FUNCTION__
+#elif defined(_MSC_VER)
+    #define FUNC_NAME __FUNCSIG__
+#else
+    #define FUNC_NAME __func__
+#endif
+
+// clang-format on
 
 // 构造函数
 Logger::Logger() {
@@ -55,7 +68,7 @@ Logger::Logger() {
             std::string& log_content = message.logContent_;
             std::string log_level_name = LogLevelToString(message.logLevel_);
 
-            // 获取当前时间
+            // 设置当前时间 + 线程 ID + 日志级别名称
             char time_buf[128] = {0};
             sprintf(time_buf, "%d-%d-%d %d:%d:%d => %d [%s] ", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
                     now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec, real_thread_id,

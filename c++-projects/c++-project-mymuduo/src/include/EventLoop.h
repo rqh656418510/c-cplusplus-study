@@ -17,7 +17,7 @@ class Poller;
 // 事件循环类
 class EventLoop : noncopyable {
 public:
-    using Functor = std::function<void>;
+    using Functor = std::function<void()>;
 
     // 构造函数
     EventLoop();
@@ -72,8 +72,8 @@ private:
     Timestamp pollReturnTime_;        // 记录 Poller 返回发生事件的时间点
     std::unique_ptr<Poller> poller_;  // EventLoop 使用的 Poller（I/O 多路复用器）
 
-    int weakupFd_;                            // 用于唤醒 EventLoop 所在线程的 fd
-    std::unique_ptr<Channel> weakupChannel_;  // 用于唤醒 EventLoop 所在线程的 Channel
+    int wakeupFd_;                            // 用于唤醒 EventLoop 所在线程的 fd
+    std::unique_ptr<Channel> wakeupChannel_;  // 用于唤醒 EventLoop 所在线程的 Channel
 
     ChannelList activeChannels_;     // 保存 Poller 返回的活跃的 Channel 列表
     Channel* currentActiveChannel_;  // 当前正在处理的 Channel
