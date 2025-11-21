@@ -46,13 +46,13 @@ void Thread::start() {
     sem_wait(&sem);
 }
 
-// 等待线程结束
+// 等待线程执行结束
 void Thread::join() {
     // 如果线程已启动且未被 join
     if (started_ && !joined_) {
         // 标记线程已 join
         joined_ = true;
-        // 等待线程结束
+        // 等待线程执行结束
         thread_->join();
     }
 }

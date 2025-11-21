@@ -8,7 +8,8 @@
 
 #include "noncopyable.h"
 
-class Thread {
+// 线程类
+class Thread : noncopyable {
 public:
     // 线程执行函数的类型定义
     using ThreadFunc = std::function<void()>;
@@ -22,7 +23,7 @@ public:
     // 启动线程
     void start();
 
-    // 等待线程结束
+    // 等待线程执行结束
     void join();
 
     // 获取线程 ID
