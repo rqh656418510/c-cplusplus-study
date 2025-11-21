@@ -27,7 +27,7 @@ EventLoopThread::~EventLoopThread() {
     }
 }
 
-// 启动线程
+// 在对应的线程中启动事件循环
 EventLoop *EventLoopThread::startLoop() {
     // 启动底层新创建的线程
     thread_.start();

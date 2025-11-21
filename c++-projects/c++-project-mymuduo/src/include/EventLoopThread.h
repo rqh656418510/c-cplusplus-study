@@ -7,9 +7,10 @@
 #include "Thread.h"
 #include "noncopyable.h"
 
+// 类前置声明
 class EventLoop;
 
-// 事件循环线程类
+// 事件循环线程类，封装了 EventLoop 与 Thread
 class EventLoopThread : noncopyable {
 public:
     // 线程初始化回调操作的类型定义
@@ -21,7 +22,7 @@ public:
     // 析构函数
     ~EventLoopThread();
 
-    // 启动线程
+    // 在对应的线程中启动事件循环
     EventLoop *startLoop();
 
 private:
