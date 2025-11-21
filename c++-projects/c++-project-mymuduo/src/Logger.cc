@@ -15,7 +15,7 @@
     constexpr bool kIsDebugMode = false;
 #endif
 
-// 定义宏（跨平台获取当前函数名）
+// 定义宏（跨平台获取当前调用的函数名称）
 #if defined(__GNUC__) || defined(__clang__)
     #define FUNC_NAME __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
