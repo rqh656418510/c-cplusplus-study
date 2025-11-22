@@ -24,7 +24,7 @@ void Channel::tie(const std::shared_ptr<void>& obj) {
     tied_ = true;
 }
 
-// 从 Poller 中删除自己
+// 从 Poller 中删除当前 Channel
 void Channel::remove() {
     // 通过 Channel 所属的 EventLoop，将当前的 Channel 删除掉
     loop_->removeChannel(this);

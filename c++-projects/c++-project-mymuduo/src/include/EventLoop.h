@@ -17,6 +17,7 @@ class Poller;
 // 事件循环类
 class EventLoop : noncopyable {
 public:
+    // 回调函数类型定义
     using Functor = std::function<void()>;
 
     // 构造函数
