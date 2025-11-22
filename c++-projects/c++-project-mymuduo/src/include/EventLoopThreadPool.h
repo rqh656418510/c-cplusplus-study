@@ -29,7 +29,7 @@ public:
     // 启动线程池
     void start(const ThreadInitCallback& cb = ThreadInitCallback());
 
-    // 获取下一个被选中的事件循环（如果工作在多线程中，baseLoop_ 默认以轮询的方式分配 Channel 给 subLoop）
+    // 获取下一个被选中的事件循环（如果工作在多线程中，baseLoop 默认以轮询的方式分配 Channel 给 subLoop）
     EventLoop* getNextLoop();
 
     // 返回所有事件循环
@@ -42,7 +42,7 @@ public:
     const std::string& name() const;
 
 private:
-    EventLoop* baseLoop_;  // 基础事件循环（通常是主线程的事件循环）
+    EventLoop* baseLoop_;  // 基础事件循环（通常是主线程上的事件循环）
     std::string name_;     // 线程池名称
     bool started_;         // 标记线程池是否已启动
     int numThreads_;       // 线程数量
