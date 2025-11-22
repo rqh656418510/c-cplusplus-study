@@ -20,5 +20,5 @@ public:
     static Timestamp now();
 
 private:
-    int64_t microSecondsSinceEpoch_;  // 自纪元以来的微秒数
+    int64_t microSecondsSinceEpoch_;  // 自纪元（1970年1月1日）以来的微秒数
 };
