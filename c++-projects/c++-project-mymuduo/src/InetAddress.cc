@@ -43,3 +43,8 @@ uint16_t InetAddress::toPort() const {
 const sockaddr_in* InetAddress::getSockAddr() const {
     return &addr_;
 }
+
+// 设置底层的 sockaddr_in 结构体
+void InetAddress::setSockAddr(const sockaddr_in& addr) {
+    addr_ = addr;
+}

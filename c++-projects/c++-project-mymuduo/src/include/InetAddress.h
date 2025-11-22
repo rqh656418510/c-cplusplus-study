@@ -27,6 +27,9 @@ public:
     // 获取底层的 sockaddr_in 结构体指针
     const sockaddr_in* getSockAddr() const;
 
+    // 设置底层的 sockaddr_in 结构体
+    void setSockAddr(const sockaddr_in& addr);
+
 private:
     sockaddr_in addr_;  // 底层的 sockaddr_in 结构体
 };
