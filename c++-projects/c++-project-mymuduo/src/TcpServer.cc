@@ -1,7 +1,24 @@
 #include "TcpServer.h"
 
+#include "Logger.h"
+
+EventLoop* CheckLoopNotNull(EventLoop* loop) {
+    if (loop == nullptr) {
+        LOG_FATAL("%s => baseLoop is null \n", __PRETTY_FUNCTION__);
+    }
+    return loop;
+}
+
 // 构造函数
-TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, Option option) {
+TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, const std::string nameArg, Option option)
+    : loop_(CheckLoopNotNull(loop)),
+      ipPort_(listenAddr.toIpPort()),
+      name_(nameArg),
+      acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),
+      threadPool_(new EventLoopThreadPool(loop, name_)),
+      connectionCallback_(defaultConnectionCallback),
+      messageCallback_(defaultMessageCallback),
+      nextConnId(1) {
 }
 
 // 析构函数

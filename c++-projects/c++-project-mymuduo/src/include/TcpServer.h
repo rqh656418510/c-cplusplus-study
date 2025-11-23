@@ -27,7 +27,7 @@ public:
     };
 
     // 构造函数
-    TcpServer(EventLoop* loop, const InetAddress& listenAddr, Option option = kNoReusePort);
+    TcpServer(EventLoop* loop, const InetAddress& listenAddr, const std::string nameArg, Option option = kNoReusePort);
 
     // 析构函数
     ~TcpServer();

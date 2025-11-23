@@ -23,3 +23,7 @@ using WriteCompleteCallback = std::function<void(const TcpConnectionPtr&)>;
 
 // 有消息到来时的回调函数类型定义
 using MessageCallback = std::function<void(const TcpConnectionPtr&, Buffer*, Timestamp)>;
+
+// 默认的回调函数
+void defaultConnectionCallback(const TcpConnectionPtr& conn){};
+void defaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer, Timestamp receiveTime){};
