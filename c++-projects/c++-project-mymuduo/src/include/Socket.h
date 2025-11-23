@@ -5,6 +5,7 @@
 // 类前置声明
 class InetAddress;
 
+// 套接字类
 class Socket : noncopyable {
 public:
     // 构造函数

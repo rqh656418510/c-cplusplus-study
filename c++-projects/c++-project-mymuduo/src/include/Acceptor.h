@@ -24,10 +24,10 @@ public:
     // 设置有新连接到来时的回调操作
     void setNewConnectionCallback(const NewConnectionCallback& cb);
 
-    // 监听
+    // 监听连接请求
     void listen();
 
-    // 获取是否正在监听
+    // 获取是否正在监听连接请求
     bool listenning() const;
 
 private:
@@ -38,5 +38,5 @@ private:
     Socket acceptSocket_;    // 用于监听的 socket
     Channel acceptChannel_;  // 用于监听 acceptSocket_ 上的可读事件（即有新连接到来）
     NewConnectionCallback newConnectionCallback_;  // 有新连接到来时的回调操作
-    bool listenning_;                              // 标记是否正在监听
+    bool listenning_;                              // 标记是否正在监听连接请求
 };

@@ -10,7 +10,7 @@
 static int createNonblockingSocket() {
     int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
     if (sockfd < 0) {
-        LOG_FATAL("%s => create nonblock socket failed, errno:%d \n", __PRETTY_FUNCTION__, errno);
+        LOG_FATAL("%s => create nonblock sockfd failed, errno:%d \n", __PRETTY_FUNCTION__, errno);
     }
     return sockfd;
 }
@@ -41,7 +41,7 @@ void Acceptor::setNewConnectionCallback(const NewConnectionCallback& cb) {
     newConnectionCallback_ = cb;
 }
 
-// 监听
+// 监听连接请求
 void Acceptor::listen() {
     listenning_ = true;
     // 监听客户端的连接请求
@@ -50,7 +50,7 @@ void Acceptor::listen() {
     acceptChannel_.enableReading();
 }
 
-// 获取是否正在监听
+// 获取是否正在监听连接请求
 bool Acceptor::listenning() const {
     return listenning_;
 }
