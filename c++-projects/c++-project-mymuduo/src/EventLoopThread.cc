@@ -34,7 +34,7 @@ EventLoop *EventLoopThread::startLoop() {
 
     EventLoop *loop = nullptr;
     {
-        // 等待线程函数 threadFunc() 创建好事件循环对象
+        // 等待线程函数 threadFunc() 创建好 EventLoop 对象
         std::unique_lock<std::mutex> lock(mutex_);
         while (loop_ == nullptr) {
             cond_.wait(lock);

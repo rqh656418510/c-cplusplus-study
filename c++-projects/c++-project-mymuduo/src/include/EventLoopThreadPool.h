@@ -42,7 +42,7 @@ public:
     const std::string& name() const;
 
 private:
-    EventLoop* baseLoop_;  // 基础事件循环（通常是主线程上的事件循环）
+    EventLoop* baseLoop_;  // 基础事件循环（通常是主线程上的事件循环，也称作 mainLoop）
     std::string name_;     // 线程池名称
     bool started_;         // 标记线程池是否已启动
     int numThreads_;       // 线程数量

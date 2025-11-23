@@ -41,7 +41,7 @@ public:
     // 获取服务器的事件循环
     EventLoop* getLoop() const;
 
-    // 设置线程数量（即底层 subLoop 的数量）
+    // 设置线程池的线程数量（即底层 subLoop 的数量）
     void setThreadNum(int numThreads);
 
     // 启动服务器（线程安全）
@@ -63,7 +63,7 @@ private:
     // TCP 连接集合类型定义
     using ConnectionMap = std::unordered_map<std::string, TcpConnectionPtr>;
 
-    // 创建 TCP 连接（非线程安全，在 EventLoop 上执行）
+    // 创建 TCP 连接（非线程安全，在 baseLoop 上执行）
     void newConnection(int sockfd, const InetAddress& peerAddr);
 
     // 移除 TCP 连接（线程安全）
@@ -82,9 +82,9 @@ private:
     ConnectionCallback connectionCallback_;        // 有新连接到来时的回调操作
     MessageCallback messageCallback_;              // 有数据到来时的回调操作
     WriteCompleteCallback writeCompleteCallback_;  // 数据发送完成时的回调操作
-    ThreadInitCallback threadInitCallback;         // 线程初始化回调操作
+    ThreadInitCallback threadInitCallback_;        // 线程初始化回调操作
 
     std::atomic_int started_;    // 标记服务器是否已经启动
-    int nextConnId;              // 下一个 TCP 连接的 ID
+    int nextConnId_;             // 下一个 TCP 连接的 ID
     ConnectionMap connections_;  // 保存所有的 TCP 连接
 };

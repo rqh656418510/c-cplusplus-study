@@ -24,7 +24,7 @@ public:
     // 设置有新连接到来时的回调操作
     void setNewConnectionCallback(const NewConnectionCallback& cb);
 
-    // 监听连接请求
+    // 监听连接请求（即监听有新的客户端连接进来）
     void listen();
 
     // 获取是否正在监听连接请求

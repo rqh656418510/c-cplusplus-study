@@ -1,5 +1,7 @@
 #include "TcpServer.h"
 
+#include <string.h>
+
 #include "Logger.h"
 
 EventLoop* CheckLoopNotNull(EventLoop* loop) {
@@ -18,7 +20,10 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, const std::
       threadPool_(new EventLoopThreadPool(loop, name_)),
       connectionCallback_(defaultConnectionCallback),
       messageCallback_(defaultMessageCallback),
-      nextConnId(1) {
+      nextConnId_(1) {
+    // 当有新客户端连接进来时，会调用 TcpServer::newConnection() 函数
+    acceptor_->setNewConnectionCallback(
+        std::bind(&TcpServer::newConnection, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 // 析构函数
@@ -40,17 +45,25 @@ EventLoop* TcpServer::getLoop() const {
     return loop_;
 }
 
-// 设置线程数量（即底层 subLoop 的数量）
+// 设置线程池的线程数量（即底层 subLoop 的数量）
 void TcpServer::setThreadNum(int numThreads) {
+    threadPool_->setThreadNum(numThreads);
 }
 
 // 启动服务器（线程安全）
 void TcpServer::start() {
+    // 防止 TcpServer 被多次启动
+    if (started_++ == 0) {
+        // 启动多个子线程，并各自运行一个 subLoop
+        threadPool_->start(threadInitCallback_);
+        // 在 baseLoop（运行在主线程）上监听连接请求（即监听有新的客户端连接进来）
+        loop_->runInLoop(std::bind(&Acceptor::listen, acceptor_.get()));
+    }
 }
 
 // 设置线程初始化回调操作
 void TcpServer::setThreadInitCallback(const ThreadInitCallback& cb) {
-    threadInitCallback = cb;
+    threadInitCallback_ = cb;
 }
 
 // 设置有新连接到来时的回调操作
@@ -68,8 +81,11 @@ void TcpServer::setWriteCompleteCallback(const WriteCompleteCallback& cb) {
     writeCompleteCallback_ = cb;
 }
 
-// 创建 TCP 连接（非线程安全，在 EventLoop 上执行）
+// 创建 TCP 连接（非线程安全，在 baseLoop 上执行）
 void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr) {
+    // 获取下一个 subLoop（也称作 ioLoop）
+    EventLoop* ioLoop = threadPool_->getNextLoop();
+    // TODO
 }
 
 // 移除 TCP 连接（线程安全）
