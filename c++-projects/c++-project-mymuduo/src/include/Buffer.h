@@ -58,6 +58,21 @@ public:
     // 扩容缓冲区以容纳更多数据
     void makeSpace(size_t len);
 
+    // 向缓冲区追加数据
+    void append(const char* data, size_t len);
+
+    // 通知缓冲区已写入数据
+    void hasWritten(size_t len);
+
+    // 返回缓冲区中可写数据的起始地址
+    char* beginWrite();
+
+    // 返回缓冲区中可写数据的起始地址
+    const char* beginWrite() const;
+
+    // 从 fd 上读取数据
+    ssize_t readFd(int fd, int* saveErrno);
+
 private:
     // 返回 vector 底层数组的首元素地址（即数组的起始地址）
     char* begin();
