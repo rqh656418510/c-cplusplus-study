@@ -36,7 +36,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& nameArg, int so
       connectionCallback_(defaultConnectionCallback),
       messageCallback_(defaultMessageCallback),
       highWaterMark_(64 * 1024 * 1024) {
-    // 给 Channel 设置相应的回调函数，Poller 会通知 Channel 它感兴趣的事件发生了，Channel 会回调相应的操作函数
+    // 给 Channel 设置相应的回调函数，Poller 会通知 Channel 它感兴趣的事件发生了，然后 Channel 会回调相应的操作函数
     channel_->setReadCallback(std::bind(&TcpConnection::handleRead, this, std::placeholders::_1));
     channel_->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
     channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
@@ -194,7 +194,7 @@ void TcpConnection::handleWrite() {
         }
     } else {
         // 打印日志信息
-        LOG_DEBUG("%s => connection %s is down, no more writing, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+        LOG_DEBUG("%s => tcp connection %s is down, no more writing, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(),
                   channel_->fd());
     }
 }
@@ -202,8 +202,8 @@ void TcpConnection::handleWrite() {
 // 处理关闭事件
 void TcpConnection::handleClose() {
     // 打印日志信息
-    LOG_DEBUG("%s => connection %s close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(), channel_->fd(),
-              stateToString());
+    LOG_DEBUG("%s => tcp connection %s is close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(),
+              channel_->fd(), stateToString());
 
     // 设置连接状态
     setState(kDisconnected);
@@ -236,7 +236,7 @@ void TcpConnection::handleError() {
     }
 
     // 打印日志信息
-    LOG_ERROR("%s => connection name=%s occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+    LOG_ERROR("%s => tcp connection name=%s occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), saveErrno);
 }
 
