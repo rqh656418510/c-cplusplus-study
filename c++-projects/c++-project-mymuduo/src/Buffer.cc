@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <sys/uio.h>
+#include <unistd.h>
 
 // 构造函数
 Buffer::Buffer(size_t initialSize)
@@ -13,17 +14,17 @@ Buffer::Buffer(size_t initialSize)
 Buffer::~Buffer() {
 }
 
-// 获取缓冲区可读的字节数
+// 获取缓冲区中可读的字节数
 size_t Buffer::readableBytes() const {
     return writerIndex_ - readerIndex_;
 }
 
-// 获取缓冲区可写的字节数
+// 获取缓冲区中可写的字节数
 size_t Buffer::writableBytes() const {
     return buffer_.size() - writerIndex_;
 }
 
-// 获取缓冲区可预留的字节数
+// 获取缓冲区中可预留的字节数
 size_t Buffer::prependableBtes() const {
     return readerIndex_;
 }
@@ -49,12 +50,12 @@ void Buffer::retrieveAll() {
     writerIndex_ = kCheapPrepend;
 }
 
-// 将所有可读数据以字符串形式返回
+// 将缓冲区中所有可读数据以字符串形式返回
 std::string Buffer::retrieveAllAsString() {
     return retrieveAsString(readableBytes());
 }
 
-// 将指定长度的可读数据以字符串形式返回
+// 将缓冲区中指定长度的可读数据以字符串形式返回
 std::string Buffer::retrieveAsString(size_t len) {
     assert(len <= readableBytes());
     // 构造字符串
@@ -113,7 +114,7 @@ const char* Buffer::beginWrite() const {
     return begin() + writerIndex_;
 }
 
-// 从 fd 上读取数据
+// 从 fd 上读取数据，并写到缓冲区中（返回值：n > 0：读取成功；n == 0：连接关闭；n < 0：读取出错）
 ssize_t Buffer::readFd(int fd, int* saveErrno) {
     // 在栈上分配内存空间（64KB）
     char extrabuf[65536] = {0};
@@ -148,6 +149,17 @@ ssize_t Buffer::readFd(int fd, int* saveErrno) {
     else {
         writerIndex_ = buffer_.size();
         append(extrabuf, n - writable);
+    }
+
+    return n;
+}
+
+// 从缓冲区中读取数据，并写到 fd 上（返回值：n > 0：写入成功；n == 0：没有数据可写入；n < 0：写入出错）
+ssize_t Buffer::writeFd(int fd, int* saveErrno) {
+    ssize_t n = ::write(fd, peek(), readableBytes());
+    if (n < 0) {
+        // 写入出错，记录错误码
+        *saveErrno = errno;
     }
     return n;
 }

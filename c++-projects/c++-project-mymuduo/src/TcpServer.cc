@@ -4,7 +4,7 @@
 
 #include "Logger.h"
 
-EventLoop* CheckLoopNotNull(EventLoop* loop) {
+static EventLoop* CheckLoopNotNull(EventLoop* loop) {
     if (loop == nullptr) {
         LOG_FATAL("%s => baseLoop is null \n", __PRETTY_FUNCTION__);
     }

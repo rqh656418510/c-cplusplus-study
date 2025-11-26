@@ -86,7 +86,7 @@ public:
         update();
     }
 
-    // 关闭监听 fd 上的读事件
+    // 关闭监听 fd 上的写事件
     void disableWriting() {
         events_ &= ~kWriteEvent;
         update();
