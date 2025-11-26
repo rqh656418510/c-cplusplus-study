@@ -1,6 +1,8 @@
 #include "TcpConnection.h"
 
+#include <assert.h>
 #include <error.h>
+#include <unistd.h>
 
 #include "Channel.h"
 #include "EventLoop.h"
@@ -84,12 +86,28 @@ bool TcpConnection::disconnected() const {
     return state_ == kDisconnected;
 }
 
-// 发送数据
-void TcpConnection::send(const void* message, int len) {
+// 发送数据到输出缓冲区
+void TcpConnection::send(const std::string& message) {
+    if (state_ == kConnected) {
+        // 如果当前线程是 loop_ 所在的线程
+        if (loop_->isInLoopThread()) {
+            // 直接将数据发送到输出缓冲区
+            sendInLoop(message.c_str(), message.size());
+        } else {
+            // 唤醒 loop_ 对应的线程将数据发送到输出缓冲区
+            loop_->runInLoop(std::bind(&TcpConnection::sendInLoop, this, message.c_str(), message.size()));
+        }
+    }
 }
 
 // 关闭 TCP 连接
 void TcpConnection::shutdown() {
+    if (state_ == kConnected) {
+        // 设置 TCP 连接的状态
+        setState(kDisconnecting);
+        // 唤醒 loop_ 对应的线程去关闭 TCP 连接
+        loop_->runInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
+    }
 }
 
 // 连接建立/关闭时的回调操作
@@ -107,7 +125,7 @@ void TcpConnection::setWriteCompleteCallback(const WriteCompleteCallback& cb) {
     writeCompleteCallback_ = cb;
 }
 
-// 设置高水位时的回调操作
+// 设置触发高水位时的回调操作
 void TcpConnection::setHighWaterMarkCallback(const HighWaterMarkCallback& cb, size_t highWaterMark) {
     highWaterMarkCallback_ = cb;
     highWaterMark_ = highWaterMark;
@@ -130,10 +148,29 @@ Buffer* TcpConnection::outBuffer() {
 
 // 连接建立
 void TcpConnection::connectEstablished() {
+    assert(state_ == kConnecting);
+    // 设置 TCP 连接的状态
+    setState(kConnected);
+    // Channel 绑定 TCP 连接
+    channel_->tie(shared_from_this());
+    // Channel 开启监听 fd 上的读事件
+    channel_->enableReading();
+    // 调用用户设置的回调操作
+    connectionCallback_(shared_from_this());
 }
 
 // 连接销毁
 void TcpConnection::connectDestroyed() {
+    if (state_ == kConnected) {
+        // 设置 TCP 连接的状态
+        setState(kDisconnected);
+        // Channel 禁止监听 fd 上的所有事件
+        channel_->disableAll();
+        // 调用用户设置的回调操作
+        connectionCallback_(shared_from_this());
+    }
+    // 从 Poller 中删除 Channel
+    channel_->remove();
 }
 
 // 处理读事件
@@ -205,7 +242,7 @@ void TcpConnection::handleClose() {
     LOG_DEBUG("%s => tcp connection %s is close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), stateToString());
 
-    // 设置连接状态
+    // 设置 TCP 连接的状态
     setState(kDisconnected);
 
     // 禁止 Channel 监听 fd 上的所有事件
@@ -236,16 +273,80 @@ void TcpConnection::handleError() {
     }
 
     // 打印日志信息
-    LOG_ERROR("%s => tcp connection name=%s occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+    LOG_ERROR("%s => tcp connection %s occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), saveErrno);
 }
 
-// 在事件循环（EventLoop）中发送数据
+// 在事件循环（EventLoop）中发送数据到输出缓冲区
 void TcpConnection::sendInLoop(const void* message, size_t len) {
+    // 已发送数据的字节数
+    ssize_t nwrote = 0;
+
+    // 剩下未发送数据的字节数
+    size_t remaining = len;
+
+    // 是否发生致命错误
+    bool faultError = false;
+
+    // 如果 TCP 连接已断开，则放弃发送数据
+    if (state_ == kDisconnected) {
+        LOG_ERROR("%s => tcp connection %s disconnected, give up writing \n", __PRETTY_FUNCTION__, name_.c_str());
+        return;
+    }
+
+    // 如果 Channel 是第一次写入数据，且输出缓冲区里面没有待发送的数据
+    if (!channel_->isWriting() && outputBuffer_.readableBytes() == 0) {
+        // 直接发送数据（成功：返回已发送的字节数，失败：返回小于零的数字）
+        nwrote = ::write(channel_->fd(), message, len);
+        // 发送数据成功
+        if (nwrote >= 0) {
+            // 剩下未发送的字节数
+            remaining = len - nwrote;
+            // 如果所有数据都发送完
+            if (remaining == 0 && writeCompleteCallback_) {
+                // 唤醒 loop_ 对应的线程去执行用户设置的回调操作
+                loop_->runInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
+            }
+        }
+        // 发送数据失败
+        else {
+            nwrote = 0;
+            if (errno != EWOULDBLOCK) {
+                LOG_ERROR("%s => occurred error \n", __PRETTY_FUNCTION__);
+                if (errno == EPIPE || errno == ECONNRESET) {
+                    faultError = true;
+                }
+            }
+        }
+    }
+
+    assert(remaining <= len);
+
+    // 如果发送数据没有发生致命错误，且有剩下的数据未发送
+    if (!faultError && remaining > 0) {
+        // 输出缓冲区中原先未发送数据的字节数
+        size_t oldLen = outputBuffer_.readableBytes();
+        // 判断所有未发送数据的大小是否触及了高水位线
+        if (oldLen + remaining >= highWaterMark_ && oldLen < highWaterMark_ && highWaterMarkCallback_) {
+            // 唤醒 loop_ 对应的线程去执行用户设置的回调操作
+            loop_->runInLoop(std::bind(highWaterMarkCallback_, shared_from_this(), oldLen + remaining));
+        }
+        // 往输出缓冲区中写入上面未发送完的数据
+        outputBuffer_.append(static_cast<const char*>(message) + nwrote, remaining);
+        // 让 Channel 开启监听 fd 上的写事件
+        if (!channel_->isWriting()) {
+            channel_->enableWriting();
+        }
+    }
 }
 
 // 在事件循环（EventLoop）中关闭 TCP 连接
 void TcpConnection::shutdownInLoop() {
+    // 如果输出缓冲区中的所有数据都发送完
+    if (!channel_->isWriting()) {
+        // Socket 关闭写入
+        socket_->shutdownWrite();
+    }
 }
 
 // 设置 TCP 连接的状态

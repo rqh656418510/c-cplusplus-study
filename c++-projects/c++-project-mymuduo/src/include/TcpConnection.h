@@ -43,8 +43,8 @@ public:
     // 判断 TCP 连接是否处于断开状态
     bool disconnected() const;
 
-    // 发送数据
-    void send(const void* message, int len);
+    // 发送数据到输出缓冲区
+    void send(const std::string& message);
 
     // 关闭 TCP 连接
     void shutdown();
@@ -58,7 +58,7 @@ public:
     // 设置数据发送完成时的回调操作
     void setWriteCompleteCallback(const WriteCompleteCallback& cb);
 
-    // 设置高水位时的回调操作
+    // 设置触发高水位时的回调操作
     void setHighWaterMarkCallback(const HighWaterMarkCallback& cb, size_t highWaterMark);
 
     // 设置连接关闭时的回调操作
@@ -92,7 +92,7 @@ private:
     // 处理错误事件
     void handleError();
 
-    // 在事件循环（EventLoop）中发送数据
+    // 在事件循环（EventLoop）中发送数据到输出缓冲区
     void sendInLoop(const void* message, size_t len);
 
     // 在事件循环（EventLoop）中关闭 TCP 连接
@@ -118,10 +118,10 @@ private:
     ConnectionCallback connectionCallback_;        // 连接建立/关闭时的回调操作
     MessageCallback messageCallback_;              // 有数据到来时的回调操作
     WriteCompleteCallback writeCompleteCallback_;  // 数据发送完成时的回调操作
-    HighWaterMarkCallback highWaterMarkCallback_;  // 高水位时的回调操作
+    HighWaterMarkCallback highWaterMarkCallback_;  // 触发高水位时的回调操作
     CloseCallback closeCallback_;                  // 连接关闭时的回调操作
 
     size_t highWaterMark_;  // 高水位的大小（默认 64M）
-    Buffer inputBuffer_;    // 输入缓冲区
-    Buffer outputBuffer_;   // 输出缓冲区
+    Buffer inputBuffer_;    // 输入缓冲区（用于接收客户端发送过来的数据）
+    Buffer outputBuffer_;   // 输出缓冲区（用于发送数据给客户端）
 };
