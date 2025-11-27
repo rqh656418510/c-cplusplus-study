@@ -1,11 +1,9 @@
 #pragma once
 
-#include <chrono>
 #include <string>
 #include <thread>
 
 #include "CurrentThread.h"
-#include "LockQueue.h"
 #include "noncopyable.h"
 
 // 定义宏
@@ -87,13 +85,13 @@ struct LogMessage {
     int threadId_;            // 打印日志的线程的 ID
 };
 
-// 日志系统（单例对象，负责异步写入日志文件）
+// 日志类（单例模式）
 class Logger : noncopyable {
 public:
     // 获取单例对象
     static Logger& instance();
 
-    // 写入日志信息
+    // 输出日志信息
     void log(const LogMessage& message);
 
     // 获取日志级别
@@ -103,10 +101,6 @@ public:
     void setLogLevel(LogLevel level);
 
 private:
-    LogLevel logLevel_;             // 记录日志级别
-    std::thread writeThread_;       // 日志写入线程
-    LockQueue<LogMessage> lckQue_;  // 日志缓冲队列
-
     // 私有构造函数
     Logger();
 
@@ -114,5 +108,7 @@ private:
     ~Logger();
 
     // 获取日志级别的名称
-    std::string LogLevelToString(LogLevel level);
+    std::string logLevelToString(LogLevel level);
+
+    LogLevel logLevel_;  // 记录日志级别
 };

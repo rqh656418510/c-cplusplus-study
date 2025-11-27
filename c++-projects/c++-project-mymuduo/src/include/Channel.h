@@ -68,26 +68,31 @@ public:
 
     /********** 设置 fd 相应的事件状态 **********/
 
+    // 开启监听 fd 上的读事件
     void enableReading() {
         events_ |= kReadEvent;
         update();
     }
 
+    // 关闭监听 fd 上的读事件
     void disableReading() {
         events_ &= ~kReadEvent;
         update();
     }
 
+    // 开启监听 fd 上的写事件
     void enableWriting() {
         events_ |= kWriteEvent;
         update();
     }
 
+    // 关闭监听 fd 上的写事件
     void disableWriting() {
         events_ &= ~kWriteEvent;
         update();
     }
 
+    // 禁止监听 fd 上的所有事件（读 + 写）
     void disableAll() {
         events_ = kNoneEvent;
         update();
@@ -95,22 +100,27 @@ public:
 
     /********** 获取 fd 当前的事件状态 **********/
 
+    // 判断当前是否没有监听任何事件（既不读也不写）
     bool isNoneEvent() const {
         return events_ == kNoneEvent;
     }
 
+    // 判断当前是否正在监听写事件
     bool isWriting() const {
         return events_ & kWriteEvent;
     }
 
+    // 判断当前是否正在监听读事件
     bool isReading() const {
         return events_ & kReadEvent;
     }
 
+    // 返回当前 Channel 在 Poller 中的状态
     int index() {
         return index_;
     }
 
+    // 设置当前 Channel 在 Poller 中的状态
     void set_index(int index) {
         index_ = index;
     }
@@ -118,7 +128,7 @@ public:
     // 防止当 Channel 被手动 remove 掉后，Channel 还在执行事件的回调操作
     void tie(const std::shared_ptr<void>& obj);
 
-    // 从 Poller 中删除自己
+    // 从 Poller 中删除当前 Channel
     void remove();
 
 private:
