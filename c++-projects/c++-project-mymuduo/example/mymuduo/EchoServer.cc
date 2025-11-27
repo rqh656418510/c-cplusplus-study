@@ -54,8 +54,10 @@ void EchoServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timesta
 
     // 打印日志信息
     LOG_INFO("Echo server receive message, time: %s, content: %s", time.toString().c_str(), message.c_str());
+
     // 发送数据给客户端
     conn->send(message);
+
     // 关闭 TCP 连接（如果希望长连接，不要立即 shutdown）
     conn->shutdown();
 }
