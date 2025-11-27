@@ -63,16 +63,16 @@ private:
     // TCP 连接集合类型定义
     using ConnectionMap = std::unordered_map<std::string, TcpConnectionPtr>;
 
-    // 创建 TCP 连接（非线程安全，在 baseLoop 上执行）
+    // 创建 TCP 连接（在 baseLoop 上执行）
     void newConnection(int sockfd, const InetAddress& peerAddr);
 
-    // 移除 TCP 连接（线程安全）
+    // 移除 TCP 连接
     void removeConnection(const TcpConnectionPtr& conn);
 
-    // 在 EventLoop 上移除 TCP 连接（非线程安全）
+    // 移除 TCP 连接（在 baseLoop 上执行）
     void removeConnectionInLoop(const TcpConnectionPtr& conn);
 
-    EventLoop* loop_;           // 用户自定义的 EventLoop（即 baseLoop）
+    EventLoop* loop_;           // 用户自定义的 EventLoop（即 baseLoop，也称作 mainLoop）
     const std::string ipPort_;  // 服务器监听的 IP 和端口信息
     const std::string name_;    // 服务器名称
 

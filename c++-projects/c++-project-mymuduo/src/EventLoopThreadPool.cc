@@ -35,7 +35,7 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb) {
         loops_.push_back(t->startLoop());
     }
 
-    // 当整个服务端只有一个线程（负责运行一个 baseLoop），就执行初始化回调操作
+    // 当整个服务端只有一个线程（负责运行 baseLoop），就执行初始化回调操作
     if (numThreads_ == 0 && cb) {
         cb(baseLoop_);
     }

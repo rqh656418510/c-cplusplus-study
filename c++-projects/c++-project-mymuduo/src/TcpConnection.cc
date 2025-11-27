@@ -44,7 +44,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& nameArg, int so
     channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
     channel_->setErrorCallback(std::bind(&TcpConnection::handleError, this));
     // 打印日志信息
-    LOG_DEBUG("%s => create tcp connection %s at %p, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(), this, sockfd);
+    LOG_DEBUG("%s => create tcp connection [%s] at %p, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(), this, sockfd);
     // 开启 TCP 保活机制
     socket_->setKeepAlive(true);
 }
@@ -52,7 +52,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& nameArg, int so
 // 析构函数
 TcpConnection::~TcpConnection() {
     // 打印日志信息
-    LOG_DEBUG("%s => destruct tcp connection %s at %p, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(), this,
+    LOG_DEBUG("%s => destruct tcp connection [%s] at %p, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(), this,
               channel_->fd(), stateToString());
 }
 
@@ -217,7 +217,7 @@ void TcpConnection::handleWrite() {
                 channel_->disableWriting();
                 // 调用用户设置的回调操作
                 if (writeCompleteCallback_) {
-                    // 唤醒 loop_ 对应的线程去执行用户设置的回调操作
+                    // 唤醒 loop_ 所在的线程去执行用户设置的回调操作
                     loop_->queueInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
                 }
                 // 如果正在断开 TCP 连接，则关闭 TCP 连接
@@ -231,7 +231,7 @@ void TcpConnection::handleWrite() {
         }
     } else {
         // 打印日志信息
-        LOG_DEBUG("%s => tcp connection %s is down, no more writing, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+        LOG_DEBUG("%s => tcp connection [%s] is down, no more writing, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(),
                   channel_->fd());
     }
 }
@@ -239,7 +239,7 @@ void TcpConnection::handleWrite() {
 // 处理关闭事件
 void TcpConnection::handleClose() {
     // 打印日志信息
-    LOG_DEBUG("%s => tcp connection %s is close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(),
+    LOG_DEBUG("%s => tcp connection [%s] is close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), stateToString());
 
     // 设置 TCP 连接的状态
@@ -273,7 +273,7 @@ void TcpConnection::handleError() {
     }
 
     // 打印日志信息
-    LOG_ERROR("%s => tcp connection %s occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+    LOG_ERROR("%s => tcp connection [%s] occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), saveErrno);
 }
 
@@ -290,7 +290,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
 
     // 如果 TCP 连接已断开，则放弃发送数据
     if (state_ == kDisconnected) {
-        LOG_ERROR("%s => tcp connection %s disconnected, give up writing \n", __PRETTY_FUNCTION__, name_.c_str());
+        LOG_ERROR("%s => tcp connection [%s] disconnected, give up writing \n", __PRETTY_FUNCTION__, name_.c_str());
         return;
     }
 
@@ -304,7 +304,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
             remaining = len - nwrote;
             // 如果所有数据都发送完
             if (remaining == 0 && writeCompleteCallback_) {
-                // 唤醒 loop_ 对应的线程去执行用户设置的回调操作
+                // 唤醒 loop_ 所在的线程去执行用户设置的回调操作
                 loop_->runInLoop(std::bind(writeCompleteCallback_, shared_from_this()));
             }
         }
@@ -328,7 +328,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
         size_t oldLen = outputBuffer_.readableBytes();
         // 判断所有未发送数据的大小是否触及了高水位线
         if (oldLen + remaining >= highWaterMark_ && oldLen < highWaterMark_ && highWaterMarkCallback_) {
-            // 唤醒 loop_ 对应的线程去执行用户设置的回调操作
+            // 唤醒 loop_ 所在的线程去执行用户设置的回调操作
             loop_->runInLoop(std::bind(highWaterMarkCallback_, shared_from_this(), oldLen + remaining));
         }
         // 往输出缓冲区中写入上面未发送完的数据

@@ -16,24 +16,24 @@ public:
     }
 };
 
-void inetAddress() {
+void inetAddressTest() {
     InetAddress addr(8080, "192.168.1.1");
     std::cout << "ip = " + addr.toIp() << std::endl;
     std::cout << "port = " + std::to_string(addr.toPort()) << std::endl;
     std::cout << "address = " + addr.toIpPort() << std::endl;
 }
 
-void timestamp() {
+void timestampTest() {
     Timestamp time = Timestamp::now();
-    std::cout << time.toString() << std::endl;
+    std::cout << "timestamp = " << time.toString() << std::endl;
 }
 
-void logger() {
+void logTest() {
     LoggerTest logger;
     logger.log();
 }
 
-void threadId() {
+void threadIdTest() {
     std::thread t1([] { LOG_INFO("I'm thread 1"); });
     std::thread t2([] { LOG_INFO("I'm thread 2"); });
     t1.join();
@@ -41,10 +41,10 @@ void threadId() {
 }
 
 int main() {
-    // inetAddress();
-    // timestamp();
-    // logger();
-    threadId();
+    inetAddressTest();
+    timestampTest();
+    logTest();
+    threadIdTest();
 
     // 等待退出程序
     getchar();
