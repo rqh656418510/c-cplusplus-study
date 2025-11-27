@@ -68,7 +68,7 @@ public:
     Buffer* inputBuffer();
 
     // 获取输出缓冲区
-    Buffer* outBuffer();
+    Buffer* outputBuffer();
 
     // 连接建立
     void connectEstablished();
@@ -122,6 +122,6 @@ private:
     CloseCallback closeCallback_;                  // 连接关闭时的回调操作
 
     size_t highWaterMark_;  // 高水位的大小（默认 64M）
-    Buffer inputBuffer_;    // 输入缓冲区（用于接收客户端发送过来的数据）
-    Buffer outputBuffer_;   // 输出缓冲区（用于发送数据给客户端）
+    Buffer inputBuffer_;    // 输入缓冲区（用于接收数据的缓冲区）
+    Buffer outputBuffer_;   // 输出缓冲区（用于发送数据的缓冲区）
 };

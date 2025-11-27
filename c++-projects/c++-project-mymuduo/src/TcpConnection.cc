@@ -142,7 +142,7 @@ Buffer* TcpConnection::inputBuffer() {
 }
 
 // 获取输出缓冲区
-Buffer* TcpConnection::outBuffer() {
+Buffer* TcpConnection::outputBuffer() {
     return &outputBuffer_;
 }
 
