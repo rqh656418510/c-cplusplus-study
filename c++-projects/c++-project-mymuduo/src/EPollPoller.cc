@@ -127,9 +127,9 @@ void EPollPoller::update(int operation, Channel* channel) {
     ::epoll_event event;
     bzero(&event, sizeof event);
     event.data.ptr = channel;
-    event.data.fd = fd;
+    event.events = channel->events();
 
-    // 设置 fd 相应的 Epoll 事件
+    // 设置 fd 相应的 Epoll 事件（使用 Channel 中记录的 interests）
     if (::epoll_ctl(epollfd_, operation, fd, &event) < 0) {
         if (operation == EPOLL_CTL_DEL) {
             LOG_ERROR("epoll_ctl delete error:%d", errno);
