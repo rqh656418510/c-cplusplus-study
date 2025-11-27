@@ -10,11 +10,11 @@
 EchoServer::EchoServer(EventLoop *loop, const InetAddress &listenAddr, const std::string &nameArg)
     : server_(loop, listenAddr, nameArg), loop_(loop) {
     // 设置服务端注册用户连接的创建和断开回调
-    server_.setConnectionCallback(std::bind(&EchoServer::onConnection, this, std::placeholders::_1));
+    // server_.setConnectionCallback(std::bind(&EchoServer::onConnection, this, std::placeholders::_1));
 
     // 设置服务端注册用户读写事件的回调
-    server_.setMessageCallback(
-        std::bind(&EchoServer::onMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    // server_.setMessageCallback(
+    // std::bind(&EchoServer::onMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
     // 设置线程池的线程数量（比如：1个I/O线程，3个Worker线程）
     server_.setThreadNum(4);
