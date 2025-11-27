@@ -40,10 +40,10 @@ void Socket::listen() {
 // 接受连接请求
 int Socket::accept(InetAddress* peeraddr) {
     sockaddr_in addr;
-    socklen_t len;
+    socklen_t len = sizeof addr;
     bzero(&addr, sizeof addr);
-    // 接受客户端新连接，返回新连接对应的 socket fd，用来和客户端进行读写
-    int connfd = ::accept(sockFd_, (sockaddr*)&addr, &len);
+    // 接受客户端新连接，返回新连接对应的 socket fd（非阻塞的），用来和客户端进行读写
+    int connfd = ::accept4(sockFd_, (sockaddr*)&addr, &len, SOCK_NONBLOCK | SOCK_CLOEXEC);
     if (connfd >= 0) {
         peeraddr->setSockAddr(addr);
     }
