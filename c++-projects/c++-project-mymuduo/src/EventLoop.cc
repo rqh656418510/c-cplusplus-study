@@ -20,7 +20,7 @@ const int kPollTimeMs = 10000;
 int createEventFd() {
     int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     if (evtfd < 0) {
-        LOG_FATAL("%s => eventfd error:%d \n", __PRETTY_FUNCTION__, errno);
+        LOG_FATAL("%s => eventfd error:%d", __PRETTY_FUNCTION__, errno);
     }
     return evtfd;
 }
@@ -35,11 +35,11 @@ EventLoop::EventLoop()
       wakeupFd_(createEventFd()),
       wakeupChannel_(new Channel(this, wakeupFd_)) {
     // 打印日志信息
-    LOG_DEBUG("%s => EventLoop created %p in thread %d \n", __PRETTY_FUNCTION__, this, threadId_);
+    LOG_DEBUG("%s => EventLoop created %p in thread %d", __PRETTY_FUNCTION__, this, threadId_);
 
     // 防止一个线程创建多个 EventLoop
     if (t_loopInThisThread) {
-        LOG_FATAL("%s => Another EventLoop existed in this thread %d \n", __PRETTY_FUNCTION__, threadId_);
+        LOG_FATAL("%s => Another EventLoop existed in this thread %d", __PRETTY_FUNCTION__, threadId_);
     } else {
         // 将当前 EventLoop 对象赋值给线程局部变量
         t_loopInThisThread = this;
@@ -54,8 +54,7 @@ EventLoop::EventLoop()
 
 // 析构函数
 EventLoop::~EventLoop() {
-    LOG_DEBUG("%s => EventLoop %p of thread %d destructs in thread \n", __PRETTY_FUNCTION__, this,
-              CurrentThread::tid());
+    LOG_DEBUG("%s => EventLoop %p of thread %d destructs in thread", __PRETTY_FUNCTION__, this, CurrentThread::tid());
     // 关闭 Wakeup Channel
     wakeupChannel_->disableAll();
     // 移除 Wakeup Channel
@@ -75,7 +74,7 @@ void EventLoop::loop() {
     quit_ = false;
 
     // 打印日志信息
-    LOG_DEBUG("%s => EventLoop %p start looping \n", __PRETTY_FUNCTION__, this);
+    LOG_DEBUG("%s => EventLoop %p start looping", __PRETTY_FUNCTION__, this);
 
     while (!quit_) {
         activeChannels_.clear();
@@ -89,7 +88,7 @@ void EventLoop::loop() {
     }
 
     // 打印日志信息
-    LOG_DEBUG("%s => EventLoop %p stop looping \n", __PRETTY_FUNCTION__, this);
+    LOG_DEBUG("%s => EventLoop %p stop looping", __PRETTY_FUNCTION__, this);
 
     // 标记事件循环结束
     looping_ = false;
@@ -112,7 +111,7 @@ void EventLoop::wakeup() {
     // 向 wakeupFd_ 写一个数据，wakeupChannel_ 就会发生读事件，当前的 EventLoop 就会被唤醒
     ssize_t n = ::write(wakeupFd_, &one, sizeof one);
     if (n != sizeof one) {
-        LOG_ERROR("%s write %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
+        LOG_ERROR("%s write %zd bytes instead of 8", __PRETTY_FUNCTION__, n);
     }
 }
 
@@ -173,7 +172,7 @@ void EventLoop::handleRead() {
     uint64_t one = 1;
     ssize_t n = ::read(wakeupFd_, &one, sizeof one);
     if (n != sizeof one) {
-        LOG_ERROR("%s reads %zd bytes instead of 8 \n", __PRETTY_FUNCTION__, n);
+        LOG_ERROR("%s reads %zd bytes instead of 8", __PRETTY_FUNCTION__, n);
     }
 }
 

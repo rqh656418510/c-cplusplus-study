@@ -17,7 +17,7 @@ EPollPoller::EPollPoller(EventLoop* loop)
     : Poller(loop), epollfd_(::epoll_create1(EPOLL_CLOEXEC)), events_(kInitEventListSize) {
     // 如果创建 Epoll 文件描述符失败，则记录日志并终止程序
     if (epollfd_ < 0) {
-        LOG_FATAL("%s => epoll_create1() error:%d \n", __PRETTY_FUNCTION__, errno);
+        LOG_FATAL("%s => epoll_create1() error:%d", __PRETTY_FUNCTION__, errno);
     }
 }
 
@@ -30,7 +30,7 @@ EPollPoller::~EPollPoller() {
 // 监听就绪事件，返回活跃的 Channel 列表
 Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     // 打印日志信息
-    LOG_DEBUG("%s => fd total count:%lu \n", __PRETTY_FUNCTION__, channels_.size());
+    LOG_DEBUG("%s => fd total count:%lu", __PRETTY_FUNCTION__, channels_.size());
 
     // 监听就绪事件，会阻塞当前线程，超时等待返回 0（表示本次等待期间没有任何就绪事件发生）
     int numEvents = ::epoll_wait(epollfd_, &*events_.begin(), static_cast<int>(events_.size()), timeoutMs);
@@ -44,7 +44,7 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     // 如果有就绪事件发生
     if (numEvents > 0) {
         // 打印日志信息
-        LOG_DEBUG("%s => epoll happend %d events \n", __PRETTY_FUNCTION__, numEvents);
+        LOG_DEBUG("%s => epoll happend %d events", __PRETTY_FUNCTION__, numEvents);
 
         // 填充活跃的 Channel 列表
         fillActiveChannels(numEvents, activeChannels);
@@ -56,7 +56,7 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
     }
     // 如果监听超时没有任何就绪事件发生
     else if (numEvents == 0) {
-        LOG_DEBUG("%s => epoll wait timeout, nothing happened \n", __FUNCTION__);
+        LOG_DEBUG("%s => epoll wait timeout, nothing happened", __PRETTY_FUNCTION__);
     }
     // 如果监听出错
     else {
@@ -65,7 +65,7 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList* activeChannels) {
             // 恢复错误码
             errno = savedErrno;
             // 打印日志信息
-            LOG_ERROR("%s => epoll wait error \n", __FUNCTION__);
+            LOG_ERROR("%s => epoll wait error", __PRETTY_FUNCTION__);
         }
     }
 
@@ -91,7 +91,7 @@ void EPollPoller::updateChannel(Channel* channel) {
     const int index = channel->index();
 
     // 打印日志信息
-    LOG_INFO("%s => fd=%d events=%d index=%d \n", __PRETTY_FUNCTION__, channel->fd(), channel->events(), index);
+    LOG_INFO("%s => fd=%d events=%d index=%d", __PRETTY_FUNCTION__, channel->fd(), channel->events(), index);
 
     if (index == kNew || index == kDeleted) {
         if (index == kNew) {
@@ -132,9 +132,9 @@ void EPollPoller::update(int operation, Channel* channel) {
     // 设置 fd 相应的 Epoll 事件
     if (::epoll_ctl(epollfd_, operation, fd, &event) < 0) {
         if (operation == EPOLL_CTL_DEL) {
-            LOG_ERROR("epoll_ctl delete error:%d \n", errno);
+            LOG_ERROR("epoll_ctl delete error:%d", errno);
         } else {
-            LOG_FATAL("epoll_ctl add or mod error:%d \n", errno);
+            LOG_FATAL("epoll_ctl add or mod error:%d", errno);
         }
     }
 }
@@ -148,7 +148,7 @@ void EPollPoller::removeChannel(Channel* channel) {
     channels_.erase(fd);
 
     // 打印日志信息
-    LOG_INFO("%s => fd=%d \n", __PRETTY_FUNCTION__, fd);
+    LOG_INFO("%s => fd=%d", __PRETTY_FUNCTION__, fd);
 
     // 获取 Channel 在 Epoll 中的状态
     int index = channel->index();

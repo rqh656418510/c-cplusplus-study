@@ -27,8 +27,11 @@ void Thread::start() {
     // 标记线程为已启动
     started_ = true;
 
-    // 初始化信号量
+    // 声明信号量
     sem_t sem;
+
+    // 初始化信号量
+    sem_init(&sem, false, 0);
 
     // 启动新的线程
     thread_ = std::shared_ptr<std::thread>(new std::thread([&]() {

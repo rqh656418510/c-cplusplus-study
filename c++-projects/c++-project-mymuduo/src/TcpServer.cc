@@ -8,7 +8,7 @@
 
 static EventLoop* CheckLoopNotNull(EventLoop* loop) {
     if (loop == nullptr) {
-        LOG_FATAL("%s => baseLoop is null \n", __PRETTY_FUNCTION__);
+        LOG_FATAL("%s => baseLoop is null", __PRETTY_FUNCTION__);
     }
     return loop;
 }
@@ -22,7 +22,8 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, const std::
       threadPool_(new EventLoopThreadPool(loop, name_)),
       connectionCallback_(defaultConnectionCallback),
       messageCallback_(defaultMessageCallback),
-      nextConnId_(1) {
+      nextConnId_(1),
+      started_(0) {
     // 当有新客户端连接进来时，会调用 TcpServer::newConnection() 函数
     acceptor_->setNewConnectionCallback(
         std::bind(&TcpServer::newConnection, this, std::placeholders::_1, std::placeholders::_2));
@@ -31,7 +32,7 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress& listenAddr, const std::
 // 析构函数
 TcpServer::~TcpServer() {
     // 打印日志信息
-    LOG_DEBUG("%s => tcp server [%s] destructing \n", __PRETTY_FUNCTION__, name_.c_str());
+    LOG_DEBUG("%s => tcp server [%s] destructing", __PRETTY_FUNCTION__, name_.c_str());
 
     // 遍历所有 TCP 连接
     for (auto& item : connections_) {
@@ -107,15 +108,15 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr) {
     std::string connName = name_ + buf;
 
     // 打印日志信息
-    LOG_INFO("%s => tcp server [%s] new connection [%s] from %s \n", __PRETTY_FUNCTION__, name_.c_str(),
-             connName.c_str(), ipPort_.c_str());
+    LOG_INFO("%s => tcp server [%s] new connection [%s] from %s", __PRETTY_FUNCTION__, name_.c_str(), connName.c_str(),
+             ipPort_.c_str());
 
     // 获取本地网络地址
     sockaddr_in local;
     ::bzero(&local, sizeof local);
     socklen_t addrlen = sizeof local;
     if (::getsockname(sockfd, (sockaddr*)&local, &addrlen) < 0) {
-        LOG_ERROR("%s => fail to get local internet address \n", __PRETTY_FUNCTION__);
+        LOG_ERROR("%s => fail to get local internet address", __PRETTY_FUNCTION__);
     }
     InetAddress localAddr(local);
 
@@ -144,8 +145,7 @@ void TcpServer::removeConnection(const TcpConnectionPtr& conn) {
 // 移除 TCP 连接（在 baseLoop 上执行）
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn) {
     // 打印日志信息
-    LOG_INFO("%s => tcp server [%s] remove connection [%s] \n", __PRETTY_FUNCTION__, name_.c_str(),
-             conn->name().c_str());
+    LOG_INFO("%s => tcp server [%s] remove connection [%s]", __PRETTY_FUNCTION__, name_.c_str(), conn->name().c_str());
 
     // 移除 TCP 连接
     size_t n = connections_.erase(conn->name());

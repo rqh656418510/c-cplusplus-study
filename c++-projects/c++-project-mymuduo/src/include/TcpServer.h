@@ -10,6 +10,7 @@
 #include "EventLoop.h"
 #include "EventLoopThreadPool.h"
 #include "InetAddress.h"
+#include "TcpConnection.h"
 #include "atomic"
 #include "noncopyable.h"
 #include "unordered_map"
@@ -72,11 +73,12 @@ private:
     // 移除 TCP 连接（在 baseLoop 上执行）
     void removeConnectionInLoop(const TcpConnectionPtr& conn);
 
-    EventLoop* loop_;           // 用户自定义的 EventLoop（即 baseLoop，也称作 mainLoop）
-    const std::string ipPort_;  // 服务器监听的 IP 和端口信息
-    const std::string name_;    // 服务器名称
+    EventLoop* loop_;  // 用户自定义的 EventLoop（即 baseLoop，也称作 mainLoop，运行在主线程上）
 
+    const std::string name_;              // 服务器名称
+    const std::string ipPort_;            // 服务器监听的 IP 和端口信息
     std::unique_ptr<Acceptor> acceptor_;  // 用于监听新连接的 Acceptor 对象，运行在 baseLoop 上
+
     std::shared_ptr<EventLoopThreadPool> threadPool_;  // 事件循环线程池
 
     ConnectionCallback connectionCallback_;        // 有新连接到来时的回调操作

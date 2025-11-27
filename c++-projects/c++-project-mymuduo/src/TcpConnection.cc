@@ -11,7 +11,7 @@
 
 static EventLoop* CheckLoopNotNull(EventLoop* loop) {
     if (loop == nullptr) {
-        LOG_FATAL("%s => subLoop is null \n", __PRETTY_FUNCTION__);
+        LOG_FATAL("%s => subLoop is null", __PRETTY_FUNCTION__);
     }
     return loop;
 }
@@ -44,7 +44,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& nameArg, int so
     channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
     channel_->setErrorCallback(std::bind(&TcpConnection::handleError, this));
     // 打印日志信息
-    LOG_DEBUG("%s => create tcp connection [%s] at %p, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(), this, sockfd);
+    LOG_DEBUG("%s => create tcp connection [%s] at %p, fd=%d", __PRETTY_FUNCTION__, name_.c_str(), this, sockfd);
     // 开启 TCP 保活机制
     socket_->setKeepAlive(true);
 }
@@ -52,7 +52,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& nameArg, int so
 // 析构函数
 TcpConnection::~TcpConnection() {
     // 打印日志信息
-    LOG_DEBUG("%s => destruct tcp connection [%s] at %p, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(), this,
+    LOG_DEBUG("%s => destruct tcp connection [%s] at %p, fd=%d, state=%s", __PRETTY_FUNCTION__, name_.c_str(), this,
               channel_->fd(), stateToString());
 }
 
@@ -191,7 +191,7 @@ void TcpConnection::handleRead(Timestamp receiveTime) {
         // 设置错误码
         errno = saveErrno;
         // 打印日志信息
-        LOG_ERROR("%s => read fd error, fd=%d, errno=%d \n", __PRETTY_FUNCTION__, channel_->fd(), errno);
+        LOG_ERROR("%s => read fd error, fd=%d, errno=%d", __PRETTY_FUNCTION__, channel_->fd(), errno);
         // 处理连接错误
         handleError();
     }
@@ -227,11 +227,11 @@ void TcpConnection::handleWrite() {
             }
         } else if (n < 0) {
             // 打印日志信息
-            LOG_ERROR("%s => write fd error, fd=%d, errno=%d \n", __PRETTY_FUNCTION__, channel_->fd(), errno);
+            LOG_ERROR("%s => write fd error, fd=%d, errno=%d", __PRETTY_FUNCTION__, channel_->fd(), errno);
         }
     } else {
         // 打印日志信息
-        LOG_DEBUG("%s => tcp connection [%s] is down, no more writing, fd=%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+        LOG_DEBUG("%s => tcp connection [%s] is down, no more writing, fd=%d", __PRETTY_FUNCTION__, name_.c_str(),
                   channel_->fd());
     }
 }
@@ -239,8 +239,8 @@ void TcpConnection::handleWrite() {
 // 处理关闭事件
 void TcpConnection::handleClose() {
     // 打印日志信息
-    LOG_DEBUG("%s => tcp connection [%s] is close, fd=%d, state=%s \n", __PRETTY_FUNCTION__, name_.c_str(),
-              channel_->fd(), stateToString());
+    LOG_DEBUG("%s => tcp connection [%s] is close, fd=%d, state=%s", __PRETTY_FUNCTION__, name_.c_str(), channel_->fd(),
+              stateToString());
 
     // 设置 TCP 连接的状态
     setState(kDisconnected);
@@ -273,7 +273,7 @@ void TcpConnection::handleError() {
     }
 
     // 打印日志信息
-    LOG_ERROR("%s => tcp connection [%s] occurred error, fd=%d, SO_ERROR:%d \n", __PRETTY_FUNCTION__, name_.c_str(),
+    LOG_ERROR("%s => tcp connection [%s] occurred error, fd=%d, SO_ERROR:%d", __PRETTY_FUNCTION__, name_.c_str(),
               channel_->fd(), saveErrno);
 }
 
@@ -290,7 +290,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
 
     // 如果 TCP 连接已断开，则放弃发送数据
     if (state_ == kDisconnected) {
-        LOG_ERROR("%s => tcp connection [%s] disconnected, give up writing \n", __PRETTY_FUNCTION__, name_.c_str());
+        LOG_ERROR("%s => tcp connection [%s] disconnected, give up writing", __PRETTY_FUNCTION__, name_.c_str());
         return;
     }
 
@@ -312,7 +312,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
         else {
             nwrote = 0;
             if (errno != EWOULDBLOCK) {
-                LOG_ERROR("%s => occurred error \n", __PRETTY_FUNCTION__);
+                LOG_ERROR("%s => occurred error", __PRETTY_FUNCTION__);
                 if (errno == EPIPE || errno == ECONNRESET) {
                     faultError = true;
                 }

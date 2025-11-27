@@ -1,0 +1,51 @@
+2025-11-27 4:9:22 => 10411 [DEBUG] EventLoop::EventLoop() => EventLoop created 0x7ffc196bd5a0 in thread 10411
+2025-11-27 4:9:22 => 10411 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=4 events=3 index=-1
+2025-11-27 4:9:22 => 10413 [DEBUG] EventLoop::EventLoop() => EventLoop created 0x7f4f91a18c10 in thread 10413
+2025-11-27 4:9:22 => 10413 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=8 events=3 index=-1
+2025-11-27 4:9:22 => 10413 [DEBUG] void EventLoop::loop() => EventLoop 0x7f4f91a18c10 start looping
+2025-11-27 4:9:22 => 10413 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:22 => 10414 [DEBUG] EventLoop::EventLoop() => EventLoop created 0x7f4f91217c10 in thread 10414
+2025-11-27 4:9:22 => 10414 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=10 events=3 index=-1
+2025-11-27 4:9:22 => 10414 [DEBUG] void EventLoop::loop() => EventLoop 0x7f4f91217c10 start looping
+2025-11-27 4:9:22 => 10414 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:22 => 10415 [DEBUG] EventLoop::EventLoop() => EventLoop created 0x7f4f90a16c10 in thread 10415
+2025-11-27 4:9:22 => 10415 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=12 events=3 index=-1
+2025-11-27 4:9:22 => 10415 [DEBUG] void EventLoop::loop() => EventLoop 0x7f4f90a16c10 start looping
+2025-11-27 4:9:22 => 10415 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:22 => 10416 [DEBUG] EventLoop::EventLoop() => EventLoop created 0x7f4f83ffec10 in thread 10416
+2025-11-27 4:9:22 => 10416 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=14 events=3 index=-1
+2025-11-27 4:9:22 => 10416 [DEBUG] void EventLoop::loop() => EventLoop 0x7f4f83ffec10 start looping
+2025-11-27 4:9:22 => 10416 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:22 => 10411 [INFO] virtual void EPollPoller::updateChannel(Channel*) => fd=6 events=3 index=-1
+2025-11-27 4:9:22 => 10411 [DEBUG] void EventLoop::loop() => EventLoop 0x7ffc196bd5a0 start looping
+2025-11-27 4:9:22 => 10411 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:2
+2025-11-27 4:9:22 => 10413 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:32 => 10413 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:32 => 10414 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:32 => 10414 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:32 => 10415 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:32 => 10415 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:32 => 10416 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:32 => 10416 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:32 => 10411 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:32 => 10411 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:2
+2025-11-27 4:9:32 => 10413 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:42 => 10414 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:42 => 10414 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:42 => 10413 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:42 => 10415 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:42 => 10415 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:42 => 10411 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:42 => 10411 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:2
+2025-11-27 4:9:42 => 10416 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:42 => 10416 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:42 => 10414 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:52 => 10415 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:52 => 10413 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:52 => 10413 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:52 => 10415 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:52 => 10414 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
+2025-11-27 4:9:52 => 10411 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:52 => 10411 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:2
+2025-11-27 4:9:52 => 10416 [DEBUG] poll => epoll wait timeout, nothing happened
+2025-11-27 4:9:52 => 10416 [DEBUG] virtual Timestamp EPollPoller::poll(int, Poller::ChannelList*) => fd total count:1
