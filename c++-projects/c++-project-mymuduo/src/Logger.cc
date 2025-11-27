@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include <sstream>
+
 #include "Timestamp.h"
 
 // clang-format off
@@ -41,8 +43,15 @@ Logger& Logger::instance() {
 
 // 输出日志信息
 void Logger::log(const LogMessage& message) {
-    std::cout << Timestamp::now().toString() << " => " << message.threadId_ << " ["
-              << logLevelToString(message.logLevel_) << "] " << message.logContent_ << std::endl;
+    // 首先在外面构建好完整的字符串（避免多次 << 竞争）
+    std::ostringstream oss;
+    oss << Timestamp::now().toString() << " => " << message.threadId_ << " [" << logLevelToString(message.logLevel_)
+        << "] " << message.logContent_ << '\n';
+
+    std::string s = oss.str();
+
+    // 然后一次性写入，不使用 std::endl（避免隐式 flush）
+    std::fwrite(s.data(), 1, s.size(), stdout);
 }
 
 // 设置日志级别
