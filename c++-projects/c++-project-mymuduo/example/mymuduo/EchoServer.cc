@@ -47,7 +47,7 @@ void EchoServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timesta
     // 获取客户端发送的数据
     std::string message = buffer->retrieveAllAsString();
 
-    // 去掉末尾的 '\r' 和 '\n'（telnet 命令会发送 CRLF）
+    // 去掉数据末尾的 '\r' 和 '\n' 字符（telnet 命令会发送 CRLF）
     while (!message.empty() && (message.back() == '\n' || message.back() == '\r')) {
         message.pop_back();
     }
