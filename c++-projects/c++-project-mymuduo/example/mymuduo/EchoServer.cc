@@ -39,8 +39,6 @@ void EchoServer::onConnection(const TcpConnectionPtr &conn) {
     // 连接断开
     else {
         LOG_INFO("Connection DOWN : %s", conn->peerAddress().toIpPort().c_str());
-        // 关闭 TCP 连接
-        conn->shutdown();
     }
 }
 
@@ -49,7 +47,7 @@ void EchoServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timesta
     // 获取客户端发送的数据
     std::string message = buffer->retrieveAllAsString();
     // 打印日志信息
-    LOG_INFO("Echo server receive message, time: %s, content: %s", time.toString(), message.c_str());
+    LOG_INFO("Echo server receive message, time: %s, content: %s", time.toString().c_str(), message.c_str());
     // 发送数据给客户端
     conn->send(message);
     // 关闭 TCP 连接

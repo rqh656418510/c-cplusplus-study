@@ -91,7 +91,7 @@ void EPollPoller::updateChannel(Channel* channel) {
     const int index = channel->index();
 
     // 打印日志信息
-    LOG_INFO("%s => fd=%d events=%d index=%d", __PRETTY_FUNCTION__, channel->fd(), channel->events(), index);
+    LOG_DEBUG("%s => fd=%d events=%d index=%d", __PRETTY_FUNCTION__, channel->fd(), channel->events(), index);
 
     if (index == kNew || index == kDeleted) {
         if (index == kNew) {
@@ -148,7 +148,7 @@ void EPollPoller::removeChannel(Channel* channel) {
     channels_.erase(fd);
 
     // 打印日志信息
-    LOG_INFO("%s => fd=%d", __PRETTY_FUNCTION__, fd);
+    LOG_DEBUG("%s => fd=%d", __PRETTY_FUNCTION__, fd);
 
     // 获取 Channel 在 Epoll 中的状态
     int index = channel->index();
