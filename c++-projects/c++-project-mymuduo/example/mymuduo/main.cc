@@ -9,8 +9,8 @@
 #include "EventLoop.h"
 #include "InetAddress.h"
 
-// 测试 TCP 服务端
-void testEchoServer() {
+// 回声服务端测试
+void echoServerTest() {
     // 创建服务端
     EventLoop loop;
     InetAddress addr(6000, "127.0.0.1");
@@ -24,6 +24,6 @@ void testEchoServer() {
 }
 
 int main() {
-    testEchoServer();
+    echoServerTest();
     return 0;
 }
