@@ -78,7 +78,7 @@ void EventLoop::loop() {
 
     while (!quit_) {
         activeChannels_.clear();
-        // Poller 会监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
+        // Poller 会阻塞监听有哪些 Channel 发生了事件，然后上报给 EventLoop，通知 Channel 处理相应的事件
         pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
         for (Channel* channel : activeChannels_) {
             channel->handleEvent(pollReturnTime_);
