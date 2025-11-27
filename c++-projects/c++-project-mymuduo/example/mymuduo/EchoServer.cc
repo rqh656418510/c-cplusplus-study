@@ -46,10 +46,16 @@ void EchoServer::onConnection(const TcpConnectionPtr &conn) {
 void EchoServer::onMessage(const TcpConnectionPtr &conn, Buffer *buffer, Timestamp time) {
     // 获取客户端发送的数据
     std::string message = buffer->retrieveAllAsString();
+
+    // 去掉末尾的 '\r' 和 '\n'（telnet 命令会发送 CRLF）
+    while (!message.empty() && (message.back() == '\n' || message.back() == '\r')) {
+        message.pop_back();
+    }
+
     // 打印日志信息
     LOG_INFO("Echo server receive message, time: %s, content: %s", time.toString().c_str(), message.c_str());
     // 发送数据给客户端
     conn->send(message);
-    // 关闭 TCP 连接
+    // 关闭 TCP 连接（如果希望长连接，不要立即 shutdown）
     conn->shutdown();
 }

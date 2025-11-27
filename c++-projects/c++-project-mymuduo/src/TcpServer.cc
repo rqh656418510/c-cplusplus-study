@@ -108,8 +108,8 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr) {
     std::string connName = name_ + buf;
 
     // 打印日志信息
-    LOG_INFO("%s => tcp server [%s] new connection [%s] from %s", __PRETTY_FUNCTION__, name_.c_str(), connName.c_str(),
-             ipPort_.c_str());
+    LOG_DEBUG("%s => tcp server [%s] new connection [%s] from %s", __PRETTY_FUNCTION__, name_.c_str(), connName.c_str(),
+              ipPort_.c_str());
 
     // 获取本地网络地址
     sockaddr_in local;
@@ -145,7 +145,7 @@ void TcpServer::removeConnection(const TcpConnectionPtr& conn) {
 // 移除 TCP 连接（在 baseLoop 上执行）
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn) {
     // 打印日志信息
-    LOG_INFO("%s => tcp server [%s] remove connection [%s]", __PRETTY_FUNCTION__, name_.c_str(), conn->name().c_str());
+    LOG_DEBUG("%s => tcp server [%s] remove connection [%s]", __PRETTY_FUNCTION__, name_.c_str(), conn->name().c_str());
 
     // 移除 TCP 连接
     size_t n = connections_.erase(conn->name());

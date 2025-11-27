@@ -58,7 +58,7 @@ void Channel::handleEvent(Timestamp receiveTime) {
  * EPOLLPRI：紧急数据，文件描述符有优先数据（TCP OOB 或特殊设备的紧急数据）。
  */
 void Channel::handleEventWithGuard(Timestamp receiveTime) {
-    LOG_INFO("channel handle event, revents: %d", revents_);
+    LOG_DEBUG("channel handle event, revents: %d", revents_);
 
     // 发生挂断事件且没有读事件发生
     if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN)) {

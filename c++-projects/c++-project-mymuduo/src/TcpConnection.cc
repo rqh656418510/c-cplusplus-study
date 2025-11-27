@@ -17,8 +17,8 @@ static EventLoop* CheckLoopNotNull(EventLoop* loop) {
 }
 
 void defaultConnectionCallback(const TcpConnectionPtr& conn) {
-    LOG_INFO("%s => %s -> %s is %s", __PRETTY_FUNCTION__, conn->localAddress().toIpPort(),
-             conn->peerAddress().toIpPort(), (conn->connected() ? "UP" : "DOWN"));
+    LOG_DEBUG("%s => %s -> %s is %s", __PRETTY_FUNCTION__, conn->localAddress().toIpPort(),
+              conn->peerAddress().toIpPort(), (conn->connected() ? "UP" : "DOWN"));
 }
 
 void defaultMessageCallback(const TcpConnectionPtr&, Buffer* buf, Timestamp) {
