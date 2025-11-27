@@ -13,7 +13,7 @@
 // 定义线程局部变量（thread-local），用于防止一个线程创建多个 EventLoop
 __thread EventLoop* t_loopInThisThread = nullptr;
 
-// 定义 Poller（I/O 多路复用器）默认的超时时间
+// 定义 Poller（I/O 多路复用器）的默认超时时间，比如 10 秒
 const int kPollTimeMs = 10000;
 
 // 创建 wakeupFd，用来 Notify（唤醒）SubReactor 处理新来的 Channel
