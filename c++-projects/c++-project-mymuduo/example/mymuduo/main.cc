@@ -9,7 +9,10 @@
 #include "EventLoop.h"
 #include "InetAddress.h"
 
-// 回声服务端测试
+/**
+ * 回声服务端测试 <p>
+ * Linux 上执行测试命令：telnet 127.0.0.1 6000
+ */
 void echoServerTest() {
     // 创建服务端
     EventLoop loop;
