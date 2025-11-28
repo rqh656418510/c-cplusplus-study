@@ -265,7 +265,7 @@ int Connector::removeAndResetChannel() {
     // 获取 Channel 对应的 sockfd
     int sockfd = channel_->fd();
     // 唤醒 loop_ 对应的线程去重置 Channel
-    loop_->runInLoop(std::bind(&Connector::resetChannel, this));
+    loop_->queueInLoop(std::bind(&Connector::resetChannel, this));
     return sockfd;
 }
 
