@@ -5,18 +5,17 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 
 #include "TcpServer.h"
-#include "Timestamp.h"
 
-class EchoServer {
+// 聊天服务器
+class ChatServer {
 public:
     // 构造函数
-    EchoServer(EventLoop *loop, const InetAddress &listenAddr, const std::string &nameArg);
+    ChatServer(EventLoop *loop, const InetAddress &listenAddr, const std::string &nameArg);
 
     // 析构函数
-    ~EchoServer();
+    ~ChatServer();
 
     // 启动服务端
     void start();

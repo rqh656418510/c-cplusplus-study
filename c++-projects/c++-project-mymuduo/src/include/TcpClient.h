@@ -3,6 +3,7 @@
 #include <atomic>
 #include <mutex>
 
+#include "EventLoop.h"
 #include "TcpConnection.h"
 #include "noncopyable.h"
 
