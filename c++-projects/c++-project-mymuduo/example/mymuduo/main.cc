@@ -1,5 +1,7 @@
 /**
  * MyMuduo 网络库的使用案例
+ *
+ * Linux 上运行程序：./mymuduo_example
  */
 
 #include <chrono>
