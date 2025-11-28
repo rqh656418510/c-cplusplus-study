@@ -215,7 +215,7 @@ void Connector::handleError() {
         // 获取 Socket 错误码
         int savedErrno = getSocketError(sockfd);
         // 打印日志信息
-        LOG_DEBUG("%s => SO_ERROR:%d", savedErrno);
+        LOG_DEBUG("%s => SO_ERROR:%d", __PRETTY_FUNCTION__, savedErrno);
         // 重新连接
         retry(sockfd);
     }

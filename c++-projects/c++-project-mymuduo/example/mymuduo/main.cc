@@ -39,7 +39,7 @@ void startChatClient() {
 
 int main() {
     // 设置日志级别
-    Logger::instance().setLogLevel(LogLevel::INFO);
+    Logger::instance().setLogLevel(LogLevel::DEBUG);
 
     // 启动聊天服务器
     // std::thread serverThread([]() { startChatServer(); });
