@@ -16,8 +16,9 @@
 | `bin`             | 存放项目编译生成的可执行文件的目录（项目首次编译后才会有）          |
 | `lib`             | 存放项目编译生成的 MyMuduo 动态链接库的目录（项目首次编译后才会有） |
 | `src`             | MyMuduo 网络框架的源码                                              |
+| `src/include`     | MyMuduo 网络框架的头文件                                            |
 | `test`            | MyMuduo 网络框架的的测试代码                                        |
-| `example`         | 各种案例代码                                                          |
+| `example`         | 各种案例代码                                                        |
 | `example/epoll`   | epoll 的使用案例代码                                                |
 | `example/mymuduo` | MyMuduo 网络框架的使用案例代码                                      |
 | `autobuild.sh`    | 项目一键编译构建的脚本文件                                          |
