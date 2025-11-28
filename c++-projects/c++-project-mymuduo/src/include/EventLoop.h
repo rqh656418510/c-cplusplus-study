@@ -56,6 +56,12 @@ public:
     // 判断当前线程是否是 EventLoop 所在的线程
     bool isInLoopThread() const;
 
+    // 如果当前线程不是 EventLoop 所在的线程，则触发断言失败
+    void assertInLoopThread();
+
+    // 如果当前线程不是 EventLoop 所在的线程，则中止程序运行
+    void abortNotInLoopThread();
+
 private:
     // 处理 Wakeup Channel 的读事件
     void handleRead();

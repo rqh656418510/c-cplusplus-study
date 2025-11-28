@@ -144,6 +144,7 @@ void TcpServer::removeConnection(const TcpConnectionPtr& conn) {
 
 // 移除 TCP 连接（在 baseLoop 上执行）
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn) {
+    loop_->assertInLoopThread();
     // 打印日志信息
     LOG_DEBUG("%s => tcp server [%s] remove connection [%s]", __PRETTY_FUNCTION__, name_.c_str(), conn->name().c_str());
 

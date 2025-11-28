@@ -279,6 +279,8 @@ void TcpConnection::handleError() {
 
 // 在事件循环（EventLoop）中发送数据到输出缓冲区
 void TcpConnection::sendInLoop(const void* message, size_t len) {
+    loop_->assertInLoopThread();
+
     // 已发送数据的字节数
     ssize_t nwrote = 0;
 
@@ -342,6 +344,7 @@ void TcpConnection::sendInLoop(const void* message, size_t len) {
 
 // 在事件循环（EventLoop）中关闭 TCP 连接
 void TcpConnection::shutdownInLoop() {
+    loop_->assertInLoopThread();
     // 如果输出缓冲区中的所有数据都发送完
     if (!channel_->isWriting()) {
         // Socket 关闭写入

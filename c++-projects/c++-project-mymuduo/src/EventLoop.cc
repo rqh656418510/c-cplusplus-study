@@ -125,6 +125,19 @@ bool EventLoop::isInLoopThread() const {
     return threadId_ == CurrentThread::tid();
 }
 
+// 如果当前线程不是 EventLoop 所在的线程，则触发断言失败
+void EventLoop::assertInLoopThread() {
+    if (!isInLoopThread()) {
+        abortNotInLoopThread();
+    }
+}
+
+// 如果当前线程不是 EventLoop 所在的线程，则中止程序运行
+void EventLoop::abortNotInLoopThread() {
+    LOG_FATAL("%s => EventLoop %p was created in threadId_ = %d, current thread id = %d", __PRETTY_FUNCTION__, this,
+              threadId_, CurrentThread::tid());
+}
+
 // 在当前 EventLoop 所在的线程上执行回调操作
 void EventLoop::runInLoop(Functor cb) {
     // 如果在 EventLoop 所在的线程上执行回调操作
