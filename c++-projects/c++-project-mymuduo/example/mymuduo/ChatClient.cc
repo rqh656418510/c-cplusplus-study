@@ -8,38 +8,42 @@
 
 // 构造函数
 ChatClient::ChatClient(EventLoop* loop, const InetAddress& serverAddr, const std::string& nameArg)
-    : _client(loop, serverAddr, nameArg), _loop(loop) {
-    // 允许重新连接
-    _client.enableRetry();
+    : client_(loop, serverAddr, nameArg), loop_(loop) {
+    // 允许重试连接
+    client_.enableRetry();
     // 设置客户端TCP连接的回调
-    _client.setConnectionCallback(std::bind(&ChatClient::onConnection, this, std::placeholders::_1));
+    client_.setConnectionCallback(std::bind(&ChatClient::onConnection, this, std::placeholders::_1));
     // 设置客户端接收数据的回调
-    _client.setMessageCallback(
+    client_.setMessageCallback(
         std::bind(&ChatClient::onMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
 // 析构函数
 ChatClient::~ChatClient() {
     // 发起断开连接
-    _client.disconnect();
+    client_.disconnect();
     // 停止内部 Connector 的重连机制，避免异步行为
-    _client.stop();
+    client_.stop();
 }
 
-// 连接服务端
+// 连接服务器
 void ChatClient::connect() {
-    _client.connect();
+    client_.connect();
 }
 
-// 客户端绑定连接回调函数，当连接或者断开服务端时调用
+// 客户端绑定连接回调函数，当连接或者断开服务器时调用
 void ChatClient::onConnection(const TcpConnectionPtr& conn) {
     // 连接创建
     if (conn->connected()) {
+        // 打印日志信息
         LOG_INFO("ChatClient - new connection [%s] -> [%s], state: connected", conn->localAddress().toIpPort().c_str(),
                  conn->peerAddress().toIpPort().c_str());
+        // 发送消息
+        conn->send("I'm " + client_.name());
     }
     // 连接断开
     else {
+        // 打印日志信息
         LOG_INFO("ChatClient - close connection [%s] -> [%s], state: disconnected",
                  conn->localAddress().toIpPort().c_str(), conn->peerAddress().toIpPort().c_str());
     }
@@ -47,9 +51,10 @@ void ChatClient::onConnection(const TcpConnectionPtr& conn) {
 
 // 客户端绑定消息回调函数，当有数据接收时调用
 void ChatClient::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp time) {
+    // 获取服务器发送的消息
     std::string message = buf->retrieveAllAsString();
 
-    // 去掉数据末尾的 '\r' 和 '\n' 字符（nc 命令会发送 CRLF）
+    // 去掉消息末尾的 '\r' 和 '\n' 字符（nc 命令会发送 CRLF）
     while (!message.empty() && (message.back() == '\n' || message.back() == '\r')) {
         message.pop_back();
     }

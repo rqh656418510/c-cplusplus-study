@@ -68,7 +68,7 @@ private:
     ConnectionCallback connectionCallback_;        // 连接建立/关闭时的回调操作
     MessageCallback messageCallback_;              // 有数据到来时的回调操作
     WriteCompleteCallback writeCompleteCallback_;  // 数据发送完成时的回调操作
-    std::atomic_bool retry_;                       // 是否允许重试连接
+    std::atomic_bool retry_;                       // 是否允许重试连接（即断线重连）
     std::atomic_bool connect_;                     // 是否需要连接
     int nextConnId_;                               // 下一个 TCP 连接的 ID
     std::mutex mutex_;                             // 互斥锁

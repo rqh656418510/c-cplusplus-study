@@ -82,5 +82,5 @@ private:
     States state_;                                 // 连接状态
     std::unique_ptr<Channel> channel_;             // 连接器对应的 Channel
     NewConnectionCallback newConnectionCallback_;  // 新连接建立时的回调操作
-    int retryDelayMs_;                             // 重试延迟时间（毫秒）
+    int retryDelayMs_;                             // 重试连接的延迟时间（毫秒）
 };

@@ -2,6 +2,7 @@
  * MyMuduo 网络库的使用案例
  */
 
+#include <chrono>
 #include <iostream>
 #include <thread>
 
@@ -42,8 +43,11 @@ int main() {
     Logger::instance().setLogLevel(LogLevel::INFO);
 
     // 启动聊天服务器
-    // std::thread serverThread([]() { startChatServer(); });
-    // serverThread.detach();
+    std::thread serverThread([]() { startChatServer(); });
+    serverThread.detach();
+
+    // 等待一段时间，让聊天服务器先启动（可选，因为聊天客户端会自动重连）
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     // 启动聊天客户端
     std::thread clientThrad([]() { startChatClient(); });
