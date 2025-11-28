@@ -8,15 +8,18 @@
 using namespace std;
 
 struct student {
+
+public:
     int id;
     char name[50];
 
     void show() {
         cout << "id = " << id << ", name = " << name << endl;
     }
+
 };
 
-// 结构体作为形参（效率低，会发生数据拷贝）
+// 结构体作为值形参（效率低，会发生数据拷贝）
 void func1(student stu) {
     stu.id = 2;
     strcpy(stu.name, "Bob");

@@ -25,10 +25,9 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb) {
     // 当整个服务端有多个线程（负责运行一个 baseLoop 和多个 subLoop）
     for (int i = 0; i < numThreads_; ++i) {
         // 拼接线程的名称
-        char buf[name_.size() + 32] = {0};
-        snprintf(buf, sizeof buf, "%s%d", name_.c_str(), i);
+        std::string tname = name_ + std::to_string(i);
         // 创建事件循环线程
-        EventLoopThread* t = new EventLoopThread(cb, buf);
+        EventLoopThread* t = new EventLoopThread(cb, tname);
         // 将事件循环线程添加到线程池中
         threads_.push_back(std::unique_ptr<EventLoopThread>(t));
         // 启动事件循环线程，并获取该线程对应的事件循环对象，将其添加到事件循环对象的集合中
