@@ -48,4 +48,3 @@ Debug
 *.o
 *.out
 main
-*-log.txt
