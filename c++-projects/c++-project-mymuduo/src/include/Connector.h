@@ -14,7 +14,7 @@ class EventLoop;
 // TCP 连接器类
 class Connector : noncopyable, public std::enable_shared_from_this<Connector> {
 public:
-    // 有新连接到来时的回调操作类型定义
+    // 有新连接建立时的回调操作类型定义
     using NewConnectionCallback = std::function<void(int sockfd)>;
 
     // 构造函数
@@ -23,7 +23,7 @@ public:
     // 析构函数
     ~Connector();
 
-    // 设置有新连接到来时的回调操作类型定义
+    // 设置有新连接建立时的回调操作类型定义
     void setNewConnectionCallback(const NewConnectionCallback& cb);
 
     // 启动连接器
@@ -42,9 +42,9 @@ private:
     // 连接器的状态
     enum States { kDisconnected, kConnecting, kConnected };
     // 最大重试延迟时间（毫秒）
-    static const int kMaxRetryDelayMs = 30 * 1000;
+    static const int kMaxRetryDelayMs;
     // 初始重试延迟时间（毫秒）
-    static const int kInitRetryDelayMs = 500;
+    static const int kInitRetryDelayMs;
 
     // 设置连接状态
     void setState(States s);
@@ -81,6 +81,6 @@ private:
     std::atomic_int connect_;                      // 标记是否需要连接
     States state_;                                 // 连接状态
     std::unique_ptr<Channel> channel_;             // 连接器对应的 Channel
-    NewConnectionCallback newConnectionCallback_;  // 新连接到来时的回调操作
+    NewConnectionCallback newConnectionCallback_;  // 新连接建立时的回调操作
     int retryDelayMs_;                             // 重试延迟时间（毫秒）
 };

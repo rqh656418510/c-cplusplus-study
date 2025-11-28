@@ -7,6 +7,9 @@
 #include "error.h"
 #include "unistd.h"
 
+// 定义 Epoll 事件列表的初始大小
+const int EPollPoller::kInitEventListSize = 16;
+
 // 定义 Channel 在 Epoll 中的状态
 const int kNew = -1;     // 新创建的 Channel
 const int kAdded = 1;    // 已经添加到 Epoll 中的 Channel

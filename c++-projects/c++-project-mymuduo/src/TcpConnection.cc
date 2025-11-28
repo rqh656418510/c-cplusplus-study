@@ -8,19 +8,23 @@
 #include "EventLoop.h"
 #include "Logger.h"
 #include "Socket.h"
+#include "SocketsOps.h"
 
+// 检查 EventLoop 指针是否为空
 static EventLoop* CheckLoopNotNull(EventLoop* loop) {
     if (loop == nullptr) {
-        LOG_FATAL("%s => subLoop is null", __PRETTY_FUNCTION__);
+        LOG_FATAL("%s => eventloop is null", __PRETTY_FUNCTION__);
     }
     return loop;
 }
 
+// 默认连接建立/关闭时的回调操作
 void defaultConnectionCallback(const TcpConnectionPtr& conn) {
     LOG_DEBUG("%s => %s -> %s is %s", __PRETTY_FUNCTION__, conn->localAddress().toIpPort().c_str(),
               conn->peerAddress().toIpPort().c_str(), (conn->connected() ? "UP" : "DOWN"));
 }
 
+// 默认有数据到来时的回调操作
 void defaultMessageCallback(const TcpConnectionPtr&, Buffer* buf, Timestamp) {
     buf->retrieveAll();
 }
@@ -107,6 +111,17 @@ void TcpConnection::shutdown() {
         setState(kDisconnecting);
         // 唤醒 loop_ 对应的线程去关闭 TCP 连接
         loop_->runInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
+    }
+}
+
+// 强制关闭连接
+void TcpConnection::forceClose() {
+    // 判断 TCP 连接的状态
+    if (state_ == kConnected || state_ == kDisconnecting) {
+        // 设置连接状态
+        setState(kDisconnecting);
+        // 唤醒 loop_ 对应的线程去强制关闭 TCP 连接
+        loop_->queueInLoop(std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
     }
 }
 
@@ -262,19 +277,12 @@ void TcpConnection::handleClose() {
 
 // 处理错误事件
 void TcpConnection::handleError() {
-    int saveErrno = 0;
-
-    int optval;
-    socklen_t optlen = sizeof optval;
-    if (::getsockopt(channel_->fd(), SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0) {
-        saveErrno = errno;
-    } else {
-        saveErrno = optval;
-    }
+    // 获取 Socket 错误码
+    int savedErrno = getSocketError(channel_->fd());
 
     // 打印日志信息
     LOG_ERROR("%s => tcp connection [%s] occurred error, fd=%d, SO_ERROR:%d", __PRETTY_FUNCTION__, name_.c_str(),
-              channel_->fd(), saveErrno);
+              channel_->fd(), savedErrno);
 }
 
 // 在事件循环（EventLoop）中发送数据到输出缓冲区
@@ -349,6 +357,16 @@ void TcpConnection::shutdownInLoop() {
     if (!channel_->isWriting()) {
         // Socket 关闭写入
         socket_->shutdownWrite();
+    }
+}
+
+// 在事件循环（EventLoop）中强制关闭 TCP 连接
+void TcpConnection::forceCloseInLoop() {
+    loop_->assertInLoopThread();
+    // 判断 TCP 连接的状态
+    if (state_ == kConnected || state_ == kDisconnecting) {
+        // 处理关闭事件
+        handleClose();
     }
 }
 

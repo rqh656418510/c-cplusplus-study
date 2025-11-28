@@ -10,6 +10,7 @@
 class EventLoop;
 class InetAddress;
 
+// TCP 连接接受器类
 class Acceptor : noncopyable {
 public:
     // 有新连接到来时的回调操作类型定义

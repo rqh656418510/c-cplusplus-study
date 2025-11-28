@@ -6,15 +6,7 @@
 
 #include "InetAddress.h"
 #include "Logger.h"
-
-// 创建非阻塞的 listen fd
-static int createNonblockingSocket() {
-    int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
-    if (sockfd < 0) {
-        LOG_FATAL("%s => create nonblock sockfd failed, errno:%d", __PRETTY_FUNCTION__, errno);
-    }
-    return sockfd;
-}
+#include "SocketsOps.h"
 
 // 构造函数
 Acceptor::Acceptor(EventLoop* loop, const InetAddress& listenAddr, bool reuseport)

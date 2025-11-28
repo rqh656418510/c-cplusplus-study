@@ -49,6 +49,9 @@ public:
     // 关闭 TCP 连接
     void shutdown();
 
+    // 强制关闭连接
+    void forceClose();
+
     // 设置连接建立/关闭时的回调操作
     void setConnectionCallback(const ConnectionCallback& cb);
 
@@ -98,6 +101,9 @@ private:
     // 在事件循环（EventLoop）中关闭 TCP 连接
     void shutdownInLoop();
 
+    // 在事件循环（EventLoop）中强制关闭 TCP 连接
+    void forceCloseInLoop();
+
     // 设置 TCP 连接的状态
     void setState(StateE state);
 
@@ -109,8 +115,8 @@ private:
     std::atomic_int state_;   // TCP 连接的状态
     bool reading_;            // 标记是否正在读数据
 
-    std::unique_ptr<Socket> socket_;    // TCP 连接对应的套接字对象
-    std::unique_ptr<Channel> channel_;  // TCP 连接对应的管道对象
+    std::unique_ptr<Socket> socket_;    // TCP 连接对应的 Socket 对象
+    std::unique_ptr<Channel> channel_;  // TCP 连接对应的 Channel 对象
 
     const InetAddress localAddr_;  // TCP 连接的本地网络地址
     const InetAddress peerAddr_;   // TCP 连接的远程网络地址
