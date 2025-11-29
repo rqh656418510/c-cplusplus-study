@@ -1,0 +1,26 @@
+# 基于哪种代码风格，可选：LLVM、Google、Chromium、Mozilla、WebKit 等
+BasedOnStyle: Google
+
+# 每一层缩进使用的空格数（默认 Google 是 2，这里改为 4）
+IndentWidth: 4
+
+# 设置一个制表符（Tab）等价于多少个空格（影响对齐）
+TabWidth: 4
+
+# 使访问修饰符（如 private:）顶格，不缩进
+AccessModifierOffset: -4
+
+# 是否使用 Tab 缩进：
+#   - Never: 一律使用空格
+#   - Always: 总是使用 Tab
+#   - ForIndentation: 缩进用 Tab，对齐用空格
+UseTab: Never
+
+# 每行的最大字符数限制
+ColumnLimit: 120
+
+# 强制所有函数体换行，即使只有一行
+AllowShortFunctionsOnASingleLine: None
+
+# 所有 namespace 内代码都缩进
+NamespaceIndentation: All
