@@ -62,7 +62,7 @@ cd c++-project-mymuduo
 # 执行 MyMuduo 网络库使用案例的可执行文件
 ./bin/mymuduo_example
 
-# 执行 telnet 命令连接 TCP 服务器（成功连接后，输入任意字符，按回车键即可发送消息给服务器）
+# 执行 telnet 命令连接 TCP 服务器（成功连接后，输入任意字符，按回车键即可发送消息给服务器，之后服务器会返回相应的消息内容）
 telnet 127.0.0.1 6000
 ```
 
