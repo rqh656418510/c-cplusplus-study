@@ -15,12 +15,12 @@
 | `build`           | CMake 编译构建项目的目录（项目首次编译后才会有）                    |
 | `bin`             | 存放项目编译生成的可执行文件的目录（项目首次编译后才会有）          |
 | `lib`             | 存放项目编译生成的 MyMuduo 动态链接库的目录（项目首次编译后才会有） |
-| `src`             | MyMuduo 网络框架的源码                                              |
-| `src/include`     | MyMuduo 网络框架的头文件                                            |
-| `test`            | MyMuduo 网络框架的的测试代码                                        |
+| `src`             | MyMuduo 网络库的源码                                                |
+| `src/include`     | MyMuduo 网络库的头文件                                              |
+| `test`            | MyMuduo 网络库的的测试代码                                          |
 | `example`         | 各种案例代码                                                        |
 | `example/epoll`   | epoll 的使用案例代码                                                |
-| `example/mymuduo` | MyMuduo 网络框架的使用案例代码                                      |
+| `example/mymuduo` | MyMuduo 网络库的使用案例代码                                        |
 | `autobuild.sh`    | 项目一键编译构建的脚本文件                                          |
 
 ### 项目技术栈
@@ -57,7 +57,7 @@ cd c++-project-mymuduo
 # 进入项目根目录
 cd c++-project-mymuduo
 
-# 执行 MyMuduo 网络框架使用案例的可执行文件
+# 执行 MyMuduo 网络库使用案例的可执行文件
 ./bin/mymuduo_example
 
 # 执行 telnet 命令连接 TCP 服务器（成功连接后，输入任意字符，按回车键即可发送消息给服务器）
