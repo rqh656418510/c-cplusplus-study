@@ -55,7 +55,7 @@ int main() {
     std::thread clientThrad([]() { startChatClient(); });
     clientThrad.detach();
 
-    // 阻塞等待用户输入，然后终止程序
+    // 阻塞等待用户按下任意键，然后结束程序运行
     getchar();
 
     return 0;
