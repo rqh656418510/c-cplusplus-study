@@ -82,7 +82,7 @@ telnet 127.0.0.1 6000
 
 ## 项目扩展
 
-MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定时事件机制（`TimerQueue`）、IPV6 / DNS / HTTP / RPC 协议等，可以从以下几方面继续对其进行扩展：
+MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定时事件机制（`TimerQueue`）、IPV6 / DNS / HTTP / RPC 协议等，日后可以从以下几方面继续对其进行扩展：
 
 - (1) 定时事件机制
     - TimerQueue：支持 EventLoop 内的定时任务调度，常见实现方式包括：
