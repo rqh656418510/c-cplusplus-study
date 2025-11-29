@@ -63,3 +63,30 @@ cd c++-project-mymuduo
 # 执行 telnet 命令连接 TCP 服务器（成功连接后，输入任意字符，按回车键即可发送消息给服务器）
 telnet 127.0.0.1 6000
 ```
+
+## 项目扩展
+
+MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定时事件机制（`TimerQueue`）、IPV6 / DNS / HTTP / RPC 协议等，可以从以下几方面继续对其进行扩展：
+
+- (1) 定时事件机制
+    - TimerQueue：支持 EventLoop 内的定时任务调度，常见实现方式包括：
+        - 链表队列：实现简单，但不适合大量定时器场景（需要线性扫描）。
+        - 红黑树（如 `nginx`）：按照到期时间排序，可快速找到最早到期的定时器，插入 / 删除的时间复杂度为 `O(logN)`。
+        - 时间轮（如 `libevent`）：适合大量、定时精度要求不高的场景，插入 / 删除的时间复杂度为 `O(1)`，整体性能出色。
+
+- (2) IPV6 / DNS / HTTP / RPC 协议支持
+    - IPV6：支持 IPv6 套接字、地址解析与双栈接入，确保网络库的所有连接与事件处理流程均可透明兼容 IPv6。
+    - DNS：实现异步域名解析（如 `getaddrinfo_a`），将域名解析和网络事件循环结合，避免阻塞 I/O。
+    - HTTP：构建基础的 HTTP 请求解析、响应封装，可扩展为简单的 Web 服务器或客户端；需要支持 Keep-Alive、Chunked 等机制。
+    - RPC：在已有 TCP 框架上封装请求 / 响应协议，实现序列化、服务注册、方法调用、超时与重试等功能（可仿照 gRPC 实现）。
+
+- (3) 服务器性能测试
+    - 为了验证网络库的性能，需要进行专业的性能压测和系统配置优化：
+    - 系统性能优化
+        - Linux 最大文件描述符数设置：包括
+            - `/etc/security/limits.conf`（进程级限制）
+            - `/proc/sys/fs/file-max`（系统级限制）
+            - `ulimit -n`（当前会话限制）
+    - 性能测试工具
+        - [JMeter](https://github.com/apache/jmeter?utm_source=chatgpt.com)：可压测 HTTP 服务与自定义 TCP 服务，能够生成聚合报告和可视化图表。
+        - [wrk](https://github.com/wg/wrk?utm_source=chatgpt.com)：高性能 HTTP 压测工具，支持多线程 + `epoll`，需要手动编译安装，仅支持 HTTP 协议。
