@@ -64,6 +64,20 @@ cd c++-project-mymuduo
 telnet 127.0.0.1 6000
 ```
 
+测试程序输出的日志信息如下：
+
+```
+2025-11-15 22:10:01 => 6609 [INFO] ChatServer - start success, listening on 127.0.0.1:6000
+2025-11-15 22:10:01 => 6614 [INFO] TcpClient::TcpClient(EventLoop*, const InetAddress&, const std::string&) => crate tcp client [ChatClient] - connector 0x7f52b8000e20
+2025-11-15 22:10:01 => 6614 [INFO] void TcpClient::connect() => connect to 127.0.0.1:6000
+2025-11-15 22:10:01 => 6614 [INFO] ChatClient - new connection [127.0.0.1:42170] -> [127.0.0.1:6000], state: connected
+2025-11-15 22:10:01 => 6610 [INFO] ChatServer - Connection UP : 127.0.0.1:42170
+2025-11-15 22:10:01 => 6610 [INFO] ChatServer - receive message: [I'm ChatClient], time: 2025-11-15 22:10:01, ip: 127.0.0.1:42170
+2025-11-15 22:10:01 => 6614 [INFO] ChatClient - receive message: [You just said: I'm ChatClient], time: 2025-11-15 22:10:01
+2025-11-15 22:14:24 => 6611 [INFO] ChatServer - Connection UP : 127.0.0.1:54554
+2025-11-15 22:14:56 => 6611 [INFO] ChatServer - receive message: [Hello, I'm MyMuduo], time: 2025-11-15 22:14:56, ip: 127.0.0.1:54554
+```
+
 ## 项目扩展
 
 MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定时事件机制（`TimerQueue`）、IPV6 / DNS / HTTP / RPC 协议等，可以从以下几方面继续对其进行扩展：
