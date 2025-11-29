@@ -29,7 +29,7 @@
 
 - 单例设计模式
 - epoll 等 I/O 多路复用技术
-- Linux 网络编程基础（`socket`、`bind`、`listen`、`accept` 等）
+- Linux 网络编程基础（`socket()`、`bind()`、`listen()`、`accept()`、`readv()`、`write()` 等）
 - C++ 11 多线程编程（`std::thread`、`std::unique_lock`、`std::mutex`、`std::condition_variable` 等）
 - 使用 CMake 构建与集成项目的编译环境
 
