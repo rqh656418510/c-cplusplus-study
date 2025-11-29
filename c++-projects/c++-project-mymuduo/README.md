@@ -47,7 +47,7 @@
 # 进入项目根目录
 cd c++-project-mymuduo
 
-# 执行自动构建脚本
+# 执行项目自动构建脚本
 ./autobuild.sh
 ```
 
