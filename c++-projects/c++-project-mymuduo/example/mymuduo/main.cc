@@ -44,14 +44,14 @@ int main() {
     // 设置日志级别
     Logger::instance().setLogLevel(LogLevel::INFO);
 
-    // 启动聊天服务器
+    // 在独立的线程上启动聊天服务器
     std::thread serverThread([]() { startChatServer(); });
     serverThread.detach();
 
     // 等待一段时间，让聊天服务器先启动（可选，因为聊天客户端会自动重连）
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-    // 启动聊天客户端
+    // 在独立的线程上启动聊天客户端
     std::thread clientThrad([]() { startChatClient(); });
     clientThrad.detach();
 
