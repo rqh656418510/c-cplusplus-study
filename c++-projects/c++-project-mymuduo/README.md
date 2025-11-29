@@ -8,6 +8,8 @@
 
 基于 C++ 开发一个类似 [Muduo](https://github.com/chenshuo/muduo) 的高性能网络库，项目代码大部分是从 Muduo 移值过来，同时去掉 Boost 依赖，并使用 C++ 11 进行代码重构，重点是学习 Muduo 的底层设计思想。
 
+> 注意：本项目开发的 MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定时事件机制（`TimerQueue`）、IPV6 / DNS / HTTP / RPC 协议等。
+
 ### 项目结构
 
 | 目录名称          | 目录说明                                                            |
