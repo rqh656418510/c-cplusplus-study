@@ -76,8 +76,6 @@ telnet 127.0.0.1 6000
 2025-11-15 22:10:01 => 6610 [INFO] ChatServer - Connection UP : 127.0.0.1:42170
 2025-11-15 22:10:01 => 6610 [INFO] ChatServer - receive message: [I'm ChatClient], time: 2025-11-15 22:10:01, ip: 127.0.0.1:42170
 2025-11-15 22:10:01 => 6614 [INFO] ChatClient - receive message: [You just said: I'm ChatClient], time: 2025-11-15 22:10:01
-2025-11-15 22:14:24 => 6611 [INFO] ChatServer - Connection UP : 127.0.0.1:54554
-2025-11-15 22:14:56 => 6611 [INFO] ChatServer - receive message: [Hello, I'm MyMuduo], time: 2025-11-15 22:14:56, ip: 127.0.0.1:54554
 ```
 
 ## 项目扩展
