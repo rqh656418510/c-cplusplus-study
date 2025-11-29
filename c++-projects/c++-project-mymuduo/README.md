@@ -98,8 +98,8 @@ MyMuduo 网络库只实现了 Muduo 的核心功能，并不支持 Muduo 的定�
     - 为了验证网络库的性能，需要进行专业的性能压测和系统配置优化：
     - 系统性能优化
         - Linux 最大文件描述符数设置：包括
-            - `/etc/security/limits.conf`（进程级限制）
             - `/proc/sys/fs/file-max`（系统级限制）
+            - `/etc/security/limits.conf`（进程级限制）
             - `ulimit -n`（当前会话限制）
     - 性能测试工具
         - [JMeter](https://github.com/apache/jmeter?utm_source=chatgpt.com)：可压测 HTTP 服务与自定义 TCP 服务，能够生成聚合报告和可视化图表。
