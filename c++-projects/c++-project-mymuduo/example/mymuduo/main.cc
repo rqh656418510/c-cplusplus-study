@@ -1,7 +1,7 @@
 /**
  * MyMuduo 网络库的使用案例
  *
- * Linux 上运行程序：./mymuduo_example
+ * Linux 上运行程序：./bin/mymuduo_example
  */
 
 #include <chrono>
@@ -49,7 +49,7 @@ int main() {
     serverThread.detach();
 
     // 等待一段时间，让聊天服务器先启动（可选，因为聊天客户端会自动重连）
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
     // 启动聊天客户端
     std::thread clientThrad([]() { startChatClient(); });

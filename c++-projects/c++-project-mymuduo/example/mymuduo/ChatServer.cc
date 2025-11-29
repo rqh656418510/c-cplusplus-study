@@ -28,6 +28,8 @@ ChatServer::~ChatServer() {
 void ChatServer::start() {
     // 开启事件循环处理
     server_.start();
+    // 打印日志信息
+    LOG_INFO("ChatServer - start success, listening on %s", server_.ipPort().c_str());
 }
 
 // 处理用户的连接创建和断开
