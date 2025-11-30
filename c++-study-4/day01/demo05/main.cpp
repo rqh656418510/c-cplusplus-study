@@ -6,6 +6,17 @@
 
 using namespace std;
 
+// 未命名参数
+int func1(int a, int) {
+    return a * 2;
+}
+
+// 后置返回类型
+auto func2(int a, int b) -> int {
+    return a + b;
+}
+
 int main() {
-    cout << "Hello World" << endl;
+    func1(1, 3);
+    func2(2, 4);
 }
