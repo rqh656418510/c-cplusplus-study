@@ -24,10 +24,10 @@ add_executable(mysql_c_api_test ${SRC_FILES})
 # 指定项目中的头文件
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# 指定系统的头文件，如 MySQL 头文件
+# 指定系统的头文件，如 MySQL C API 的头文件
 include_directories(/usr/local/include)
 
-# 搜索 MySQL 的静态库或动态库
+# 搜索 MySQL C API 的静态库或动态库
 find_library(MYSQL_LIBRARY
     NAMES mysqlclient
     PATHS /usr/lib /usr/local/lib /usr/lib64/mysql /usr/lib/x86_64-linux-gnu
