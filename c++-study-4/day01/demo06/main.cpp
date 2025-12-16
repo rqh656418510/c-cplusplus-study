@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// C语言中字符串的初始化
+// C 语言中字符串的初始化
 void test01() {
     // 使用字符串字面量初始化：末尾自动追加 '\0'，其余元素补 0
     char str1[100] = "C++";
@@ -27,7 +27,7 @@ void test01() {
     char str5[100] = {'C', '+', '+'};
 }
 
-// string 的初始化
+// C++ 中字符串的初始化
 void test02() {
     // 默认初始化，s1 是空字符串，表示里面没有字符
     string s1;
@@ -58,7 +58,7 @@ void test02() {
     string s9(buf);
 }
 
-// string 的 API
+// C++ 中字符串的 API
 void test03() {
     string s1 = "abcde";
 
