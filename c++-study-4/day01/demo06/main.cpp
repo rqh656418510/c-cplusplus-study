@@ -100,12 +100,12 @@ void test03() {
 
     // 字符串与范围 for 的使用
     string s10 = "hello c++";
-    // 通过范围 for 遍历字符串所有元素
-    for (char c : s10) {
+    // 通过范围 for 遍历字符串所有元素，使用常量引用
+    for (const char& c : s10) {
         cout << c;
     }
     cout << endl;
-    // 通过范围 for 和引用遍历字符串所有元素，并更改其元素的值
+    // 通过范围 for 和引用遍历字符串所有元素，并更改其元素的值，使用普通引用
     for (char& c : s10) {
         c = toupper(c);
         cout << c;
