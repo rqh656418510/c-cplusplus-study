@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// vector 初始化方式
+// vector 的初始化方式
 void test0() {
     // 1. 默认初始化方式，创建一个空的 vector 对象
     vector<int> v1;
