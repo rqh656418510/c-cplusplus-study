@@ -14,7 +14,12 @@ public:
         cout << "Student()" << endl;
     }
 
-    // 有参构造函数
+    // 有参构造函数（一个参数）
+    explicit Student(int age) : m_age(age), m_name("") {
+        cout << "Student(int)" << endl;
+    }
+
+    // 有参构造函数（两个参数）
     Student(int age, string name) : m_age(age), m_name(name) {
         cout << "Student(int, string)" << endl;
     }
@@ -30,7 +35,17 @@ public:
     }
 
     // 成员函数
-    void show() {
+    int getAge() const {
+        return m_age;
+    }
+
+    // 成员函数
+    string getName() const {
+        return m_name;
+    }
+
+    // 成员函数
+    void show() const {
         cout << "age: " << m_age << ", name: " << m_name << endl;
     }
 
@@ -39,6 +54,11 @@ private:
     int m_age;
     string m_name;
 };
+
+// 普通函数
+void print(Student stu) {
+    cout << "age: " << stu.getAge() << ", name: " << stu.getName() << endl;
+}
 
 // 构造函数的调用
 void test01() {
@@ -70,8 +90,24 @@ void test02() {
     Student student6 = {student1};
 }
 
+// 隐式类型转换和 explicit
+void test03() {
+    // 错误写法（编译失败），单参数构造函数使用 explicit 声明，不允许隐式类型转换
+    // Student student1 = 20;
+
+    // 错误写法（编译失败），单参数构造函数使用 explicit 声明，不允许隐式类型转换
+    // Student student2 = {20};
+
+    // 错误写法（编译失败），单参数构造函数使用 explicit 声明，不允许隐式类型转换
+    // Student student3 = (12, 13, 14, 15);
+
+    // 错误写法（编译失败），单参数构造函数使用 explicit 声明，不允许隐式类型转换
+    // print(25);
+}
+
 int main() {
     // test01();
     // test02();
+    test03();
     return 0;
 }
