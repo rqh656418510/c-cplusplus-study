@@ -17,7 +17,7 @@ C++ 从基础到进阶（王建伟 - 80 集）
 └── day02
     ├── demo01          成员函数、对象拷贝、私有成员
     ├── demo02          构造函数详解，explicit，初始化列表
-    ├── demo03          inline、const、mutable、this、stat
+    ├── demo03          inline、const、mutable、this、static
     ├── demo04          类内初始化、默认构造函数、=default
     ├── demo05          拷贝构造函数
 ```

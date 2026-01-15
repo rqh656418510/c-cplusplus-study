@@ -1,5 +1,5 @@
 /**
- * inline、const、mutable、this、stat
+ * inline、const、mutable、this、static
  */
 
 #include <iostream>
