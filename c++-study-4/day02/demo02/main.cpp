@@ -36,5 +36,7 @@ private:
 };
 
 int main() {
+    // 只调用一次构造函数
+    Student stu = Student(18, "Jim");
     return 0;
 }
