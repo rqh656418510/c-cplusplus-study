@@ -6,17 +6,23 @@
 
 using namespace std;
 
+// 默认参数
+void func1(string name, int age = 18) {
+    cout << "name: " << name << ", age: " << age << endl;
+}
+
 // 未命名参数
-int func1(int a, int) {
+int func2(int a, int) {
     return a * 2;
 }
 
 // 后置返回类型
-auto func2(int a, int b) -> int {
+auto func3(int a, int b) -> int {
     return a + b;
 }
 
 int main() {
-    func1(1, 3);
-    func2(2, 4);
+    func1("Peter");
+    func2(1, 3);
+    func3(2, 4);
 }
