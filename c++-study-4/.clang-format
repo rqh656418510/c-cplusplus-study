@@ -17,7 +17,7 @@ AccessModifierOffset: -4
 UseTab: Never
 
 # 每行的最大字符数限制
-ColumnLimit: 120
+ColumnLimit: 200
 
 # 强制所有函数体换行，即使只有一行
 AllowShortFunctionsOnASingleLine: None
