@@ -48,7 +48,7 @@ void testConnectionPoolSingleThread() {
 }
 
 void testConnectionPoolMultiThread() {
-    const int num_threads = 15;
+    const int num_threads = 30;
     thread threads[num_threads];
 
     const string insertSql = "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
