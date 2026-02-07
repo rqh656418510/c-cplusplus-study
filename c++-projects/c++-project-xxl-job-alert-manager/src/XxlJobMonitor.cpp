@@ -1,6 +1,7 @@
 #include "XxlJobMonitor.h"
 
 #include <chrono>
+#include <functional>
 #include <iostream>
 
 #include "Alert.h"
@@ -13,11 +14,21 @@
 
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor() : monitorRunning_(true), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
+    // 后台启动监控XXL-JOB是否停止运行的线程
+    std::thread t_monitor_stop(std::bind(&XxlJobMonitor::monitorStopStatusLoop, this));
+    t_monitor_stop.detach();
+
+    // 后台启动监控XXL-JOB是否调度失败的线程
+    std::thread t_monitor_fatal(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
+    t_monitor_fatal.detach();
+
+    // 打印日志信息
     LOG_DEBUG("xxl-job monitor initialized");
 }
 
 // 私有析构函数
 XxlJobMonitor::~XxlJobMonitor() {
+    // 打印日志信息
     LOG_DEBUG("xxl-job monitor destroyed");
 }
 

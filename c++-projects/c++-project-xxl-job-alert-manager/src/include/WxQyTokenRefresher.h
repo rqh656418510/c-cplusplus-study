@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <cstdint>
 #include <mutex>
 #include <string>
 
@@ -27,14 +26,11 @@ public:
     WxQyTokenRefresher& operator=(const WxQyTokenRefresher&) = delete;
 
 private:
-    // 私有构造函数（创建eventfd）
+    // 私有构造函数
     WxQyTokenRefresher();
 
-    // 私有析构函数（关闭eventfd）
+    // 私有析构函数
     ~WxQyTokenRefresher();
-
-    // 用于唤醒poll()的eventfd文件描述符
-    int eventFd_;
 
     // 企业微信AccessToken
     std::string accessToken_;
@@ -43,5 +39,5 @@ private:
     std::mutex accessTokenMutex_;
 
     // 企业微信AccessToken刷新的开关
-    std::atomic<bool> refreshRunning_;
+    std::atomic_bool refreshRunning_;
 };
