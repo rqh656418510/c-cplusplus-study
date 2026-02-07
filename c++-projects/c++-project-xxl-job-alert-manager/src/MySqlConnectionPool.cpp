@@ -1,5 +1,7 @@
 #include "MySqlConnectionPool.h"
 
+#include <exception>
+
 #include "AppConfigLoader.h"
 #include "Logger.h"
 
@@ -106,7 +108,7 @@ MySqlConnectionPtr MySqlConnectionPool::getConnection() {
         if (std::cv_status::timeout == status) {
             // 如果等待超时，再次判断连接队列是否为空
             if (this->connectionQueue_.empty()) {
-                LOG_ERROR("Failed to get connection, queue is empty");
+                LOG_ERROR("Failed to get mysql connection, queue is empty");
                 return nullptr;
             }
         }
@@ -204,18 +206,25 @@ void MySqlConnectionPool::scanIdleConnection() {
 
         // 判断当前的连接总数量是否大于初始连接数量
         while (this->connectionCount_ > this->initSize_) {
-            // 扫描队头的连接是否超过最大空闲时间
-            MySqlConnection *phead = this->connectionQueue_.front();
-            if (phead->getAliveTime() >= this->maxIdleTime_ * 1000) {
-                // 出队操作
-                this->connectionQueue_.pop();
-                // 计数器减一
-                this->connectionCount_--;
-                // 释放连接
-                delete phead;
-            } else {
-                // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
-                break;
+            // TODO 待解决高并发场景下，MysqlConnection指针释放后再使用的问题
+            try {
+                // 扫描队头的连接是否超过最大空闲时间
+                MySqlConnection *phead = this->connectionQueue_.front();
+                if (phead->getAliveTime() >= this->maxIdleTime_ * 1000) {
+                    // 出队操作
+                    this->connectionQueue_.pop();
+                    // 计数器减一
+                    this->connectionCount_--;
+                    // 释放连接
+                    delete phead;
+                } else {
+                    // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
+                    break;
+                }
+            } catch (const std::exception &e) {
+                LOG_ERROR("Failed to recycle mysql connection");
+                // 空闲连接释放失败后，休眠一会避免循环过快
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
 
