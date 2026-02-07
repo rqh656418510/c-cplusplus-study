@@ -13,12 +13,12 @@
 
 ## 开发工具
 
-| 软件                       | 版本        | 说明                                         |
-| -------------------------- | ----------- | -------------------------------------------- |
-| C++                        | `11`        |                                              |
-| MySQL C API（Connector/C） | `8.4.5`     |                                              |
-| MySQL Server               | `8.4.5`     |                                              |
-| Linux System               | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台 |
+| 软件                       | 版本        | 说明                                                   |
+| -------------------------- | ----------- | ------------------------------------------------------ |
+| C++                        | `11`        |                                                        |
+| MySQL C API（Connector/C） | `8.4.5`     | [使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
+| MySQL Server               | `8.4.5`     |                                                        |
+| Linux System               | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
 
 ## 项目配置
 
@@ -52,7 +52,7 @@ wechat.corp_secret=xxxxxxxxxx
 
 ## 项目编译
 
-> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 OpenSSL、MySQL C API（Connector/C）库，否则项目会编译失败。
+> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 OpenSSL、MySQL C API（Connector/C）库，详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
 
 ``` sh
 # 进入项目根目录
