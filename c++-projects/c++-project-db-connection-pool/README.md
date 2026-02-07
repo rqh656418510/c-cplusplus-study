@@ -116,8 +116,11 @@ SET GLOBAL max_connections = 200;
 # 进入项目的根目录
 cd c++-project-db-connection-pool
 
-# 编译构建生成可执行测试程序
-cmake -S . -B build && cmake --build build
+# 脚本文件授权执行
+chmod +x autobuild.sh
+
+# 执行一键编译构建脚本
+./autobuild.sh
 
 # 运行可执行测试程序
 ./bin/db_connection_pool_test
