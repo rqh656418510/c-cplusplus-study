@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <cstdint>
 #include <ctime>
 
 // XXL-JOB监控器（单例对象）
@@ -26,21 +25,18 @@ public:
     XxlJobMonitor& operator=(const XxlJobMonitor&) = delete;
 
 private:
-    // 私有构造函数（创建eventfd）
+    // 私有构造函数
     XxlJobMonitor();
 
-    // 私有析构函数（关闭eventfd）
+    // 私有析构函数
     ~XxlJobMonitor();
 
-    // 用于唤醒poll()的eventfd文件描述符
-    int eventFd_;
-
     // 定期扫描任务调度日志的开关
-    std::atomic<bool> monitorRunning_;
+    std::atomic_bool monitorRunning_;
 
     // 上次告警的任务调度失败日志的触发时间
     std::atomic<time_t> lastAlertFatalTriggerTime_;
 
     // 是否已发送空闲（无新的任务调度日志）告警，用于防止重复发送
-    std::atomic<bool> idleAlertSended_;
+    std::atomic_bool idleAlertSended_;
 };

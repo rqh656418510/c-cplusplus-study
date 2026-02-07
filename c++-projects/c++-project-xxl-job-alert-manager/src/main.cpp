@@ -1,4 +1,5 @@
-#include <csignal>
+#include <unistd.h>
+
 #include <iostream>
 #include <thread>
 
@@ -6,12 +7,6 @@
 #include "Logger.h"
 #include "WxQyTokenRefresher.h"
 #include "XxlJobMonitor.h"
-
-// 信号处理函数
-void handleSignal(int signal) {
-    XxlJobMonitor::getInstance().stopMonitor();
-    WxQyTokenRefresher::getInstance().stopRefreshLocalToken();
-}
 
 // 打印命令帮助内容
 void ShowArgsHelp() {
@@ -50,12 +45,6 @@ void initApplication(int argc, char** argv) {
     if (!config_file.empty()) {
         AppConfigLoader::CONFIG_FILE_PATH = config_file;
     }
-
-    // 注册信号处理函数，用于优雅退出
-    std::signal(SIGINT, handleSignal);
-    std::signal(SIGTERM, handleSignal);
-    std::signal(SIGQUIT, handleSignal);
-    std::signal(SIGHUP, handleSignal);
 }
 
 int main(int argc, char** argv) {

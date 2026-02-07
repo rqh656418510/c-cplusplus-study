@@ -1,12 +1,6 @@
 #include "XxlJobMonitor.h"
 
-#include <errno.h>
-#include <poll.h>
-#include <sys/eventfd.h>
-#include <unistd.h>
-
 #include <chrono>
-#include <ctime>
 #include <iostream>
 
 #include "Alert.h"
@@ -17,6 +11,16 @@
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
 
+// 私有构造函数
+XxlJobMonitor::XxlJobMonitor() : monitorRunning_(true), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
+    LOG_DEBUG("xxl-job monitor initialized");
+}
+
+// 私有析构函数
+XxlJobMonitor::~XxlJobMonitor() {
+    LOG_DEBUG("xxl-job monitor destroyed");
+}
+
 // 获取单例对象
 XxlJobMonitor& XxlJobMonitor::getInstance() {
     // 静态局部变量（线程安全）
@@ -24,32 +28,12 @@ XxlJobMonitor& XxlJobMonitor::getInstance() {
     return instance;
 }
 
-// 私有构造函数（创建eventfd）
-XxlJobMonitor::XxlJobMonitor()
-    : eventFd_(-1), monitorRunning_(true), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
-    // 创建eventfd，用于唤醒多个监控线程，不使用 EFD_NONBLOCK
-    eventFd_ = ::eventfd(0, EFD_CLOEXEC | EFD_SEMAPHORE);
-    if (eventFd_ < 0) {
-        LOG_FATAL("failed to create eventfd for xxl-job monitor");
-    }
-    LOG_INFO("xxl-job monitor initialized");
-}
-
-// 私有析构函数（关闭eventfd）
-XxlJobMonitor::~XxlJobMonitor() {
-    if (eventFd_ >= 0) {
-        close(eventFd_);
-        eventFd_ = -1;
-    }
-    LOG_INFO("xxl-job monitor cleaned up");
-}
-
 // 循环监控XXL-JOB是否停止运行
 void XxlJobMonitor::monitorStopStatusLoop() {
     // 全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
-    while (monitorRunning_.load()) {
+    while (monitorRunning_) {
         try {
             XxlJobLogDao logDao;
 
@@ -61,9 +45,9 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 仅在尚未发送过空闲告警时发送，避免重复告警
                 if (!idleAlertSended_.load()) {
                     char buf[1024] = {0};
-                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警环境: %s\n告警时间: %s\n告警 IP 地址: %s",
-                            config.alert.xxljobEnvironmentName.c_str(), Timestamp::now().toString().c_str(),
-                            NetworkUtil::getInstance().getPublicIp().c_str());
+                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
+                            Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str(),
+                            config.alert.xxljobEnvironmentName.c_str());
                     Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser, std::string(buf));
                     idleAlertSended_.store(true);
                 }
@@ -85,9 +69,9 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                     // 仅在尚未发送过空闲告警时发送，避免重复告警
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};
-                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警环境: %s\n告警时间: %s\n告警 IP 地址: %s",
-                                config.alert.xxljobEnvironmentName.c_str(), Timestamp::now().toString().c_str(),
-                                NetworkUtil::getInstance().getPublicIp().c_str());
+                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
+                                Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str(),
+                                config.alert.xxljobEnvironmentName.c_str());
                         Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser,
                                                std::string(buf));
                         idleAlertSended_.store(true);
@@ -103,42 +87,8 @@ void XxlJobMonitor::monitorStopStatusLoop() {
             LOG_ERROR("xxl-job monitor occure unknown exception");
         }
 
-        // 使用poll()等待超时或eventfd事件（可被信号唤醒）
-        struct pollfd pfd;
-        pfd.fd = eventFd_;
-        pfd.events = POLLIN;
-        int timeout_ms = config.alert.xxljobStopStatusScanIntervalSeconds * 1000;  // 转换为毫秒
-        int poll_ret = poll(&pfd, 1, timeout_ms);                                  // 阻塞等待
-
-        // 当前线程接收到事件，被唤醒
-        if (poll_ret > 0) {
-            // 先检查eventfd是否有效
-            if (pfd.revents & POLLNVAL) {
-                LOG_WARN("xxl-job monitor poll: eventfd invalid (POLLNVAL), exiting loop");
-                // 退出循环，避免 Read EBADF
-                break;
-            }
-            // 如果poll()被eventfd唤醒，则消费事件
-            if (pfd.revents & POLLIN) {
-                uint64_t buf = 0;
-                ssize_t n = read(eventFd_, &buf, sizeof(buf));
-                if (n != sizeof(buf)) {
-                    if (n < 0) {
-                        if (errno == EINTR) {
-                            LOG_INFO("xxl-job monitor eventfd read interrupted by signal");
-                        } else {
-                            LOG_WARN("xxl-job monitor eventfd read failed, errno=%d (%s)", errno, strerror(errno));
-                        }
-                    } else {
-                        LOG_WARN("xxl-job monitor eventfd partial read, expected=%zu, got=%zd", sizeof(buf), n);
-                    }
-                }
-            }
-        } else if (poll_ret < 0) {
-            if (errno != EINTR) {
-                LOG_ERROR("poll failed during xxl-job monitor wait: %d", errno);
-            }
-        }
+        // 模拟定时扫描
+        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalSeconds));
     }
 }
 
@@ -147,7 +97,7 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
     // 全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
-    while (monitorRunning_.load()) {
+    while (monitorRunning_) {
         try {
             XxlJobLogDao logDao;
 
@@ -182,61 +132,13 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
             LOG_ERROR("xxl-job monitor occure unknown exception");
         }
 
-        // 使用poll()等待超时或eventfd事件（可被信号唤醒）
-        struct pollfd pfd;
-        pfd.fd = eventFd_;
-        pfd.events = POLLIN;
-        int timeout_ms = config.alert.xxljobFatalStatusScanIntervalSeconds * 1000;  // 转换为毫秒
-        int poll_ret = poll(&pfd, 1, timeout_ms);                                   // 阻塞等待
-
-        // 当前线程接收到事件，被唤醒
-        if (poll_ret > 0) {
-            // 先检查eventfd是否有效
-            if (pfd.revents & POLLNVAL) {
-                LOG_WARN("xxl-job monitor poll: eventfd invalid (POLLNVAL), exiting loop");
-                // 退出循环，避免 Read EBADF
-                break;
-            }
-            // 如果poll()被eventfd唤醒，则消费事件
-            if (pfd.revents & POLLIN) {
-                uint64_t buf = 0;
-                ssize_t n = read(eventFd_, &buf, sizeof(buf));
-                if (n != sizeof(buf)) {
-                    if (n < 0) {
-                        if (errno == EINTR) {
-                            LOG_INFO("xxl-job monitor eventfd read interrupted by signal");
-                        } else {
-                            LOG_WARN("xxl-job monitor eventfd read failed, errno=%d (%s)", errno, strerror(errno));
-                        }
-                    } else {
-                        LOG_WARN("xxl-job monitor eventfd partial read, expected=%zu, got=%zd", sizeof(buf), n);
-                    }
-                }
-            }
-        } else if (poll_ret < 0) {
-            if (errno != EINTR) {
-                LOG_ERROR("poll failed during xxl-job monitor wait: %d", errno);
-            }
-        }
+        // 模拟定时扫描
+        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalSeconds));
     }
 }
 
 // 停止监控XXL-JOB
 void XxlJobMonitor::stopMonitor() {
     // 更改监控器的运行状态
-    monitorRunning_.store(false);
-
-    // 写入eventfd以唤醒正在poll()中等待的线程
-    if (eventFd_ >= 0) {
-        // 写入一个极大值用于广播唤醒多个等待线程（或者直接写等待的线程数）
-        uint64_t wakeup_count = UINT32_MAX / 2;
-        ssize_t n = write(eventFd_, &wakeup_count, sizeof(wakeup_count));
-        if (n != sizeof(wakeup_count)) {
-            if (n < 0) {
-                LOG_WARN("xxl-job monitor eventfd write failed, errno=%d", errno);
-            } else {
-                LOG_WARN("xxl-job monitor eventfd partial write, size=%zd", n);
-            }
-        }
-    }
+    monitorRunning_ = false;
 }
