@@ -17,13 +17,16 @@
 
 using namespace std;
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝智能指针，限制每个连接只会被一个线程使用）
+// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝智能指针，限制每个连接在同一时刻只会被一个线程使用）
 using MysqlConnectionPtr = unique_ptr<MysqlConnection, function<void(MysqlConnection *)>>;
 
 // MySQL 连接池类（单例对象）
 class MysqlConnectionPool {
 
 public:
+    // 析构函数
+    ~MysqlConnectionPool();
+
     // 关闭连接池
     void close();
 
@@ -43,9 +46,6 @@ private:
     // 私有构造函数
     MysqlConnectionPool();
 
-    // 私有析构函数
-    ~MysqlConnectionPool();
-
     // 删除拷贝构造函数
     MysqlConnectionPool(const MysqlConnectionPool &) = delete;
 
@@ -60,9 +60,6 @@ private:
 
     // 扫描多余的空闲连接，并释放连接
     void scanIdleConnection();
-
-    // 单例对象
-    static MysqlConnectionPool *INSTANCE;
 
     string _host;             // MySQL 连接地址
     string _username;         // MySQL 用户名

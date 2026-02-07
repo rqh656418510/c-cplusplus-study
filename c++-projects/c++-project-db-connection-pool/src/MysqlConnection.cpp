@@ -78,7 +78,7 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
 }
 
 // 连接 MySQL 数据库
-bool MysqlConnection::connect(const string& host, const string& username, const string& password, const string& dbname) {
+bool MysqlConnection::connect(const string &host, const string &username, const string &password, const string &dbname) {
     // 初始化MySQL的连接信息
     this->_host = "tcp://" + host;
     this->_username = username;
@@ -115,12 +115,14 @@ bool MysqlConnection::connect(const string& host, const string& username, const 
 
 // 刷新连接进入空闲状态后的起始存活时间点
 void MysqlConnection::refreshAliveTime() {
-    this->_aliveTime = chrono::system_clock::now();
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    _aliveTime.store(now_ms, std::memory_order_relaxed);
 }
 
 // 获取连接的空闲存活时间（单位毫秒）
-long MysqlConnection::getAliveTime() const {
-    chrono::milliseconds active_timestamp_ms = chrono::duration_cast<chrono::milliseconds>(this->_aliveTime.time_since_epoch());
-    chrono::milliseconds now_timestamp_ms = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
-    return now_timestamp_ms.count() - active_timestamp_ms.count();
+long long MysqlConnection::getAliveTime() const {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    return static_cast<long>(now_ms - _aliveTime.load(std::memory_order_relaxed));
 }
