@@ -91,7 +91,7 @@ public:
         conn->update("update " + config.mysql.table + " set `handle_msg` = `handle_msg`");
 
         // 打印连接池信息
-        LOG_INFO("Thread %d, current pool size: %d", CurrentThread::tid(), pool->getSize());
+        LOG_INFO("Thread %d, current connection pool size: %d", CurrentThread::tid(), pool->getSize());
     }
 
     // 多个线程从数据库连接池获取连接
@@ -119,7 +119,7 @@ public:
                     // 执行更新操作
                     conn->update(sql);
                     // 打印连接池信息
-                    LOG_INFO("Thread %d, current pool size: %d", i, pool->getSize());
+                    LOG_INFO("Thread %d, current connection pool size: %d", i, pool->getSize());
                 }
             });
         }
@@ -130,8 +130,8 @@ public:
         }
 
         // 等待一段时间，触发数据库连接池回收空闲连接
-        LOG_INFO("Waiting to collect idle connection...");
+        LOG_INFO("Waiting to recycle idle mysql connection...");
         std::this_thread::sleep_for(std::chrono::seconds(config.mysql.connectionPoolMaxIdleTime * 3));
-        LOG_INFO("Run finished, final pool size: %d", pool->getSize());
+        LOG_INFO("Run finished, final connection pool size: %d", pool->getSize());
     }
 };
