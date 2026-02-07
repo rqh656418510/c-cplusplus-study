@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <iostream>
 #include <vector>
 #include <mysql_connection.h>
@@ -18,8 +19,6 @@
 using namespace std;
 using namespace sql;
 
-typedef chrono::system_clock::time_point time_point;
-
 // MySQL 数据库操作类
 class MysqlConnection {
 
@@ -31,10 +30,10 @@ public:
     ~MysqlConnection();
 
     // 删除拷贝构造函数
-    MysqlConnection(const MysqlConnection&) = delete;
+    MysqlConnection(const MysqlConnection &) = delete;
 
     // 删除赋值运算操作符
-    MysqlConnection& operator=(const MysqlConnection&) = delete;
+    MysqlConnection &operator=(const MysqlConnection &) = delete;
 
     // 执行任何 SQL 语句，返回一个 bool 值，表明执行该 SQL 语句是否返回了 ResultSet
     bool execute(const char *sql);
@@ -46,7 +45,7 @@ public:
     unique_ptr<ResultSet> query(const char *query, const vector<string> parameters);
 
     // 连接数据库
-    bool connect(const string& host, const string& username, const string& password, const string& dbname);
+    bool connect(const string &host, const string &username, const string &password, const string &dbname);
 
     // 刷新连接进入空闲状态后的起始存活时间点
     void refreshAliveTime();
@@ -61,5 +60,5 @@ private:
     string _dbname;                         // MySQL 数据库
     Driver *_driver;                        // MySQL 驱动
     Connection *_connection;                // MySQL 连接
-    time_point _aliveTime;                  // 记录连接进入空闲状态后的起始存活时间点
+    std::atomic<long long> _aliveTime;                  // 记录连接进入空闲状态后的起始存活时间点
 };

@@ -24,6 +24,9 @@ using MysqlConnectionPtr = unique_ptr<MysqlConnection, function<void(MysqlConnec
 class MysqlConnectionPool {
 
 public:
+    // 析构函数
+    ~MysqlConnectionPool();
+
     // 关闭连接池
     void close();
 
@@ -42,9 +45,6 @@ public:
 private:
     // 私有构造函数
     MysqlConnectionPool();
-
-    // 私有析构函数
-    ~MysqlConnectionPool();
 
     // 删除拷贝构造函数
     MysqlConnectionPool(const MysqlConnectionPool &) = delete;
