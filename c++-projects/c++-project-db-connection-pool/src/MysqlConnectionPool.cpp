@@ -162,15 +162,10 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
         pcon->refreshAliveTime();
         // 入队操作（将连接归还到队列中）
         this->_connectionQueue.push(pcon);
-        // 计数器加一
-        this->_connectionCount++;
     });
 
     // 出队操作
     this->_connectionQueue.pop();
-
-    // 计数器减一
-    this->_connectionCount--;
 
     if (this->_connectionQueue.empty()) {
         // 如果连接队列为空，则通知生产线程生产连接
@@ -230,7 +225,7 @@ void MysqlConnectionPool::scanIdleConnection() {
         while (this->_connectionCount > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
-            if (phead->getAliveTime() >= this->_maxIdleTime) {
+            if (phead != nullptr && phead->getAliveTime() >= this->_maxIdleTime * 1000) {
                 // 出队操作
                 this->_connectionQueue.pop();
                 // 计数器减一

@@ -71,7 +71,7 @@ private:
     int _maxIdleTime;         // 最大空闲时间（单位秒）
     int _connectionTimeout;   // 连接超时时间（单位毫秒）
 
-    atomic_int _connectionCount;                 // MySQL 连接的总数量
+    atomic_int _connectionCount;                 // MySQL连接池中连接的总数量
     queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
     mutex _queueMutex;                           // 维护 MySQL 连接队列线程安全的互斥锁
     condition_variable _cv;                      // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
