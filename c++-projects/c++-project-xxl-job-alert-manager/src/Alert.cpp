@@ -3,6 +3,7 @@
 #include "Alert.h"
 #include "Logger.h"
 #include "WxQyApi.h"
+#include "AppConfigLoader.h"
 #include "NetworkUtil.h"
 #include "WxQySendMsgReq.h"
 #include <algorithm>
@@ -27,9 +28,14 @@ void Alert::sendWxQyTextMsg(const int agentId, const std::string& toUser, const 
 
 // 发送企业微信应用信息
 void Alert::sendWxQyTextMsg(const int agentId, const std::string& toUser, const XxlJobLog& log) {
+    // 全局配置信息
+    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+    
+    // 应用信息内容
     std::string msg =
         "【XXL-JOB 任务执行失败】\n"
         "【IP】" + NetworkUtil::getInstance().getPublicIp() + "\n" +
+        "【Env】" + config.alert.xxljobEnvironmentName + "\n" +
         "【Job】" + log.getExecutorHandler() + "\n" +
         "【Time】" + log.getTriggerTime() + "\n" +
         "【Code】" + std::to_string(log.getTriggerCode()) + "\n" +
