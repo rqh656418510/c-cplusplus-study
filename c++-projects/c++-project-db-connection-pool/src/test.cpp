@@ -79,9 +79,9 @@ void testConnectionPoolMultiThread() {
     cout << "Total Times: " << elapsed_time.count() << "ms" << endl;
 
     // 等待一段时间，触发数据库连接池回收空闲连接
-    cout << "Waiting to collect idle connection..." << endl;
+    cout << "Waiting to recycle idle connection..." << endl;
     sleep(15);
-    cout << "Pool final size: " << pool->getSize() << endl;
+    cout << "Connection pool final size: " << pool->getSize() << endl;
 
     delete pool;
 }
