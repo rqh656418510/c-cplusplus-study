@@ -92,6 +92,9 @@ public:
 
         // 打印连接池信息
         LOG_INFO("Thread %d, current connection pool size: %d", CurrentThread::tid(), pool->getSize());
+
+        // 关闭连接池
+        delete pool;
     }
 
     // 多个线程从数据库连接池获取连接
@@ -133,5 +136,8 @@ public:
         LOG_INFO("Waiting to recycle idle mysql connection...");
         std::this_thread::sleep_for(std::chrono::seconds(config.mysql.connectionPoolMaxIdleTime * 3));
         LOG_INFO("Run finished, final connection pool size: %d", pool->getSize());
+
+        // 关闭连接池
+        delete pool;
     }
 };
