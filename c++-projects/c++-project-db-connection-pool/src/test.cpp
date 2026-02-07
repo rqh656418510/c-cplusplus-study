@@ -44,6 +44,7 @@ void testConnectionPoolSingleThread() {
     chrono::duration<double, milli> elapsed_time = end_time - start_time;
     cout << "Total Times: " << elapsed_time.count() << "ms" << endl;
 
+    // 关闭连接池
     delete pool;
 }
 
@@ -83,6 +84,7 @@ void testConnectionPoolMultiThread() {
     sleep(15);
     cout << "Connection pool final size: " << pool->getSize() << endl;
 
+    // 关闭连接池
     delete pool;
 }
 
