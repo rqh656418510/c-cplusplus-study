@@ -61,8 +61,9 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 仅在尚未发送过空闲告警时发送，避免重复告警
                 if (!idleAlertSended_.load()) {
                     char buf[1024] = {0};
-                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s",
-                            Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str());
+                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警环境: %s\n告警时间: %s\n告警 IP 地址: %s",
+                            config.alert.xxljobEnvironmentName.c_str(), Timestamp::now().toString().c_str(),
+                            NetworkUtil::getInstance().getPublicIp().c_str());
                     Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser, std::string(buf));
                     idleAlertSended_.store(true);
                 }
@@ -84,8 +85,9 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                     // 仅在尚未发送过空闲告警时发送，避免重复告警
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};
-                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s",
-                                Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str());
+                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警环境: %s\n告警时间: %s\n告警 IP 地址: %s",
+                                config.alert.xxljobEnvironmentName.c_str(), Timestamp::now().toString().c_str(),
+                                NetworkUtil::getInstance().getPublicIp().c_str());
                         Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser,
                                                std::string(buf));
                         idleAlertSended_.store(true);

@@ -39,6 +39,7 @@ struct AlertConfig {
     int xxljobStopStatusScanIntervalSeconds;  // 监控XXL-JOB是否停止运行的时间间隔（alert.xxljob.stop_status_scan_interval_seconds）
     int xxljobFatalStatusScanIntervalSeconds;  // 监控XXL-JOB是否调度失败的时间间隔（alert.xxljob.fatal_status_scan_interval_seconds）
     int xxljobLogMaxIdleSecondsForStop;  // 任务调度日志记录的最大空闲时间（alert.xxljob.log_max_idle_seconds_for_stop）
+    std::string xxljobEnvironmentName;  //监控XXL-JOB的环境名称（alert.xxljob.environment_name）
 };
 
 // 全局配置
