@@ -33,7 +33,7 @@ void testConnectionPoolSingleThread() {
 
     // 单个线程插入多条记录
     for (int i = 0; i < 1500; i++) {
-        shared_ptr<MysqlConnection> connection = pool->getConnection();
+        MysqlConnectionPtr connection = pool->getConnection();
         connection->executeUpdate(insertSql.c_str());
         cout << "Insert " << i << " record, current pool size: " << pool->getSize() << endl;
     }
@@ -60,7 +60,7 @@ void testConnectionPoolMultiThread() {
     for (int i = 0; i < num_threads; i++) {
         threads[i] = thread([&, i]() {
             for (int n = 0; n < 100; n++) {
-                shared_ptr<MysqlConnection> connection = pool->getConnection();
+                MysqlConnectionPtr connection = pool->getConnection();
                 connection->executeUpdate(insertSql.c_str());
                 cout << "Thread " << i << ", current pool size: " << pool->getSize() << endl;
             }
