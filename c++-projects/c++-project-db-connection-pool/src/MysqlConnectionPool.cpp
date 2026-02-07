@@ -260,8 +260,5 @@ void MysqlConnectionPool::scanIdleConnection() {
                 break;
             }
         }
-
-        // 唤醒生产者线程，可以创建新连接
-        this->_cv.notify_all();
     }
 }
