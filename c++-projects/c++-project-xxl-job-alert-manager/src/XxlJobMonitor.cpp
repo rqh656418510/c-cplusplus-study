@@ -14,22 +14,10 @@
 
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor() : monitorRunning_(true), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
-    // 后台启动监控XXL-JOB是否停止运行的线程
-    std::thread t_monitor_stop(std::bind(&XxlJobMonitor::monitorStopStatusLoop, this));
-    t_monitor_stop.detach();
-
-    // 后台启动监控XXL-JOB是否调度失败的线程
-    std::thread t_monitor_fatal(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
-    t_monitor_fatal.detach();
-
-    // 打印日志信息
-    LOG_DEBUG("xxl-job monitor initialized");
 }
 
 // 私有析构函数
 XxlJobMonitor::~XxlJobMonitor() {
-    // 打印日志信息
-    LOG_DEBUG("xxl-job monitor destroyed");
 }
 
 // 获取单例对象
@@ -37,6 +25,23 @@ XxlJobMonitor& XxlJobMonitor::getInstance() {
     // 静态局部变量（线程安全）
     static XxlJobMonitor instance;
     return instance;
+}
+
+// 启动监控器
+void XxlJobMonitor::start() {
+    // 后台启动监控XXL-JOB是否停止运行的线程
+    std::thread t_monitor_stop(std::bind(&XxlJobMonitor::monitorStopStatusLoop, this));
+    t_monitor_stop.detach();
+
+    // 后台启动监控XXL-JOB是否调度失败的线程
+    std::thread t_monitor_fatal(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
+    t_monitor_fatal.detach();
+}
+
+// 关闭监控器
+void XxlJobMonitor::stop() {
+    // 更改运行状态
+    monitorRunning_ = false;
 }
 
 // 循环监控XXL-JOB是否停止运行
@@ -146,10 +151,4 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
         // 模拟定时扫描
         std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalSeconds));
     }
-}
-
-// 停止监控XXL-JOB
-void XxlJobMonitor::stopMonitor() {
-    // 更改监控器的运行状态
-    monitorRunning_ = false;
 }

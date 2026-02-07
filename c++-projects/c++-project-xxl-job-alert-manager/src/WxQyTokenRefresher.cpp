@@ -11,17 +11,10 @@
 
 // 私有构造函数
 WxQyTokenRefresher::WxQyTokenRefresher() : accessToken_(""), refreshRunning_(true) {
-    // 后台启动刷新AccessToken的线程
-    std::thread t_refresh(std::bind(&WxQyTokenRefresher::refreshLocalTokenLoop, this));
-    t_refresh.detach();
-    // 打印日志信息
-    LOG_DEBUG("wx-qy token refresher initialized");
 }
 
 // 私有析构函数
 WxQyTokenRefresher::~WxQyTokenRefresher() {
-    // 打印日志信息
-    LOG_DEBUG("wx-qy token refresher destroyed");
 }
 
 // 获取单例对象
@@ -29,6 +22,19 @@ WxQyTokenRefresher& WxQyTokenRefresher::getInstance() {
     // 静态局部变量（线程安全）
     static WxQyTokenRefresher instance;
     return instance;
+}
+
+// 启动刷新器
+void WxQyTokenRefresher::start() {
+    // 后台启动刷新AccessToken的线程
+    std::thread t_refresh(std::bind(&WxQyTokenRefresher::refreshLocalTokenLoop, this));
+    t_refresh.detach();
+}
+
+// 关闭刷新器
+void WxQyTokenRefresher::stop() {
+    // 更改运行状态
+    refreshRunning_ = false;
 }
 
 // 循环刷新本地的AccessToken
@@ -68,12 +74,6 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
         // 模拟定时刷新
         std::this_thread::sleep_for(std::chrono::seconds(wait_seconds));
     }
-}
-
-// 停止刷新本地的AccessToken
-void WxQyTokenRefresher::stopRefreshLocalToken() {
-    // 更改运行状态
-    refreshRunning_ = false;
 }
 
 // 获取本地的AccessToken

@@ -7,17 +7,17 @@
 // 企业微信AccessToken刷新器（单例对象）
 class WxQyTokenRefresher {
 public:
-    // 获取单例对象
-    static WxQyTokenRefresher& getInstance();
+    // 启动刷新器
+    void start();
 
-    // 循环刷新本地的AccessToken
-    void refreshLocalTokenLoop();
-
-    // 停止刷新本地的AccessToken
-    void stopRefreshLocalToken();
+    // 关闭刷新器
+    void stop();
 
     // 获取本地的AccessToken
     std::string getLocalAccessToken();
+
+    // 获取单例对象
+    static WxQyTokenRefresher& getInstance();
 
     // 删除拷贝构造函数
     WxQyTokenRefresher(const WxQyTokenRefresher&) = delete;
@@ -31,6 +31,9 @@ private:
 
     // 私有析构函数
     ~WxQyTokenRefresher();
+
+    // 循环刷新本地的AccessToken
+    void refreshLocalTokenLoop();
 
     // 企业微信AccessToken
     std::string accessToken_;

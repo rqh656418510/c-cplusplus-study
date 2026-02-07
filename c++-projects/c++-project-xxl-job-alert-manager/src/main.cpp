@@ -1,7 +1,6 @@
 #include <unistd.h>
 
 #include <iostream>
-#include <thread>
 
 #include "AppConfigLoader.h"
 #include "Logger.h"
@@ -51,22 +50,14 @@ int main(int argc, char** argv) {
     // 初始化应用程序
     initApplication(argc, argv);
 
-    // 创建刷新线程
-    std::thread refresh_token_thread = std::thread([] { WxQyTokenRefresher::getInstance().refreshLocalTokenLoop(); });
+    // 启动AccessToken刷新器
+    WxQyTokenRefresher::getInstance().start();
 
-    // 创建监控线程
-    std::thread monitor_stop_thread = std::thread([] { XxlJobMonitor::getInstance().monitorStopStatusLoop(); });
+    // 启动XXL-JOB监控器
+    XxlJobMonitor::getInstance().start();
 
-    // 创建监控线程
-    std::thread monitor_fatal_thread = std::thread([] { XxlJobMonitor::getInstance().monitorFatalStatusLoop(); });
-
-    // 等待线程退出
-    refresh_token_thread.join();
-    monitor_stop_thread.join();
-    monitor_fatal_thread.join();
-
-    // 缓冲一段时间，等日志信息全部落盘
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    getchar();
+    LOG_INFO("exist.");
 
     return 0;
 }

@@ -6,17 +6,14 @@
 // XXL-JOB监控器（单例对象）
 class XxlJobMonitor {
 public:
+    // 启动监控器
+    void start();
+
+    // 关闭监控器
+    void stop();
+
     // 获取单例对象
     static XxlJobMonitor& getInstance();
-
-    // 循环监控XXL-JOB是否停止运行
-    void monitorStopStatusLoop();
-
-    // 循环监控XXL-JOB是否调度失败
-    void monitorFatalStatusLoop();
-
-    // 停止监控XXL-JOB
-    void stopMonitor();
 
     // 删除拷贝构造函数
     XxlJobMonitor(const XxlJobMonitor&) = delete;
@@ -30,6 +27,12 @@ private:
 
     // 私有析构函数
     ~XxlJobMonitor();
+
+    // 循环监控XXL-JOB是否停止运行
+    void monitorStopStatusLoop();
+
+    // 循环监控XXL-JOB是否调度失败
+    void monitorFatalStatusLoop();
 
     // 定期扫描任务调度日志的开关
     std::atomic_bool monitorRunning_;
