@@ -132,7 +132,8 @@ int MysqlConnectionPool::getSize() const {
     return this->_connectionCount;
 }
 
-shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
+MysqlConnectionPtr MysqlConnectionPool::getConnection() {
+    // 判断连接池是否已关闭
     if (this->_closed) {
         LOG("# ERR: %s\n", "Connection pool has closed");
         return nullptr;
@@ -155,13 +156,22 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
     }
 
     // 获取队头的连接，并返回智能指针，同时自定义智能指针释放资源的方式，将连接归还到队列中
-    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front(), [&](MysqlConnection *pcon) -> void {
+    MysqlConnectionPtr ptr_conn(this->_connectionQueue.front(), [this](MysqlConnection *pconn) {
         // 获取互斥锁
-        unique_lock<mutex> lock(this->_queueMutex);
-        // 刷新连接进入空闲状态后的起始存活时间点
-        pcon->refreshAliveTime();
-        // 入队操作（将连接归还到队列中）
-        this->_connectionQueue.push(pcon);
+        std::unique_lock<std::mutex> lock(this->_queueMutex);
+
+        // 判断连接池是否已关闭
+        if (!this->_closed) {
+            // 刷新连接进入空闲状态后的起始存活时间点
+            pconn->refreshAliveTime();
+            // 入队操作（将连接归还到队列中）
+            this->_connectionQueue.push(pconn);
+            // 通知正在等待获取连接的线程
+            this->_cv.notify_all();
+        } else {
+            // 关闭连接，避免内存泄漏
+            delete pconn;
+        }
     });
 
     // 出队操作
@@ -172,7 +182,7 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
         this->_cv.notify_all();
     }
 
-    return sp;
+    return ptr_conn;
 }
 
 void MysqlConnectionPool::produceConnection() {

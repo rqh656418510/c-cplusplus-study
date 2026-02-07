@@ -78,7 +78,7 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
 }
 
 // 连接 MySQL 数据库
-bool MysqlConnection::connect(const string host, const string username, const string password, const string dbname) {
+bool MysqlConnection::connect(const string& host, const string& username, const string& password, const string& dbname) {
     // 初始化MySQL的连接信息
     this->_host = "tcp://" + host;
     this->_username = username;
