@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     XxlJobMonitor::getInstance().start();
 
     getchar();
-    LOG_INFO("exist.");
+    LOG_INFO("program exited.");
 
     return 0;
 }
