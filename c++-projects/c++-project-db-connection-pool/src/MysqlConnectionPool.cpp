@@ -170,9 +170,6 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
             this->_connectionQueue.push(pconn);
             // 通知正在等待获取连接的线程
             this->_cv.notify_all();
-        } else {
-            // 关闭连接，避免内存泄漏
-            delete pconn;
         }
     });
 
@@ -262,6 +259,6 @@ void MysqlConnectionPool::scanIdleConnection() {
         }
 
         // 唤醒生产者线程，可以创建新连接
-        this->cv_.notify_one();
+        this->_cv.notify_one();
     }
 }
