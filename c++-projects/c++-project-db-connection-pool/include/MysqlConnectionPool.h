@@ -61,9 +61,6 @@ private:
     // 扫描多余的空闲连接，并释放连接
     void scanIdleConnection();
 
-    // 单例对象
-    static MysqlConnectionPool *INSTANCE;
-
     string _host;             // MySQL 连接地址
     string _username;         // MySQL 用户名
     string _password;         // MySQL 密码

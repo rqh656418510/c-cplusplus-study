@@ -121,7 +121,7 @@ void MysqlConnection::refreshAliveTime() {
 }
 
 // 获取连接的空闲存活时间（单位毫秒）
-long MysqlConnection::getAliveTime() const {
+long long MysqlConnection::getAliveTime() const {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return static_cast<long>(now_ms - _aliveTime.load(std::memory_order_relaxed));

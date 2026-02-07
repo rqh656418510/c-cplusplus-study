@@ -51,7 +51,7 @@ public:
     void refreshAliveTime();
 
     // 获取连接的空闲存活时间（单位毫秒）
-    long getAliveTime() const;
+    long long getAliveTime() const;
 
 private:
     string _host;                           // MySQL 连接地址

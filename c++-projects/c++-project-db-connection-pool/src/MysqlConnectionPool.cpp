@@ -41,7 +41,9 @@ MysqlConnectionPool::~MysqlConnectionPool() {
 }
 
 MysqlConnectionPool *MysqlConnectionPool::getInstance() {
-    return INSTANCE;
+    // 静态局部变量（线程安全）
+    static MysqlConnectionPool instatnce;
+    return &instatnce;
 }
 
 bool MysqlConnectionPool::loadConfigFile() {
@@ -190,30 +192,41 @@ void MysqlConnectionPool::produceConnection() {
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
 
-        // 使用 While 循环来避免线程虚假唤醒
-        while (!(this->_connectionQueue.empty())) {
-            // 如果连接队列不为空，生产者线程进入等待状态
+        // 使用While循环来避免线程虚假唤醒
+        while (!this->_closed && this->_connectionCount >= this->_maxSize) {
+            // 如果连接数量达到上限，生产者线程进入等待状态
             this->_cv.wait(lock);
         }
 
-        // 当连接数量没有达到上限，继续创建新的连接
-        if (this->_connectionCount < this->_maxSize) {
-            MysqlConnection *connection = new MysqlConnection();
-            // 连接数据库
-            bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
-            // 判断是否连接成功
-            if (connected) {
-                // 刷新连接进入空闲状态后的起始存活时间点
-                connection->refreshAliveTime();
-                // 入队操作
-                this->_connectionQueue.push(connection);
-                // 计数器加一
-                this->_connectionCount++;
-            }
+        // 如果连接池已经关闭，则退出生产线程
+        if (this->_closed) {
+            break;
         }
 
-        // 通知消费者线程可以消费连接了
-        this->_cv.notify_all();
+        // 创建数据库连接
+        MysqlConnection *connection = new MysqlConnection();
+
+        // 连接数据库
+        bool connected = connection->connect(this->_host, this->_username, this->_password, this->_dbname);
+
+        // 判断是否连接成功
+        if (connected) {
+            // 刷新连接进入空闲状态后的起始存活时间点
+            connection->refreshAliveTime();
+            // 入队操作
+            this->_connectionQueue.push(connection);
+            // 计数器加一
+            this->_connectionCount++;
+            // 通知消费者线程可以消费连接了
+            this->_cv.notify_all();
+        } else {
+            // 连接失败后，释放连接
+            delete connection;
+            // 连接失败后，解锁再休眠，避免阻塞其他线程
+            lock.unlock();
+            // 连接失败后，休眠一会避免循环过快
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 }
 
@@ -240,7 +253,7 @@ void MysqlConnectionPool::scanIdleConnection() {
                 this->_connectionQueue.pop();
                 // 计数器减一
                 this->_connectionCount--;
-                // 释放连接占用的内存空间
+                // 释放连接
                 delete phead;
             } else {
                 // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
@@ -249,6 +262,3 @@ void MysqlConnectionPool::scanIdleConnection() {
         }
     }
 }
-
-// 初始化单例对象
-MysqlConnectionPool *MysqlConnectionPool::INSTANCE = new MysqlConnectionPool();
