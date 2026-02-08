@@ -18,7 +18,7 @@
 
 using namespace std;
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝智能指针，限制每个连接在同一时刻只会被一个线程使用）
+// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝MySQL连接，限制每个连接在同一时刻只会被一个线程使用）
 using MysqlConnectionPtr = unique_ptr<MysqlConnection, function<void(MysqlConnection *)>>;
 
 // MySQL 连接池类（单例对象）
