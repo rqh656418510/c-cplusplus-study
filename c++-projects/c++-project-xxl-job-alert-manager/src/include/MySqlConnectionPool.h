@@ -11,15 +11,12 @@
 
 #include "MySqlConnection.h"
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝智能指针，限制每个连接只会被一个线程使用）
+// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝MySQL连接，限制每个连接在同一时刻只会被一个线程使用）
 using MySqlConnectionPtr = std::unique_ptr<MySqlConnection, std::function<void(MySqlConnection *)>>;
 
 // MySQL连接池（单例对象）
 class MySqlConnectionPool {
 public:
-    // 析构函数
-    ~MySqlConnectionPool();
-
     // 关闭连接池
     void close();
 
@@ -39,6 +36,9 @@ private:
     // 私有化构造函数
     MySqlConnectionPool();
 
+    // 析构函数
+    ~MySqlConnectionPool();
+
     // 删除拷贝构造函数
     MySqlConnectionPool(const MySqlConnectionPool &) = delete;
 
@@ -55,6 +55,9 @@ private:
     int maxSize_;            // 连接池的最大连接数
     int maxIdleTime_;        // 连接池的最大空闲时间（单位秒）
     int connectionTimeout_;  // 从连接池获取连接的超时时间（单位毫秒）
+
+    std::thread produceThread_;   // 生产连接的线程
+    std::thread scanIdleThread_;  // 扫描空闲连接的线程
 
     std::atomic_int connectionCount_;                // MySQL连接池中连接的总数量
     std::queue<MySqlConnection *> connectionQueue_;  // 存储MySQL连接的队列

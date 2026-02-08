@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     // 发送企业微信应用消息
     // baseTest.sendWxQyTextMsg2();
 
-    // 通过数据库连接查询数据
+    // 通过单个数据库连接查询数据
     // mysqlTest.selectByConnection();
 
     // 单个线程从数据库连接池获取连接
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
     // 等待一段时间后（日志落盘），程序再结束运行
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    LOG_INFO("exit.");
+    LOG_INFO("Test finished.");
 
     return 0;
 }

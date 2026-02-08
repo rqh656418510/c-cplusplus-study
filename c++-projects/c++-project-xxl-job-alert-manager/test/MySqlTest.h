@@ -34,8 +34,8 @@ public:
         }
     }
 
-    // 通过数据库连接查询数据
-    void selectByConnection() {
+    // 通过单个数据库连接查询数据
+    void selectBySingleConnection() {
         // 全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
@@ -80,7 +80,7 @@ public:
         MySqlConnectionPool* pool = MySqlConnectionPool::getInstance();
 
         // 获取数据库连接
-        std::shared_ptr<MySqlConnection> conn = pool->getConnection();
+        MySqlConnectionPtr conn = pool->getConnection();
 
         // 判断连接是否有效
         if (!conn) {
@@ -94,7 +94,7 @@ public:
         LOG_INFO("Thread %d, current connection pool size: %d", CurrentThread::tid(), pool->getSize());
 
         // 关闭连接池
-        delete pool;
+        pool->close();
     }
 
     // 多个线程从数据库连接池获取连接
@@ -114,7 +114,7 @@ public:
             threads[i] = std::thread([&, i]() {
                 for (int n = 0; n < 100; n++) {
                     // 获取数据连接
-                    std::shared_ptr<MySqlConnection> conn = pool->getConnection();
+                    MySqlConnectionPtr conn = pool->getConnection();
                     if (!conn) {
                         LOG_ERROR("Connection invalid");
                         continue;
@@ -135,9 +135,9 @@ public:
         // 等待一段时间，触发数据库连接池回收空闲连接
         LOG_INFO("Waiting to recycle idle mysql connection...");
         std::this_thread::sleep_for(std::chrono::seconds(config.mysql.connectionPoolMaxIdleTime * 3));
-        LOG_INFO("Run finished, final connection pool size: %d", pool->getSize());
+        LOG_INFO("Final connection pool size: %d", pool->getSize());
 
         // 关闭连接池
-        delete pool;
+        pool->close();
     }
 };

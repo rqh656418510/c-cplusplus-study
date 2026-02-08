@@ -33,19 +33,22 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
         }
     }
 
-    // 后台启动MySQL连接的生产者线程
-    std::thread produce_thread(std::bind(&MySqlConnectionPool::produceConnection, this));
-    produce_thread.detach();
+    // 创建生产 MySQL 连接的线程
+    produceThread_ = std::thread(std::bind(&MySqlConnectionPool::produceConnection, this));
 
-    // 后台启动一个扫描线程，定时扫描多余的空闲连接，并释放连接
-    std::thread scan_thread(std::bind(&MySqlConnectionPool::scanIdleConnection, this));
-    scan_thread.detach();
+    // 创建扫描空闲连接的线程
+    scanIdleThread_ = std::thread(std::bind(&MySqlConnectionPool::scanIdleConnection, this));
 }
 
 // 析构函数
 MySqlConnectionPool::~MySqlConnectionPool() {
-    // 关闭连接池，释放所有连接
-    this->close();
+    try {
+        // 关闭连接池，释放所有连接
+        this->close();
+    } catch (...) {
+        // 析构函数禁止抛异常
+        LOG_ERROR("Failed to destroy connection pool");
+    }
 }
 
 // 获取连接池单例对象
@@ -64,6 +67,19 @@ void MySqlConnectionPool::close() {
 
     // 设置关闭状态
     this->closed_ = true;
+
+    // 通知所有线程连接池关闭
+    cv_.notify_all();
+
+    // 等待生产线程结束运行
+    if (produceThread_.joinable()) {
+        produceThread_.join();
+    }
+
+    // 等待空闲扫描线程结束运行
+    if (scanIdleThread_.joinable()) {
+        scanIdleThread_.join();
+    }
 
     // 获取互斥锁
     std::unique_lock<std::mutex> lock(this->queueMutex_);
@@ -114,8 +130,13 @@ MySqlConnectionPtr MySqlConnectionPool::getConnection() {
         }
     }
 
+    // 如果连接池已经关闭，则直接返回
+    if (this->closed_) {
+        return nullptr;
+    }
+
     // 获取队头的连接，并返回智能指针，同时自定义智能指针释放资源的方式，将连接归还到队列中
-    MySqlConnectionPtr ptr(this->connectionQueue_.front(), [this](MySqlConnection *pconn) {
+    MySqlConnectionPtr ptr_conn(this->connectionQueue_.front(), [this](MySqlConnection *pconn) {
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(this->queueMutex_);
 
@@ -127,6 +148,9 @@ MySqlConnectionPtr MySqlConnectionPool::getConnection() {
             this->connectionQueue_.push(pconn);
             // 通知正在等待获取连接的线程
             this->cv_.notify_all();
+        } else {
+            // 连接池已关闭，释放连接
+            delete pconn;
         }
     });
 
@@ -138,7 +162,7 @@ MySqlConnectionPtr MySqlConnectionPool::getConnection() {
         this->cv_.notify_all();
     }
 
-    return ptr;
+    return ptr_conn;
 }
 
 // 生产MySQL连接
@@ -192,39 +216,35 @@ void MySqlConnectionPool::produceConnection() {
 // 扫描多余的空闲连接，并释放连接
 void MySqlConnectionPool::scanIdleConnection() {
     while (!this->closed_) {
-        // 模拟定时扫描连接的效果
-        std::this_thread::sleep_for(std::chrono::seconds(this->maxIdleTime_));
-
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(this->queueMutex_);
 
-        // 使用While循环来避免线程虚假唤醒
-        while (this->connectionCount_ <= this->initSize_) {
-            // 如果当前的连接总数量小于等于初始连接数量，扫描线程进入等待状态
-            this->cv_.wait(lock);
+        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
+        if (this->cv_.wait_for(lock, std::chrono::seconds(this->maxIdleTime_),
+                               [this]() { return this->closed_.load(); })) {
+            // 当被唤醒时，说明连接池已经关闭，退出扫描线程
+            break;
+        }
+
+        // wait_for() 超时返回后，如果连接池已经关闭，则退出扫描线程
+        if (this->closed_) {
+            break;
         }
 
         // 判断当前的连接总数量是否大于初始连接数量
         while (this->connectionCount_ > this->initSize_) {
-            // TODO 待解决高并发场景下，MysqlConnection指针释放后再使用的问题
-            try {
-                // 扫描队头的连接是否超过最大空闲时间
-                MySqlConnection *phead = this->connectionQueue_.front();
-                if (phead->getAliveTime() >= this->maxIdleTime_ * 1000) {
-                    // 出队操作
-                    this->connectionQueue_.pop();
-                    // 计数器减一
-                    this->connectionCount_--;
-                    // 释放连接
-                    delete phead;
-                } else {
-                    // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
-                    break;
-                }
-            } catch (const std::exception &e) {
-                LOG_ERROR("Failed to recycle mysql connection");
-                // 空闲连接释放失败后，休眠一会避免循环过快
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            // 扫描队头的连接是否超过最大空闲时间
+            MySqlConnection *phead = this->connectionQueue_.front();
+            if (phead->getAliveTime() >= this->maxIdleTime_ * 1000) {
+                // 出队操作
+                this->connectionQueue_.pop();
+                // 计数器减一
+                this->connectionCount_--;
+                // 释放连接
+                delete phead;
+            } else {
+                // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
+                break;
             }
         }
 

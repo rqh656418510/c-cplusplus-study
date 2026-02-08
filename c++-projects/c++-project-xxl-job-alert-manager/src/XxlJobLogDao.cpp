@@ -8,8 +8,6 @@
 #include "MySqlConnectionPool.h"
 #include "XxlJobMonitor.h"
 
-using namespace std;
-
 // 查询最新的任务调度日志记录
 XxlJobLog XxlJobLogDao::selectLastest() {
     // 数据库表的名称
@@ -25,7 +23,7 @@ XxlJobLog XxlJobLogDao::selectLastest() {
     XxlJobLog log;
 
     // 获取MySQL连接
-    std::shared_ptr<MySqlConnection> connection = MySqlConnectionPool::getInstance()->getConnection();
+    MySqlConnectionPtr connection = MySqlConnectionPool::getInstance()->getConnection();
 
     // 判断连接是否有效
     if (!connection) {
@@ -73,7 +71,7 @@ XxlJobLog XxlJobLogDao::selectLastestFatal() {
     XxlJobLog log;
 
     // 获取MySQL连接
-    std::shared_ptr<MySqlConnection> connection = MySqlConnectionPool::getInstance()->getConnection();
+    MySqlConnectionPtr connection = MySqlConnectionPool::getInstance()->getConnection();
 
     // 判断连接是否有效
     if (!connection) {
