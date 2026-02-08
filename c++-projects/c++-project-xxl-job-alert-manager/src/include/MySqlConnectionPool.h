@@ -57,7 +57,7 @@ private:
     std::thread scanIdleThread_;  // 扫描空闲连接的线程
 
     std::atomic_int connectionCount_;                // MySQL连接池中连接的总数量
-    std::queue<MySqlConnection *> connectionQueue_;  // 存储MySQL连接的队列
+    std::queue<MySqlConnection *> connectionQueue_;  // 存储MySQL连接（空闲连接）的队列
     std::mutex queueMutex_;                          // 维护MySQL连接队列线程安全的互斥锁
     std::condition_variable cv_;  // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
     std::atomic_bool closed_;     // 连接池是否已关闭

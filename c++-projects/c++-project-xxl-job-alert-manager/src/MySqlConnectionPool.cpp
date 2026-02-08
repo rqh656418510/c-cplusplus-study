@@ -231,7 +231,7 @@ void MySqlConnectionPool::scanIdleConnection() {
             break;
         }
 
-        // 判断空闲连接数量是否大于初始连接数量
+        // 判断空闲连接（即队列里的连接）数量是否大于初始连接数量
         while (!this->connectionQueue_.empty() && this->connectionQueue_.size() > this->initSize_) {
             // 扫描队头的连接是否超过最大空闲时间
             MySqlConnection *phead = this->connectionQueue_.front();
