@@ -5,7 +5,9 @@
 
 using namespace std;
 
-void testQuerySingleThread() {
+// 不使用数据库连接池，单个线程查询记录
+void testConnectionSingleThread() {
+    // 创建连接
     MysqlConnection *connection = new MysqlConnection();
     connection->connect("192.168.2.181:3306", "root", "Cxx_Chat_12345", "cxx_study");
 
@@ -23,9 +25,11 @@ void testQuerySingleThread() {
         }
     }
 
+    // 释放连接
     delete connection;
 }
 
+// 使用数据库连接池，单个线程插入多条记录
 void testConnectionPoolSingleThread() {
     const string insertSql =
             "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
@@ -55,6 +59,7 @@ void testConnectionPoolSingleThread() {
     pool->close();
 }
 
+// 使用数据库连接池，多个线程插入多条记录
 void testConnectionPoolMultiThread() {
     const int num_threads = 30;
     thread threads[num_threads];
@@ -102,7 +107,7 @@ void testConnectionPoolMultiThread() {
 
 int main() {
     // 不使用数据库连接池，单个线程查询记录
-    // testQuerySingleThread();
+    // testConnectionSingleThread();
 
     // 使用数据库连接池，单个线程插入多条记录
     // testConnectionPoolSingleThread();
