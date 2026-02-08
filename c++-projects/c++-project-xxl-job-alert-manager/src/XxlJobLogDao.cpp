@@ -23,15 +23,15 @@ XxlJobLog XxlJobLogDao::selectLastest() {
     XxlJobLog log;
 
     // 获取MySQL连接
-    MySqlConnectionPtr connection = MySqlConnectionPool::getInstance()->getConnection();
+    std::shared_ptr<MySqlConnection> conn = MySqlConnectionPool::getInstance()->getConnection();
 
     // 判断连接是否有效
-    if (!connection) {
+    if (!conn) {
         return log;
     }
 
     // 执行SQL语句
-    MYSQL_RES* res = connection->query(sql);
+    MYSQL_RES* res = conn->query(sql);
     if (res != nullptr && mysql_num_rows(res) > 0) {
         // 封装查询结果
         MYSQL_ROW row = mysql_fetch_row(res);
@@ -71,15 +71,15 @@ XxlJobLog XxlJobLogDao::selectLastestFatal() {
     XxlJobLog log;
 
     // 获取MySQL连接
-    MySqlConnectionPtr connection = MySqlConnectionPool::getInstance()->getConnection();
+    std::shared_ptr<MySqlConnection> conn = MySqlConnectionPool::getInstance()->getConnection();
 
     // 判断连接是否有效
-    if (!connection) {
+    if (!conn) {
         return log;
     }
 
     // 执行SQL语句
-    MYSQL_RES* res = connection->query(sql);
+    MYSQL_RES* res = conn->query(sql);
     if (res != nullptr && mysql_num_rows(res) > 0) {
         // 封装查询结果
         MYSQL_ROW row = mysql_fetch_row(res);

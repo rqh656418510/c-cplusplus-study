@@ -11,9 +11,6 @@
 
 #include "MySqlConnection.h"
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝MySQL连接，限制每个连接在同一时刻只会被一个线程使用）
-using MySqlConnectionPtr = std::unique_ptr<MySqlConnection, std::function<void(MySqlConnection *)>>;
-
 // MySQL连接池（单例对象）
 class MySqlConnectionPool {
 public:
@@ -30,7 +27,7 @@ public:
     static MySqlConnectionPool *getInstance();
 
     // 从连接池中获取MySQL连接
-    MySqlConnectionPtr getConnection();
+    std::shared_ptr<MySqlConnection> getConnection();
 
 private:
     // 私有构造函数

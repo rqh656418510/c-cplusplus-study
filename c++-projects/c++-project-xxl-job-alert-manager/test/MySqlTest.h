@@ -80,7 +80,7 @@ public:
         MySqlConnectionPool* pool = MySqlConnectionPool::getInstance();
 
         // 获取数据库连接
-        MySqlConnectionPtr conn = pool->getConnection();
+        std::shared_ptr<MySqlConnection> conn = pool->getConnection();
 
         // 判断连接是否有效
         if (!conn) {
@@ -114,7 +114,7 @@ public:
             threads[i] = std::thread([&, i]() {
                 for (int n = 0; n < 100; n++) {
                     // 获取数据连接
-                    MySqlConnectionPtr conn = pool->getConnection();
+                    std::shared_ptr<MySqlConnection> conn = pool->getConnection();
                     if (!conn) {
                         LOG_ERROR("Connection invalid");
                         continue;
