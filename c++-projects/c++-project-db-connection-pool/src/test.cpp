@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "MysqlConnection.h"
 #include "MysqlConnectionPool.h"
 
@@ -6,7 +7,7 @@ using namespace std;
 
 void testQuerySingleThread() {
     MysqlConnection *connection = new MysqlConnection();
-    connection->connect("192.168.56.112:3307", "root", "123456", "cxx_study");
+    connection->connect("192.168.2.181:3306", "root", "Cxx_Chat_12345", "cxx_study");
 
     // 单个线程查询记录
     const string querySql = "select * from properties where `KEY` = ?";
@@ -26,7 +27,8 @@ void testQuerySingleThread() {
 }
 
 void testConnectionPoolSingleThread() {
-    const string insertSql = "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
+    const string insertSql =
+        "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
     auto start_time = chrono::high_resolution_clock::now();
@@ -51,7 +53,8 @@ void testConnectionPoolMultiThread() {
     const int num_threads = 30;
     thread threads[num_threads];
 
-    const string insertSql = "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
+    const string insertSql =
+        "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
     auto start_time = chrono::high_resolution_clock::now();
@@ -88,13 +91,13 @@ void testConnectionPoolMultiThread() {
 
 int main() {
     // 不使用数据库连接池，单个线程查询记录
-    // testQuerySingleThread();
+    testQuerySingleThread();
 
     // 使用数据库连接池，单个线程插入多条记录
     // testConnectionPoolSingleThread();
 
     // 使用数据库连接池，多个线程插入多条记录
-    testConnectionPoolMultiThread();
+    // testConnectionPoolMultiThread();
 
     // 阻塞主线程，直到用户按下任意键才结束程序
     char c = getchar();

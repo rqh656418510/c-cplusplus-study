@@ -4,16 +4,18 @@
 
 #pragma once
 
-#include <atomic>
-#include <iostream>
-#include <vector>
-#include <mysql_connection.h>
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
+#include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
+#include <mysql_connection.h>
+
+#include <atomic>
 #include <chrono>
+#include <iostream>
+#include <vector>
+
 #include "public.h"
 
 using namespace std;
@@ -21,7 +23,6 @@ using namespace sql;
 
 // MySQL 数据库操作类
 class MysqlConnection {
-
 public:
     // 构造函数
     MysqlConnection();
@@ -54,11 +55,11 @@ public:
     long long getAliveTime() const;
 
 private:
-    string _host;                           // MySQL 连接地址
-    string _username;                       // MySQL 用户名
-    string _password;                       // MySQL 密码
-    string _dbname;                         // MySQL 数据库
-    Driver *_driver;                        // MySQL 驱动
-    Connection *_connection;                // MySQL 连接
-    std::atomic<long long> _aliveTime;                  // 记录连接进入空闲状态后的起始存活时间点
+    string _host;                       // MySQL 连接地址
+    string _username;                   // MySQL 用户名
+    string _password;                   // MySQL 密码
+    string _dbname;                     // MySQL 数据库
+    Driver *_driver;                    // MySQL 驱动
+    Connection *_connection;            // MySQL 连接
+    std::atomic<long long> _aliveTime;  // 记录连接进入空闲状态后的起始存活时间点
 };

@@ -36,7 +36,7 @@ public:
     // 获取连接池中的连接数量
     int getSize() const;
 
-    // 获取连接池单例
+    // 获取连接池单例对象
     static MysqlConnectionPool *getInstance();
 
     // 获取 MySQL 连接
@@ -71,9 +71,12 @@ private:
     int _maxIdleTime;        // 最大空闲时间（单位秒）
     int _connectionTimeout;  // 连接超时时间（单位毫秒）
 
+    std::thread _produceThread;   // 生产连接的线程
+    std::thread _scanIdleThread;  // 扫描空闲连接的线程
+
+    atomic_bool _closed;                        // 连接池是否已关闭
     atomic_int _connectionCount;                // MySQL连接池中连接的总数量
     queue<MysqlConnection *> _connectionQueue;  // 存储 MySQL 连接的队列
     mutex _queueMutex;                          // 维护 MySQL 连接队列线程安全的互斥锁
     condition_variable _cv;  // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
-    atomic_bool _closed;     // 连接池是否已关闭
 };

@@ -2,7 +2,6 @@
 
 // 构造函数
 MysqlConnection::MysqlConnection() {
-
 }
 
 // 析构函数
@@ -25,8 +24,7 @@ bool MysqlConnection::execute(const char *sql) {
                 return statement->execute(sql);
             }
         }
-    }
-    catch (SQLException &e) {
+    } catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
@@ -44,8 +42,7 @@ int MysqlConnection::executeUpdate(const char *sql) {
                 return statement->executeUpdate(sql);
             }
         }
-    }
-    catch (SQLException &e) {
+    } catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
@@ -68,8 +65,7 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
                 resultSet.reset(statement->executeQuery());
             }
         }
-    }
-    catch (SQLException &e) {
+    } catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
@@ -78,7 +74,8 @@ unique_ptr<ResultSet> MysqlConnection::query(const char *sql, const vector<strin
 }
 
 // 连接 MySQL 数据库
-bool MysqlConnection::connect(const string &host, const string &username, const string &password, const string &dbname) {
+bool MysqlConnection::connect(const string &host, const string &username, const string &password,
+                              const string &dbname) {
     // 初始化MySQL的连接信息
     this->_host = "tcp://" + host;
     this->_username = username;
@@ -104,8 +101,7 @@ bool MysqlConnection::connect(const string &host, const string &username, const 
             // LOG("# DEBUG: %s\n", "Inited mysql connection");
             return true;
         }
-    }
-    catch (SQLException &e) {
+    } catch (SQLException &e) {
         LOG("# ERR: SQLException in %s(%s) on line %d \n", __FILE__, __FUNCTION__, __LINE__);
         LOG("# ERR: MySQL Error Code %d\n", e.getErrorCode());
         LOG("# ERR: %s\n", e.what());
