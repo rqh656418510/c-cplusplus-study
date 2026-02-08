@@ -200,6 +200,9 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
             this->_connectionQueue.push(pconn);
             // 通知正在等待获取连接的线程
             this->_cv.notify_all();
+        } else {
+            // 连接池已关闭，释放连接
+            delete pconn;
         }
     });
 
