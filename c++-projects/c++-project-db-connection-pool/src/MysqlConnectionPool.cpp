@@ -264,13 +264,12 @@ void MysqlConnectionPool::produceConnection() {
 // 扫描多余的空闲连接，并释放连接
 void MysqlConnectionPool::scanIdleConnection() {
     while (!this->_closed) {
-
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
         if (this->_cv.wait_for(lock, std::chrono::seconds(this->_maxIdleTime), [this]() { return this->_closed.load(); })) {
-            // 当被唤醒且连接池已经关闭时，退出扫描线程
+            // 当被唤醒时，说明连接池已经关闭，退出扫描线程
             break;
         }
 
