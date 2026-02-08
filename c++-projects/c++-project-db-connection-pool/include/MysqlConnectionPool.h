@@ -18,9 +18,6 @@
 
 using namespace std;
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝MySQL连接，限制每个连接在同一时刻只会被一个线程使用）
-using MysqlConnectionPtr = unique_ptr<MysqlConnection, function<void(MysqlConnection *)>>;
-
 // MySQL 连接池类（单例对象）
 class MysqlConnectionPool {
 public:
@@ -37,7 +34,7 @@ public:
     static MysqlConnectionPool *getInstance();
 
     // 获取 MySQL 连接
-    MysqlConnectionPtr getConnection();
+    shared_ptr<MysqlConnection> getConnection();
 
 private:
     // 私有构造函数

@@ -35,7 +35,7 @@ void testConnectionPoolSingleThread() {
 
     // 单个线程插入多条记录
     for (int i = 0; i < 1500; i++) {
-        MysqlConnectionPtr connection = pool->getConnection();
+        shared_ptr<MysqlConnection> connection = pool->getConnection();
         if (!connection) {
             cout << "Connection invalid";
             continue;
@@ -69,7 +69,7 @@ void testConnectionPoolMultiThread() {
     for (int i = 0; i < num_threads; i++) {
         threads[i] = thread([&, i]() {
             for (int n = 0; n < 100; n++) {
-                MysqlConnectionPtr connection = pool->getConnection();
+                shared_ptr<MysqlConnection> connection = pool->getConnection();
                 if (!connection) {
                     cout << "Connection invalid";
                     continue;

@@ -159,7 +159,7 @@ int MysqlConnectionPool::getSize() const {
 }
 
 // 获取 MySQL 连接
-MysqlConnectionPtr MysqlConnectionPool::getConnection() {
+shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
     // 判断连接池是否已关闭
     if (this->_closed) {
         LOG("# ERR: %s\n", "Connection pool has closed");
@@ -188,7 +188,7 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
     }
 
     // 获取队头的连接，并返回智能指针，同时自定义智能指针释放资源的方式，将连接归还到队列中
-    MysqlConnectionPtr ptr_conn(this->_connectionQueue.front(), [this](MysqlConnection *pconn) {
+    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front(), [this](MysqlConnection *pconn) {
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(this->_queueMutex);
 
@@ -214,7 +214,7 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
         this->_cv.notify_all();
     }
 
-    return ptr_conn;
+    return sp;
 }
 
 // 生产 MySQL 连接
