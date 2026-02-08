@@ -278,8 +278,8 @@ void MysqlConnectionPool::scanIdleConnection() {
             break;
         }
 
-        // 判断当前的连接总数量是否大于初始连接数量
-        while (this->_connectionCount > this->_initSize) {
+        // 判断空闲连接数量是否大于初始连接数量
+        while (!this->_connectionQueue.empty() && this->_connectionQueue.size() > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
             if (phead->getAliveTime() >= this->_maxIdleTime * 1000) {
@@ -294,8 +294,5 @@ void MysqlConnectionPool::scanIdleConnection() {
                 break;
             }
         }
-
-        // 唤醒生产者线程，可以创建新连接
-        this->_cv.notify_one();
     }
 }
