@@ -159,7 +159,7 @@ int MysqlConnectionPool::getSize() const {
 }
 
 // 获取 MySQL 连接
-MysqlConnectionPtr MysqlConnectionPool::getConnection() {
+shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
     // 判断连接池是否已关闭
     if (this->_closed) {
         LOG("# ERR: %s\n", "Connection pool has closed");
@@ -188,7 +188,7 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
     }
 
     // 获取队头的连接，并返回智能指针，同时自定义智能指针释放资源的方式，将连接归还到队列中
-    MysqlConnectionPtr ptr_conn(this->_connectionQueue.front(), [this](MysqlConnection *pconn) {
+    shared_ptr<MysqlConnection> sp(this->_connectionQueue.front(), [this](MysqlConnection *pconn) {
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(this->_queueMutex);
 
@@ -214,7 +214,7 @@ MysqlConnectionPtr MysqlConnectionPool::getConnection() {
         this->_cv.notify_all();
     }
 
-    return ptr_conn;
+    return sp;
 }
 
 // 生产 MySQL 连接
@@ -278,8 +278,8 @@ void MysqlConnectionPool::scanIdleConnection() {
             break;
         }
 
-        // 判断当前的连接总数量是否大于初始连接数量
-        while (this->_connectionCount > this->_initSize) {
+        // 判断空闲连接（即队列里的连接）数量是否大于初始连接数量
+        while (!this->_connectionQueue.empty() && this->_connectionQueue.size() > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
             if (phead->getAliveTime() >= this->_maxIdleTime * 1000) {
@@ -294,8 +294,5 @@ void MysqlConnectionPool::scanIdleConnection() {
                 break;
             }
         }
-
-        // 唤醒生产者线程，可以创建新连接
-        this->_cv.notify_one();
     }
 }
