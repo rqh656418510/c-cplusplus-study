@@ -33,10 +33,10 @@ public:
     MySqlConnectionPtr getConnection();
 
 private:
-    // 私有化构造函数
+    // 私有构造函数
     MySqlConnectionPool();
 
-    // 析构函数
+    // 私有析构函数
     ~MySqlConnectionPool();
 
     // 删除拷贝构造函数
