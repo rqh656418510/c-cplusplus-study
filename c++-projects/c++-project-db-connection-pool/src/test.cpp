@@ -28,7 +28,7 @@ void testQuerySingleThread() {
 
 void testConnectionPoolSingleThread() {
     const string insertSql =
-        "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
+            "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
     auto start_time = chrono::high_resolution_clock::now();
@@ -36,6 +36,10 @@ void testConnectionPoolSingleThread() {
     // 单个线程插入多条记录
     for (int i = 0; i < 1500; i++) {
         MysqlConnectionPtr connection = pool->getConnection();
+        if (!connection) {
+            cout << "Connection invalid";
+            continue;
+        }
         connection->executeUpdate(insertSql.c_str());
         cout << "Insert " << i << " record, current pool size: " << pool->getSize() << endl;
     }
@@ -45,9 +49,10 @@ void testConnectionPoolSingleThread() {
     // 统计执行耗时
     chrono::duration<double, milli> elapsed_time = end_time - start_time;
     cout << "Total Times: " << elapsed_time.count() << "ms" << endl;
+    cout << "Connection pool final size: " << pool->getSize() << endl;
 
     // 关闭连接池
-    delete pool;
+    pool->close();
 }
 
 void testConnectionPoolMultiThread() {
@@ -55,7 +60,7 @@ void testConnectionPoolMultiThread() {
     thread threads[num_threads];
 
     const string insertSql =
-        "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
+            "INSERT INTO `properties` (`KEY`, `VALUE`, `REMARK`) VALUES ('test_limit_price', '30.5', 'Limit Price')";
     MysqlConnectionPool *pool = MysqlConnectionPool::getInstance();
 
     auto start_time = chrono::high_resolution_clock::now();
@@ -65,6 +70,10 @@ void testConnectionPoolMultiThread() {
         threads[i] = thread([&, i]() {
             for (int n = 0; n < 100; n++) {
                 MysqlConnectionPtr connection = pool->getConnection();
+                if (!connection) {
+                    cout << "Connection invalid";
+                    continue;
+                }
                 connection->executeUpdate(insertSql.c_str());
                 cout << "Thread " << i << ", current pool size: " << pool->getSize() << endl;
             }
@@ -88,21 +97,18 @@ void testConnectionPoolMultiThread() {
     cout << "Connection pool final size: " << pool->getSize() << endl;
 
     // 关闭连接池
-    delete pool;
+    pool->close();
 }
 
 int main() {
     // 不使用数据库连接池，单个线程查询记录
-    testQuerySingleThread();
+    // testQuerySingleThread();
 
     // 使用数据库连接池，单个线程插入多条记录
     // testConnectionPoolSingleThread();
 
     // 使用数据库连接池，多个线程插入多条记录
-    // testConnectionPoolMultiThread();
-
-    // 阻塞主线程，直到用户按下任意键才结束程序
-    char c = getchar();
+    testConnectionPoolMultiThread();
 
     return 0;
 }

@@ -4,7 +4,7 @@
 
 namespace fs = boost::filesystem;
 
-// 构造函数
+// 私有构造函数
 MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false) {
     // 加载配置文件
     if (!loadConfigFile()) {
@@ -35,7 +35,7 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
     _scanIdleThread = thread(bind(&MysqlConnectionPool::scanIdleConnection, this));
 }
 
-// 析构函数
+// 私有析构函数
 MysqlConnectionPool::~MysqlConnectionPool() {
     try {
         // 关闭连接池，释放所有连接
@@ -261,19 +261,17 @@ void MysqlConnectionPool::produceConnection() {
 // 扫描多余的空闲连接，并释放连接
 void MysqlConnectionPool::scanIdleConnection() {
     while (!this->_closed) {
-        // 模拟定时扫描连接的效果
-        this_thread::sleep_for(chrono::seconds(this->_maxIdleTime));
 
         // 获取互斥锁
         unique_lock<mutex> lock(this->_queueMutex);
 
-        // 使用 While 循环来避免线程虚假唤醒
-        while (this->_connectionCount <= this->_initSize) {
-            // 如果当前的连接总数量小于等于初始连接数量，扫描线程进入等待状态
-            this->_cv.wait(lock);
+        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
+        if (this->_cv.wait_for(lock, std::chrono::seconds(this->_maxIdleTime), [this]() { return this->_closed.load(); })) {
+            // 当被唤醒且连接池已经关闭时，退出扫描线程
+            break;
         }
 
-        // 如果连接池已经关闭，则退出扫描线程
+        // wait_for() 超时返回后，如果连接池已经关闭，则退出扫描线程
         if (this->_closed) {
             break;
         }
