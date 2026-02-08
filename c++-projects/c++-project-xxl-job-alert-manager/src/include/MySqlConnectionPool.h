@@ -11,15 +11,9 @@
 
 #include "MySqlConnection.h"
 
-// 声明MySQL连接的指针类型（使用unique_ptr，禁止拷贝智能指针，限制每个连接只会被一个线程使用）
-using MySqlConnectionPtr = std::unique_ptr<MySqlConnection, std::function<void(MySqlConnection *)>>;
-
 // MySQL连接池（单例对象）
 class MySqlConnectionPool {
 public:
-    // 析构函数
-    ~MySqlConnectionPool();
-
     // 关闭连接池
     void close();
 
@@ -33,11 +27,14 @@ public:
     static MySqlConnectionPool *getInstance();
 
     // 从连接池中获取MySQL连接
-    MySqlConnectionPtr getConnection();
+    std::shared_ptr<MySqlConnection> getConnection();
 
 private:
-    // 私有化构造函数
+    // 私有构造函数
     MySqlConnectionPool();
+
+    // 私有析构函数
+    ~MySqlConnectionPool();
 
     // 删除拷贝构造函数
     MySqlConnectionPool(const MySqlConnectionPool &) = delete;
@@ -56,8 +53,11 @@ private:
     int maxIdleTime_;        // 连接池的最大空闲时间（单位秒）
     int connectionTimeout_;  // 从连接池获取连接的超时时间（单位毫秒）
 
+    std::thread produceThread_;   // 生产连接的线程
+    std::thread scanIdleThread_;  // 扫描空闲连接的线程
+
     std::atomic_int connectionCount_;                // MySQL连接池中连接的总数量
-    std::queue<MySqlConnection *> connectionQueue_;  // 存储MySQL连接的队列
+    std::queue<MySqlConnection *> connectionQueue_;  // 存储MySQL连接（空闲连接）的队列
     std::mutex queueMutex_;                          // 维护MySQL连接队列线程安全的互斥锁
     std::condition_variable cv_;  // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
     std::atomic_bool closed_;     // 连接池是否已关闭
