@@ -4,16 +4,17 @@
 
 #pragma once
 
-#include <iostream>
-#include <queue>
-#include <mutex>
 #include <atomic>
-#include <thread>
-#include <memory>
-#include <functional>
 #include <condition_variable>
-#include "public.h"
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <queue>
+#include <thread>
+
 #include "MysqlConnection.h"
+#include "public.h"
 
 using namespace std;
 
@@ -22,7 +23,6 @@ using MysqlConnectionPtr = unique_ptr<MysqlConnection, function<void(MysqlConnec
 
 // MySQL 连接池类（单例对象）
 class MysqlConnectionPool {
-
 public:
     // 析构函数
     ~MysqlConnectionPool();
@@ -61,19 +61,19 @@ private:
     // 扫描多余的空闲连接，并释放连接
     void scanIdleConnection();
 
-    string _host;             // MySQL 连接地址
-    string _username;         // MySQL 用户名
-    string _password;         // MySQL 密码
-    string _dbname;           // MySQL 数据库
+    string _host;      // MySQL 连接地址
+    string _username;  // MySQL 用户名
+    string _password;  // MySQL 密码
+    string _dbname;    // MySQL 数据库
 
-    int _initSize;            // 初始连接数
-    int _maxSize;             // 最大连接数
-    int _maxIdleTime;         // 最大空闲时间（单位秒）
-    int _connectionTimeout;   // 连接超时时间（单位毫秒）
+    int _initSize;           // 初始连接数
+    int _maxSize;            // 最大连接数
+    int _maxIdleTime;        // 最大空闲时间（单位秒）
+    int _connectionTimeout;  // 连接超时时间（单位毫秒）
 
-    atomic_int _connectionCount;                 // MySQL连接池中连接的总数量
-    queue<MysqlConnection *> _connectionQueue;   // 存储 MySQL 连接的队列
-    mutex _queueMutex;                           // 维护 MySQL 连接队列线程安全的互斥锁
-    condition_variable _cv;                      // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
-    atomic_bool _closed;                         // 连接池是否已关闭
+    atomic_int _connectionCount;                // MySQL连接池中连接的总数量
+    queue<MysqlConnection *> _connectionQueue;  // 存储 MySQL 连接的队列
+    mutex _queueMutex;                          // 维护 MySQL 连接队列线程安全的互斥锁
+    condition_variable _cv;  // 条件变量，用于连接生产者线程和连接消费者线程之间的通信
+    atomic_bool _closed;     // 连接池是否已关闭
 };
