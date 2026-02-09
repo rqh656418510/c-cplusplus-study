@@ -13,10 +13,10 @@
 #include <string>
 
 // 网络工具类（单例对象）
-class NetworkUtil {
+class Network {
 public:
     // 获取单例对象
-    static NetworkUtil& getInstance();
+    static Network& getInstance();
 
     // 获取本地的 IP 地址，可指定网络接口名称（比如 eth0）
     std::string getLocalIp(const std::string& network_interface = "");
@@ -25,15 +25,15 @@ public:
     std::string getPublicIp();
 
     // 删除拷贝构造函数
-    NetworkUtil(const NetworkUtil&) = delete;
+    Network(const Network&) = delete;
 
     // 删除赋值操作运算符
-    NetworkUtil& operator=(const NetworkUtil&) = delete;
+    Network& operator=(const Network&) = delete;
 
 private:
     // 私有构造函数
-    NetworkUtil() = default;
+    Network() = default;
 
     // 私有析构函数
-    ~NetworkUtil() = default;
+    ~Network() = default;
 };

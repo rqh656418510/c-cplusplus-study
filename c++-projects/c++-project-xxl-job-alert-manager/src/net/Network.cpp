@@ -1,20 +1,19 @@
-#include "NetworkUtil.h"
-
 #include "Logger.h"
+#include "Network.h"
 
 // 定义宏，启用 httplib 的 HTTPS 支持，需要依赖 OpenSSL
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "httplib.h"
 
 // 获取单例对象
-NetworkUtil& NetworkUtil::getInstance() {
+Network& Network::getInstance() {
     // 静态局部变量（线程安全）
-    static NetworkUtil instance;
+    static Network instance;
     return instance;
 }
 
 // 获取本地的 IP 地址，可指定网络接口名称（比如 eth0）
-std::string NetworkUtil::getLocalIp(const std::string& network_interface) {
+std::string Network::getLocalIp(const std::string& network_interface) {
     std::string result;
 
     // 获取本地网络接口的信息链表
@@ -63,7 +62,7 @@ std::string NetworkUtil::getLocalIp(const std::string& network_interface) {
 }
 
 // 获取公网 IP 地址
-std::string NetworkUtil::getPublicIp() {
+std::string Network::getPublicIp() {
     try {
         // 创建 HTTPS 客户端
         httplib::SSLClient client("checkip.amazonaws.com", 443);

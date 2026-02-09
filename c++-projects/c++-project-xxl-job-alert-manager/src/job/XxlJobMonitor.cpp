@@ -7,7 +7,7 @@
 #include "Alert.h"
 #include "AppConfigLoader.h"
 #include "Logger.h"
-#include "NetworkUtil.h"
+#include "Network.h"
 #include "Timestamp.h"
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
@@ -94,7 +94,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 if (!idleAlertSended_.load()) {
                     char buf[1024] = {0};
                     sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
-                            Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str(),
+                            Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
                             config.alert.xxljobEnvironmentName.c_str());
                     Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser, std::string(buf));
                     idleAlertSended_.store(true);
@@ -118,7 +118,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};
                         sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
-                                Timestamp::now().toString().c_str(), NetworkUtil::getInstance().getPublicIp().c_str(),
+                                Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
                                 config.alert.xxljobEnvironmentName.c_str());
                         Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser,
                                                std::string(buf));

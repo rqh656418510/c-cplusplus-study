@@ -6,7 +6,7 @@
 #include "Alert.h"
 #include "AppConfigLoader.h"
 #include "Logger.h"
-#include "NetworkUtil.h"
+#include "Network.h"
 #include "Timestamp.h"
 #include "WxQyTokenRefresher.h"
 #include "XxlJobLog.h"
@@ -36,7 +36,7 @@ public:
     void sendWxQyTextMsg1() {
         char buf[1024] = {0};
         sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s", Timestamp::now().toString().c_str(),
-                NetworkUtil::getInstance().getPublicIp().c_str());
+                Network::getInstance().getPublicIp().c_str());
 
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
         Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser, std::string(buf));

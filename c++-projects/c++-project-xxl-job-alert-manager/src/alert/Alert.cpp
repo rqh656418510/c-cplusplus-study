@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "WxQyApi.h"
 #include "AppConfigLoader.h"
-#include "NetworkUtil.h"
+#include "Network.h"
 #include "WxQySendMsgReq.h"
 #include <algorithm>
 
@@ -38,7 +38,7 @@ void Alert::sendWxQyTextMsg(const int agentId, const std::string& toUser, const 
     // 应用信息内容
     std::string msg =
         "【XXL-JOB 任务执行失败】\n"
-        "【IP】" + NetworkUtil::getInstance().getPublicIp() + "\n" +
+        "【IP】" + Network::getInstance().getPublicIp() + "\n" +
         "【Env】" + config.alert.xxljobEnvironmentName + "\n" +
         "【Job】" + log.getExecutorHandler() + "\n" +
         "【Time】" + log.getTriggerTime() + "\n" +

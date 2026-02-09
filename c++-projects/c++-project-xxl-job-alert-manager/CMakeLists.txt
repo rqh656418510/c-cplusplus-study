@@ -30,7 +30,12 @@ include_directories(
 include_directories(
     ${CMAKE_SOURCE_DIR}/third_party/httplib
     ${CMAKE_SOURCE_DIR}/third_party/json
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/base
+    ${CMAKE_SOURCE_DIR}/include/net
+    ${CMAKE_SOURCE_DIR}/include/config
+    ${CMAKE_SOURCE_DIR}/include/db
+    ${CMAKE_SOURCE_DIR}/include/alert
+    ${CMAKE_SOURCE_DIR}/include/job
 )
 
 # 加载 CMake 子目录

@@ -8,7 +8,7 @@
 // 类型重定义
 using json = nlohmann::json;
 
-// XXL-JOB任务调度日志
+// XXL-JOB任务调度日志表的映射类
 class XxlJobLog {
 public:
     XxlJobLog() = default;

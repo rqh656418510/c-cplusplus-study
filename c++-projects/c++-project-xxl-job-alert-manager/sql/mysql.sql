@@ -1,8 +1,12 @@
+-- --------------------------------------------------------
+--    XXL-JOB 数据库的初始化脚本，仅用于跑 C++ 的单元测试    
+-- --------------------------------------------------------
+
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS `spring_cloud_xxl_job` CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `xxl_job_test` CHARACTER SET utf8mb4;
 
 -- 切换数据库
-use `spring_cloud_xxl_job`
+USE `xxl_job_test`
 
 -- 创建表
 CREATE TABLE IF NOT EXISTS `xxl_job_log` (
@@ -24,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_log` (
   PRIMARY KEY (`id`),
   KEY `I_trigger_time` (`trigger_time`),
   KEY `I_handle_code` (`handle_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=54529939 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 插入表数据
 INSERT INTO xxl_job_log (job_group,job_id,executor_address,executor_handler,executor_param,executor_sharding_param,executor_fail_retry_count,trigger_time,trigger_code,trigger_msg,handle_time,handle_code,handle_msg,alarm_status) VALUES
