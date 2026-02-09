@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-// 网络工具类（单例对象）
+// 网络工具类（单例模式）
 class Network {
 public:
     // 获取单例对象

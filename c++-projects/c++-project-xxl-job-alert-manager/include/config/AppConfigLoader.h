@@ -3,7 +3,7 @@
 #include "AppConfig.h"
 #include "ConfigFileUtil.h"
 
-// 应用配置信息加载器（单例对象）
+// 应用配置信息加载器（单例模式）
 class AppConfigLoader {
 public:
     // 获取单例对象

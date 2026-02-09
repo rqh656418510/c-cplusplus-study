@@ -6,7 +6,7 @@
 #include <string>
 #include <thread>
 
-// 企业微信AccessToken刷新器（单例对象）
+// 企业微信AccessToken刷新器（单例模式）
 class WxQyTokenRefresher {
 public:
     // 启动刷新器

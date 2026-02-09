@@ -11,7 +11,7 @@
 
 #include "MySqlConnection.h"
 
-// MySQL连接池（单例对象）
+// MySQL连接池（单例模式）
 class MySqlConnectionPool {
 public:
     // 关闭连接池

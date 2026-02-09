@@ -5,7 +5,7 @@
 #include <ctime>
 #include <thread>
 
-// XXL-JOB监控器（单例对象）
+// XXL-JOB监控器（单例模式）
 class XxlJobMonitor {
 public:
     // 启动监控器
