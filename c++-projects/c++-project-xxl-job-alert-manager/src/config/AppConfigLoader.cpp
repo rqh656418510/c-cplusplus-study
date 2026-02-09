@@ -61,10 +61,10 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.mysql.password = toStr(cfg_util.load("mysql.password"), "mysql.password");
     app.mysql.database = toStr(cfg_util.load("mysql.db"), "mysql.db");
     app.mysql.table = toStr(cfg_util.load("mysql.table"), "mysql.table");
-    app.mysql.connectionPoolInitSize = toInt(cfg_util.load("mysql.connection.pool.initSize"), "mysql.connection.pool.initSize");
-    app.mysql.connectionPoolMaxSize = toInt(cfg_util.load("mysql.connection.pool.maxSize"), "mysql.connection.pool.maxSize");
-    app.mysql.connectionPoolMaxIdleTime = toInt(cfg_util.load("mysql.connection.pool.maxIdleTime"), "mysql.connection.pool.maxIdleTime");
-    app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connectionTimeout"), "mysql.connection.pool.connectionTimeout");
+    app.mysql.connectionPoolInitSize = toInt(cfg_util.load("mysql.connection.pool.init_size"), "mysql.connection.pool.init_size");
+    app.mysql.connectionPoolMaxSize = toInt(cfg_util.load("mysql.connection.pool.max_size"), "mysql.connection.pool.max_size");
+    app.mysql.connectionPoolMaxIdleTime = toInt(cfg_util.load("mysql.connection.pool.max_idle_time"), "mysql.connection.pool.max_idle_time");
+    app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connection_timeout"), "mysql.connection.pool.connection_timeout");
     
     // WeChat Account
     app.wechatAccount.agentId = toInt(cfg_util.load("wechat.agent_id"), "wechat.agent_id");
@@ -79,11 +79,11 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.wechatApi.sendMsgPath = toStr(cfg_util.load("wechat.api.send_msg"), "wechat.api.send_msg");
 
     // Alert
-    app.alert.wechatRefreshTokenIntervalSeconds = toInt(cfg_util.load("alert.wechat.refresh_token_interval_seconds"), "alert.wechat.refresh_token_interval_seconds");
-    app.alert.wechatRetryRefreshIntervalSeconds = toInt(cfg_util.load("alert.wechat.retry_refresh_interval_seconds"), "alert.wechat.retry_refresh_interval_seconds");
-    app.alert.xxljobStopStatusScanIntervalSeconds = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_seconds"), "alert.xxljob.stop_status_scan_interval_seconds");
-    app.alert.xxljobFatalStatusScanIntervalSeconds = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_seconds"), "alert.xxljob.fatal_status_scan_interval_seconds");
-    app.alert.xxljobLogMaxIdleSecondsForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_seconds_for_stop"), "alert.xxljob.log_max_idle_seconds_for_stop");
+    app.alert.wechatRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wechat.refresh_token_interval_time"), "alert.wechat.refresh_token_interval_time");
+    app.alert.wechatRetryRefreshIntervalTime = toInt(cfg_util.load("alert.wechat.retry_refresh_interval_time"), "alert.wechat.retry_refresh_interval_time");
+    app.alert.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
+    app.alert.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
+    app.alert.xxljobLogMaxIdleTimeForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_time_for_stop"), "alert.xxljob.log_max_idle_time_for_stop");
     app.alert.xxljobEnvironmentName = toStr(cfg_util.load("alert.xxljob.environment_name"), "alert.xxljob.environment_name");
     
     return app;

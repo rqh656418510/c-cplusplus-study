@@ -10,10 +10,10 @@ struct MySQLConfig {
     std::string password;           // MySQL的登录密码（mysql.password）
     std::string database;           // 连接的数据库名称（mysql.db）
     std::string table;              // XXL-JOB调度日志表的名称（mysql.table）
-    int connectionPoolInitSize;     // 连接池的初始连接数（mysql.connection.pool.initSize）
-    int connectionPoolMaxSize;      // 连接池的最大连接数（mysql.connection.pool.maxSize）
-    int connectionPoolMaxIdleTime;  // 连接池的最大空闲时间，单位秒（mysql.connection.pool.maxIdleTime）
-    int connectionPoolConnectionTimeout;  // 从连接池获取连接的超时时间，单位毫秒（mysql.connection.pool.connectionTimeout）
+    int connectionPoolInitSize;     // 连接池的初始连接数（mysql.connection.pool.init_size）
+    int connectionPoolMaxSize;      // 连接池的最大连接数（mysql.connection.pool.max_size）
+    int connectionPoolMaxIdleTime;  // 连接池的最大空闲时间，单位秒（mysql.connection.pool.max_idle_time）
+    int connectionPoolConnectionTimeout;  // 从连接池获取连接的超时时间，单位毫秒（mysql.connection.pool.connection_timeout）
 };
 
 // 企业微信账号配置
@@ -34,11 +34,11 @@ struct WeChatApiConfig {
 
 // 监控告警配置
 struct AlertConfig {
-    int wechatRefreshTokenIntervalSeconds;  // 企业微信AccessToken刷新的时间间隔（alert.wechat.refresh_token_interval_seconds）
-    int wechatRetryRefreshIntervalSeconds;  // 企业微信AccessToken刷新失败后的重试间隔（alert.wechat.retry_refresh_interval_seconds）
-    int xxljobStopStatusScanIntervalSeconds;  // 监控XXL-JOB是否停止运行的时间间隔（alert.xxljob.stop_status_scan_interval_seconds）
-    int xxljobFatalStatusScanIntervalSeconds;  // 监控XXL-JOB是否调度失败的时间间隔（alert.xxljob.fatal_status_scan_interval_seconds）
-    int xxljobLogMaxIdleSecondsForStop;  // 任务调度日志记录的最大空闲时间（alert.xxljob.log_max_idle_seconds_for_stop）
+    int wechatRefreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（alert.wechat.refresh_token_interval_time）
+    int wechatRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（alert.wechat.retry_refresh_interval_time）
+    int xxljobStopStatusScanIntervalTime;  // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
+    int xxljobFatalStatusScanIntervalTime;  // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
+    int xxljobLogMaxIdleTimeForStop;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.log_max_idle_time_for_stop）
     std::string xxljobEnvironmentName;  //监控XXL-JOB的环境名称（alert.xxljob.environment_name）
 };
 

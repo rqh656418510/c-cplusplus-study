@@ -16,7 +16,7 @@ public:
 
         // 等待一段时间
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
-        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalSeconds * 3));
+        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalTime * 3));
 
         // 关闭监控器
         XxlJobMonitor::getInstance().stop();

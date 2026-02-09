@@ -113,7 +113,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
                 // 如果在指定时间内没有任务调度日志记录，则发送告警消息
                 double diff_seconds = difftime(t_now, t_lastest_trigger_time);
-                if (diff_seconds >= config.alert.xxljobLogMaxIdleSecondsForStop) {
+                if (diff_seconds >= config.alert.xxljobLogMaxIdleTimeForStop) {
                     // 仅在尚未发送过空闲告警时发送，避免重复告警
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};
@@ -137,7 +137,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出
         std::unique_lock<std::mutex> lock(monitorMutex_);
-        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalSeconds),
+        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalTime),
                                 [this]() { return !monitorRunning_.load(); })) {
             // 当被唤醒时，说明已停止监控，退出监控线程
             break;
@@ -187,7 +187,7 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出
         std::unique_lock<std::mutex> lock(monitorMutex_);
-        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalSeconds),
+        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalTime),
                                 [this]() { return !monitorRunning_.load(); })) {
             // 当被唤醒时，说明已停止监控，退出监控线程
             break;
