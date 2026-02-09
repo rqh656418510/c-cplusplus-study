@@ -16,6 +16,16 @@ find_library(MYSQL_LIBRARY
 # 指定编译生成可执行文件
 add_executable(xxl_job_alert_manager_test ${TEST_SRC_FILES} ${MAIN_SRC_FILES})
 
+# 每次编译之后拷贝所有配置文件到可执行文件的输出目录
+add_custom_command(
+    TARGET xxl_job_alert_manager
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/config
+            ${EXECUTABLE_OUTPUT_PATH}
+    COMMENT "Copying config files to bin directory after build"
+)
+
 # 指定可执行文件链接的静态库或者动态库（必须注意顺序，从上到下链接）
 target_link_libraries(xxl_job_alert_manager_test PRIVATE
     pthread
