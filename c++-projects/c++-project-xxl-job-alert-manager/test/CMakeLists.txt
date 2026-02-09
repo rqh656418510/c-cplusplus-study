@@ -18,7 +18,7 @@ add_executable(xxl_job_alert_manager_test ${TEST_SRC_FILES} ${MAIN_SRC_FILES})
 
 # 每次编译之后拷贝所有配置文件到可执行文件的输出目录
 add_custom_command(
-    TARGET xxl_job_alert_manager
+    TARGET xxl_job_alert_manager_test
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/config
