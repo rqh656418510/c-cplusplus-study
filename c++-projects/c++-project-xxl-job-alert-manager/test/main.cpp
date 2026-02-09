@@ -1,11 +1,12 @@
 #include <chrono>
 #include <iostream>
 
-#include "BaseTest.h"
 #include "Logger.h"
-#include "MonitorTest.h"
-#include "MySqlTest.h"
-#include "WxQyTest.h"
+#include "alert/WxQyAlertTest.h"
+#include "base/BaseTest.h"
+#include "db/MySqlTest.h"
+#include "monitor/MonitorTest.h"
+#include "net/NetworkTest.h"
 
 int main(int argc, char** argv) {
     // 设置默认日志级别
@@ -16,19 +17,21 @@ int main(int argc, char** argv) {
     // 加载配置文件
     // baseTest.loadConfigFile();
 
+    NetworkTest networkTest;
+
     // 获取公网IP地址
-    // baseTest.getPublicIp();
+    // networkTest.getPublicIp();
 
-    WxQyTest wxQyTest;
-
-    // 发送企业微信应用消息
-    // wxQyTest.sendWxQyTextMsg1();
+    WxQyAlertTest wxQyAlertTest;
 
     // 发送企业微信应用消息
-    // wxQyTest.sendWxQyTextMsg2();
+    // wxQyAlertTest.sendWxQyTextMsg1();
+
+    // 发送企业微信应用消息
+    // wxQyAlertTest.sendWxQyTextMsg2();
 
     // 启动与关闭AccessToken刷新器
-    // wxQyTest.startAndStopTokenRefresher();
+    // wxQyAlertTest.startAndStopTokenRefresher();
 
     MySqlTest mysqlTest;
 

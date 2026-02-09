@@ -12,7 +12,7 @@
 #include "XxlJobLog.h"
 
 // 企业微信应用消息测试
-class WxQyTest {
+class WxQyAlertTest {
 public:
     // 启动与关闭AccessToken刷新器
     void startAndStopTokenRefresher() {

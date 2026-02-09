@@ -17,7 +17,7 @@
 | 软件                       | 版本        | 说明                                                                 |
 | -------------------------- | ----------- | -------------------------------------------------------------------- |
 | C++                        | `11`        |                                                                      |
-| OpenSSL                    | `3.0.18`    |                                                                      |
+| OpenSSL                    | `3.0.18`    | [httplib](https://github.com/yhirose/cpp-httplib) 库依赖 OpenSSL     |
 | MySQL C API（Connector/C） | `8.4.5`     | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
 | MySQL Server               | `8.4.5`     |                                                                      |
 | Linux System               | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |

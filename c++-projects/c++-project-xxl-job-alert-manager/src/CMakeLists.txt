@@ -19,7 +19,7 @@ add_custom_command(
     TARGET xxl_job_alert_manager
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/conf
+            ${CMAKE_SOURCE_DIR}/config
             ${EXECUTABLE_OUTPUT_PATH}
     COMMENT "Copying config files to bin directory after build"
 )

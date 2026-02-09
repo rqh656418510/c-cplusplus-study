@@ -28,8 +28,9 @@ include_directories(
 
 # 指定项目中的头文件
 include_directories(
-    ${CMAKE_SOURCE_DIR}/thirdparty
-    ${CMAKE_SOURCE_DIR}/src/include
+    ${CMAKE_SOURCE_DIR}/third_party/httplib
+    ${CMAKE_SOURCE_DIR}/third_party/json
+    ${CMAKE_SOURCE_DIR}/include
 )
 
 # 加载 CMake 子目录
