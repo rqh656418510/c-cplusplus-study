@@ -69,9 +69,12 @@ public:
             // 打印查询结果
             LOG_INFO("%s", j.dump().c_str());
         }
+
+        // 释放连接
+        delete conn;
     }
 
-    // 单个线程从数据库连接池获取连接
+    // 单个线程从数据库连接池获取连接执行更新操作
     void connectionPoolSingleThread() {
         // 全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
@@ -97,12 +100,12 @@ public:
         pool->close();
     }
 
-    // 多个线程从数据库连接池获取连接
+    // 多个线程从数据库连接池获取连接执行更新操作
     void connectionPoolMultiThread() {
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // SQL语句
-        std::string sql = "update " + config.mysql.table + " set `handle_msg` = `handle_msg`";
+        const std::string sql = "update " + config.mysql.table + " set `handle_msg` = `handle_msg`";
 
         // 数据库连接池
         MySqlConnectionPool* pool = MySqlConnectionPool::getInstance();
@@ -133,7 +136,7 @@ public:
         }
 
         // 等待一段时间，触发数据库连接池回收空闲连接
-        LOG_INFO("Waiting to recycle idle mysql connection...");
+        LOG_INFO("Waiting to recycle idle connection...");
         std::this_thread::sleep_for(std::chrono::seconds(config.mysql.connectionPoolMaxIdleTime * 3));
         LOG_INFO("Final connection pool size: %d", pool->getSize());
 

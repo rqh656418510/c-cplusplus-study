@@ -13,11 +13,15 @@
 #include "XxlJobMonitor.h"
 
 // 私有构造函数
-XxlJobMonitor::XxlJobMonitor() : monitorRunning_(true), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
+XxlJobMonitor::XxlJobMonitor() : monitorRunning_(false), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
 }
 
 // 私有析构函数
 XxlJobMonitor::~XxlJobMonitor() {
+    // 关闭监控器
+    if (monitorRunning_) {
+        this->stop();
+    }
 }
 
 // 获取单例对象
@@ -29,19 +33,47 @@ XxlJobMonitor& XxlJobMonitor::getInstance() {
 
 // 启动监控器
 void XxlJobMonitor::start() {
-    // 后台启动监控XXL-JOB是否停止运行的线程
-    std::thread t_monitor_stop(std::bind(&XxlJobMonitor::monitorStopStatusLoop, this));
-    t_monitor_stop.detach();
+    // 判断监控器是否处于关闭状态
+    if (!monitorRunning_) {
+        // 更改运行状态
+        monitorRunning_ = true;
 
-    // 后台启动监控XXL-JOB是否调度失败的线程
-    std::thread t_monitor_fatal(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
-    t_monitor_fatal.detach();
+        // 创建监控XXL-JOB是否停止运行的线程
+        monitorStopStatusThread_ = std::thread(std::bind(&XxlJobMonitor::monitorStopStatusLoop, this));
+
+        // 创建监控XXL-JOB是否调度失败的线程
+        monitorFatalStatusThread_ = std::thread(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
+
+        // 打印日志信息
+        LOG_INFO("xxl-job monitor started");
+    }
 }
 
 // 关闭监控器
 void XxlJobMonitor::stop() {
+    // 判断监控器是否已关闭
+    if (!monitorRunning_) {
+        return;
+    }
+
     // 更改运行状态
     monitorRunning_ = false;
+
+    // 通知所有监控线程结束运行
+    monitorCv_.notify_all();
+
+    // 等待监控XXL-JOB是否停止运行的线程结束运行
+    if (monitorStopStatusThread_.joinable()) {
+        monitorStopStatusThread_.join();
+    }
+
+    // 等待监控XXL-JOB是否调度失败的线程结束运行
+    if (monitorFatalStatusThread_.joinable()) {
+        monitorFatalStatusThread_.join();
+    }
+
+    // 打印日志信息
+    LOG_INFO("xxl-job monitor stoped");
 }
 
 // 循环监控XXL-JOB是否停止运行
@@ -103,8 +135,13 @@ void XxlJobMonitor::monitorStopStatusLoop() {
             LOG_ERROR("xxl-job monitor occure unknown exception");
         }
 
-        // 模拟定时扫描
-        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalSeconds));
+        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出
+        std::unique_lock<std::mutex> lock(monitorMutex_);
+        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobStopStatusScanIntervalSeconds),
+                                [this]() { return !monitorRunning_.load(); })) {
+            // 当被唤醒时，说明已停止监控，退出监控线程
+            break;
+        }
     }
 }
 
@@ -148,7 +185,12 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
             LOG_ERROR("xxl-job monitor occure unknown exception");
         }
 
-        // 模拟定时扫描
-        std::this_thread::sleep_for(std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalSeconds));
+        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出
+        std::unique_lock<std::mutex> lock(monitorMutex_);
+        if (monitorCv_.wait_for(lock, std::chrono::seconds(config.alert.xxljobFatalStatusScanIntervalSeconds),
+                                [this]() { return !monitorRunning_.load(); })) {
+            // 当被唤醒时，说明已停止监控，退出监控线程
+            break;
+        }
     }
 }

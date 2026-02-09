@@ -1,8 +1,10 @@
 #pragma once
 
 #include <atomic>
+#include <condition_variable>
 #include <mutex>
 #include <string>
+#include <thread>
 
 // 企业微信AccessToken刷新器（单例对象）
 class WxQyTokenRefresher {
@@ -40,6 +42,12 @@ private:
 
     // 企业微信AccessToken的互斥锁
     std::mutex accessTokenMutex_;
+
+    // 企业微信AccessToken刷新的线程
+    std::thread refreshThread_;
+
+    // 企业微信AccessToken刷新的条件变量
+    std::condition_variable refreshCv_;
 
     // 企业微信AccessToken刷新的开关
     std::atomic_bool refreshRunning_;

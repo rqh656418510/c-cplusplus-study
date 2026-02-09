@@ -10,11 +10,15 @@
 #include "WxQyApi.h"
 
 // 私有构造函数
-WxQyTokenRefresher::WxQyTokenRefresher() : accessToken_(""), refreshRunning_(true) {
+WxQyTokenRefresher::WxQyTokenRefresher() : accessToken_(""), refreshRunning_(false) {
 }
 
 // 私有析构函数
 WxQyTokenRefresher::~WxQyTokenRefresher() {
+    // 关闭刷新器
+    if (refreshRunning_) {
+        this->stop();
+    }
 }
 
 // 获取单例对象
@@ -26,15 +30,39 @@ WxQyTokenRefresher& WxQyTokenRefresher::getInstance() {
 
 // 启动刷新器
 void WxQyTokenRefresher::start() {
-    // 后台启动刷新AccessToken的线程
-    std::thread t_refresh(std::bind(&WxQyTokenRefresher::refreshLocalTokenLoop, this));
-    t_refresh.detach();
+    // 判断刷新器是否处于关闭状态
+    if (!refreshRunning_) {
+        // 更改运行状态
+        refreshRunning_ = true;
+
+        // 创建刷新AccessToken的线程
+        refreshThread_ = std::thread(std::bind(&WxQyTokenRefresher::refreshLocalTokenLoop, this));
+
+        // 打印日志信息
+        LOG_INFO("wx-qy token refresher started");
+    }
 }
 
 // 关闭刷新器
 void WxQyTokenRefresher::stop() {
+    // 判断刷新器是否已关闭
+    if (!refreshRunning_) {
+        return;
+    }
+
     // 更改运行状态
     refreshRunning_ = false;
+
+    // 通知刷新线程结束运行
+    refreshCv_.notify_all();
+
+    // 等待刷新线程结束运行
+    if (refreshThread_.joinable()) {
+        refreshThread_.join();
+    }
+
+    // 打印日志信息
+    LOG_INFO("wx-qy token refresher stoped");
 }
 
 // 循环刷新本地的AccessToken
@@ -47,13 +75,13 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
         int wait_seconds = config.alert.wechatRefreshTokenIntervalSeconds;
 
         try {
-            // 获取 AccessToken
-            std::string access_token = WxQyApi::getAccessToken();
-            if (!access_token.empty()) {
+            // 获取新的AccessToken
+            std::string new_token = WxQyApi::getAccessToken();
+            if (!new_token.empty()) {
                 // 获取成功后，设置本地的AccessToken
                 {
                     std::lock_guard<std::mutex> lock(accessTokenMutex_);
-                    accessToken_ = access_token;
+                    accessToken_ = new_token;
                 }
             } else {
                 // 获取失败后，使用较短的等待时间后重试
@@ -71,8 +99,13 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
             LOG_ERROR("wx-qy token refresher occure unknown exception, will retry refresh after %ds", wait_seconds);
         }
 
-        // 模拟定时刷新
-        std::this_thread::sleep_for(std::chrono::seconds(wait_seconds));
+        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止刷新则立即返回，以保证刷新线程能够安全退出
+        std::unique_lock<std::mutex> lock(accessTokenMutex_);
+        if (refreshCv_.wait_for(lock, std::chrono::seconds(wait_seconds),
+                                [this]() { return !refreshRunning_.load(); })) {
+            // 当被唤醒时，说明已停止刷新，退出刷新线程
+            break;
+        }
     }
 }
 

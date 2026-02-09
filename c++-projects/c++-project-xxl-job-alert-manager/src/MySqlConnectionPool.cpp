@@ -33,11 +33,14 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
         }
     }
 
-    // 创建生产 MySQL 连接的线程
+    // 创建生产MySQL连接的线程
     produceThread_ = std::thread(std::bind(&MySqlConnectionPool::produceConnection, this));
 
     // 创建扫描空闲连接的线程
     scanIdleThread_ = std::thread(std::bind(&MySqlConnectionPool::scanIdleConnection, this));
+
+    // 打印日志信息
+    LOG_INFO("Connection pool inited");
 }
 
 // 析构函数
@@ -45,6 +48,8 @@ MySqlConnectionPool::~MySqlConnectionPool() {
     try {
         // 关闭连接池，释放所有连接
         this->close();
+        // 打印日志信息
+        LOG_INFO("Connection pool destroyed");
     } catch (...) {
         // 析构函数禁止抛异常
         LOG_ERROR("Failed to destroy connection pool");

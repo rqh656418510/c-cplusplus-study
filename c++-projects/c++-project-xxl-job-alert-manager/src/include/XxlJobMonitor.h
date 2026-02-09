@@ -1,7 +1,9 @@
 #pragma once
 
 #include <atomic>
+#include <condition_variable>
 #include <ctime>
+#include <thread>
 
 // XXL-JOB监控器（单例对象）
 class XxlJobMonitor {
@@ -42,4 +44,16 @@ private:
 
     // 是否已发送空闲（无新的任务调度日志）告警，用于防止重复发送
     std::atomic_bool idleAlertSended_;
+
+    // 监控XXL-JOB的互斥锁
+    std::mutex monitorMutex_;
+
+    // 监控XXL-JOB的条件变量
+    std::condition_variable monitorCv_;
+
+    // 监控XXL-JOB是否停止运行的线程
+    std::thread monitorStopStatusThread_;
+
+    // 监控XXL-JOB是否调度失败的线程
+    std::thread monitorFatalStatusThread_;
 };
