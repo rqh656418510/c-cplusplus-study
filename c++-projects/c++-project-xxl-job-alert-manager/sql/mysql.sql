@@ -3,7 +3,7 @@
 -- ------------------------------------------------------------
 
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS `xxl_job_test` CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `xxl_job_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 切换数据库
 USE `xxl_job_test`
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `xxl_job_log` (
   PRIMARY KEY (`id`),
   KEY `I_trigger_time` (`trigger_time`),
   KEY `I_handle_code` (`handle_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- 插入表数据
 INSERT INTO xxl_job_log (job_group,job_id,executor_address,executor_handler,executor_param,executor_sharding_param,executor_fail_retry_count,trigger_time,trigger_code,trigger_msg,handle_time,handle_code,handle_msg,alarm_status) VALUES
