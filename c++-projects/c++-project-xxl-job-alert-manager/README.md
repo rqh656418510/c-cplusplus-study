@@ -72,6 +72,8 @@ chmod +x autobuild.sh
 
 ### 项目运行
 
+> 注意：在运行项目之前，请务必确保 XXL-JOB 数据库已经初始化完成（开发环境可以执行 `sql/mysql.sql` 脚本来初始化数据库）
+
 ``` sh
 # 进入项目 bin 目录
 cd c++-project-xxl-job-alert-manager/bin
