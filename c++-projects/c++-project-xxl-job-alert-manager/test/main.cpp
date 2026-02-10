@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     // alertTest.wxQyAlert();
 
     // 异步邮件渠道告警
-    alertTest.asyncEmailAlert();
+    // alertTest.asyncEmailAlert();
 
     // 异步企业微信渠道告警
     // alertTest.asyncwxQyAlert();
@@ -45,16 +45,16 @@ int main(int argc, char** argv) {
     // 复合渠道告警
     // alertTest.compositeAlert();
 
+    // 告警管理器
+    // alertTest.alertManager();
+
     WxQyAlertTest wxQyAlertTest;
 
     // 发送企业微信应用消息
     // wxQyAlertTest.sendWxQyTextMsg1();
 
     // 发送企业微信应用消息
-    // wxQyAlertTest.sendWxQyTextMsg2();
-
-    // 启动与关闭AccessToken刷新器
-    // wxQyAlertTest.startAndStopTokenRefresher();
+    wxQyAlertTest.sendWxQyTextMsg2();
 
     MySqlTest mysqlTest;
 
@@ -74,6 +74,9 @@ int main(int argc, char** argv) {
     // mysqlTest.selectLastestFatalXxlJobLog();
 
     JobTest jobTest;
+
+    // 获取企业微信AccessToken
+    // jobTest.getAccessToken();
 
     // 启动与关闭监控器
     // jobTest.startAndStopMonitor();

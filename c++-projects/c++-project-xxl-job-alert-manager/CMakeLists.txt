@@ -26,7 +26,7 @@ include_directories(
     /usr/local/include
 )
 
-# 指定项目中的头文件
+# 指定项目中的核心头文件
 include_directories(
     ${CMAKE_SOURCE_DIR}/third_party/httplib
     ${CMAKE_SOURCE_DIR}/third_party/json

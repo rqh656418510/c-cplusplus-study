@@ -4,7 +4,7 @@
 
 #include "AlertChannel.h"
 
-// 企业微信告警（同步发送告警消息）
+// 企业微信告警（同步发送）
 class WxQyAlert : public AlertChannel {
 public:
     // 发送消息

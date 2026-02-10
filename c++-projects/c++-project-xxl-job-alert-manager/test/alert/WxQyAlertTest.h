@@ -14,12 +14,6 @@
 // 企业微信告警测试
 class WxQyAlertTest {
 public:
-    // 获取企业微信AccessToken
-    void getAccessToken() {
-        std::string access_token = WxQyTokenRefresher::getInstance().getLocalAccessToken();
-        LOG_INFO("access token: %s", access_token.c_str());
-    }
-
     // 发送企业微信应用消息
     void sendWxQyTextMsg1() {
         AlertManager alertManager;

@@ -10,6 +10,12 @@
 // XXL-JOB监控测试
 class JobTest {
 public:
+    // 获取企业微信AccessToken
+    void getAccessToken() {
+        std::string access_token = WxQyTokenRefresher::getInstance().getLocalAccessToken();
+        LOG_INFO("access token: %s", access_token.c_str());
+    }
+
     // 启动与关闭监控器
     void startAndStopMonitor() {
         // 启动监控器
