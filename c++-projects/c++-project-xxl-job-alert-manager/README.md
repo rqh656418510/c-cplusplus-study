@@ -46,13 +46,13 @@ mysql.table=xxl_job_log
 
 # ==================== 企业微信账号配置 ====================
 # 企业微信应用的AgentId
-wechat.agent_id=1000001
+wxqy.account.agent_id=1000001
 # 接收消息的企业微信用户ID
-wechat.to_user=ZhangSan
+wxqy.account.to_user=ZhangSan
 # 企业微信的公司ID（CorpId）
-wechat.corp_id=xxxxxxxxxx
+wxqy.account.corp_id=xxxxxxxxxx
 # 企业微信应用的Secret
-wechat.corp_secret=xxxxxxxxxx
+wxqy.account.corp_secret=xxxxxxxxxx
 ```
 
 ### 项目编译

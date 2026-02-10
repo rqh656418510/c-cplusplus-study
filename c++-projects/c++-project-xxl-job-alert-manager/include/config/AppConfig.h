@@ -17,11 +17,11 @@ struct MySQLConfig {
 };
 
 // 企业微信账号配置
-struct WeChatAccountConfig {
-    int agentId;             // 企业微信应用的AgentId（wechat.agent_id）
-    std::string toUser;      // 接收消息的企业微信用户ID（wechat.to_user）
-    std::string corpId;      // 企业微信的公司ID（CorpId）（wechat.corp_id）
-    std::string corpSecret;  // 企业微信应用的Secret（wechat.corp_secret）
+struct WxQyAccountConfig {
+    int agentId;             // 企业微信应用的AgentId（wxqy.account.agent_id）
+    std::string toUser;      // 接收消息的企业微信用户ID（wxqy.account.to_user）
+    std::string corpId;      // 企业微信的公司ID（CorpId）（wxqy.account.corp_id）
+    std::string corpSecret;  // 企业微信应用的Secret（wxqy.account.corp_secret）
 };
 
 // 企业微信API配置
@@ -44,8 +44,8 @@ struct AlertConfig {
 
 // 全局配置
 struct AppConfig {
-    MySQLConfig mysql;                  // MySQL相关配置
-    WxQyApiConfig wechatApi;            // 企业微信API相关配置
-    WeChatAccountConfig wechatAccount;  // 企业微信账号相关配置
-    AlertConfig alert;                  // 监控告警相关配置
+    MySQLConfig mysql;                // MySQL相关配置
+    WxQyApiConfig wechatApi;          // 企业微信API相关配置
+    WxQyAccountConfig wechatAccount;  // 企业微信账号相关配置
+    AlertConfig alert;                // 监控告警相关配置
 };
