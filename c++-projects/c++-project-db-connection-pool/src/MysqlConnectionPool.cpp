@@ -224,7 +224,7 @@ void MysqlConnectionPool::produceConnection() {
         unique_lock<mutex> lock(this->_queueMutex);
 
         // 使用While循环来避免线程虚假唤醒
-        while (!this->_closed && (!this->_connectionQueue.empty() || this->_connectionCount >= this->_maxSize)) {
+        while (!this->_closed && (!this->_connectionQueue.empty() && this->_connectionCount >= this->_maxSize)) {
             // 如果队列中有空闲连接，或者连接数量达到上限，生产者线程进入等待状态
             this->_cv.wait(lock);
         }
@@ -268,7 +268,8 @@ void MysqlConnectionPool::scanIdleConnection() {
         unique_lock<mutex> lock(this->_queueMutex);
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
-        if (this->_cv.wait_for(lock, std::chrono::seconds(this->_maxIdleTime), [this]() { return this->_closed.load(); })) {
+        if (this->_cv.wait_for(lock, std::chrono::seconds(this->_maxIdleTime),
+                               [this]() { return this->_closed.load(); })) {
             // 当被唤醒时，说明连接池已经关闭，退出扫描线程
             break;
         }

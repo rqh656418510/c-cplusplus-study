@@ -177,7 +177,7 @@ void MySqlConnectionPool::produceConnection() {
         std::unique_lock<std::mutex> lock(this->queueMutex_);
 
         // 使用While循环来避免线程虚假唤醒
-        while (!this->closed_ && (!this->connectionQueue_.empty() || this->connectionCount_ >= this->maxSize_)) {
+        while (!this->closed_ && (!this->connectionQueue_.empty() && this->connectionCount_ >= this->maxSize_)) {
             // 如果队列中有空闲连接，或者连接数量达到上限，生产者线程进入等待状态
             this->cv_.wait(lock);
         }
