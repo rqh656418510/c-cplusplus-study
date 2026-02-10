@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     // wxQyAlertTest.sendWxQyTextMsg1();
 
     // 发送企业微信应用消息
-    wxQyAlertTest.sendWxQyTextMsg2();
+    // wxQyAlertTest.sendWxQyTextMsg2();
 
     MySqlTest mysqlTest;
 
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     // mysqlTest.connectionPoolSingleThread();
 
     // 多个线程从数据库连接池获取连接执行更新操作
-    // mysqlTest.connectionPoolMultiThread();
+    mysqlTest.connectionPoolMultiThread();
 
     // 查询XXL-JOB最新的调度日志记录
     // mysqlTest.selectLastestXxlJobLog();
