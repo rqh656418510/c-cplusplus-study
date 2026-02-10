@@ -7,6 +7,7 @@
 // 添加告警渠道
 void CompositeAlert::addChannel(std::shared_ptr<AlertChannel> channel) {
     if (!channel) {
+        LOG_WARN("Failed to add alert channel, channel is invalid");
         return;
     }
 
@@ -23,11 +24,11 @@ bool CompositeAlert::sendMsg(const std::string& title, const std::string& conten
     {
         // 获取互斥锁
         std::lock_guard<std::mutex> lock(mutex_);
-        // 拷贝一份集合，减少持锁时间
+        // 先拷贝一份集合，后续再遍历，减少持锁时间
         channelsCopy = channels_;
     }
 
-    // 成功发送标记
+    // 全部发送成功标记
     bool allSucceeded = true;
 
     // 遍历所有告警渠道
@@ -40,11 +41,12 @@ bool CompositeAlert::sendMsg(const std::string& title, const std::string& conten
         try {
             allSucceeded &= channel->sendMsg(title, content);
         } catch (const std::exception& e) {
+            allSucceeded = false;
             LOG_ERROR("Failed to execute composite alert, exception: %s", e.what());
-            allSucceeded = false;
+
         } catch (...) {
-            LOG_ERROR("Failed to execute composite alert, unknown exception");
             allSucceeded = false;
+            LOG_ERROR("Failed to execute composite alert, unknown exception");
         }
     }
 
