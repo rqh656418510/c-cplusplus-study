@@ -20,5 +20,5 @@ public:
     static std::string getAccessToken();
 
     // 发送应用消息
-    static void sendMessage(const WxQySendMsgReq& req);
+    static bool sendMessage(const WxQySendMsgReq& req);
 };

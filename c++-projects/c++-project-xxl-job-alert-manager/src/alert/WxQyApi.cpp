@@ -54,7 +54,7 @@ std::string WxQyApi::getAccessToken() {
 }
 
 // 发送应用消息
-void WxQyApi::sendMessage(const WxQySendMsgReq& req) {
+bool WxQyApi::sendMessage(const WxQySendMsgReq& req) {
     // 全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
@@ -81,7 +81,7 @@ void WxQyApi::sendMessage(const WxQySendMsgReq& req) {
         LOG_DEBUG("HTTPS Post Data: %s", json_body.c_str());
     } catch (const std::exception& e) {
         LOG_ERROR("Json Dump Failed: %s", e.what());
-        return;
+        return false;
     }
 
     // 发送Post请求
@@ -91,7 +91,9 @@ void WxQyApi::sendMessage(const WxQySendMsgReq& req) {
     if (res) {
         LOG_DEBUG("HTTPS Post Request Status: %d, URL: %s, Response: %s", res->status, url_path.c_str(),
                   res->body.c_str());
+        return true;
     } else {
         LOG_ERROR("HTTPS Get Request Failed, URL: %s, Error Code: %d", url_path.c_str(), static_cast<int>(res.error()));
+        return false;
     }
 }

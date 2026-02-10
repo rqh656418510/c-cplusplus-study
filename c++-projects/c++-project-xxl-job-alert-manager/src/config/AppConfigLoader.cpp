@@ -27,7 +27,7 @@ AppConfigLoader::~AppConfigLoader() {
 }
 
 // 获取全局配置
-const AppConfig AppConfigLoader::getConfig() const {
+const AppConfig& AppConfigLoader::getConfig() const {
     return config_;
 }
 
