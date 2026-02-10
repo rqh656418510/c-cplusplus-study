@@ -4,9 +4,10 @@
 #include <string>
 
 #include "AlertChannel.h"
+#include "NonCopyable.h"
 
 // 告警管理器
-class AlertManager {
+class AlertManager : NonCopyable {
 public:
     // 构造函数
     explicit AlertManager(std::shared_ptr<AlertChannel> channel);

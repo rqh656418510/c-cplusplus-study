@@ -12,8 +12,10 @@
 #include <iostream>
 #include <string>
 
+#include "NonCopyable.h"
+
 // 网络工具类（单例模式）
-class Network {
+class Network : NonCopyable {
 public:
     // 获取单例对象
     static Network& getInstance();
@@ -23,12 +25,6 @@ public:
 
     // 获取公网 IP 地址
     std::string getPublicIp();
-
-    // 删除拷贝构造函数
-    Network(const Network&) = delete;
-
-    // 删除赋值操作运算符
-    Network& operator=(const Network&) = delete;
 
 private:
     // 私有构造函数

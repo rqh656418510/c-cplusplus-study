@@ -2,8 +2,10 @@
 
 #include <iostream>
 
+#include "Copyable.h"
+
 // 时间戳类
-class Timestamp {
+class Timestamp : Copyable {
 public:
     // 默认构造函数，初始化为 0 微秒
     Timestamp();

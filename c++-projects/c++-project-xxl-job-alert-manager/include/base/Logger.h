@@ -5,6 +5,7 @@
 
 #include "CurrentThread.h"
 #include "LockQueue.h"
+#include "NonCopyable.h"
 
 // 定义宏
 #define LOG_DEBUG(logmsgformat, ...)                        \
@@ -86,7 +87,7 @@ struct LogMessage {
 };
 
 // 日志类（单例模式）
-class Logger {
+class Logger : NonCopyable {
 public:
     // 获取单例对象
     static Logger& instance();
@@ -99,12 +100,6 @@ public:
 
     // 设置日志级别
     void setLogLevel(LogLevel level);
-
-    // 删除拷贝构造函数
-    Logger(const Logger&) = delete;
-
-    // 删除赋值运算操作符
-    Logger& operator=(const Logger&) = delete;
 
 private:
     // 私有构造函数

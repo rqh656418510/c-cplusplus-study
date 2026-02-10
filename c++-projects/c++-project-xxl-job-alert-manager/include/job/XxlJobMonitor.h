@@ -5,8 +5,10 @@
 #include <ctime>
 #include <thread>
 
+#include "NonCopyable.h"
+
 // XXL-JOB监控器（单例模式）
-class XxlJobMonitor {
+class XxlJobMonitor : NonCopyable {
 public:
     // 启动监控器
     void start();
@@ -16,12 +18,6 @@ public:
 
     // 获取单例对象
     static XxlJobMonitor& getInstance();
-
-    // 删除拷贝构造函数
-    XxlJobMonitor(const XxlJobMonitor&) = delete;
-
-    // 删除赋值操作运算符
-    XxlJobMonitor& operator=(const XxlJobMonitor&) = delete;
 
 private:
     // 私有构造函数

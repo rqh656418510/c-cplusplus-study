@@ -7,23 +7,19 @@
 #include <ctime>
 #include <string>
 
+#include "NonCopyable.h"
+
 // 类型重定义
 using time_point = std::chrono::system_clock::time_point;
 
 // MySQL数据库操作类
-class MySqlConnection {
+class MySqlConnection : NonCopyable {
 public:
     // 初始化数据库连接
     MySqlConnection();
 
     // 关闭数据库连接
     ~MySqlConnection();
-
-    // 删除拷贝构造函数
-    MySqlConnection(const MySqlConnection&) = delete;
-
-    // 删除赋值运算操作符
-    MySqlConnection& operator=(const MySqlConnection&) = delete;
 
     // 连接数据库
     bool connect(const std::string& ip, unsigned short port, const std::string& username, const std::string& password,

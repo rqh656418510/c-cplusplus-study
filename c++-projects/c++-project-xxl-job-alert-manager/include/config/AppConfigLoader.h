@@ -2,9 +2,10 @@
 
 #include "AppConfig.h"
 #include "ConfigFileUtil.h"
+#include "NonCopyable.h"
 
 // 应用配置信息加载器（单例模式）
-class AppConfigLoader {
+class AppConfigLoader : NonCopyable {
 public:
     // 获取单例对象
     static AppConfigLoader& getInstance();
@@ -14,12 +15,6 @@ public:
 
     // 全局的配置文件路径
     static std::string CONFIG_FILE_PATH;
-
-    // 删除拷贝构造函数
-    AppConfigLoader(const AppConfigLoader&) = delete;
-
-    // 删除赋值操作运算符
-    AppConfigLoader& operator=(const AppConfigLoader&) = delete;
 
 private:
     // 私有构造函数

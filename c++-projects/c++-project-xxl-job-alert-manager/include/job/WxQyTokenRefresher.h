@@ -6,8 +6,10 @@
 #include <string>
 #include <thread>
 
+#include "NonCopyable.h"
+
 // 企业微信AccessToken刷新器（单例模式）
-class WxQyTokenRefresher {
+class WxQyTokenRefresher : NonCopyable {
 public:
     // 启动刷新器
     void start();
@@ -20,12 +22,6 @@ public:
 
     // 获取单例对象
     static WxQyTokenRefresher& getInstance();
-
-    // 删除拷贝构造函数
-    WxQyTokenRefresher(const WxQyTokenRefresher&) = delete;
-
-    // 删除赋值操作运算符
-    WxQyTokenRefresher& operator=(const WxQyTokenRefresher&) = delete;
 
 private:
     // 私有构造函数

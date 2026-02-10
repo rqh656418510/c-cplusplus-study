@@ -10,9 +10,10 @@
 #include <thread>
 
 #include "MySqlConnection.h"
+#include "NonCopyable.h"
 
 // MySQL连接池（单例模式）
-class MySqlConnectionPool {
+class MySqlConnectionPool : NonCopyable {
 public:
     // 关闭连接池
     void close();
@@ -35,12 +36,6 @@ private:
 
     // 私有析构函数
     ~MySqlConnectionPool();
-
-    // 删除拷贝构造函数
-    MySqlConnectionPool(const MySqlConnectionPool &) = delete;
-
-    // 删除赋值操作运算符
-    MySqlConnectionPool &operator=(const MySqlConnectionPool &) = delete;
 
     // 生产MySQL连接
     void produceConnection();

@@ -4,8 +4,10 @@
 #include <string>
 #include <unordered_map>
 
+#include "NonCopyable.h"
+
 // 读取配置文件（INI格式）的工具类
-class ConfigFileUtil {
+class ConfigFileUtil : NonCopyable {
 public:
     // 加载配置文件（INI格式）
     void loadConfigFile(const char* config_file);
