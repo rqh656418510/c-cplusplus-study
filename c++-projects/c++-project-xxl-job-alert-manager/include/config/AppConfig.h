@@ -25,17 +25,17 @@ struct WeChatAccountConfig {
 };
 
 // 企业微信API配置
-struct WeChatApiConfig {
-    std::string host;          // 企业微信API服务器的地址（wechat.api.host）
-    int port;                  // 企业微信API服务器的端口（wechat.api.port）
-    std::string getTokenPath;  // 获取企业微信AccessToken的接口路径（wechat.api.get_token）
-    std::string sendMsgPath;   // 发送企业微信应用消息的接口路径（wechat.api.send_msg）
+struct WxQyApiConfig {
+    int port;                  // 企业微信API服务器的端口（wxqy.api.port）
+    std::string host;          // 企业微信API服务器的地址（wxqy.api.host）
+    std::string getTokenPath;  // 获取企业微信AccessToken的接口路径（wxqy.api.get_token）
+    std::string sendMsgPath;   // 发送企业微信应用消息的接口路径（wxqy.api.send_msg）
 };
 
 // 监控告警配置
 struct AlertConfig {
-    int wechatRefreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（alert.wechat.refresh_token_interval_time）
-    int wechatRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（alert.wechat.retry_refresh_interval_time）
+    int wxQyRefreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（alert.wxqy.refresh_token_interval_time）
+    int wxQyRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（alert.wxqy.retry_refresh_interval_time）
     int xxljobStopStatusScanIntervalTime;  // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
     int xxljobFatalStatusScanIntervalTime;  // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
     int xxljobLogMaxIdleTimeForStop;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.log_max_idle_time_for_stop）
@@ -45,7 +45,7 @@ struct AlertConfig {
 // 全局配置
 struct AppConfig {
     MySQLConfig mysql;                  // MySQL相关配置
-    WeChatApiConfig wechatApi;          // 企业微信API相关配置
+    WxQyApiConfig wechatApi;            // 企业微信API相关配置
     WeChatAccountConfig wechatAccount;  // 企业微信账号相关配置
     AlertConfig alert;                  // 监控告警相关配置
 };

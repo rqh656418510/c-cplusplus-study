@@ -73,14 +73,14 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.wechatAccount.corpSecret = toStr(cfg_util.load("wechat.corp_secret"), "wechat.corp_secret");
 
     // WeChat API
-    app.wechatApi.host = toStr(cfg_util.load("wechat.api.host"), "wechat.api.host");
-    app.wechatApi.port = toInt(cfg_util.load("wechat.api.port"), "wechat.api.port");
-    app.wechatApi.getTokenPath = toStr(cfg_util.load("wechat.api.get_token"), "wechat.api.get_token");
-    app.wechatApi.sendMsgPath = toStr(cfg_util.load("wechat.api.send_msg"), "wechat.api.send_msg");
+    app.wechatApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
+    app.wechatApi.port = toInt(cfg_util.load("wxqy.api.port"), "wxqy.api.port");
+    app.wechatApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
+    app.wechatApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
 
     // Alert
-    app.alert.wechatRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wechat.refresh_token_interval_time"), "alert.wechat.refresh_token_interval_time");
-    app.alert.wechatRetryRefreshIntervalTime = toInt(cfg_util.load("alert.wechat.retry_refresh_interval_time"), "alert.wechat.retry_refresh_interval_time");
+    app.alert.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wxqy.refresh_token_interval_time"), "alert.wxqy.refresh_token_interval_time");
+    app.alert.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("alert.wxqy.retry_refresh_interval_time"), "alert.wxqy.retry_refresh_interval_time");
     app.alert.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
     app.alert.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
     app.alert.xxljobLogMaxIdleTimeForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_time_for_stop"), "alert.xxljob.log_max_idle_time_for_stop");
