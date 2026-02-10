@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "Logger.h"
+
 // 构造函数
 AsyncAlert::AsyncAlert(std::shared_ptr<AlertChannel> channel, size_t maxQueueSize)
     : channel_(std::move(channel)), queue_(maxQueueSize), stoped_(false) {
@@ -46,8 +48,15 @@ void AsyncAlert::processQueue() {
         AlertTask task = queue_.pop();
         // 检查任务是否有效
         if (task.channel && !task.title.empty() && !task.content.empty()) {
-            // 发送消息
-            task.channel->sendMsg(task.content, task.content);
+            // 必须捕获异常，不能影响任何业务执行
+            try {
+                // 发送告警消息
+                task.channel->sendMsg(task.content, task.content);
+            } catch (const std::exception& e) {
+                LOG_ERROR("Failed to send alert message, exception: %s", e.what());
+            } catch (...) {
+                LOG_ERROR("Failed to send alert message, unknown exception");
+            }
         }
     }
 }

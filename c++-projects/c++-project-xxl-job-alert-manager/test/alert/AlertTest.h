@@ -41,3 +41,13 @@ void compositeAlert() {
     compositeAlert->addChannel(AlertChannelFactory::getInstance().createWxQyAlert());
     compositeAlert->sendMsg("XXL-JOB告警", "XXL-JOB已停止运行");
 }
+
+// 告警管理器
+void alertManager() {
+    AlertManager manager;
+    manager.registerChannel(AlertLevel::INFO, AlertChannelFactory::getInstance().createEmailAlert());
+    manager.registerChannel(AlertLevel::CRITICAL, AlertChannelFactory::getInstance().createWxQyAlert());
+    manager.alert(AlertLevel::INFO, "XXL-JOB告警", "XXL-JOB已停止运行");
+    manager.alert(AlertLevel::ERROR, "XXL-JOB告警", "XXL-JOB已停止运行");
+    manager.alert(AlertLevel::CRITICAL, "XXL-JOB告警", "XXL-JOB已停止运行");
+}

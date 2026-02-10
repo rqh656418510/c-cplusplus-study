@@ -35,18 +35,21 @@ bool CompositeAlert::sendMsg(const std::string& title, const std::string& conten
     for (const auto& channel : channelsCopy) {
         if (!channel) {
             allSucceeded = false;
+            LOG_WARN("Invalid alert channel");
             continue;
         }
 
+        // 必须捕获异常，不能影响任何业务执行
         try {
+            // 发送告警消息
             allSucceeded &= channel->sendMsg(title, content);
         } catch (const std::exception& e) {
             allSucceeded = false;
-            LOG_ERROR("Failed to execute composite alert, exception: %s", e.what());
+            LOG_ERROR("Failed to send alert message, exception: %s", e.what());
 
         } catch (...) {
             allSucceeded = false;
-            LOG_ERROR("Failed to execute composite alert, unknown exception");
+            LOG_ERROR("Failed to send alert message, unknown exception");
         }
     }
 

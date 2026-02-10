@@ -15,7 +15,7 @@ struct AlertTask {
     std::shared_ptr<AlertChannel> channel;  // 告警渠道
 };
 
-// 异步告警（装饰器模式）
+// 异步告警（装饰器模式，线程安全）
 class AsyncAlert : public AlertChannel {
 public:
     // 构造函数
@@ -34,8 +34,8 @@ private:
     // 处理队列里的任务
     void processQueue();
 
-    LockQueue<AlertTask> queue_;             // 告警队列
     std::shared_ptr<AlertChannel> channel_;  // 告警渠道
     std::thread thread_;                     // 告警线程
     std::atomic_bool stoped_;                // 停止告警的标记
+    LockQueue<AlertTask> queue_;             // 告警队列（线程安全）
 };

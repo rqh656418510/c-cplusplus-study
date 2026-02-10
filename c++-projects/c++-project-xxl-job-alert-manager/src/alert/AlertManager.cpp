@@ -39,7 +39,7 @@ bool AlertManager::alert(AlertLevel level, const std::string& title, const std::
         return false;
     }
 
-    // 发送告警消息
+    // 遍历查找到的所有告警渠道
     for (const auto& channel : it->second) {
         if (!channel) {
             allSucceeded = false;
@@ -47,7 +47,9 @@ bool AlertManager::alert(AlertLevel level, const std::string& title, const std::
             continue;
         }
 
+        // 必须捕获异常，不能影响任何业务执行
         try {
+            // 发送告警消息
             allSucceeded &= channel->sendMsg(title, content);
         } catch (const std::exception& e) {
             allSucceeded = false;
