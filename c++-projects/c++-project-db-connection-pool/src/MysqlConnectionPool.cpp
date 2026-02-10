@@ -224,7 +224,7 @@ void MysqlConnectionPool::produceConnection() {
         unique_lock<mutex> lock(this->_queueMutex);
 
         // 使用While循环来避免线程虚假唤醒
-        while (!this->_closed && (!this->_connectionQueue.empty() && this->_connectionCount >= this->_maxSize)) {
+        while (!this->_closed && (!this->_connectionQueue.empty() || this->_connectionCount >= this->_maxSize)) {
             // 如果队列中有空闲连接，或者连接数量达到上限，生产者线程进入等待状态
             this->_cv.wait(lock);
         }
