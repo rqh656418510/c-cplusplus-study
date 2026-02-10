@@ -100,18 +100,18 @@ public:
     // 设置日志级别
     void setLogLevel(LogLevel level);
 
+    // 删除拷贝构造函数
+    Logger(const Logger&) = delete;
+
+    // 删除赋值运算操作符
+    Logger& operator=(const Logger&) = delete;
+
 private:
     // 私有构造函数
     Logger();
 
     // 私有析构函数
     ~Logger();
-
-    // 删除拷贝构造函数
-    Logger(const Logger&) = delete;
-
-    // 删除赋值运算操作符
-    Logger& operator=(const Logger&) = delete;
 
     // 获取日志级别的名称
     std::string logLevelToString(LogLevel level);

@@ -8,7 +8,5 @@
 class EmailAlert : public AlertChannel {
 public:
     // 发送消息
-    bool sendMsg(const std::string& title, const std::string& content) override {
-        return true;
-    }
+    bool sendMsg(const std::string& title, const std::string& content) override;
 };

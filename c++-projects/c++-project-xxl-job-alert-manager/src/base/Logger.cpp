@@ -53,10 +53,10 @@ Logger::Logger() {
             }
 
             // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
-            LogMessage message = lckQue_.Pop();
+            LogMessage message = lckQue_.pop();
 
             // 检查退出标志
-            if (lckQue_.isExit()) {
+            if (lckQue_.isExited()) {
                 // 关闭日志文件
                 fclose(pf);
                 // 跳出外层 For 循环，结束日志写入线程的运行（会丢失未被写入的日志信息）
@@ -96,7 +96,7 @@ Logger::Logger() {
 // 析构函数
 Logger::~Logger() {
     // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
-    this->lckQue_.Stop();
+    this->lckQue_.stop();
     // 等待日志线程安全退出
     if (writeThread_.joinable()) {
         writeThread_.join();
@@ -113,7 +113,7 @@ Logger& Logger::instance() {
 // 输出日志信息
 void Logger::log(const LogMessage& message) {
     // 将日志信息写入缓冲队列中
-    this->lckQue_.Push(message);
+    this->lckQue_.push(message);
 }
 
 // 设置日志级别

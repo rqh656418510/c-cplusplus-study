@@ -8,103 +8,108 @@
 #include <queue>
 #include <thread>
 
-// 无界阻塞队列（生产者/消费者队列），线程安全
+// 有界阻塞队列（生产者/消费者队列，线程安全）
 template <typename T>
 class LockQueue {
 public:
     // 构造函数
-    LockQueue()
-        : exited_(false){
-
-          };
+    explicit LockQueue(size_t maxSize = 4096) : maxSize_(maxSize), exited_(false) {
+    }
 
     // 析构函数
     ~LockQueue() {
         if (!exited_) {
-            Stop();
+            stop();
         }
     }
 
-    // 往队尾插入数据
-    void Push(const T& data) {
-        {
-            // 获取互斥锁
-            std::lock_guard<std::mutex> lock(mutex_);
-
-            // 如果已经退出，则不再接受新数据（防御性）
-            if (exited_) {
-                return;
-            }
-
-            // 插入数据
-            queue_.push(data);
-        }
-
-        // 唤醒日志写入线程去消费队列中的数据
-        cv_.notify_one();
-    }
-
-    // 往队尾插入数据（支持右值，减少一次拷贝）
-    void Push(T&& data) {
-        {
-            // 获取互斥锁
-            std::lock_guard<std::mutex> lock(mutex_);
-
-            // 如果队列已经退出，则不再接受新数据
-            if (exited_) {
-                return;
-            }
-
-            // 插入数据
-            queue_.push(std::move(data));
-        }
-
-        // 唤醒日志写入线程去消费队列中的数据
-        cv_.notify_one();
-    }
-
-    // 往队头弹出数据
-    T Pop() {
+    // 往队尾插入数据（左值）
+    void push(const T& data) {
         // 获取互斥锁
         std::unique_lock<std::mutex> lock(mutex_);
 
-        // 阻塞等待，直到队列不为空或者已退出
-        cv_.wait(lock, [this]() { return !queue_.empty() || exited_; });
+        // 阻塞等待，直到队列有空间或已退出
+        cvNotFull_.wait(lock, [this]() { return queue_.size() < maxSize_ || exited_; });
+
+        // 如果队列已经退出，则不再接受新数据
+        if (exited_) {
+            return;
+        }
+
+        // 插入数据
+        queue_.push(data);
+
+        // 唤醒等待取数据的线程
+        cvNotEmpty_.notify_one();
+    }
+
+    // 往队尾插入数据（右值，减少拷贝）
+    void push(T&& data) {
+        // 获取互斥锁
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        // 阻塞等待，直到队列有空间或已退出
+        cvNotFull_.wait(lock, [this]() { return queue_.size() < maxSize_ || exited_; });
+
+        // 如果队列已经退出，则不再接受新数据
+        if (exited_) {
+            return;
+        }
+
+        // 插入数据
+        queue_.push(std::move(data));
+
+        // 唤醒等待取数据的线程
+        cvNotEmpty_.notify_one();
+    }
+
+    // 往队头弹出数据
+    T pop() {
+        // 获取互斥锁
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        // 阻塞等待，直到队列不为空或已退出
+        cvNotEmpty_.wait(lock, [this]() { return !queue_.empty() || exited_; });
 
         // 视业务逻辑而定，可以返回空数据或者抛出异常
-        if (exited_ && queue_.empty()) {
+        if (exited_ || queue_.empty()) {
+            // 返回空数据（要求队列中的元素有空构造函数）
             return {};
         }
 
         // 获取队头元素
-        T data = queue_.front();
+        T data = std::move(queue_.front());
 
         // 弹出队头元素
         queue_.pop();
+
+        // 唤醒等待插入数据的线程
+        cvNotFull_.notify_one();
 
         return data;
     }
 
     // 关闭队列
-    void Stop() {
+    void stop() {
         {
             // 获取互斥锁
             std::lock_guard<std::mutex> lock(mutex_);
-            // 设置退出标志
+            // 更新退出标记
             exited_ = true;
         }
 
-        // 唤醒正在等待的日志写入线程
-        cv_.notify_all();
+        // 唤醒正在等待的线程
+        cvNotEmpty_.notify_all();
+        cvNotFull_.notify_all();
     }
 
     // 获取退出标志
-    bool isExit() const {
+    bool isExited() const {
         return exited_;
     }
 
     // 获取队列大小
-    size_t Size() const {
+    size_t size() const {
         // 获取互斥锁
         std::lock_guard<std::mutex> lock(mutex_);
         // 返回队列大小
@@ -112,8 +117,10 @@ public:
     }
 
 private:
-    std::mutex mutex_;            // 互斥锁
-    std::queue<T> queue_;         // 队列
-    std::condition_variable cv_;  // 条件变量
-    std::atomic_bool exited_;     // 退出标志，用于避免发生线程死锁
+    size_t maxSize_;                      // 队列最大容量
+    std::mutex mutex_;                    // 互斥锁
+    std::queue<T> queue_;                 // 队列
+    std::condition_variable cvNotEmpty_;  // 队列非空条件
+    std::condition_variable cvNotFull_;   // 队列非满条件
+    std::atomic_bool exited_;             // 退出标志
 };

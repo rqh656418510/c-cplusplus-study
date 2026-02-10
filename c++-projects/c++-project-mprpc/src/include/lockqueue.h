@@ -72,7 +72,8 @@ public:
         m_cv.wait(lock, [this]() { return !m_queue.empty() || m_exited; });
 
         // 视业务逻辑而定，可以返回空数据或者抛出异常
-        if (m_exited && m_queue.empty()) {
+        if (m_exited || m_queue.empty()) {
+            // 返回空数据（要求队列中的元素有空构造函数）
             return {};
         }
 

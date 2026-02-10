@@ -1,7 +1,9 @@
 #pragma once
 
+#include <atomic>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "AlertChannel.h"
 #include "LockQueue.h"
@@ -13,22 +15,27 @@ struct AlertTask {
     std::shared_ptr<AlertChannel> channel;  // 告警渠道
 };
 
-// 异步告警
+// 异步告警（装饰器模式）
 class AsyncAlert : public AlertChannel {
 public:
     // 构造函数
-    AsyncAlert(std::shared_ptr<AlertChannel> channel) : channel_(channel) {
-    }
+    AsyncAlert(std::shared_ptr<AlertChannel> channel, size_t maxQueueSize = 4096);
+
+    // 析构函数
+    ~AsyncAlert();
+
+    // 停止告警
+    void stop();
 
     // 发送消息
-    bool sendMsg(const std::string& title, const std::string& content) override {
-        // 入队操作
-        AlertTask task{title, content, channel_};
-        queue_.Push(task);
-        return true;
-    }
+    bool sendMsg(const std::string& title, const std::string& content) override;
 
 private:
-    static LockQueue<AlertTask> queue_;      // 存储告警任务的队列
+    // 处理队列里的任务
+    void processQueue();
+
+    LockQueue<AlertTask> queue_;             // 告警队列
     std::shared_ptr<AlertChannel> channel_;  // 告警渠道
+    std::thread thread_;                     // 告警线程
+    std::atomic_bool stoped_;                // 停止告警的标记
 };

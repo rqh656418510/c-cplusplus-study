@@ -10,18 +10,10 @@
 class CompositeAlert : public AlertChannel {
 public:
     // 添加告警渠道
-    void addChannel(std::shared_ptr<AlertChannel> channel) {
-        channels_.push_back(std::move(channel));
-    }
+    void addChannel(std::shared_ptr<AlertChannel> channel);
 
     // 发送消息
-    bool sendMsg(const std::string& title, const std::string& content) override {
-        bool successed = true;
-        for (auto& c : channels_) {
-            successed &= c->sendMsg(title, content);
-        }
-        return successed;
-    }
+    bool sendMsg(const std::string& title, const std::string& content);
 
 private:
     // 告警渠道集合
