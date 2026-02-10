@@ -4,10 +4,11 @@
 #include <thread>
 
 #include "AppConfigLoader.h"
+#include "WxQyTokenRefresher.h"
 #include "XxlJobMonitor.h"
 
 // XXL-JOB监控测试
-class MonitorTest {
+class JobTest {
 public:
     // 启动与关闭监控器
     void startAndStopMonitor() {
@@ -20,5 +21,17 @@ public:
 
         // 关闭监控器
         XxlJobMonitor::getInstance().stop();
+    }
+
+    // 启动与关闭AccessToken刷新器
+    void startAndStopTokenRefresher() {
+        // 启动刷新器
+        WxQyTokenRefresher::getInstance().start();
+
+        // 等待一段时间
+        std::this_thread::sleep_for(std::chrono::seconds(15));
+
+        // 关闭刷新器
+        WxQyTokenRefresher::getInstance().stop();
     }
 };

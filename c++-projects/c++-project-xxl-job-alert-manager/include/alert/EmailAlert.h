@@ -4,7 +4,7 @@
 
 #include "AlertChannel.h"
 
-// 邮件告警
+// 邮件告警（同步发送告警消息）
 class EmailAlert : public AlertChannel {
 public:
     // 发送消息

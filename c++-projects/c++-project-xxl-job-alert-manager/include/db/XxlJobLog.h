@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <string>
 
+#include "AppConfigLoader.h"
+#include "Network.h"
 #include "json.hpp"
 
 // 类型重定义
@@ -106,6 +108,28 @@ public:
     }
     void setAlarmStatus(int8_t status) {
         alarmStatus_ = status;
+    }
+
+    // ---------- Other ----------
+    std::string parseAlertMsg() {
+        // 全局配置信息
+        const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+
+        // 拼接告警消息
+        char buf[2048];
+        snprintf(buf, sizeof(buf),
+                 "【XXL-JOB 调度失败】\n"
+                 "【IP】%s\n"
+                 "【Env】%s\n"
+                 "【Job】%s\n"
+                 "【Time】%s\n"
+                 "【Code】%d\n"
+                 "【Message】%s",
+                 Network::getInstance().getPublicIp().c_str(), config.alert.xxljobEnvironmentName.c_str(),
+                 executorHandler_.c_str(), triggerTime_.c_str(), triggerCode_, triggerMsg_.c_str());
+
+        // 返回告警消息
+        return std::string(buf);
     }
 
 private:

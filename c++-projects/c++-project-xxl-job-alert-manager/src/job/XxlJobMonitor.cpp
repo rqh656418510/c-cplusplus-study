@@ -4,7 +4,7 @@
 #include <functional>
 #include <iostream>
 
-#include "Alert.h"
+#include "AlertChannelFactory.h"
 #include "AppConfigLoader.h"
 #include "Logger.h"
 #include "Network.h"
@@ -14,6 +14,9 @@
 
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor() : monitorRunning_(false), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
+    // 初始化告警管理器
+    alertManager_.registerChannel(AlertLevel::ERROR, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
+    alertManager_.registerChannel(AlertLevel::CRITICAL, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
 }
 
 // 私有析构函数
@@ -96,7 +99,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                     sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
                             Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
                             config.alert.xxljobEnvironmentName.c_str());
-                    Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser, std::string(buf));
+                    alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
                     idleAlertSended_.store(true);
                 }
             } else {
@@ -120,8 +123,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                         sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
                                 Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
                                 config.alert.xxljobEnvironmentName.c_str());
-                        Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser,
-                                               std::string(buf));
+                        alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
                         idleAlertSended_.store(true);
                     }
                 } else {
@@ -172,8 +174,7 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
                     // 如果不是已告警过，则发送告警消息
                     if (t_lastest_fatal_trigger_time > lastAlertFatalTriggerTime_.load()) {
                         // 发送告警消息
-                        Alert::sendWxQyTextMsg(config.wechatAccount.agentId, config.wechatAccount.toUser,
-                                               lastestFatalLog);
+                        alertManager_.alert(AlertLevel::ERROR, "XXL-JOB 监控告警", lastestFatalLog.parseAlertMsg());
                         // 更新已告警状态
                         lastAlertFatalTriggerTime_.store(t_lastest_fatal_trigger_time);
                     }

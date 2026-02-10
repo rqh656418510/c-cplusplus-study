@@ -5,6 +5,7 @@
 #include <ctime>
 #include <thread>
 
+#include "AlertManager.h"
 #include "NonCopyable.h"
 
 // XXL-JOB监控器（单例模式）
@@ -31,6 +32,9 @@ private:
 
     // 循环监控XXL-JOB是否调度失败
     void monitorFatalStatusLoop();
+
+    // 告警管理器
+    AlertManager alertManager_;
 
     // 定期扫描任务调度日志的开关
     std::atomic_bool monitorRunning_;

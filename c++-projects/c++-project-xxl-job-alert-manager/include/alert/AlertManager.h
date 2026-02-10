@@ -21,6 +21,6 @@ public:
 private:
     // 告警路由
     std::unordered_map<AlertLevel, std::vector<std::shared_ptr<AlertChannel>>> routes_;
-    // 互斥锁（保证集合线程安全）
+    // 互斥锁（保证Map线程安全）
     std::mutex mutex_;
 };

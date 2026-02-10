@@ -15,7 +15,7 @@ struct AlertTask {
     std::shared_ptr<AlertChannel> channel;  // 告警渠道
 };
 
-// 异步告警（装饰器模式，线程安全）
+// 异步告警（装饰器模式，异步发送告警消息，线程安全）
 class AsyncAlert : public AlertChannel {
 public:
     // 构造函数

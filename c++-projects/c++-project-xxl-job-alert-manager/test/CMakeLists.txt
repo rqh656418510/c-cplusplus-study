@@ -13,6 +13,16 @@ find_library(MYSQL_LIBRARY
     REQUIRED
 )
 
+# 指定项目中的测试头文件
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/base
+    ${CMAKE_CURRENT_SOURCE_DIR}/net
+    ${CMAKE_CURRENT_SOURCE_DIR}/config
+    ${CMAKE_CURRENT_SOURCE_DIR}/db
+    ${CMAKE_CURRENT_SOURCE_DIR}/alert
+    ${CMAKE_CURRENT_SOURCE_DIR}/job
+)
+
 # 指定编译生成可执行文件
 add_executable(xxl_job_alert_manager_test ${TEST_SRC_FILES} ${MAIN_SRC_FILES})
 

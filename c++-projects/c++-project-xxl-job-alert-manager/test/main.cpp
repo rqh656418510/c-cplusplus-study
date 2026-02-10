@@ -1,12 +1,13 @@
 #include <chrono>
 #include <iostream>
 
-#include "Logger.h"
-#include "alert/WxQyAlertTest.h"
-#include "base/BaseTest.h"
-#include "db/MySqlTest.h"
-#include "monitor/MonitorTest.h"
-#include "net/NetworkTest.h"
+#include "AlertTest.h"
+#include "BaseTest.h"
+#include "ConfigTest.h"
+#include "JobTest.h"
+#include "MySqlTest.h"
+#include "NetworkTest.h"
+#include "WxQyAlertTest.h"
 
 int main(int argc, char** argv) {
     // 设置默认日志级别
@@ -14,13 +15,35 @@ int main(int argc, char** argv) {
 
     BaseTest baseTest;
 
+    // 获取当前时间
+    // baseTest.nowDateTime();
+
+    ConfigTest configTest;
+
     // 加载配置文件
-    // baseTest.loadConfigFile();
+    // configTest.loadConfigFile();
 
     NetworkTest networkTest;
 
     // 获取公网IP地址
     // networkTest.getPublicIp();
+
+    AlertTest alertTest;
+
+    // 邮件渠道告警
+    alertTest.emailAlert();
+
+    // 企业微信渠道告警
+    // alertTest.wxQyAlert();
+
+    // 异步邮件渠道告警
+    // alertTest.asyncEmailAlert();
+
+    // 异步企业微信渠道告警
+    // alertTest.asyncwxQyAlert();
+
+    // 复合渠道告警
+    // alertTest.compositeAlert();
 
     WxQyAlertTest wxQyAlertTest;
 
@@ -42,7 +65,7 @@ int main(int argc, char** argv) {
     // mysqlTest.connectionPoolSingleThread();
 
     // 多个线程从数据库连接池获取连接执行更新操作
-    mysqlTest.connectionPoolMultiThread();
+    // mysqlTest.connectionPoolMultiThread();
 
     // 查询XXL-JOB最新的调度日志记录
     // mysqlTest.selectLastestXxlJobLog();
@@ -50,10 +73,13 @@ int main(int argc, char** argv) {
     // 查询XXL-JOB最新的调度失败日志记录
     // mysqlTest.selectLastestFatalXxlJobLog();
 
-    MonitorTest monitorTest;
+    JobTest jobTest;
 
     // 启动与关闭监控器
-    // monitorTest.startAndStopMonitor();
+    // jobTest.startAndStopMonitor();
+
+    // 启动与关闭AccessToken刷新器
+    // jobTest.startAndStopTokenRefresher();
 
     // 等待用户任意输入，然后结束程序
     LOG_INFO("Wait to user any input to exit.");
