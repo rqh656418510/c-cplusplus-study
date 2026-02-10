@@ -19,7 +19,7 @@ bool WxQyAlert::sendMsg(const std::string& title, const std::string& content) {
     req.setContent(content);
     req.setSafe(0);
 
-    LOG_INFO("发送企业微信应用信息: %s", content.c_str());
+    LOG_INFO("发送企业微信告警信息: %s", content.c_str());
 
     // 发送应用消息
     bool result = WxQyApi::sendMessage(req);

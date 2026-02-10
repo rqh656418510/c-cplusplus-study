@@ -5,17 +5,19 @@
 
 #include "AlertChannel.h"
 #include "NonCopyable.h"
+#include "unordered_map"
+#include "vector"
 
 // 告警管理器
 class AlertManager : NonCopyable {
 public:
-    // 构造函数
-    explicit AlertManager(std::shared_ptr<AlertChannel> channel);
+    // 注册告警渠道
+    void registerChannel(AlertLevel level, std::shared_ptr<AlertChannel> channel);
 
     // 执行告警
-    void alert(const std::string& title, const std::string& content);
+    void alert(AlertLevel level, const std::string& title, const std::string& content);
 
 private:
-    // 告警渠道
-    std::shared_ptr<AlertChannel> channel_;
+    // 告警路由
+    std::unordered_map<AlertLevel, std::vector<std::shared_ptr<AlertChannel>>> routes_;
 };
