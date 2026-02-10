@@ -2,7 +2,7 @@
 
 // 获取单例对象
 NetworkUtil& NetworkUtil::GetInstance() {
-    // 局部静态变量（线程安全）
+    // 静态局部变量（线程安全）
     static NetworkUtil instance;
     return instance;
 }
