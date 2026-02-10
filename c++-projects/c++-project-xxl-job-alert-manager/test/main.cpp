@@ -7,7 +7,6 @@
 #include "JobTest.h"
 #include "MySqlTest.h"
 #include "NetworkTest.h"
-#include "WxQyAlertTest.h"
 
 int main(int argc, char** argv) {
     // 设置默认日志级别
@@ -48,13 +47,8 @@ int main(int argc, char** argv) {
     // 告警管理器
     // alertTest.alertManager();
 
-    WxQyAlertTest wxQyAlertTest;
-
-    // 发送企业微信应用消息
-    // wxQyAlertTest.sendWxQyTextMsg1();
-
-    // 发送企业微信应用消息
-    // wxQyAlertTest.sendWxQyTextMsg2();
+    // 发送XXL-JOB告警消息
+    // alertTest.sendXxlJobAlertMsg();
 
     MySqlTest mysqlTest;
 
