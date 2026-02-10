@@ -73,9 +73,9 @@ public:
         // 阻塞等待，直到队列不为空或已退出
         cvNotEmpty_.wait(lock, [this]() { return !queue_.empty() || exited_; });
 
-        // 视业务逻辑而定，可以返回空数据或者抛出异常
-        if (exited_ || queue_.empty()) {
-            // 返回空数据（要求队列中的元素有空构造函数）
+        // 只有在已退出且队列为空时，才真正返回空数据，否则继续执行直到队列为空为止
+        if (exited_ && queue_.empty()) {
+            // 返回空数据（要求队列元素有默认构造函数）
             return {};
         }
 

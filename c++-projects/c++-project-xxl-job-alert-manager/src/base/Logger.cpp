@@ -55,11 +55,11 @@ Logger::Logger() {
             // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
             LogMessage message = lckQue_.pop();
 
-            // 检查退出标志
-            if (lckQue_.isExited()) {
+            // 只有打印已停止且队列里不存在有效任务时，才退出循环，否则继续执行直到队列为空为止
+            if (lckQue_.isExited() && message.logContent_.empty()) {
                 // 关闭日志文件
                 fclose(pf);
-                // 跳出外层 For 循环，结束日志写入线程的运行（会丢失未被写入的日志信息）
+                // 跳出外层 For 循环，结束日志写入线程的运行
                 break;
             }
 

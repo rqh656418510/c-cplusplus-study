@@ -31,13 +31,13 @@ int main(int argc, char** argv) {
     AlertTest alertTest;
 
     // 邮件渠道告警
-    alertTest.emailAlert();
+    // alertTest.emailAlert();
 
     // 企业微信渠道告警
     // alertTest.wxQyAlert();
 
     // 异步邮件渠道告警
-    // alertTest.asyncEmailAlert();
+    alertTest.asyncEmailAlert();
 
     // 异步企业微信渠道告警
     // alertTest.asyncwxQyAlert();
