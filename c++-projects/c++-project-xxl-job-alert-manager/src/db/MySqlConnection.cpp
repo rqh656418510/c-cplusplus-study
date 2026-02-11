@@ -1,5 +1,6 @@
 #include "MySqlConnection.h"
 
+#include <exception>
 #include <iostream>
 
 #include "Logger.h"
@@ -11,8 +12,16 @@ MySqlConnection::MySqlConnection() {
 
 // 关闭数据库连接
 MySqlConnection::~MySqlConnection() {
-    if (conn_ != nullptr) {
-        mysql_close(conn_);
+    try {
+        if (conn_ != nullptr) {
+            mysql_close(conn_);
+        }
+    } catch (const std::exception& e) {
+        LOG_ERROR("Failed to close connection, exception: %s", e.what());
+        LOG_ERROR(mysql_error(conn_));
+    } catch (...) {
+        LOG_ERROR("Failed to close connection, unknow exception");
+        LOG_ERROR(mysql_error(conn_));
     }
 }
 
@@ -25,9 +34,9 @@ bool MySqlConnection::connect(const std::string& ip, unsigned short port, const 
     if (p != nullptr) {
         // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示？乱码
         mysql_query(conn_, "set names utf8mb4");
-        LOG_DEBUG("connect mysql [%s:%d] success!", ip.c_str(), port);
+        LOG_DEBUG("Connect mysql [%s:%d] success!", ip.c_str(), port);
     } else {
-        LOG_ERROR("connect mysql [%s:%d] failed!", ip.c_str(), port);
+        LOG_ERROR("Connect mysql [%s:%d] failed!", ip.c_str(), port);
         LOG_ERROR(mysql_error(conn_));
     }
 
@@ -60,16 +69,35 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     return mysql_store_result(conn_);
 }
 
-// 刷新连接进入空闲状态后的起始存活时间点
-void MySqlConnection::refreshAliveTime() {
-    auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    aliveTime_.store(now_ms, std::memory_order_relaxed);
+// 为连接发送心跳
+bool MySqlConnection::sendHeartbeat() {
+    return true;
 }
 
-// 获取连接的空闲存活时间（单位毫秒）
-long long MySqlConnection::getAliveTime() const {
+// 刷新连接进入空闲状态的时间戳
+void MySqlConnection::refreshIdleStartTime() {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    return static_cast<long>(now_ms - aliveTime_.load(std::memory_order_relaxed));
+    idleStartTime_.store(now_ms, std::memory_order_relaxed);
+}
+
+// 获取连接进入空闲状态的总时长（单位毫秒）
+long long MySqlConnection::getIdleTotalTimes() const {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    return static_cast<long>(now_ms - idleStartTime_.load(std::memory_order_relaxed));
+}
+
+// 刷新连接上次发送心跳的时间戳
+void MySqlConnection::refreshLastHeartbeatTime() {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    lastHeartbeatTime_.store(now_ms, std::memory_order_relaxed);
+}
+
+// 获取连接上次发送心跳的时间戳（单位毫秒）
+long long MySqlConnection::getLastHeartbeatIntervalTime() const {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    return static_cast<long>(now_ms - lastHeartbeatTime_.load(std::memory_order_relaxed));
 }

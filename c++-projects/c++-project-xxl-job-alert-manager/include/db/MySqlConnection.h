@@ -31,13 +31,23 @@ public:
     // 执行查询操作（select）
     MYSQL_RES* query(const std::string& sql);
 
-    // 刷新连接进入空闲状态后的起始存活时间点
-    void refreshAliveTime();
+    // 为连接发送心跳
+    bool sendHeartbeat();
 
-    // 获取连接的空闲存活时间（单位毫秒）
-    long long getAliveTime() const;
+    // 刷新连接进入空闲状态的时间戳
+    void refreshIdleStartTime();
+
+    // 获取连接进入空闲状态的总时长（单位毫秒）
+    long long getIdleTotalTimes() const;
+
+    // 获取连接上次发送心跳距今的时间间隔（毫秒）
+    long long getLastHeartbeatIntervalTime() const;
+
+    // 刷新连接上次发送心跳的时间戳
+    void refreshLastHeartbeatTime();
 
 private:
-    MYSQL* conn_;                       // 表示和MySQL Server的一条连接
-    std::atomic<long long> aliveTime_;  // 记录进入空闲状态后的起始存活时间
+    MYSQL* conn_;                               // 表示和MySQL Server的一条连接
+    std::atomic<long long> idleStartTime_;      // 记录连接进入空闲状态的时间戳（单位毫秒）
+    std::atomic<long long> lastHeartbeatTime_;  // 记录连接上次发送心跳的时间戳（单位毫秒）
 };

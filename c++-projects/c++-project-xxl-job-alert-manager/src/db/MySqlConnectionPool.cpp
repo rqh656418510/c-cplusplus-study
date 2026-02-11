@@ -1,6 +1,8 @@
 #include "MySqlConnectionPool.h"
 
+#include <algorithm>
 #include <exception>
+#include <vector>
 
 #include "AppConfigLoader.h"
 #include "Logger.h"
@@ -15,6 +17,8 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
     this->maxSize_ = config.mysql.connectionPoolMaxSize;
     this->maxIdleTime_ = config.mysql.connectionPoolMaxIdleTime;
     this->connectionTimeout_ = config.mysql.connectionPoolConnectionTimeout;
+    this->heartbeatIntervalTime_ = config.mysql.connectionPoolHeartbeatIntervalTime;
+    this->scanIntervalTime_ = std::min(this->maxIdleTime_, this->heartbeatIntervalTime_);
 
     // 创建初始化数量的MySQL连接
     for (int i = 0; i < this->initSize_; i++) {
@@ -25,9 +29,9 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
-            this->connectionQueue_.push(connection);
+            this->connectionQueue_.push_back(connection);
             // 计数器加一
             this->connectionCount_++;
         }
@@ -93,7 +97,7 @@ void MySqlConnectionPool::close() {
         // 获取队头的连接
         MySqlConnection *phead = this->connectionQueue_.front();
         // 出队操作
-        this->connectionQueue_.pop();
+        this->connectionQueue_.pop_front();
         // 计数器减一
         this->connectionCount_--;
         // 释放连接占用的内存空间
@@ -148,9 +152,9 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
         // 判断连接池是否已关闭
         if (!this->closed_) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            pconn->refreshAliveTime();
+            pconn->refreshIdleStartTime();
             // 入队操作（将连接归还到队列中）
-            this->connectionQueue_.push(pconn);
+            this->connectionQueue_.push_back(pconn);
             // 通知正在等待获取连接的线程
             this->cv_.notify_all();
         } else {
@@ -160,7 +164,7 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
     });
 
     // 出队操作
-    this->connectionQueue_.pop();
+    this->connectionQueue_.pop_front();
 
     if (this->connectionQueue_.empty()) {
         // 如果连接队列为空，则通知生产线程生产连接
@@ -200,9 +204,9 @@ void MySqlConnectionPool::produceConnection() {
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
-            this->connectionQueue_.push(connection);
+            this->connectionQueue_.push_back(connection);
             // 计数器加一
             this->connectionCount_++;
             // 通知消费者线程可以消费连接了
@@ -218,39 +222,99 @@ void MySqlConnectionPool::produceConnection() {
     }
 }
 
-// 扫描多余的空闲连接，并释放连接
+// 扫描连接池中的空闲连接
 void MySqlConnectionPool::scanIdleConnection() {
     while (!this->closed_) {
-        // 获取互斥锁
-        std::unique_lock<std::mutex> lock(this->queueMutex_);
+        //////////////////////////////// 回收连接池中的空闲连接 ////////////////////////////////
 
-        // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
-        if (this->cv_.wait_for(lock, std::chrono::seconds(this->maxIdleTime_),
-                               [this]() { return this->closed_.load(); })) {
-            // 当被唤醒时，说明连接池已经关闭，退出扫描线程
-            break;
-        }
+        {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(this->queueMutex_);
 
-        // wait_for() 超时返回后，如果连接池已经关闭，则退出扫描线程
-        if (this->closed_) {
-            break;
-        }
-
-        // 判断空闲连接（即队列里的连接）数量是否大于初始连接数量
-        while (!this->connectionQueue_.empty() && this->connectionQueue_.size() > this->initSize_) {
-            // 扫描队头的连接是否超过最大空闲时间
-            MySqlConnection *phead = this->connectionQueue_.front();
-            if (phead->getAliveTime() >= this->maxIdleTime_ * 1000) {
-                // 出队操作
-                this->connectionQueue_.pop();
-                // 计数器减一
-                this->connectionCount_--;
-                // 释放连接
-                delete phead;
-            } else {
-                // 如果队头的连接没有超过最大空闲时间，那么其他连接肯定也没有超过
+            // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查关闭标志；若检测到连接池已关闭则立即返回，以保证扫描线程能够安全退出
+            if (this->cv_.wait_for(lock, std::chrono::seconds(this->scanIntervalTime_),
+                                   [this]() { return this->closed_.load(); })) {
+                // 当被唤醒时，说明连接池已经关闭，退出扫描线程
                 break;
             }
+
+            // wait_for() 超时返回后，如果连接池已经关闭，则退出扫描线程
+            if (this->closed_) {
+                break;
+            }
+
+            for (auto it = this->connectionQueue_.begin(); it != this->connectionQueue_.end();) {
+                // 判断空闲连接（即队列里的连接）数量是否大于初始连接数量
+                if (this->connectionQueue_.size() > this->initSize_) {
+                    // 如果连接超过最大空闲时间，则回收连接
+                    if ((*it)->getIdleTotalTimes() >= this->maxIdleTime_ * 1000) {
+                        // 临时拷贝一份连接
+                        MySqlConnection *conn = *it;
+                        // 移除连接（返回下一个有效迭代器）
+                        it = this->connectionQueue_.erase(it);
+                        // 计数器减一
+                        this->connectionCount_--;
+                        // 释放连接
+                        delete conn;
+                    } else {
+                        it++;
+                    }
+                } else {
+                    it++;
+                }
+            }
+        }  // 立刻释放互斥锁
+
+        //////////////////////////////// 为连接池中的空闲连接发送心跳 ////////////////////////////////
+
+        // 用于存放需要发送心跳的连接的集合
+        std::vector<MySqlConnection *> needHeartbeatList;
+
+        {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(this->queueMutex_);
+
+            // 遍历队列里的所有连接（空闲连接）
+            for (auto conn : this->connectionQueue_) {
+                // 判断是否满足发送心跳的时间间隔
+                if (conn->getLastHeartbeatIntervalTime() >= heartbeatIntervalTime_) {
+                    // 保存需要发送心跳的连接
+                    needHeartbeatList.push_back(conn);
+                }
+            }
+        }  // 立刻释放互斥锁
+
+        // 用于存放发送心跳失败的连接的集合
+        std::vector<MySqlConnection *> failedHeartbeatList;
+
+        // 遍历所有需要发送心跳的连接
+        for (auto conn : needHeartbeatList) {
+            // 为连接发送心跳（网络耗时操作）
+            if (conn->sendHeartbeat()) {
+                // 心跳发送成功，刷新连接上次发送心跳的时间戳
+                conn->refreshLastHeartbeatTime();
+            } else {
+                // 心跳发送失败，保存发送心跳失败的连接
+                failedHeartbeatList.push_back(conn);
+            }
         }
+
+        {
+            // 获取互斥锁
+            std::unique_lock<std::mutex> lock(this->queueMutex_);
+
+            // 遍历所有发送心跳失败的连接
+            for (auto conn : failedHeartbeatList) {
+                auto it = std::find(this->connectionQueue_.begin(), this->connectionQueue_.end(), conn);
+                if (it != this->connectionQueue_.end()) {
+                    // 从队列中移除连接
+                    this->connectionQueue_.erase(it);
+                    // 计数器减一
+                    this->connectionCount_--;
+                    // 释放连接
+                    delete conn;
+                }
+            }
+        }  // 立刻释放互斥锁
     }
 }

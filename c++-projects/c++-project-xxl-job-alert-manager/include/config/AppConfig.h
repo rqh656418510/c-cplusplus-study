@@ -4,16 +4,17 @@
 
 // MySQL 连接配置
 struct MySQLConfig {
-    int port;                       // MySQL服务器的端口（mysql.port）
-    std::string ip;                 // MySQL服务器的IP地址（mysql.ip）
-    std::string user;               // MySQL的登录用户名（mysql.user）
-    std::string password;           // MySQL的登录密码（mysql.password）
-    std::string database;           // 连接的数据库名称（mysql.db）
-    std::string table;              // XXL-JOB调度日志表的名称（mysql.table）
-    int connectionPoolInitSize;     // 连接池的初始连接数（mysql.connection.pool.init_size）
-    int connectionPoolMaxSize;      // 连接池的最大连接数（mysql.connection.pool.max_size）
-    int connectionPoolMaxIdleTime;  // 连接池的最大空闲时间，单位秒（mysql.connection.pool.max_idle_time）
+    int port;                    // MySQL服务器的端口（mysql.port）
+    std::string ip;              // MySQL服务器的IP地址（mysql.ip）
+    std::string user;            // MySQL的登录用户名（mysql.user）
+    std::string password;        // MySQL的登录密码（mysql.password）
+    std::string database;        // 连接的数据库名称（mysql.db）
+    std::string table;           // XXL-JOB调度日志表的名称（mysql.table）
+    int connectionPoolInitSize;  // 连接池的初始连接数（mysql.connection.pool.init_size）
+    int connectionPoolMaxSize;   // 连接池的最大连接数（mysql.connection.pool.max_size）
+    int connectionPoolMaxIdleTime;  // 连接池的最大空闲回收时间，单位秒（mysql.connection.pool.max_idle_time）
     int connectionPoolConnectionTimeout;  // 从连接池获取连接的超时时间，单位毫秒（mysql.connection.pool.connection_timeout）
+    int connectionPoolHeartbeatIntervalTime;  // 连接发送心跳的时间间隔，单位秒（mysql.connection.pool.heartbeat_interval_time）
 };
 
 // 企业微信账号配置

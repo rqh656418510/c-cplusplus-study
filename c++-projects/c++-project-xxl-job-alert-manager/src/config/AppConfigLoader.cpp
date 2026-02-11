@@ -65,6 +65,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.mysql.connectionPoolMaxSize = toInt(cfg_util.load("mysql.connection.pool.max_size"), "mysql.connection.pool.max_size");
     app.mysql.connectionPoolMaxIdleTime = toInt(cfg_util.load("mysql.connection.pool.max_idle_time"), "mysql.connection.pool.max_idle_time");
     app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connection_timeout"), "mysql.connection.pool.connection_timeout");
+    app.mysql.connectionPoolHeartbeatIntervalTime = toInt(cfg_util.load("mysql.connection.pool.heartbeat_interval_time"), "mysql.connection.pool.heartbeat_interval_time");
     
     // WxQy Account
     app.wxQyAccount.agentId = toInt(cfg_util.load("wxqy.account.agent_id"), "wxqy.account.agent_id");
