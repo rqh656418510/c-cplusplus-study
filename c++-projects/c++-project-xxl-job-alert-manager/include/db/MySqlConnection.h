@@ -47,7 +47,7 @@ public:
     void refreshLastHeartbeatTime();
 
 private:
-    MYSQL* conn_;                               // 表示和MySQL Server的一条连接
+    MYSQL* conn_;                               // 表示和MySQL Server的一条连接（非线程安全）
     std::atomic<long long> idleStartTime_;      // 记录连接进入空闲状态的时间戳（单位毫秒）
     std::atomic<long long> lastHeartbeatTime_;  // 记录连接上次发送心跳的时间戳（单位毫秒）
 };

@@ -14,31 +14,43 @@ MySqlConnection::MySqlConnection() {
 MySqlConnection::~MySqlConnection() {
     try {
         if (conn_ != nullptr) {
+            // 关闭连接
             mysql_close(conn_);
         }
     } catch (const std::exception& e) {
         LOG_ERROR("Failed to close connection, exception: %s", e.what());
-        LOG_ERROR(mysql_error(conn_));
     } catch (...) {
         LOG_ERROR("Failed to close connection, unknow exception");
-        LOG_ERROR(mysql_error(conn_));
     }
 }
 
 // 连接数据库
 bool MySqlConnection::connect(const std::string& ip, unsigned short port, const std::string& username,
                               const std::string& password, const std::string& dbname) {
+    // 旧版本的MySQL，需要关闭自动重连的标记（生产环境不应依赖MySQL的自动重连机制，应由连接池统一管理连接的创建、重连与关闭等）
+    // bool reconnect = false;
+
+    // 配置连接
+    // mysql_options(conn_, MYSQL_OPT_RECONNECT, &reconnect);
+
+    // 发起连接
     MYSQL* p =
         mysql_real_connect(conn_, ip.c_str(), username.c_str(), password.c_str(), dbname.c_str(), port, nullptr, 0);
 
-    if (p != nullptr) {
-        // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示？乱码
-        mysql_query(conn_, "set names utf8mb4");
-        LOG_DEBUG("Connect mysql [%s:%d] success!", ip.c_str(), port);
-    } else {
-        LOG_ERROR("Connect mysql [%s:%d] failed!", ip.c_str(), port);
-        LOG_ERROR(mysql_error(conn_));
+    if (p == nullptr) {
+        LOG_ERROR("Connect mysql [%s:%d] failed", ip.c_str(), port);
+        LOG_ERROR("%s", mysql_error(conn_));
+        return false;
     }
+
+    // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示乱码
+    if (mysql_set_character_set(conn_, "utf8mb4") != 0) {
+        LOG_ERROR("Set charset failed: %s", mysql_error(conn_));
+        return false;
+    }
+
+    LOG_DEBUG("Connect mysql [%s:%d] success", ip.c_str(), port);
+    return true;
 
     return p != nullptr;
 }
@@ -71,7 +83,19 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
 
 // 为连接发送心跳
 bool MySqlConnection::sendHeartbeat() {
-    return true;
+    if (conn_ == nullptr) {
+        return false;
+    }
+
+    // 发送心跳，0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
+    if (mysql_ping(conn_) == 0) {
+        return true;
+    }
+
+    // 打印日志信息
+    LOG_ERROR("Connection send heartbeat failed: %s", mysql_errno(conn_));
+
+    return false;
 }
 
 // 刷新连接进入空闲状态的时间戳

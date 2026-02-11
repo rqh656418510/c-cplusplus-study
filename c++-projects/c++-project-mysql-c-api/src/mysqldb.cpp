@@ -18,19 +18,25 @@ MySQL::~MySQL() {
 
 // 连接数据库
 bool MySQL::connect() {
+    // 发起连接
     MYSQL *p = mysql_real_connect(_conn, DB_IP.c_str(), DB_USER.c_str(), DB_PASSWORD.c_str(), DB_NAME.c_str(), DB_PORT,
                                   nullptr, 0);
 
-    if (p != nullptr) {
-        // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示？乱码
-        mysql_query(_conn, "set names utf8mb4");
-        std::cout << "[DEBUG] connect mysql success!" << std::endl;
-    } else {
-        std::cout << "[ERROR] connect mysql failed!" << std::endl;
+    if (p == nullptr) {
+        std::cout << "[ERROR] connect mysql failed" << std::endl;
         std::cout << "[ERROR] " << mysql_error(_conn) << std::endl;
+        return false;
     }
 
-    return p;
+    // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示乱码
+    if (mysql_set_character_set(_conn, "utf8mb4") != 0) {
+        std::cout << "Set charset failed" << std::endl;
+        std::cout << "[ERROR] " << mysql_error(_conn) << std::endl;
+        return false;
+    }
+
+    std::cout << "[DEBUG] connect mysql success" << std::endl;
+    return true;
 }
 
 // 更新操作

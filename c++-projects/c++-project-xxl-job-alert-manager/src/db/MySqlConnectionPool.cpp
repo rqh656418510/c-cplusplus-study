@@ -228,6 +228,9 @@ void MySqlConnectionPool::scanIdleConnection() {
         //////////////////////////////// 回收连接池中的空闲连接 ////////////////////////////////
 
         {
+            // 打印日志信息
+            LOG_DEBUG("Connection pool scan idle connection");
+
             // 获取互斥锁
             std::unique_lock<std::mutex> lock(this->queueMutex_);
 
@@ -267,6 +270,9 @@ void MySqlConnectionPool::scanIdleConnection() {
 
         //////////////////////////////// 为连接池中的空闲连接发送心跳 ////////////////////////////////
 
+        // 打印日志信息
+        LOG_DEBUG("Connection pool send heartbeat for connection");
+
         // 用于存放需要发送心跳的连接的集合
         std::vector<MySqlConnection *> needHeartbeatList;
 
@@ -277,7 +283,7 @@ void MySqlConnectionPool::scanIdleConnection() {
             // 遍历队列里的所有连接（空闲连接）
             for (auto conn : this->connectionQueue_) {
                 // 判断是否满足发送心跳的时间间隔
-                if (conn->getLastHeartbeatIntervalTime() >= heartbeatIntervalTime_) {
+                if (conn != nullptr && conn->getLastHeartbeatIntervalTime() >= heartbeatIntervalTime_) {
                     // 保存需要发送心跳的连接
                     needHeartbeatList.push_back(conn);
                 }
@@ -307,7 +313,7 @@ void MySqlConnectionPool::scanIdleConnection() {
             for (auto conn : failedHeartbeatList) {
                 auto it = std::find(this->connectionQueue_.begin(), this->connectionQueue_.end(), conn);
                 if (it != this->connectionQueue_.end()) {
-                    // 从队列中移除连接
+                    // 从队列中移除连接（不进行连接重连，宁可丢连接，也不要复活坏连接）
                     this->connectionQueue_.erase(it);
                     // 计数器减一
                     this->connectionCount_--;

@@ -28,7 +28,7 @@ public:
     MYSQL *getConnection();
 
 private:
-    MYSQL *_conn;  // 数据库连接
+    MYSQL *_conn;  // 数据库连接（非线程安全）
 };
 
 #endif  // MYSQLDB_H
