@@ -1,11 +1,24 @@
 #include <unistd.h>
 
+#include <atomic>
+#include <csignal>
 #include <iostream>
 
 #include "AppConfigLoader.h"
+#include "Application.h"
 #include "Logger.h"
-#include "WxQyTokenRefresher.h"
-#include "XxlJobMonitor.h"
+
+// 应用程序
+static std::atomic<Application*> appPtr_{nullptr};
+
+// 信号处理
+void signalHandler(int signal) {
+    Application* app = appPtr_.load(std::memory_order_acquire);
+    if (app) {
+        // 停止应用程序
+        app->stop();
+    }
+}
 
 // 打印命令帮助内容
 void ShowArgsHelp() {
@@ -15,8 +28,8 @@ void ShowArgsHelp() {
               << "  -h                 show help\n";
 }
 
-// 初始化应用程序
-void initApplication(int argc, char** argv) {
+// 获取用户配置文件
+std::string getConfigFile(int argc, char** argv) {
     // 获取命令行参数
     int c = 0;
     opterr = 0;               // 关闭 getopt 自身的报错
@@ -37,27 +50,29 @@ void initApplication(int argc, char** argv) {
         }
     }
 
-    // 设置全局的日志级别
-    Logger::instance().setLogLevel(LogLevel::DEBUG);
-
-    // 设置全局的配置文件路径
-    if (!config_file.empty()) {
-        AppConfigLoader::CONFIG_FILE_PATH = config_file;
-    }
+    // 返回用户配置文件
+    return config_file;
 }
 
 int main(int argc, char** argv) {
+    // 创建应用程序
+    Application app;
+
+    // 让信号处理器能访问应用程序
+    appPtr_.store(&app);
+
+    // 信号处理注册
+    std::signal(SIGTERM, signalHandler);
+    std::signal(SIGINT, signalHandler);
+
     // 初始化应用程序
-    initApplication(argc, argv);
+    app.init(getConfigFile(argc, argv));
 
-    // 启动AccessToken刷新器
-    WxQyTokenRefresher::getInstance().start();
+    // 运行应用程序（会阻塞等待）
+    app.run();
 
-    // 启动XXL-JOB监控器
-    XxlJobMonitor::getInstance().start();
-
-    getchar();
-    LOG_INFO("program exited.");
+    // 重置指针
+    appPtr_.store(nullptr, std::memory_order_relaxed);
 
     return 0;
 }
