@@ -12,11 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
-# 指定项目开启DEBUG日志输出支持
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions(-DALERT_DEBUG)
-endif()
-
 # 指定可执行文件的输出目录
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 

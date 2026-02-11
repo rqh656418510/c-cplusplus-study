@@ -66,10 +66,10 @@ void mysqlTest() {
     // mysqlTest.selectBySingleConnection();
 
     // 单个线程从数据库连接池获取连接执行更新操作
-    mysqlTest.connectionPoolSingleThread();
+    // mysqlTest.connectionPoolSingleThread();
 
     // 多个线程从数据库连接池获取连接执行更新操作
-    // mysqlTest.connectionPoolMultiThread();
+    mysqlTest.connectionPoolMultiThread();
 
     // 查询XXL-JOB最新的调度日志记录
     // mysqlTest.selectLastestXxlJobLog();
@@ -94,7 +94,7 @@ void jobTest() {
 
 int main(int argc, char** argv) {
     // 设置默认日志级别
-    Logger::instance().setLogLevel(LogLevel::DEBUG);
+    Logger::getInstance().setLogLevel(LogLevel::DEBUG);
 
     // 基础测试
     baseTest();
@@ -114,13 +114,10 @@ int main(int argc, char** argv) {
     // 调度测试
     jobTest();
 
-    // 等待用户任意输入，然后结束程序
+    // 等待用户输入任意字符，然后结束程序
     LOG_INFO("Wait to user any input to exit.");
     char c = getchar();
 
-    // 等待日志全部落盘，最后结束程序
-    std::this_thread::sleep_for(std::chrono::seconds(2));
     LOG_INFO("Test finished.");
-
     return 0;
 }

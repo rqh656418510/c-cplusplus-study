@@ -10,7 +10,7 @@
 // 定义宏
 #define LOG_DEBUG(logmsgformat, ...)                        \
     do {                                                    \
-        Logger& logger = Logger::instance();                \
+        Logger& logger = Logger::getInstance();             \
         if (logger.getLogLevel() <= DEBUG) {                \
             char c[1024] = {0};                             \
             snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
@@ -22,7 +22,7 @@
 
 #define LOG_INFO(logmsgformat, ...)                         \
     do {                                                    \
-        Logger& logger = Logger::instance();                \
+        Logger& logger = Logger::getInstance();             \
         if (logger.getLogLevel() <= INFO) {                 \
             char c[1024] = {0};                             \
             snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
@@ -34,7 +34,7 @@
 
 #define LOG_WARN(logmsgformat, ...)                         \
     do {                                                    \
-        Logger& logger = Logger::instance();                \
+        Logger& logger = Logger::getInstance();             \
         if (logger.getLogLevel() <= WARN) {                 \
             char c[1024] = {0};                             \
             snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
@@ -46,7 +46,7 @@
 
 #define LOG_ERROR(logmsgformat, ...)                        \
     do {                                                    \
-        Logger& logger = Logger::instance();                \
+        Logger& logger = Logger::getInstance();             \
         if (logger.getLogLevel() <= ERROR) {                \
             char c[1024] = {0};                             \
             snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
@@ -58,7 +58,7 @@
 
 #define LOG_FATAL(logmsgformat, ...)                              \
     do {                                                          \
-        Logger& logger = Logger::instance();                      \
+        Logger& logger = Logger::getInstance();                   \
         if (logger.getLogLevel() <= FATAL) {                      \
             char c[1024] = {0};                                   \
             snprintf(c, 1024, logmsgformat, ##__VA_ARGS__);       \
@@ -90,7 +90,7 @@ struct LogMessage {
 class Logger : NonCopyable {
 public:
     // 获取单例对象
-    static Logger& instance();
+    static Logger& getInstance();
 
     // 输出日志信息
     void log(const LogMessage& message);
@@ -101,15 +101,18 @@ public:
     // 设置日志级别
     void setLogLevel(LogLevel level);
 
+    // 将日志级别转换为字符串
+    static std::string logLevelToString(LogLevel level);
+
+    // 将字符串转换为日志级别
+    static LogLevel stringToLogLevel(const std::string& levelStr);
+
 private:
     // 私有构造函数
     Logger();
 
     // 私有析构函数
     ~Logger();
-
-    // 获取日志级别的名称
-    std::string logLevelToString(LogLevel level);
 
     LogLevel logLevel_;             // 记录日志级别
     std::thread writeThread_;       // 日志写入线程

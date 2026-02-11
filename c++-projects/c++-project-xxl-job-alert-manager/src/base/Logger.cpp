@@ -1,5 +1,6 @@
 #include "Logger.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -10,13 +11,6 @@
 
 // clang-format off
 
-// 定义宏（设置 Debug 模式）
-#ifdef ALERT_DEBUG
-    constexpr bool kIsDebugMode = true;
-#else
-    constexpr bool kIsDebugMode = false;
-#endif
-
 // 定义宏（跨平台获取当前调用的函数名称）
 #if defined(__GNUC__) || defined(__clang__)
     #define FUNC_NAME __PRETTY_FUNCTION__
@@ -26,12 +20,15 @@
     #define FUNC_NAME __func__
 #endif
 
+// 定义默认日志级别
+static LogLevel DEFAULT_LOG_LEVEL = INFO;
+
 // clang-format on
 
 // 构造函数
 Logger::Logger() {
     // 设置默认的日志级别
-    this->logLevel_ = !kIsDebugMode ? INFO : DEBUG;
+    this->logLevel_ = DEFAULT_LOG_LEVEL;
 
     // 启动专门写日志文件的线程
     writeThread_ = std::thread([this]() {
@@ -104,7 +101,7 @@ Logger::~Logger() {
 }
 
 // 获取单例对象
-Logger& Logger::instance() {
+Logger& Logger::getInstance() {
     // 静态局部变量（线程安全）
     static Logger logger;
     return logger;
@@ -126,7 +123,7 @@ LogLevel Logger::getLogLevel() {
     return this->logLevel_;
 }
 
-// 获取日志级别的名称
+// 将日志级别转换为字符串
 std::string Logger::logLevelToString(LogLevel level) {
     switch (level) {
         case DEBUG:
@@ -142,4 +139,21 @@ std::string Logger::logLevelToString(LogLevel level) {
         default:
             return "UNKNOWN";
     }
+}
+
+// 将字符串转换为日志级别
+LogLevel Logger::stringToLogLevel(const std::string& levelStr) {
+    // 转换为大写
+    std::string upperStr = levelStr;
+    std::transform(upperStr.begin(), upperStr.end(), upperStr.begin(), [](unsigned char c) { return std::toupper(c); });
+
+    // 返回对应的日志级别
+    if (upperStr == "DEBUG") return DEBUG;
+    if (upperStr == "INFO") return INFO;
+    if (upperStr == "WARN") return WARN;
+    if (upperStr == "ERROR") return ERROR;
+    if (upperStr == "FATAL") return FATAL;
+
+    // 返回默认日志级别
+    return DEFAULT_LOG_LEVEL;
 }

@@ -86,6 +86,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alert.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
     app.alert.xxljobLogMaxIdleTimeForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_time_for_stop"), "alert.xxljob.log_max_idle_time_for_stop");
     app.alert.xxljobEnvironmentName = toStr(cfg_util.load("alert.xxljob.environment_name"), "alert.xxljob.environment_name");
+    app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
     
     return app;
 }

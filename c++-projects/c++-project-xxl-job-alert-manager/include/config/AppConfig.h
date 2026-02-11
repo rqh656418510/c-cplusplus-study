@@ -41,6 +41,7 @@ struct AlertConfig {
     int xxljobFatalStatusScanIntervalTime;  // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
     int xxljobLogMaxIdleTimeForStop;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.log_max_idle_time_for_stop）
     std::string xxljobEnvironmentName;  //监控XXL-JOB的环境名称（alert.xxljob.environment_name）
+    std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
 };
 
 // 全局配置
