@@ -93,7 +93,8 @@ bool WxQyApi::sendMessage(const WxQySendMsgReq& req) {
                   res->body.c_str());
         return true;
     } else {
-        LOG_ERROR("HTTPS Get Request Failed, URL: %s, Error Code: %d", url_path.c_str(), static_cast<int>(res.error()));
+        LOG_ERROR("HTTPS Post Request Failed, URL: %s, Error Code: %d", url_path.c_str(),
+                  static_cast<int>(res.error()));
         return false;
     }
 }
