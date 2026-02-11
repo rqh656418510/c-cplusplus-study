@@ -96,8 +96,8 @@ public:
         // 打印连接池信息
         LOG_INFO("Thread %d, current connection pool size: %d", CurrentThread::tid(), pool->getSize());
 
-        // 关闭连接池
-        pool->close();
+        // 手动关闭连接池（可选）
+        // pool->close();
     }
 
     // 多个线程从数据库连接池获取连接执行更新操作
@@ -140,7 +140,7 @@ public:
         std::this_thread::sleep_for(std::chrono::seconds(config.mysql.connectionPoolMaxIdleTime * 3));
         LOG_INFO("Final connection pool size: %d", pool->getSize());
 
-        // 关闭连接池
-        pool->close();
+        // 手动关闭连接池（可选）
+        // pool->close();
     }
 };

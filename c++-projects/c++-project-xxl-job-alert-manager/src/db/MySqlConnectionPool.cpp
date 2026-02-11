@@ -229,7 +229,7 @@ void MySqlConnectionPool::scanIdleConnection() {
 
         {
             // 打印日志信息
-            LOG_DEBUG("Connection pool scan idle connection");
+            LOG_DEBUG("Connection pool scan idle connection and send heartbeat");
 
             // 获取互斥锁
             std::unique_lock<std::mutex> lock(this->queueMutex_);
@@ -269,9 +269,6 @@ void MySqlConnectionPool::scanIdleConnection() {
         }  // 立刻释放互斥锁
 
         //////////////////////////////// 为连接池中的空闲连接发送心跳 ////////////////////////////////
-
-        // 打印日志信息
-        LOG_DEBUG("Connection pool send heartbeat for connection");
 
         // 用于存放需要发送心跳的连接的集合
         std::vector<MySqlConnection *> needHeartbeatList;

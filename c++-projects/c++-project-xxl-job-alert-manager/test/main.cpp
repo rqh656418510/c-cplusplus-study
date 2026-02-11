@@ -8,25 +8,32 @@
 #include "MySqlTest.h"
 #include "NetworkTest.h"
 
-int main(int argc, char** argv) {
-    // 设置默认日志级别
-    Logger::instance().setLogLevel(LogLevel::DEBUG);
-
+// 基础测试
+void baseTest() {
     BaseTest baseTest;
 
     // 获取当前时间
     // baseTest.nowDateTime();
+}
 
+// 配置测试
+void configTest() {
     ConfigTest configTest;
 
     // 加载配置文件
     // configTest.loadConfigFile();
+}
 
+// 网络测试
+void networkTest() {
     NetworkTest networkTest;
 
     // 获取公网IP地址
     // networkTest.getPublicIp();
+}
 
+// 告警测试
+void alertTest() {
     AlertTest alertTest;
 
     // 邮件渠道告警
@@ -49,24 +56,30 @@ int main(int argc, char** argv) {
 
     // 发送XXL-JOB告警消息
     // alertTest.sendXxlJobAlertMsg();
+}
 
+// MySQL测试
+void mysqlTest() {
     MySqlTest mysqlTest;
 
     // 通过单个数据库连接查询数据
     // mysqlTest.selectBySingleConnection();
 
     // 单个线程从数据库连接池获取连接执行更新操作
-    // mysqlTest.connectionPoolSingleThread();
+    mysqlTest.connectionPoolSingleThread();
 
     // 多个线程从数据库连接池获取连接执行更新操作
-    mysqlTest.connectionPoolMultiThread();
+    // mysqlTest.connectionPoolMultiThread();
 
     // 查询XXL-JOB最新的调度日志记录
     // mysqlTest.selectLastestXxlJobLog();
 
     // 查询XXL-JOB最新的调度失败日志记录
     // mysqlTest.selectLastestFatalXxlJobLog();
+}
 
+// 调度测试
+void jobTest() {
     JobTest jobTest;
 
     // 获取企业微信AccessToken
@@ -77,6 +90,29 @@ int main(int argc, char** argv) {
 
     // 启动与关闭AccessToken刷新器
     // jobTest.startAndStopTokenRefresher();
+}
+
+int main(int argc, char** argv) {
+    // 设置默认日志级别
+    Logger::instance().setLogLevel(LogLevel::DEBUG);
+
+    // 基础测试
+    baseTest();
+
+    // 配置测试
+    configTest();
+
+    // 网络测试
+    networkTest();
+
+    // 告警测试
+    alertTest();
+
+    // MySQL测试
+    mysqlTest();
+
+    // 调度测试
+    jobTest();
 
     // 等待用户任意输入，然后结束程序
     LOG_INFO("Wait to user any input to exit.");

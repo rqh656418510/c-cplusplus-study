@@ -1,7 +1,9 @@
-# 指定项目源文件
-file(GLOB_RECURSE TEST_SRC_FILES *.cpp)
+# 指定主项目的源文件
 file(GLOB_RECURSE MAIN_SRC_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
-list(FILTER MAIN_SRC_FILES EXCLUDE REGEX ".*main\\.cpp$")
+list(FILTER MAIN_SRC_FILES EXCLUDE REGEX "main.cpp")
+
+# 指定测试项目的源文件
+file(GLOB_RECURSE TEST_SRC_FILES *.cpp)
 
 # 搜索 OpenSSL
 find_package(OpenSSL REQUIRED)
@@ -24,7 +26,7 @@ include_directories(
 )
 
 # 指定编译生成可执行文件
-add_executable(xxl_job_alert_manager_test ${TEST_SRC_FILES} ${MAIN_SRC_FILES})
+add_executable(xxl_job_alert_manager_test ${MAIN_SRC_FILES} ${TEST_SRC_FILES})
 
 # 每次编译之后拷贝所有配置文件到可执行文件的输出目录
 add_custom_command(
