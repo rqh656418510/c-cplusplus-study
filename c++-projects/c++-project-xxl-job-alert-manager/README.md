@@ -70,6 +70,8 @@ chmod +x autobuild.sh
 ./autobuild.sh
 ```
 
+> 在 CentOS 系统上，编译项目之前可以执行命令 `yum install -y openssl openssl-devel mysql-devel cmake3` 一键安装所需的依赖软件。
+
 ### 项目运行
 
 > 注意：在运行项目之前，请务必确保 XXL-JOB 数据库已经初始化完成（开发环境可以执行 `sql/mysql.sql` 脚本来初始化数据库）
