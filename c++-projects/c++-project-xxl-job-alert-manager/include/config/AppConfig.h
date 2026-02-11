@@ -44,8 +44,8 @@ struct AlertConfig {
 
 // 全局配置
 struct AppConfig {
-    MySQLConfig mysql;                // MySQL相关配置
-    WxQyApiConfig wechatApi;          // 企业微信API相关配置
-    WxQyAccountConfig wechatAccount;  // 企业微信账号相关配置
-    AlertConfig alert;                // 监控告警相关配置
+    MySQLConfig mysql;              // MySQL相关配置
+    WxQyApiConfig wxQyApi;          // 企业微信API相关配置
+    WxQyAccountConfig wxQyAccount;  // 企业微信账号相关配置
+    AlertConfig alert;              // 监控告警相关配置
 };

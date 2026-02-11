@@ -11,7 +11,7 @@ std::string WxQyApi::getAccessToken() {
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 创建 HTTPS 客户端
-    httplib::SSLClient client(config.wechatApi.host, config.wechatApi.port);
+    httplib::SSLClient client(config.wxQyApi.host, config.wxQyApi.port);
 
     // 设置连接超时时间（5秒）
     client.set_connection_timeout(5, 0);
@@ -20,8 +20,8 @@ std::string WxQyApi::getAccessToken() {
     client.set_read_timeout(5, 0);
 
     // 构造 URL 路径
-    std::string url_path = config.wechatApi.getTokenPath + "?corpid=" + config.wechatAccount.corpId +
-                           "&corpsecret=" + config.wechatAccount.corpSecret;
+    std::string url_path = config.wxQyApi.getTokenPath + "?corpid=" + config.wxQyAccount.corpId +
+                           "&corpsecret=" + config.wxQyAccount.corpSecret;
 
     // 发送Get请求
     auto res = client.Get(url_path);
@@ -59,7 +59,7 @@ bool WxQyApi::sendMessage(const WxQySendMsgReq& req) {
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 创建 HTTPS 客户端
-    httplib::SSLClient client(config.wechatApi.host, config.wechatApi.port);
+    httplib::SSLClient client(config.wxQyApi.host, config.wxQyApi.port);
 
     // 设置连接超时时间（5秒）
     client.set_connection_timeout(5, 0);
@@ -69,7 +69,7 @@ bool WxQyApi::sendMessage(const WxQySendMsgReq& req) {
 
     // 构造 URL 路径
     std::string url_path =
-        config.wechatApi.sendMsgPath + "?access_token=" + WxQyTokenRefresher::getInstance().getLocalAccessToken();
+        config.wxQyApi.sendMsgPath + "?access_token=" + WxQyTokenRefresher::getInstance().getLocalAccessToken();
 
     // 构造JSON消息
     std::string json_body;

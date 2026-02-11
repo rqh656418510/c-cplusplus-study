@@ -67,16 +67,16 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connection_timeout"), "mysql.connection.pool.connection_timeout");
     
     // WxQy Account
-    app.wechatAccount.agentId = toInt(cfg_util.load("wxqy.account.agent_id"), "wxqy.account.agent_id");
-    app.wechatAccount.toUser = toStr(cfg_util.load("wxqy.account.to_user"), "wxqy.account.to_user");
-    app.wechatAccount.corpId = toStr(cfg_util.load("wxqy.account.corp_id"), "wxqy.account.corp_id");
-    app.wechatAccount.corpSecret = toStr(cfg_util.load("wxqy.account.corp_secret"), "wxqy.account.corp_secret");
+    app.wxQyAccount.agentId = toInt(cfg_util.load("wxqy.account.agent_id"), "wxqy.account.agent_id");
+    app.wxQyAccount.toUser = toStr(cfg_util.load("wxqy.account.to_user"), "wxqy.account.to_user");
+    app.wxQyAccount.corpId = toStr(cfg_util.load("wxqy.account.corp_id"), "wxqy.account.corp_id");
+    app.wxQyAccount.corpSecret = toStr(cfg_util.load("wxqy.account.corp_secret"), "wxqy.account.corp_secret");
 
     // WxQy API
-    app.wechatApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
-    app.wechatApi.port = toInt(cfg_util.load("wxqy.api.port"), "wxqy.api.port");
-    app.wechatApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
-    app.wechatApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
+    app.wxQyApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
+    app.wxQyApi.port = toInt(cfg_util.load("wxqy.api.port"), "wxqy.api.port");
+    app.wxQyApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
+    app.wxQyApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
 
     // Alert
     app.alert.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wxqy.refresh_token_interval_time"), "alert.wxqy.refresh_token_interval_time");

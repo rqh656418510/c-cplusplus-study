@@ -16,8 +16,8 @@ bool WxQyAlert::sendMsg(const std::string& title, const std::string& content) {
 
     // 封装请求参数
     WxQySendMsgReq req;
-    req.setAgentid(config.wechatAccount.agentId);
-    req.setTouser(config.wechatAccount.toUser);
+    req.setAgentid(config.wxQyAccount.agentId);
+    req.setTouser(config.wxQyAccount.toUser);
     req.setMsgtype(toMsgTypeString(WxQyMsgType::Text));
     req.setContent(content);
     req.setSafe(0);
