@@ -89,7 +89,7 @@ cd c++-project-xxl-job-alert-manager/bin
 
 ### 服务管理
 
-Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下：
+Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 配置为例）：
 
 - 拷贝可执行文件
 
@@ -113,8 +113,11 @@ sudo vim /etc/systemd/system/alert-manager.service
 Description=Alert Manager Service
 After=network.target
 
-[Service]
+# 在 60 秒时间窗口内，最多重启 5 次，防止频繁崩溃无限重启
+StartLimitIntervalSec=60
+StartLimitBurst=5
 
+[Service]
 # 以 centos 用户运行
 User=centos
 Group=centos
@@ -131,10 +134,6 @@ Type=simple
 # 异常退出则自动重启
 Restart=on-failure
 RestartSec=3
-
-# 防止启动过快被判定为失败
-StartLimitIntervalSec=60
-StartLimitBurst=5
 
 # 停止服务的最大等待时间，超时将被强制 Kill
 TimeoutStopSec=30
@@ -153,10 +152,10 @@ StandardError=journal
 WantedBy=multi-user.target
 ```
 
-通过 Systemd 管理监控告警程序的命令如下：
+- 通过 Systemd 管理监控告警程序
 
 ``` sh
-# 重新加载配置
+# 重新加载系统配置
 sudo systemctl daemon-reload
 
 # 设置开机启动
@@ -171,8 +170,11 @@ sudo systemctl status alert-manager
 # 关闭程序
 sudo systemctl stop alert-manager
 
-# 查看日志
+# 查看系统日志
 sudo journalctl -u alert-manager -f
+
+# 查询应用日志
+tail -f -n 50 /home/centos/alert/2026-2-12.log
 ```
 
 ### 参考项目
