@@ -112,7 +112,7 @@ public:
 
     // ---------- Other ----------
     std::string parseAlertMsg() {
-        // 全局配置信息
+        // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // 拼接告警消息

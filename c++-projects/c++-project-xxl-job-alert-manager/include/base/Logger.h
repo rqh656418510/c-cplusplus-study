@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <string>
 #include <thread>
 
@@ -95,6 +96,9 @@ public:
     // 输出日志信息
     void log(const LogMessage& message);
 
+    // 停止记录日志
+    void stop();
+
     // 获取日志级别
     LogLevel getLogLevel();
 
@@ -114,7 +118,8 @@ private:
     // 私有析构函数
     ~Logger();
 
-    LogLevel logLevel_;             // 记录日志级别
-    std::thread writeThread_;       // 日志写入线程
-    LockQueue<LogMessage> lckQue_;  // 日志缓冲队列
+    LogLevel logLevel_;               // 记录日志级别
+    std::thread writeThread_;         // 日志写入线程
+    LockQueue<LogMessage> lckQue_;    // 日志缓冲队列
+    std::atomic_bool stoped_{false};  // 停止记录日志的标识
 };

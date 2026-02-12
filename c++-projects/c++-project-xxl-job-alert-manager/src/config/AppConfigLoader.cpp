@@ -6,15 +6,8 @@
 
 #include "Logger.h"
 
-// 初始化类静态变量
+// 初始化类静态变量（定义全局配置文件）
 std::string AppConfigLoader::CONFIG_FILE_PATH = "alert.conf";
-
-// 获取单例对象
-AppConfigLoader& AppConfigLoader::getInstance() {
-    // 静态局部变量（线程安全）
-    static AppConfigLoader instance;
-    return instance;
-}
 
 // 私有构造函数
 AppConfigLoader::AppConfigLoader() {
@@ -24,6 +17,13 @@ AppConfigLoader::AppConfigLoader() {
 
 // 私有析构函数
 AppConfigLoader::~AppConfigLoader() {
+}
+
+// 获取单例对象
+AppConfigLoader& AppConfigLoader::getInstance() {
+    // 静态局部变量（线程安全）
+    static AppConfigLoader instance;
+    return instance;
 }
 
 // 获取全局配置
@@ -86,6 +86,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alert.xxljobLogMaxIdleTimeForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_time_for_stop"), "alert.xxljob.log_max_idle_time_for_stop");
     app.alert.xxljobEnvironmentName = toStr(cfg_util.load("alert.xxljob.environment_name"), "alert.xxljob.environment_name");
     app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
-    
+    app.alert.lockFile = toStr(cfg_util.load("alert.lock_file"), "alert.lock_file");
+
     return app;
 }

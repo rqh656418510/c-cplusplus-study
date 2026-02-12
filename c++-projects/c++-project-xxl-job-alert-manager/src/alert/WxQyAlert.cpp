@@ -10,7 +10,7 @@
 
 // 发送消息
 bool WxQyAlert::sendMsg(const std::string& title, const std::string& content) {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 封装请求参数

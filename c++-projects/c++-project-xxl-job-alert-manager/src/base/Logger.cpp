@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <exception>
 #include <iostream>
 #include <sstream>
 #include <thread>
@@ -92,11 +93,9 @@ Logger::Logger() {
 
 // 析构函数
 Logger::~Logger() {
-    // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
-    this->lckQue_.stop();
-    // 等待日志线程安全退出
-    if (writeThread_.joinable()) {
-        writeThread_.join();
+    // 停止记录日志
+    if (!this->stoped_) {
+        this->stop();
     }
 }
 
@@ -111,6 +110,34 @@ Logger& Logger::getInstance() {
 void Logger::log(const LogMessage& message) {
     // 将日志信息写入缓冲队列中
     this->lckQue_.push(message);
+}
+
+// 停止记录日志
+void Logger::stop() {
+    try {
+        // 判断是否已停止记录日志
+        if (this->stoped_) {
+            return;
+        }
+
+        // 更新停止标识
+        this->stoped_ = true;
+
+        // 关闭队列，通知日志写入线程停止运行，避免发生线程死锁
+        this->lckQue_.stop();
+
+        // 等待日志线程安全退出
+        if (writeThread_.joinable()) {
+            writeThread_.join();
+        }
+
+        // 打印日志信息
+        LOG_INFO("Logger stoped");
+    } catch (const std::exception& e) {
+        LOG_ERROR("Logger stop failed, exception: %s", e.what());
+    } catch (...) {
+        LOG_ERROR("Logger stop failed, unknown exception");
+    }
 }
 
 // 设置日志级别
@@ -137,7 +164,7 @@ std::string Logger::logLevelToString(LogLevel level) {
         case FATAL:
             return "FATAL";
         default:
-            return "UNKNOWN";
+            return "INFO";
     }
 }
 

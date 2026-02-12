@@ -9,26 +9,27 @@
 #include "WxQyTokenRefresher.h"
 #include "XxlJobMonitor.h"
 
-// 应用程序的锁文件
-static const std::string APP_LOCK_FILE = "/tmp/alert-manager.lock";
-
 // 初始化应用程序
 void Application::init(const std::string& configFile) {
-    // 通过锁文件加排他锁，防止应用程序被启动多个实例
-    this->appLockFd_ = lockfile(APP_LOCK_FILE.c_str());
-    if (this->appLockFd_ < 0) {
-        // 退出应用程序
-        exit(EXIT_FAILURE);
-    }
-
     // 设置全局的配置文件
     if (!configFile.empty()) {
         AppConfigLoader::CONFIG_FILE_PATH = configFile;
     }
 
+    // 获取全局配置信息
+    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+
     // 设置全局的日志输出级别
-    Logger::getInstance().setLogLevel(
-        Logger::stringToLogLevel(AppConfigLoader::getInstance().getConfig().alert.logLevel));
+    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alert.logLevel));
+
+    // 通过锁文件加排他锁，防止应用程序被启动多个实例
+    this->appLockFd_ = lockfile(config.alert.lockFile.c_str());
+    if (this->appLockFd_ < 0) {
+        // 关闭日志打印器
+        Logger::getInstance().stop();
+        // 退出应用程序
+        exit(EXIT_FAILURE);
+    }
 }
 
 // 通过锁文件加排他锁，防止应用程序被启动多个实例
@@ -39,11 +40,7 @@ int Application::lockfile(const char* path) {
     // 打开锁文件失败
     if (fd < 0) {
         // 打印日志信息
-        char buf[1024] = {};
-        std::string timestamp = Timestamp::now().toString();
-        snprintf(buf, sizeof(buf), "%s => %d [FATAL] Failed to open lock file [%s]", timestamp.c_str(),
-                 CurrentThread::tid(), APP_LOCK_FILE.c_str());
-        std::cout << buf << std::endl;
+        LOG_ERROR("Failed to open lock file [%s]", path);
 
         // 加锁失败返回-1
         return -1;
@@ -52,11 +49,7 @@ int Application::lockfile(const char* path) {
     // 尝试加非阻塞排他锁，若失败则说明已经有其他实例正在运行
     if (flock(fd, LOCK_EX | LOCK_NB) < 0) {
         // 打印日志信息
-        char buf[1024] = {};
-        std::string timestamp = Timestamp::now().toString();
-        snprintf(buf, sizeof(buf), "%s => %d [FATAL] Another instance is running", timestamp.c_str(),
-                 CurrentThread::tid());
-        std::cout << buf << std::endl;
+        LOG_ERROR("Another instance is running");
 
         // 释放文件描述符
         close(fd);

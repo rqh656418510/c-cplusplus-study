@@ -9,7 +9,7 @@
 
 // 构造函数
 MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false) {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig &config = AppConfigLoader::getInstance().getConfig();
 
     // 初始化连接池参数
@@ -49,14 +49,11 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
 
 // 析构函数
 MySqlConnectionPool::~MySqlConnectionPool() {
-    try {
+    if (!this->closed_) {
         // 关闭连接池，释放所有连接
         this->close();
         // 打印日志信息
-        LOG_INFO("Connection pool destroyed");
-    } catch (...) {
-        // 析构函数禁止抛异常
-        LOG_ERROR("Failed to destroy connection pool");
+        LOG_INFO("Connection pool stoped");
     }
 }
 
@@ -69,39 +66,46 @@ MySqlConnectionPool *MySqlConnectionPool::getInstance() {
 
 // 关闭连接池
 void MySqlConnectionPool::close() {
-    // 判断连接池是否已关闭
-    if (this->closed_) {
-        return;
-    }
+    try {
+        // 判断连接池是否已关闭
+        if (this->closed_) {
+            return;
+        }
 
-    // 设置关闭状态
-    this->closed_ = true;
+        // 设置关闭状态
+        this->closed_ = true;
 
-    // 通知所有线程连接池关闭
-    cv_.notify_all();
+        // 通知所有线程连接池关闭
+        cv_.notify_all();
 
-    // 等待生产线程结束运行
-    if (produceThread_.joinable()) {
-        produceThread_.join();
-    }
+        // 等待生产线程结束运行
+        if (produceThread_.joinable()) {
+            produceThread_.join();
+        }
 
-    // 等待空闲扫描线程结束运行
-    if (scanIdleThread_.joinable()) {
-        scanIdleThread_.join();
-    }
+        // 等待空闲扫描线程结束运行
+        if (scanIdleThread_.joinable()) {
+            scanIdleThread_.join();
+        }
 
-    // 获取互斥锁
-    std::unique_lock<std::mutex> lock(this->queueMutex_);
+        // 获取互斥锁
+        std::unique_lock<std::mutex> lock(this->queueMutex_);
 
-    while (!(this->connectionQueue_.empty())) {
-        // 获取队头的连接
-        MySqlConnection *phead = this->connectionQueue_.front();
-        // 出队操作
-        this->connectionQueue_.pop_front();
-        // 计数器减一
-        this->connectionCount_--;
-        // 释放连接占用的内存空间
-        delete phead;
+        // 释放所有连接
+        while (!(this->connectionQueue_.empty())) {
+            // 获取队头的连接
+            MySqlConnection *phead = this->connectionQueue_.front();
+            // 出队操作
+            this->connectionQueue_.pop_front();
+            // 计数器减一
+            this->connectionCount_--;
+            // 释放连接占用的内存空间
+            delete phead;
+        }
+    } catch (const std::exception &e) {
+        LOG_ERROR("Connection pool stop failed, exception: %s", e.what());
+    } catch (...) {
+        LOG_ERROR("Connection pool stop failed, unknown exception");
     }
 }
 
@@ -191,7 +195,7 @@ void MySqlConnectionPool::produceConnection() {
             break;
         }
 
-        // 全局配置信息
+        // 获取全局配置信息
         const AppConfig &config = AppConfigLoader::getInstance().getConfig();
 
         // 创建数据库连接

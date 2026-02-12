@@ -50,7 +50,7 @@ XxlJobLog XxlJobLogDao::selectLastest() {
 
 // 查询最新的任务调度失败日志记录
 XxlJobLog XxlJobLogDao::selectLastestFatal() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 分钟数（查询范围）

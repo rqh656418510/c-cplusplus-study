@@ -1,6 +1,7 @@
 #include "WxQyTokenRefresher.h"
 
 #include <chrono>
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <thread>
@@ -45,29 +46,35 @@ void WxQyTokenRefresher::start() {
 
 // 关闭刷新器
 void WxQyTokenRefresher::stop() {
-    // 判断刷新器是否已关闭
-    if (!refreshRunning_) {
-        return;
+    try {
+        // 判断刷新器是否已关闭
+        if (!refreshRunning_) {
+            return;
+        }
+
+        // 更改运行状态
+        refreshRunning_ = false;
+
+        // 通知刷新线程结束运行
+        refreshCv_.notify_all();
+
+        // 等待刷新线程结束运行
+        if (refreshThread_.joinable()) {
+            refreshThread_.join();
+        }
+
+        // 打印日志信息
+        LOG_INFO("Wx-Qy token refresher stoped");
+    } catch (const std::exception& e) {
+        LOG_ERROR("Wx-Qy token refresher stop failed, exception: %s", e.what());
+    } catch (...) {
+        LOG_ERROR("Wx-Qy token refresher stop failed, unknown exception");
     }
-
-    // 更改运行状态
-    refreshRunning_ = false;
-
-    // 通知刷新线程结束运行
-    refreshCv_.notify_all();
-
-    // 等待刷新线程结束运行
-    if (refreshThread_.joinable()) {
-        refreshThread_.join();
-    }
-
-    // 打印日志信息
-    LOG_INFO("Wx-Qy token refresher stoped");
 }
 
 // 循环刷新本地的AccessToken
 void WxQyTokenRefresher::refreshLocalTokenLoop() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     while (refreshRunning_) {

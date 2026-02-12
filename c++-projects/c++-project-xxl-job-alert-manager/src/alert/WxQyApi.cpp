@@ -13,7 +13,7 @@
 
 // 获取最新的AccessToken
 std::string WxQyApi::getAccessToken() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 构造URL
@@ -79,7 +79,7 @@ std::string WxQyApi::getAccessToken() {
 
 // 发送应用消息
 bool WxQyApi::sendMessage(const WxQySendMsgReq& req) {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 构造URL

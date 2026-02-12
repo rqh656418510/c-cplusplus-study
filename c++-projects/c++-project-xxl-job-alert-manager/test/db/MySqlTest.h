@@ -36,7 +36,7 @@ public:
 
     // 通过单个数据库连接查询数据
     void selectBySingleConnection() {
-        // 全局配置信息
+        // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // 查询结果
@@ -76,7 +76,7 @@ public:
 
     // 单个线程从数据库连接池获取连接执行更新操作
     void connectionPoolSingleThread() {
-        // 全局配置信息
+        // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // 数据库连接池

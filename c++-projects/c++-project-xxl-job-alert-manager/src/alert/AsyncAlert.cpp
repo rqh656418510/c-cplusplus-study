@@ -1,5 +1,6 @@
 #include "AsyncAlert.h"
 
+#include <exception>
 #include <functional>
 
 #include "Logger.h"
@@ -20,15 +21,26 @@ AsyncAlert::~AsyncAlert() {
 
 // 停止告警
 void AsyncAlert::stop() {
-    // 更新告警标记
-    stoped_ = true;
+    try {
+        // 检查是否已停止告警
+        if (stoped_) {
+            return;
+        }
 
-    // 关闭队列
-    queue_.stop();
+        // 更新告警标记
+        stoped_ = true;
 
-    // 等待队列处理线程结束运行
-    if (thread_.joinable()) {
-        thread_.join();
+        // 关闭队列
+        queue_.stop();
+
+        // 等待队列处理线程结束运行
+        if (thread_.joinable()) {
+            thread_.join();
+        }
+    } catch (const std::exception& e) {
+        LOG_ERROR("Async alert stop failed, exception: %s", e.what());
+    } catch (...) {
+        LOG_ERROR("Async alert stop failed, unknown exception");
     }
 }
 

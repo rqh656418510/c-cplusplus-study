@@ -54,34 +54,40 @@ void XxlJobMonitor::start() {
 
 // 关闭监控器
 void XxlJobMonitor::stop() {
-    // 判断监控器是否已关闭
-    if (!monitorRunning_) {
-        return;
+    try {
+        // 判断监控器是否已关闭
+        if (!monitorRunning_) {
+            return;
+        }
+
+        // 更改运行状态
+        monitorRunning_ = false;
+
+        // 通知所有监控线程结束运行
+        monitorCv_.notify_all();
+
+        // 等待监控XXL-JOB是否停止运行的线程结束运行
+        if (monitorStopStatusThread_.joinable()) {
+            monitorStopStatusThread_.join();
+        }
+
+        // 等待监控XXL-JOB是否调度失败的线程结束运行
+        if (monitorFatalStatusThread_.joinable()) {
+            monitorFatalStatusThread_.join();
+        }
+
+        // 打印日志信息
+        LOG_INFO("XXL-JOB monitor stoped");
+    } catch (const std::exception& e) {
+        LOG_ERROR("XXL-JOB monitor stop failed, exception: %s", e.what());
+    } catch (...) {
+        LOG_ERROR("XXL-JOB monitor stop failed, unknown exception");
     }
-
-    // 更改运行状态
-    monitorRunning_ = false;
-
-    // 通知所有监控线程结束运行
-    monitorCv_.notify_all();
-
-    // 等待监控XXL-JOB是否停止运行的线程结束运行
-    if (monitorStopStatusThread_.joinable()) {
-        monitorStopStatusThread_.join();
-    }
-
-    // 等待监控XXL-JOB是否调度失败的线程结束运行
-    if (monitorFatalStatusThread_.joinable()) {
-        monitorFatalStatusThread_.join();
-    }
-
-    // 打印日志信息
-    LOG_INFO("XXL-JOB monitor stoped");
 }
 
 // 循环监控XXL-JOB是否停止运行
 void XxlJobMonitor::monitorStopStatusLoop() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     while (monitorRunning_) {
@@ -149,7 +155,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
 // 循环监控XXL-JOB是否调度失败
 void XxlJobMonitor::monitorFatalStatusLoop() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     while (monitorRunning_) {
