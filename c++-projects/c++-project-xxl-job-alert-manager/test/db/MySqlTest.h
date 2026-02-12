@@ -15,10 +15,10 @@ public:
         XxlJobLogDao log_dao;
         XxlJobLog log = log_dao.selectLastest();
         if (log.getId() == 0) {
-            LOG_WARN("xxl-job lastest log not found");
+            LOG_WARN("XXL-JOB lastest log not found");
         } else {
             json j = log;
-            LOG_INFO("xxl-job lastest log: %s", j.dump().c_str());
+            LOG_INFO("XXL-JOB lastest log: %s", j.dump().c_str());
         }
     }
 
@@ -27,10 +27,10 @@ public:
         XxlJobLogDao log_dao;
         XxlJobLog log = log_dao.selectLastestFatal();
         if (log.getId() == 0) {
-            LOG_WARN("xxl-job lastest fatal log not found");
+            LOG_WARN("XXL-JOB lastest fatal log not found");
         } else {
             json j = log;
-            LOG_INFO("xxl-job lastest fatal log: %s", j.dump().c_str());
+            LOG_INFO("XXL-JOB lastest fatal log: %s", j.dump().c_str());
         }
     }
 
