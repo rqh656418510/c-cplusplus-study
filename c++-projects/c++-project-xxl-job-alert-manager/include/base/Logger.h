@@ -66,7 +66,7 @@
             LogMessage msg = {FATAL, c, tid};                     \
             logger.log(msg);                                      \
             std::this_thread::sleep_for(std::chrono::seconds(1)); \
-            exit(-1);                                             \
+            exit(EXIT_FAILURE);                                   \
         }                                                         \
     } while (0)
 

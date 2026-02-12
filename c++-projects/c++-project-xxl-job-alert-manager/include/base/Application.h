@@ -1,7 +1,14 @@
 #pragma once
 
+#include <fcntl.h>
+#include <sys/file.h>
+#include <unistd.h>
+
 #include <atomic>
 #include <string>
+
+#include "CurrentThread.h"
+#include "Timestamp.h"
 
 // 应用程序
 class Application {
@@ -19,6 +26,10 @@ private:
     // 关闭应用程序
     void shutdown();
 
+    // 通过锁文件加排他锁，防止应用程序被启动多个实例
+    int lockfile(const char* path);
+
 private:
-    std::atomic<bool> appRunning_{true};  // 应用运行标识
+    int appLockFd_;                       // 应用程序的文件描述符
+    std::atomic<bool> appRunning_{true};  // 应用程序的运行标识
 };
