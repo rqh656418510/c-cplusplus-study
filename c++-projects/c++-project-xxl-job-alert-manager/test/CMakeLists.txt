@@ -8,6 +8,9 @@ file(GLOB_RECURSE TEST_SRC_FILES *.cpp)
 # 搜索 OpenSSL
 find_package(OpenSSL REQUIRED)
 
+# 搜索 LibCurl
+find_package(CURL REQUIRED)
+
 # 搜索 MySQL C API 的静态库或动态库
 find_library(MYSQL_LIBRARY
     NAMES mysqlclient
@@ -43,5 +46,6 @@ target_link_libraries(xxl_job_alert_manager_test PRIVATE
     pthread
     OpenSSL::SSL 
     OpenSSL::Crypto
+    CURL::libcurl
     ${MYSQL_LIBRARY}
 )

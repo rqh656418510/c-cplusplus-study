@@ -39,7 +39,7 @@ void WxQyTokenRefresher::start() {
         refreshThread_ = std::thread(std::bind(&WxQyTokenRefresher::refreshLocalTokenLoop, this));
 
         // 打印日志信息
-        LOG_INFO("wx-qy token refresher started");
+        LOG_INFO("Wx-Qy token refresher started");
     }
 }
 
@@ -62,7 +62,7 @@ void WxQyTokenRefresher::stop() {
     }
 
     // 打印日志信息
-    LOG_INFO("wx-qy token refresher stoped");
+    LOG_INFO("Wx-Qy token refresher stoped");
 }
 
 // 循环刷新本地的AccessToken
@@ -91,12 +91,12 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
         } catch (const std::exception& e) {
             // 获取失败后，使用较短的等待时间后重试
             wait_seconds = config.alert.wxQyRetryRefreshIntervalTime;
-            LOG_ERROR("wx-qy token refresher occure exception: %s, will retry refresh after %ds", e.what(),
+            LOG_ERROR("Wx-Qy token refresher occure exception: %s, will retry refresh after %ds", e.what(),
                       wait_seconds);
         } catch (...) {
             // 获取失败后，使用较短的等待时间后重试
             wait_seconds = config.alert.wxQyRetryRefreshIntervalTime;
-            LOG_ERROR("wx-qy token refresher occure unknown exception, will retry refresh after %ds", wait_seconds);
+            LOG_ERROR("Wx-Qy token refresher occure unknown exception, will retry refresh after %ds", wait_seconds);
         }
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止刷新则立即返回，以保证刷新线程能够安全退出

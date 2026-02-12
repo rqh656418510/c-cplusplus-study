@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <regex>
 #include <string>
 
 #include "AppConfigLoader.h"
-#include "Network.h"
+#include "NetworkHelper.h"
 #include "json.hpp"
 
 // 类型重定义
@@ -125,11 +126,16 @@ public:
                  "【Time】%s\n"
                  "【Code】%d\n"
                  "【Message】%s",
-                 Network::getInstance().getPublicIp().c_str(), config.alert.xxljobEnvironmentName.c_str(),
+                 NetworkHelper::getInstance().getPublicIp().c_str(), config.alert.xxljobEnvironmentName.c_str(),
                  executorHandler_.c_str(), triggerTime_.c_str(), triggerCode_, triggerMsg_.c_str());
 
+        // 告警消息降噪
+        std::regex regexPattern(R"(<br>\s*<span style="color:#00c0ef;" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>)");
+        std::string content = std::regex_replace(std::string(buf), regexPattern, "");
+        content = std::regex_replace(content, std::regex("<br><br>"), "");
+
         // 返回告警消息
-        return std::string(buf);
+        return content;
     }
 
 private:

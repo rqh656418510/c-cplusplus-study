@@ -75,7 +75,6 @@ AppConfig AppConfigLoader::load(const char* configFile) {
 
     // WxQy API
     app.wxQyApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
-    app.wxQyApi.port = toInt(cfg_util.load("wxqy.api.port"), "wxqy.api.port");
     app.wxQyApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
     app.wxQyApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
 

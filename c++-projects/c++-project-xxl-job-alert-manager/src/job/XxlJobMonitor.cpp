@@ -7,7 +7,7 @@
 #include "AlertChannelFactory.h"
 #include "AppConfigLoader.h"
 #include "Logger.h"
-#include "Network.h"
+#include "NetworkHelper.h"
 #include "Timestamp.h"
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
@@ -48,7 +48,7 @@ void XxlJobMonitor::start() {
         monitorFatalStatusThread_ = std::thread(std::bind(&XxlJobMonitor::monitorFatalStatusLoop, this));
 
         // 打印日志信息
-        LOG_INFO("xxl-job monitor started");
+        LOG_INFO("XXL-JOB monitor started");
     }
 }
 
@@ -76,7 +76,7 @@ void XxlJobMonitor::stop() {
     }
 
     // 打印日志信息
-    LOG_INFO("xxl-job monitor stoped");
+    LOG_INFO("XXL-JOB monitor stoped");
 }
 
 // 循环监控XXL-JOB是否停止运行
@@ -96,8 +96,8 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 仅在尚未发送过空闲告警时发送，避免重复告警
                 if (!idleAlertSended_.load()) {
                     char buf[1024] = {0};
-                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
-                            Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
+                    sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+                            Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
                             config.alert.xxljobEnvironmentName.c_str());
                     alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
                     idleAlertSended_.store(true);
@@ -109,7 +109,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 最新触发时间
                 time_t t_lastest_trigger_time = Timestamp::toUtcTimestamp(lastestLog.getTriggerTime());
                 if (t_lastest_trigger_time == static_cast<time_t>(-1)) {
-                    LOG_ERROR("xxl-job log lastest trigger time parse failed, time: %s",
+                    LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
                               lastestLog.getTriggerTime().c_str());
                     continue;
                 }
@@ -120,8 +120,8 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                     // 仅在尚未发送过空闲告警时发送，避免重复告警
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};
-                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境名称: %s",
-                                Timestamp::now().toString().c_str(), Network::getInstance().getPublicIp().c_str(),
+                        sprintf(buf, "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+                                Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
                                 config.alert.xxljobEnvironmentName.c_str());
                         alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
                         idleAlertSended_.store(true);
@@ -132,9 +132,9 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 }
             }
         } catch (const std::exception& e) {
-            LOG_ERROR("xxl-job monitor occure exception: %s", e.what());
+            LOG_ERROR("XXL-JOB monitor occure exception: %s", e.what());
         } catch (...) {
-            LOG_ERROR("xxl-job monitor occure unknown exception");
+            LOG_ERROR("XXL-JOB monitor occure unknown exception");
         }
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出
@@ -166,7 +166,7 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
                     // 最新失败触发时间
                     time_t t_lastest_fatal_trigger_time = Timestamp::toUtcTimestamp(lastestFatalLog.getTriggerTime());
                     if (t_lastest_fatal_trigger_time == static_cast<time_t>(-1)) {
-                        LOG_ERROR("xxl-job log lastest fatal trigger time parse failed, time: %s",
+                        LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s",
                                   lastestFatalLog.getTriggerTime().c_str());
                         continue;
                     }
@@ -181,9 +181,9 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
                 }
             }
         } catch (const std::exception& e) {
-            LOG_ERROR("xxl-job monitor occure exception: %s", e.what());
+            LOG_ERROR("XXL-JOB monitor occure exception: %s", e.what());
         } catch (...) {
-            LOG_ERROR("xxl-job monitor occure unknown exception");
+            LOG_ERROR("XXL-JOB monitor occure unknown exception");
         }
 
         // 使用条件变量进行可中断的定时等待，在每次被唤醒（包括虚假唤醒）时都会检查运行标志；若检测到已停止监控则立即返回，以保证监控线程能够安全退出

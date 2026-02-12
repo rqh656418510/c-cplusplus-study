@@ -27,7 +27,6 @@ struct WxQyAccountConfig {
 
 // 企业微信API配置
 struct WxQyApiConfig {
-    int port;                  // 企业微信API服务器的端口（wxqy.api.port）
     std::string host;          // 企业微信API服务器的地址（wxqy.api.host）
     std::string getTokenPath;  // 获取企业微信AccessToken的接口路径（wxqy.api.get_token）
     std::string sendMsgPath;   // 发送企业微信应用消息的接口路径（wxqy.api.send_msg）

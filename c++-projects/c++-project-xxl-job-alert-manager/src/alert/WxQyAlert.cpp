@@ -1,6 +1,5 @@
 #include "WxQyAlert.h"
 
-#include <algorithm>
 #include <string>
 
 #include "AppConfigLoader.h"
@@ -22,12 +21,12 @@ bool WxQyAlert::sendMsg(const std::string& title, const std::string& content) {
     req.setContent(content);
     req.setSafe(0);
 
-    // 日志内容去掉换行符
-    std::string log_conent = content;
-    std::replace(log_conent.begin(), log_conent.end(), '\n', ' ');
+    // 日志信息去掉换行符
+    std::string logConent = content;
+    std::replace(logConent.begin(), logConent.end(), '\n', ' ');
 
     // 记录日志信息
-    LOG_INFO("发送企业微信告警信息: %s", log_conent.c_str());
+    LOG_INFO("发送企业微信告警信息: %s", logConent.c_str());
 
     // 发送应用消息
     return WxQyApi::sendMessage(req);

@@ -20,7 +20,7 @@
 | 软件                       | 版本        | 说明                                                                 |
 | -------------------------- | ----------- | -------------------------------------------------------------------- |
 | C++                        | `11`        |                                                                      |
-| OpenSSL                    | `3.0.18`    | [httplib](https://github.com/yhirose/cpp-httplib) 库依赖 OpenSSL     |
+| OpenSSL                    | `3.0.18`    | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
 | MySQL C API（Connector/C） | `8.4.5`     | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
 | MySQL Server               | `8.4.5`     |                                                                      |
 | Linux System               | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
@@ -57,7 +57,7 @@ wxqy.account.corp_secret=xxxxxxxxxx
 
 ### 项目编译
 
-> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
+> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
 
 ``` sh
 # 进入项目根目录
@@ -70,7 +70,7 @@ chmod +x autobuild.sh
 ./autobuild.sh
 ```
 
-> 在 CentOS 系统上，编译项目之前可以执行命令 `yum install -y cmake3 openssl openssl-devel mysql-devel` 一键安装所需的依赖软件。
+> 在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install -y cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
 
 ### 项目运行
 
