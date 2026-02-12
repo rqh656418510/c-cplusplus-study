@@ -109,7 +109,7 @@ void MySqlConnection::refreshIdleStartTime() {
 long long MySqlConnection::getIdleTotalTimes() const {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    return static_cast<long>(now_ms - idleStartTime_.load(std::memory_order_relaxed));
+    return now_ms - idleStartTime_.load(std::memory_order_relaxed);
 }
 
 // 刷新连接上次发送心跳的时间戳
@@ -123,5 +123,5 @@ void MySqlConnection::refreshLastHeartbeatTime() {
 long long MySqlConnection::getLastHeartbeatIntervalTime() const {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    return static_cast<long>(now_ms - lastHeartbeatTime_.load(std::memory_order_relaxed));
+    return now_ms - lastHeartbeatTime_.load(std::memory_order_relaxed);
 }
