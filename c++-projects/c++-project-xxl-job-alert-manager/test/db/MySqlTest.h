@@ -90,8 +90,13 @@ public:
             LOG_ERROR("Connection invalid");
         }
 
+        // SQL语句
+        const std::string sql =
+            "update " + config.mysql.table +
+            " set `handle_msg` = `handle_msg` where trigger_time between now() - interval 1 minute and now()";
+
         // 执行更新操作
-        conn->update("update " + config.mysql.table + " set `handle_msg` = `handle_msg`");
+        conn->update(sql);
 
         // 打印连接池信息
         LOG_INFO("Thread %d, current connection pool size: %d", CurrentThread::tid(), pool->getSize());
@@ -105,7 +110,9 @@ public:
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // SQL语句
-        const std::string sql = "update " + config.mysql.table + " set `handle_msg` = `handle_msg`";
+        const std::string sql =
+            "update " + config.mysql.table +
+            " set `handle_msg` = `handle_msg` where trigger_time between now() - interval 1 minute and now()";
 
         // 数据库连接池
         MySqlConnectionPool* pool = MySqlConnectionPool::getInstance();
