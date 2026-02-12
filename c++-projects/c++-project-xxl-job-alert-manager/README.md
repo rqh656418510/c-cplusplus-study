@@ -81,10 +81,10 @@ chmod +x autobuild.sh
 cd c++-project-xxl-job-alert-manager/bin
 
 # 运行可执行文件（默认配置文件为 ./alert.conf）
-./xxl-job-alert-manager
+./alert-manager
 
 # 或者运行可执行文件时指定配置文件
-./xxl-job-alert-manager -i alert.conf
+./alert-manager -i alert.conf
 ```
 
 ### 参考项目
