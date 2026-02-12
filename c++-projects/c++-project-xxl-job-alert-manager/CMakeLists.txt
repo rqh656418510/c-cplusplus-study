@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # 指定项目名称
-project(alert_manager)
+project(alert-managerr)
 
 # 指定C++版本
 set(CMAKE_CXX_STANDARD 11)

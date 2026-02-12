@@ -87,6 +87,82 @@ cd c++-project-xxl-job-alert-manager/bin
 ./alert-manager -i alert.conf
 ```
 
+### 服务管理
+
+Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下：
+
+``` sh
+# 创建并编辑系统服务配置文件，然后添加以下配置内容
+vim /etc/systemd/system/alert-manager.service
+```
+
+``` conf
+[Unit]
+Description=Alert Manager Service
+After=network.target
+
+[Service]
+
+# 以 centos 用户运行
+User=centos
+Group=centos
+
+# 工作目录
+WorkingDirectory=/home/centos/alert/alert-manager/bin
+
+# 启动命令
+ExecStart=/home/centos/alert/alert-manager/bin/alert-manager -f alert.conf
+
+# 服务类型（前台运行）
+Type=simple
+
+# 异常退出则自动重启
+Restart=on-failure
+RestartSec=3
+
+# 防止启动过快被判定为失败
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+# 停止服务的最大等待时间，超时将被强制 Kill
+TimeoutStopSec=30
+
+# 进程杀死策略
+KillMode=control-group
+
+# 文件描述符上限
+LimitNOFILE=65535
+
+# 输出到 journal
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+```
+
+通过 Systemd 管理监控告警程序的命令如下：
+
+``` sh
+# 重新加载
+sudo systemctl daemon-reload
+
+# 设置开机启动
+sudo systemctl enable alert-manager
+
+# 启动程序
+sudo systemctl start alert-manager
+
+# 查看状态
+sudo systemctl status alert-manager
+
+# 关闭程序
+sudo systemctl stop alert-manager
+
+# 查看日志
+sudo journalctl -u alert-manager -f
+```
+
 ### 参考项目
 
 - [基于 C++ 实现 MySQL 数据库连接池](https://github.com/rqh656418510/c-cplusplus-study/tree/main/c%2B%2B-projects/c%2B%2B-project-db-connection-pool)
