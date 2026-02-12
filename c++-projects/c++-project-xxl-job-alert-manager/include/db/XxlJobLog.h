@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <regex>
 #include <string>
 
 #include "AppConfigLoader.h"
@@ -128,11 +127,19 @@ public:
                  "【Message】%s",
                  NetworkHelper::getInstance().getPublicIp().c_str(), config.alert.xxljobEnvironmentName.c_str(),
                  executorHandler_.c_str(), triggerTime_.c_str(), triggerCode_, triggerMsg_.c_str());
+        std::string content(buf);
 
-        // 告警消息降噪
-        std::regex regexPattern(R"(<br>\s*<span style="color:#00c0ef;" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>)");
-        std::string content = std::regex_replace(std::string(buf), regexPattern, std::string(""));
-        content = std::regex_replace(content, std::regex("<br><br>"), std::string(""));
+        // 去掉多余内容
+        size_t pos;
+        std::string target = "<span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span>";
+        while ((pos = content.find(target)) != std::string::npos) {
+            content.replace(pos, target.length(), "");
+        }
+
+        // 去掉 <br><br>
+        while ((pos = content.find("<br><br>")) != std::string::npos) {
+            content.replace(pos, 8, "");
+        }
 
         // 返回告警消息
         return content;
