@@ -91,9 +91,21 @@ cd c++-project-xxl-job-alert-manager/bin
 
 Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下：
 
+- 拷贝可执行文件
+
+``` sh
+# 创建工作目录
+mkdir -p /home/centos/alert
+
+# 拷贝可执行文件到工作目录
+cp -r {YOUR_PROJECT_PATH}/bin/* /home/centos/alert
+```
+
+- 创建系统服务配置文件
+
 ``` sh
 # 创建并编辑系统服务配置文件，然后添加以下配置内容
-vim /etc/systemd/system/alert-manager.service
+sudo vim /etc/systemd/system/alert-manager.service
 ```
 
 ``` conf
@@ -108,10 +120,10 @@ User=centos
 Group=centos
 
 # 工作目录
-WorkingDirectory=/home/centos/alert/alert-manager/bin
+WorkingDirectory=/home/centos/alert
 
 # 启动命令
-ExecStart=/home/centos/alert/alert-manager/bin/alert-manager -f alert.conf
+ExecStart=/home/centos/alert/alert-manager -i /home/centos/alert/alert.conf
 
 # 服务类型（前台运行）
 Type=simple
@@ -144,7 +156,7 @@ WantedBy=multi-user.target
 通过 Systemd 管理监控告警程序的命令如下：
 
 ``` sh
-# 重新加载
+# 重新加载配置
 sudo systemctl daemon-reload
 
 # 设置开机启动
