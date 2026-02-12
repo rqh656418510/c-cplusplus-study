@@ -22,7 +22,7 @@ void signalHandler(int signal) {
 
 // 打印命令帮助内容
 void ShowArgsHelp() {
-    std::cout << "Usage: alert-managerr [options]\n"
+    std::cout << "Usage: alert-manager [options]\n"
               << "Options:\n"
               << "  -i <config_file>   specify config file (default: ./alert.conf)\n"
               << "  -h                 show help\n";
