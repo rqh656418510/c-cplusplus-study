@@ -86,7 +86,7 @@ void Application::run() {
         // 让Systemd可以触发[Restart=on-failure]
         std::abort();
     } catch (...) {
-        LOG_FATAL("Alert manager exited, fatal unknown exception");
+        LOG_ERROR("Alert manager exited, fatal unknown exception");
         // 让Systemd可以触发[Restart=on-failure]
         std::abort();
     }

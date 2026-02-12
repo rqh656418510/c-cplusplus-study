@@ -37,6 +37,8 @@ void AsyncAlert::stop() {
         if (thread_.joinable()) {
             thread_.join();
         }
+
+        LOG_INFO("Async alert stoped");
     } catch (const std::exception& e) {
         LOG_ERROR("Async alert stop failed, exception: %s", e.what());
     } catch (...) {

@@ -52,8 +52,6 @@ MySqlConnectionPool::~MySqlConnectionPool() {
     if (!this->closed_) {
         // 关闭连接池，释放所有连接
         this->close();
-        // 打印日志信息
-        LOG_INFO("Connection pool stoped");
     }
 }
 
@@ -102,6 +100,9 @@ void MySqlConnectionPool::close() {
             // 释放连接占用的内存空间
             delete phead;
         }
+
+        // 打印日志信息
+        LOG_INFO("Connection pool stoped");
     } catch (const std::exception &e) {
         LOG_ERROR("Connection pool stop failed, exception: %s", e.what());
     } catch (...) {

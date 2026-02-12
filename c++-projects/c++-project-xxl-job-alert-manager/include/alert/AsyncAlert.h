@@ -16,7 +16,7 @@ struct AlertTask {
 };
 
 // 异步告警（装饰器模式，异步发送，线程安全）
-// 特别注意：不允许频繁创建AsyncAlert对象，否则会频繁创建和销毁线程，建议在AsyncAlert对象创建后，保留其引用或者指针
+// 【特别注意】不允许频繁创建AsyncAlert对象，否则会频繁创建和销毁线程，建议在AsyncAlert对象创建后，保留其引用或者指针
 class AsyncAlert : public AlertChannel {
 public:
     // 构造函数
