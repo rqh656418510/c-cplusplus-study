@@ -94,7 +94,7 @@ void jobTest() {
 
 // 打印命令帮助内容
 void ShowArgsHelp() {
-    std::cout << "Usage: xxl_job_alert_manager_test [options]\n"
+    std::cout << "Usage: alert_manager_test [options]\n"
               << "Options:\n"
               << "  -i <config_file>   specify config file (default: ./alert.conf)\n"
               << "  -h                 show help\n";
