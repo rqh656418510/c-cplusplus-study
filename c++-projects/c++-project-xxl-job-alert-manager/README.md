@@ -70,7 +70,7 @@ chmod +x autobuild.sh
 ./autobuild.sh
 ```
 
-> 在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install -y cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
+> 在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
 
 ### 项目运行
 

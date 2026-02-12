@@ -131,8 +131,8 @@ public:
 
         // 告警消息降噪
         std::regex regexPattern(R"(<br>\s*<span style="color:#00c0ef;" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span><br>)");
-        std::string content = std::regex_replace(std::string(buf), regexPattern, "");
-        content = std::regex_replace(content, std::regex("<br><br>"), "");
+        std::string content = std::regex_replace(std::string(buf), regexPattern, std::string(""));
+        content = std::regex_replace(content, std::regex("<br><br>"), std::string(""));
 
         // 返回告警消息
         return content;
