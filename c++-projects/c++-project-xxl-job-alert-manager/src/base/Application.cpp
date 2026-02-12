@@ -11,7 +11,7 @@
 
 // 初始化应用程序
 void Application::init(const std::string& configFile) {
-    // 设置全局的配置文件路径
+    // 设置全局的配置文件
     if (!configFile.empty()) {
         AppConfigLoader::CONFIG_FILE_PATH = configFile;
     }

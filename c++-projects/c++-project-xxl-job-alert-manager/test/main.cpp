@@ -92,9 +92,51 @@ void jobTest() {
     // jobTest.startAndStopTokenRefresher();
 }
 
+// 打印命令帮助内容
+void ShowArgsHelp() {
+    std::cout << "Usage: xxl_job_alert_manager_test [options]\n"
+              << "Options:\n"
+              << "  -i <config_file>   specify config file (default: ./alert.conf)\n"
+              << "  -h                 show help\n";
+}
+
+// 获取用户配置文件
+std::string getConfigFile(int argc, char** argv) {
+    // 获取命令行参数
+    int c = 0;
+    opterr = 0;               // 关闭 getopt 自身的报错
+    std::string config_file;  // 用户指定的配置文件
+    while ((c = getopt(argc, argv, "hi:")) != -1) {
+        switch (c) {
+            case 'h':
+                ShowArgsHelp();
+                exit(EXIT_SUCCESS);
+            case 'i':
+                config_file = optarg;
+                break;
+            case '?':
+            default:
+                std::cout << "invalid command args!" << std::endl;
+                ShowArgsHelp();
+                exit(EXIT_FAILURE);
+        }
+    }
+
+    // 返回用户配置文件
+    return config_file;
+}
+
 int main(int argc, char** argv) {
+    // 获取用户配置文件
+    std::string configFile = getConfigFile(argc, argv);
+
     // 设置默认日志级别
     Logger::getInstance().setLogLevel(LogLevel::DEBUG);
+
+    // 设置全局的配置文件
+    if (!configFile.empty()) {
+        AppConfigLoader::CONFIG_FILE_PATH = configFile;
+    }
 
     // 基础测试
     baseTest();
