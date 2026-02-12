@@ -15,7 +15,7 @@ void ConfigFileUtil::loadConfigFile(const char* config_file) {
     // 打开配置文件
     FILE* pf = fopen(config_file, "r");
     if (nullptr == pf) {
-        LOG_FATAL("config file [%s] not exist!", config_file);
+        LOG_FATAL("Config file [%s] not exist!", config_file);
     }
 
     // 解析配置文件
@@ -55,7 +55,7 @@ void ConfigFileUtil::loadConfigFile(const char* config_file) {
         m_configMap.insert({key, value});
 
         // 打印日志信息
-        LOG_DEBUG("%s=%s", key.c_str(), value.c_str());
+        LOG_INFO("%s=%s", key.c_str(), value.c_str());
     }
 
     // 关闭文件
