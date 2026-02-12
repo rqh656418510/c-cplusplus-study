@@ -40,7 +40,8 @@ Logger::Logger() {
 
             // 获取日志文件的名称
             char file_name[128];
-            sprintf(file_name, "%d-%d-%d.log", now_tm->tm_year + 1900, now_tm->tm_mon + 1, now_tm->tm_mday);
+            snprintf(file_name, sizeof(file_name), "%04d-%02d-%02d.log", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
+                     now_tm->tm_mday);
 
             // 打开日志文件
             FILE* pf = fopen(file_name, "a+");

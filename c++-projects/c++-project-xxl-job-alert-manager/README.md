@@ -170,6 +170,9 @@ sudo systemctl status alert-manager
 # 关闭程序
 sudo systemctl stop alert-manager
 
+# 重启程序
+sudo systemctl restart alert-manager
+
 # 查看系统日志
 sudo journalctl -u alert-manager -f
 
