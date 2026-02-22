@@ -5,8 +5,8 @@
 
 using namespace std;
 
-// 不使用数据库连接池，单个线程查询记录
-void testConnectionSingleThread() {
+// 通过单个数据库连接查询数据
+void selectBySingleConnection() {
     // 创建连接
     MysqlConnection *connection = new MysqlConnection();
     connection->connect("192.168.2.181:3306", "root", "Cxx_Chat_12345", "cxx_study");
@@ -106,8 +106,8 @@ void testConnectionPoolMultiThread() {
 }
 
 int main() {
-    // 不使用数据库连接池，单个线程查询记录
-    // testConnectionSingleThread();
+    // 通过单个数据库连接查询数据
+    // selectBySingleConnection();
 
     // 使用数据库连接池，单个线程插入多条记录
     // testConnectionPoolSingleThread();
