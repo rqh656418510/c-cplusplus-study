@@ -48,11 +48,11 @@ public:
     // 连接数据库
     bool connect(const string &host, const string &username, const string &password, const string &dbname);
 
-    // 刷新连接进入空闲状态后的起始存活时间点
-    void refreshAliveTime();
+    // 刷新连接进入空闲状态的时间戳
+    void refreshIdleStartTime();
 
-    // 获取连接的空闲存活时间（单位毫秒）
-    long long getAliveTime() const;
+    // 获取连接进入空闲状态的总时长（单位毫秒）
+    long long getIdleTotalTimes() const;
 
 private:
     string _host;                       // MySQL 连接地址
@@ -60,6 +60,6 @@ private:
     string _password;                   // MySQL 密码
     string _dbname;                     // MySQL 数据库
     Driver *_driver;                    // MySQL 驱动
-    Connection *_connection;            // MySQL 连接
-    std::atomic<long long> _aliveTime;  // 记录连接进入空闲状态后的起始存活时间点
+    Connection *_connection;            // MySQL 连接（非线程安全）
+    std::atomic<long long> _idleStartTime;  // 记录连接进入空闲状态的时间戳（单位毫秒）
 };

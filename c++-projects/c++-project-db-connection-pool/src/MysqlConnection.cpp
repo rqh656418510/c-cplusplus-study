@@ -109,16 +109,16 @@ bool MysqlConnection::connect(const string &host, const string &username, const 
     return false;
 }
 
-// 刷新连接进入空闲状态后的起始存活时间点
-void MysqlConnection::refreshAliveTime() {
+// 刷新连接进入空闲状态的时间戳
+void MysqlConnection::refreshIdleStartTime() {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    _aliveTime.store(now_ms, std::memory_order_relaxed);
+    _idleStartTime.store(now_ms, std::memory_order_relaxed);
 }
 
-// 获取连接的空闲存活时间（单位毫秒）
-long long MysqlConnection::getAliveTime() const {
+// 获取连接进入空闲状态的总时长（单位毫秒）
+long long MysqlConnection::getIdleTotalTimes() const {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    return static_cast<long>(now_ms - _aliveTime.load(std::memory_order_relaxed));
+    return static_cast<long>(now_ms - _idleStartTime.load(std::memory_order_relaxed));
 }

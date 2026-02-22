@@ -20,7 +20,7 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
             this->_connectionQueue.push(connection);
             // 计数器加一
@@ -195,7 +195,7 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
         // 判断连接池是否已关闭
         if (!this->_closed) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            pconn->refreshAliveTime();
+            pconn->refreshIdleStartTime();
             // 入队操作（将连接归还到队列中）
             this->_connectionQueue.push(pconn);
             // 通知正在等待获取连接的线程
@@ -243,7 +243,7 @@ void MysqlConnectionPool::produceConnection() {
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
             this->_connectionQueue.push(connection);
             // 计数器加一
@@ -283,7 +283,7 @@ void MysqlConnectionPool::scanIdleConnection() {
         while (!this->_connectionQueue.empty() && this->_connectionQueue.size() > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
-            if (phead->getAliveTime() >= this->_maxIdleTime * 1000) {
+            if (phead->getIdleTotalTimes() >= this->_maxIdleTime * 1000) {
                 // 出队操作
                 this->_connectionQueue.pop();
                 // 计数器减一
