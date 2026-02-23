@@ -7,12 +7,12 @@
 #include "Logger.h"
 
 // 初始化类静态变量（定义全局配置文件）
-std::string AppConfigLoader::CONFIG_FILE_PATH = "alert.conf";
+std::string AppConfigLoader::CONFIG_FILE = "alert.conf";
 
 // 私有构造函数
 AppConfigLoader::AppConfigLoader() {
     // 加载配置文件
-    config_ = load(CONFIG_FILE_PATH.c_str());
+    config_ = load(CONFIG_FILE.c_str());
 }
 
 // 私有析构函数

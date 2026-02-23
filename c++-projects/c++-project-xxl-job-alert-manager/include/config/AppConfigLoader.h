@@ -13,8 +13,8 @@ public:
     // 获取全局配置
     const AppConfig& getConfig() const;
 
-    // 全局的配置文件路径
-    static std::string CONFIG_FILE_PATH;
+    // 全局的配置文件
+    static std::string CONFIG_FILE;
 
 private:
     // 私有构造函数

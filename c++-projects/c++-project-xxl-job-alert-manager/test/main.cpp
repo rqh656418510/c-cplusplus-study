@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
 
     // 设置全局的配置文件
     if (!configFile.empty()) {
-        AppConfigLoader::CONFIG_FILE_PATH = configFile;
+        AppConfigLoader::CONFIG_FILE = configFile;
     }
 
     // 基础测试

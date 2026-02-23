@@ -13,7 +13,7 @@
 void Application::init(const std::string& configFile) {
     // 设置全局的配置文件
     if (!configFile.empty()) {
-        AppConfigLoader::CONFIG_FILE_PATH = configFile;
+        AppConfigLoader::CONFIG_FILE = configFile;
     }
 
     // 获取全局配置信息
