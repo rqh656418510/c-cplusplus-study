@@ -157,9 +157,9 @@ int main(int argc, char** argv) {
     jobTest();
 
     // 等待用户输入任意字符，然后结束程序
-    LOG_INFO("Wait to user any input to exit.");
+    LOG_INFO("Wait to user any input to exit");
     char c = getchar();
 
-    LOG_INFO("Test finished.");
+    LOG_INFO("Test finished");
     return 0;
 }

@@ -49,7 +49,7 @@ int Application::lockfile(const char* path) {
     // 尝试加非阻塞排他锁，若失败则说明已经有其他实例正在运行
     if (flock(fd, LOCK_EX | LOCK_NB) < 0) {
         // 打印日志信息
-        LOG_ERROR("Another instance is running");
+        LOG_ERROR("Another alert instance is running");
 
         // 释放文件描述符
         close(fd);
@@ -58,7 +58,7 @@ int Application::lockfile(const char* path) {
         return -1;
     }
 
-    // 加锁成功，返回 fd（需要在程序生命周期内保持该fd不关闭）
+    // 加锁成功，返回 fd（需要在告警程序的整个生命周期内保持该fd不关闭）
     return fd;
 }
 
@@ -66,7 +66,7 @@ int Application::lockfile(const char* path) {
 void Application::run() {
     try {
         // 打印日志信息
-        LOG_INFO("Alert manager started.");
+        LOG_INFO("Alert manager started");
 
         // 启动AccessToken刷新器
         WxQyTokenRefresher::getInstance().start();
@@ -112,5 +112,5 @@ void Application::shutdown() {
     }
 
     // 打印日志信息
-    LOG_INFO("Alert manager stopped.");
+    LOG_INFO("Alert manager stopped");
 }

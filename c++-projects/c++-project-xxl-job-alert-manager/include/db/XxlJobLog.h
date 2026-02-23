@@ -125,7 +125,7 @@ public:
                  "【Time】%s\n"
                  "【Code】%d\n"
                  "【Message】%s",
-                 NetworkHelper::getInstance().getPublicIp().c_str(), config.alert.xxljobEnvironmentName.c_str(),
+                 NetworkHelper::getInstance().getPublicIp().c_str(), config.alert.environmentName.c_str(),
                  executorHandler_.c_str(), triggerTime_.c_str(), triggerCode_, triggerMsg_.c_str());
         std::string content(buf);
 

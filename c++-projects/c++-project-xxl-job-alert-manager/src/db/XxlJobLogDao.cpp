@@ -54,7 +54,10 @@ XxlJobLog XxlJobLogDao::selectLastestFatal() {
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 分钟数（查询范围）
-    const int minutes = config.alert.xxljobFatalStatusScanIntervalTime / 60;
+    int minutes = config.alert.xxljobFatalStatusScanIntervalTime / 60;
+    if (minutes <= 0) {
+        minutes = 1;
+    }
 
     // 数据库表的名称
     const std::string table = AppConfigLoader::getInstance().getConfig().mysql.table;
