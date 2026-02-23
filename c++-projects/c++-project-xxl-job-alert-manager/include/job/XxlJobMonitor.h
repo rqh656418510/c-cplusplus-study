@@ -3,6 +3,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <ctime>
+#include <memory>
 #include <thread>
 
 #include "AlertManager.h"
@@ -56,4 +57,16 @@ private:
 
     // 监控XXL-JOB是否调度失败的线程
     std::thread monitorFatalStatusThread_;
+
+    // 连续监控到XXL-JOB调度失败的次数
+    std::atomic_int consecutiveFatalCount_;
+
+    // 当天已执行"处理XXL-JOB调度失败"命令的次数
+    std::atomic_int timesProcessedFatalStatusToday_;
+
+    // 最后一次执行"处理XXL-JOB调度失败"命令的日期 (YYYY-MM-DD 格式)，用于判断是否跨天
+    std::string lastProcessedFatalStatusDate_;
+
+    // 保护 lastProcessedFatalStatusDate_ 的互斥锁
+    std::mutex processedFatalStatusDateMutex_;
 };

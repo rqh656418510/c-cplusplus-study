@@ -1,6 +1,7 @@
 #include "XxlJobMonitor.h"
 
 #include <chrono>
+#include <ctime>
 #include <functional>
 #include <iostream>
 
@@ -13,7 +14,13 @@
 #include "XxlJobMonitor.h"
 
 // 私有构造函数
-XxlJobMonitor::XxlJobMonitor() : monitorRunning_(false), lastAlertFatalTriggerTime_(-1), idleAlertSended_(false) {
+XxlJobMonitor::XxlJobMonitor()
+    : monitorRunning_(false),
+      lastAlertFatalTriggerTime_(-1),
+      idleAlertSended_(false),
+      consecutiveFatalCount_(0),
+      timesProcessedFatalStatusToday_(0),
+      lastProcessedFatalStatusDate_("") {
     // 初始化告警管理器
     alertManager_.registerChannel(AlertLevel::ERROR, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
     alertManager_.registerChannel(AlertLevel::CRITICAL, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
@@ -185,6 +192,60 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
                         // 更新已告警状态
                         lastAlertFatalTriggerTime_.store(t_lastest_fatal_trigger_time);
                     }
+
+                    // 递增连续调度失败计数器
+                    int consecutive_fatal_count = consecutiveFatalCount_.load() + 1;
+                    consecutiveFatalCount_.store(consecutive_fatal_count);
+
+                    // 检查是否达到连续调度失败阈值
+                    if (consecutive_fatal_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
+                        // 获取当前时间
+                        time_t now = time(nullptr);
+                        struct tm* tm_now = localtime(&now);
+                        char date_buf[16] = {0};
+                        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
+                        std::string current_date(date_buf);
+
+                        // 检查是否跨天，如果跨天则重置计数器
+                        {
+                            std::unique_lock<std::mutex> lock(processedFatalStatusDateMutex_);
+                            if (lastProcessedFatalStatusDate_ != current_date) {
+                                // 跨天，重置计数器
+                                lastProcessedFatalStatusDate_ = current_date;
+                                timesProcessedFatalStatusToday_.store(0);
+                            }
+                        }
+
+                        // 检查当天是否还有剩余的执行次数
+                        int times_processed = timesProcessedFatalStatusToday_.load();
+                        if (times_processed < config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay) {
+                            // 执行处理命令
+                            LOG_INFO(
+                                "Executing xxl-job fatal status process command: %s. Times processed today: %d / %d",
+                                config.alertCore.xxljobFatalStatusProcessCommand.c_str(), times_processed + 1,
+                                config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay);
+
+                            int ret_code = system(config.alertCore.xxljobFatalStatusProcessCommand.c_str());
+                            if (ret_code == 0) {
+                                // 命令执行成功，更新计数器
+                                timesProcessedFatalStatusToday_.store(times_processed + 1);
+                                // 重置连续调度失败计数器
+                                consecutiveFatalCount_.store(0);
+                                LOG_INFO("XXL-JOB fatal status process command executed successfully");
+                            } else {
+                                LOG_ERROR("XXL-JOB fatal status process command failed, return code: %d", ret_code);
+                            }
+                        } else {
+                            // 当天已达到最大处理次数
+                            LOG_WARN(
+                                "Maximum times per day reached for xxl-job fatal status process command. Times "
+                                "processed today: %d / %d",
+                                times_processed, config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay);
+                        }
+                    }
+                } else {
+                    // 没有失败日志，重置连续调度失败计数器
+                    consecutiveFatalCount_.store(0);
                 }
             }
         } catch (const std::exception& e) {
