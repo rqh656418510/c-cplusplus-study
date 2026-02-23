@@ -12,14 +12,14 @@
 
 // 有界阻塞队列（生产者/消费者队列，线程安全）
 template <typename T>
-class LockQueue : NonCopyable {
+class BlockingQueue : NonCopyable {
 public:
     // 构造函数
-    explicit LockQueue(size_t maxSize = 4096) : maxSize_(maxSize), exited_(false) {
+    explicit BlockingQueue(size_t maxSize = 4096) : maxSize_(maxSize), exited_(false) {
     }
 
     // 析构函数
-    ~LockQueue() {
+    ~BlockingQueue() {
         if (!exited_) {
             stop();
         }

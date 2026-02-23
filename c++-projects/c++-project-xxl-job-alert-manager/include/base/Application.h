@@ -8,10 +8,11 @@
 #include <string>
 
 #include "CurrentThread.h"
+#include "NonCopyable.h"
 #include "Timestamp.h"
 
 // 应用程序
-class Application {
+class Application : NonCopyable {
 public:
     // 初始化应用程序
     void init(const std::string& config_file);

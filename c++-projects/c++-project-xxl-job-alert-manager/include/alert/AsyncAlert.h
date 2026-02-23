@@ -6,7 +6,7 @@
 #include <thread>
 
 #include "AlertChannel.h"
-#include "LockQueue.h"
+#include "BlockingQueue.h"
 
 // 告警任务
 struct AlertTask {
@@ -38,5 +38,5 @@ private:
     std::shared_ptr<AlertChannel> channel_;  // 告警渠道
     std::thread thread_;                     // 告警线程
     std::atomic_bool stoped_;                // 停止告警的标记
-    LockQueue<AlertTask> queue_;             // 告警队列（线程安全）
+    BlockingQueue<AlertTask> queue_;         // 告警队列（线程安全）
 };
