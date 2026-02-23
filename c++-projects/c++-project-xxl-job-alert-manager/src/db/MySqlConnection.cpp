@@ -57,13 +57,11 @@ bool MySqlConnection::connect(const std::string& ip, unsigned short port, const 
     // C和C++代码默认的编码字符是ASCII，如果不设置，从MySQL查询到的中文内容可能会显示乱码
     if (mysql_set_character_set(conn_, "utf8mb4") != 0) {
         LOG_ERROR("Set charset failed: %s", mysql_error(conn_));
-        return false;
     }
 
     LOG_DEBUG("Connect mysql [%s:%d] success", ip_.c_str(), port_);
-    return true;
 
-    return p != nullptr;
+    return true;
 }
 
 // 执行更新操作（insert、delete、update）
@@ -139,7 +137,7 @@ bool MySqlConnection::sendHeartbeat() {
 
     // 针对心跳失败，尝试重连
     if (reconnect()) {
-        LOG_INFO("Reconnect succeeded after send heartbeat failed");
+        LOG_DEBUG("Reconnect succeeded after send heartbeat failed");
         return true;
     }
 
