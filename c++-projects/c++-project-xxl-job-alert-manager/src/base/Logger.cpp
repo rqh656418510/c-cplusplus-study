@@ -1,6 +1,7 @@
 #include "Logger.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <exception>
@@ -8,6 +9,7 @@
 #include <sstream>
 #include <thread>
 
+#include "CurrentThread.h"
 #include "Timestamp.h"
 
 // clang-format off
@@ -23,6 +25,7 @@
 
 // 定义默认日志级别
 static LogLevel DEFAULT_LOG_LEVEL = INFO;
+static std::string DEFAULT_LOG_LEVEL_NAME = "INFO";
 
 // clang-format on
 
@@ -35,8 +38,8 @@ Logger::Logger() {
     writeThread_ = std::thread([this]() {
         for (;;) {
             // 获取当前日期
-            time_t now = time(nullptr);
-            tm* now_tm = localtime(&now);
+            std::time_t now = std::time(nullptr);
+            std::tm* now_tm = std::localtime(&now);
 
             // 获取日志文件的名称
             char file_name[128];
@@ -108,10 +111,31 @@ Logger& Logger::getInstance() {
     return logger;
 }
 
-// 输出日志信息
+// 输出日志信息（记录日志文件）
 void Logger::log(const LogMessage& message) {
     // 将日志信息写入缓冲队列中
     this->lckQue_.push(message);
+}
+
+// 输出日志信息（不记录日志文件）
+void Logger::log_direct(const char* message, LogLevel level) {
+    char time_buf[32];
+    char log_buf[1024];
+
+    // 获取当前时间
+    std::time_t now = std::time(nullptr);
+    std::tm* tm_now = std::localtime(&now);
+
+    // 格式化时间
+    snprintf(time_buf, sizeof(time_buf), "%04d-%02d-%02d %02d:%02d:%02d", tm_now->tm_year + 1900, tm_now->tm_mon + 1,
+             tm_now->tm_mday, tm_now->tm_hour, tm_now->tm_min, tm_now->tm_sec);
+
+    // 拼接完整日志
+    snprintf(log_buf, sizeof(log_buf), "%s => %d [%s] %s", time_buf, CurrentThread::tid(),
+             logLevelToString(level).c_str(), message);
+
+    // 输出日志信息
+    std::puts(log_buf);
 }
 
 // 停止记录日志
@@ -134,11 +158,13 @@ void Logger::stop() {
         }
 
         // 打印日志信息
-        LOG_INFO("Logger stoped");
+        log_direct("Logger stopped", LogLevel::INFO);
     } catch (const std::exception& e) {
-        LOG_ERROR("Logger stop failed, exception: %s", e.what());
+        char buf[512];
+        snprintf(buf, sizeof(buf), "Logger stop failed, exception: %s", e.what());
+        log_direct(buf, LogLevel::ERROR);
     } catch (...) {
-        LOG_ERROR("Logger stop failed, unknown exception");
+        log_direct("Logger stop failed, unknown exception", LogLevel::ERROR);
     }
 }
 
@@ -166,7 +192,7 @@ std::string Logger::logLevelToString(LogLevel level) {
         case FATAL:
             return "FATAL";
         default:
-            return "INFO";
+            return DEFAULT_LOG_LEVEL_NAME;
     }
 }
 

@@ -58,7 +58,7 @@ int Application::lockfile(const char* path) {
         return -1;
     }
 
-    // 加锁成功，返回 fd（需要在告警程序的整个生命周期内保持该fd不关闭）
+    // 加锁成功，返回 fd（需要在应用程序的整个生命周期内保持该fd不关闭）
     return fd;
 }
 

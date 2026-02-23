@@ -93,8 +93,11 @@ public:
     // 获取单例对象
     static Logger& getInstance();
 
-    // 输出日志信息
+    // 输出日志信息（记录日志文件）
     void log(const LogMessage& message);
+
+    // 输出日志信息（不记录日志文件）
+    void log_direct(const char* message, LogLevel level);
 
     // 停止记录日志
     void stop();
