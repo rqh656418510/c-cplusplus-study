@@ -1,3 +1,5 @@
+// clang-format off
+
 #pragma once
 
 #include <string>
@@ -37,11 +39,17 @@ struct AlertConfig {
     int wxQyRefreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（alert.wxqy.refresh_token_interval_time）
     int wxQyRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（alert.wxqy.retry_refresh_interval_time）
     int xxljobStopStatusScanIntervalTime;  // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
+    int xxljobStopStatusMaxLogIdleTime;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.stop_status_max_log_idle_time）
+    int xxljobStopStatusProcessMaxTimesPerDay;  // 每天最多执行“处理XXL-JOB停止运行”的命令次数（alert.xxljob.stop_status_process_max_times_per_day）
+    int xxljobStopStatusConsecutiveFailureThreshold;  // 连续失败阈值后处理（alert.xxljob.stop_status_consecutive_failure_threshold）
     int xxljobFatalStatusScanIntervalTime;  // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
-    int xxljobLogMaxIdleTimeForStop;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.log_max_idle_time_for_stop）
+    std::string xxljobStopStatusProcessCommand;  // 处理XXL-JOB停止运行的命令（alert.xxljob.stop_status_process_command）
+    int xxljobFatalStatusProcessMaxTimesPerDay;  // 每天最多执行“处理XXL-JOB调度失败”的命令次数（alert.xxljob.fatal_status_process_max_times_per_day）
+    int xxljobFatalStatusConsecutiveFailureThreshold;  // 连续失败阈值后处理（alert.xxljob.fatal_status_consecutive_failure_threshold）
+    std::string xxljobFatalStatusProcessCommand;  // 处理XXL-JOB调度失败的命令（alert.xxljob.fatal_status_process_command）
     std::string environmentName;  //监控告警程序的运行环境（alert.environment.name）
-    std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
     std::string lockFile;  // 监控告警程序的锁文件（alert.lock_file）
+    std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
 };
 
 // 全局配置

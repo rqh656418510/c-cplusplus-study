@@ -122,7 +122,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
                 // 如果在指定时间内没有任务调度日志记录，则发送告警消息
                 double diff_seconds = difftime(t_now, t_lastest_trigger_time);
-                if (diff_seconds >= config.alert.xxljobLogMaxIdleTimeForStop) {
+                if (diff_seconds >= config.alert.xxljobStopStatusMaxLogIdleTime) {
                     // 仅在尚未发送过空闲告警时发送，避免重复告警
                     if (!idleAlertSended_.load()) {
                         char buf[1024] = {0};

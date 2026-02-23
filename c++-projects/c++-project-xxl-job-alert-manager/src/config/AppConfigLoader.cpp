@@ -82,11 +82,17 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alert.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wxqy.refresh_token_interval_time"), "alert.wxqy.refresh_token_interval_time");
     app.alert.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("alert.wxqy.retry_refresh_interval_time"), "alert.wxqy.retry_refresh_interval_time");
     app.alert.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
+    app.alert.xxljobStopStatusMaxLogIdleTime = toInt(cfg_util.load("alert.xxljob.stop_status_max_log_idle_time"), "alert.xxljob.stop_status_max_log_idle_time");
+    app.alert.xxljobStopStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.stop_status_process_max_times_per_day"), "alert.xxljob.stop_status_process_max_times_per_day");
+    app.alert.xxljobStopStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.stop_status_consecutive_failure_threshold"), "alert.xxljob.stop_status_consecutive_failure_threshold");
+    app.alert.xxljobStopStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.stop_status_process_command"), "alert.xxljob.stop_status_process_command");
     app.alert.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
-    app.alert.xxljobLogMaxIdleTimeForStop = toInt(cfg_util.load("alert.xxljob.log_max_idle_time_for_stop"), "alert.xxljob.log_max_idle_time_for_stop");
+    app.alert.xxljobFatalStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.fatal_status_process_max_times_per_day"), "alert.xxljob.fatal_status_process_max_times_per_day");
+    app.alert.xxljobFatalStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.fatal_status_consecutive_failure_threshold"), "alert.xxljob.fatal_status_consecutive_failure_threshold");
+    app.alert.xxljobFatalStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.fatal_status_process_command"), "alert.xxljob.fatal_status_process_command");
     app.alert.environmentName = toStr(cfg_util.load("alert.environment.name"), "alert.environment.name");
-    app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
     app.alert.lockFile = toStr(cfg_util.load("alert.lock_file"), "alert.lock_file");
+    app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
 
     return app;
 }
