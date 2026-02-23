@@ -77,8 +77,8 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.wxQyApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
     app.wxQyApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
     app.wxQyApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
-    app.wxQyApi.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("wxqy.api.refresh_token_interval_time"), "wxqy.api.refresh_token_interval_time");
-    app.wxQyApi.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("wxqy.api.retry_refresh_interval_time"), "wxqy.api.retry_refresh_interval_time");
+    app.wxQyApi.refreshTokenIntervalTime = toInt(cfg_util.load("wxqy.api.refresh_token_interval_time"), "wxqy.api.refresh_token_interval_time");
+    app.wxQyApi.retryRefreshTokenIntervalTime = toInt(cfg_util.load("wxqy.api.retry_refresh_token_interval_time"), "wxqy.api.retry_refresh_token_interval_time");
     
     // Alert Core Config
     app.alertCore.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");

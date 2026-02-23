@@ -113,10 +113,6 @@ sudo vim /etc/systemd/system/alert-manager.service
 Description=Alert Manager Service
 After=network.target
 
-# 在 60 秒时间窗口内，最多重启 5 次，防止频繁崩溃无限重启
-StartLimitIntervalSec=60
-StartLimitBurst=5
-
 [Service]
 # 以 centos 用户运行
 User=centos
@@ -130,6 +126,10 @@ ExecStart=/home/centos/alert/alert-manager -i /home/centos/alert/alert.conf
 
 # 服务类型（前台运行）
 Type=simple
+
+# 在 60 秒时间窗口内，最多重启 5 次，防止频繁崩溃无限重启
+StartLimitInterval=60
+StartLimitBurst=5
 
 # 异常退出则自动重启
 Restart=on-failure

@@ -32,8 +32,8 @@ struct WxQyApiConfig {
     std::string host;          // 企业微信API服务器的地址（wxqy.api.host）
     std::string getTokenPath;  // 获取企业微信AccessToken的接口路径（wxqy.api.get_token）
     std::string sendMsgPath;   // 发送企业微信应用消息的接口路径（wxqy.api.send_msg）
-    int wxQyRefreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（wxqy.api.refresh_token_interval_time）
-    int wxQyRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（wxqy.api.retry_refresh_interval_time）
+    int refreshTokenIntervalTime;  // 企业微信AccessToken刷新的时间间隔，单位秒（wxqy.api.refresh_token_interval_time）
+    int retryRefreshTokenIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（wxqy.api.retry_refresh_token_interval_time）
 };
 
 // 监控告警核心配置
