@@ -79,7 +79,7 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
 
     while (refreshRunning_) {
         // 刷新的时间间隔（秒）
-        int wait_seconds = config.alert.wxQyRefreshTokenIntervalTime;
+        int wait_seconds = config.wxQyApi.wxQyRefreshTokenIntervalTime;
 
         try {
             // 获取新的AccessToken
@@ -92,17 +92,17 @@ void WxQyTokenRefresher::refreshLocalTokenLoop() {
                 }
             } else {
                 // 获取失败后，使用较短的等待时间后重试
-                wait_seconds = config.alert.wxQyRetryRefreshIntervalTime;
+                wait_seconds = config.wxQyApi.wxQyRetryRefreshIntervalTime;
                 LOG_WARN("failed to get wx-qy access token, will retry after %ds", wait_seconds);
             }
         } catch (const std::exception& e) {
             // 获取失败后，使用较短的等待时间后重试
-            wait_seconds = config.alert.wxQyRetryRefreshIntervalTime;
+            wait_seconds = config.wxQyApi.wxQyRetryRefreshIntervalTime;
             LOG_ERROR("Wx-Qy token refresher occure exception: %s, will retry refresh after %ds", e.what(),
                       wait_seconds);
         } catch (...) {
             // 获取失败后，使用较短的等待时间后重试
-            wait_seconds = config.alert.wxQyRetryRefreshIntervalTime;
+            wait_seconds = config.wxQyApi.wxQyRetryRefreshIntervalTime;
             LOG_ERROR("Wx-Qy token refresher occure unknown exception, will retry refresh after %ds", wait_seconds);
         }
 

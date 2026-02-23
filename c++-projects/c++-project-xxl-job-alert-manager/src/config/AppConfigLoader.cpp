@@ -77,10 +77,10 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.wxQyApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
     app.wxQyApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
     app.wxQyApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
-
+    app.wxQyApi.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("wxqy.api.refresh_token_interval_time"), "wxqy.api.refresh_token_interval_time");
+    app.wxQyApi.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("wxqy.api.retry_refresh_interval_time"), "wxqy.api.retry_refresh_interval_time");
+    
     // Alert
-    app.alert.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("alert.wxqy.refresh_token_interval_time"), "alert.wxqy.refresh_token_interval_time");
-    app.alert.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("alert.wxqy.retry_refresh_interval_time"), "alert.wxqy.retry_refresh_interval_time");
     app.alert.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
     app.alert.xxljobStopStatusMaxLogIdleTime = toInt(cfg_util.load("alert.xxljob.stop_status_max_log_idle_time"), "alert.xxljob.stop_status_max_log_idle_time");
     app.alert.xxljobStopStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.stop_status_process_max_times_per_day"), "alert.xxljob.stop_status_process_max_times_per_day");
@@ -91,7 +91,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alert.xxljobFatalStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.fatal_status_consecutive_failure_threshold"), "alert.xxljob.fatal_status_consecutive_failure_threshold");
     app.alert.xxljobFatalStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.fatal_status_process_command"), "alert.xxljob.fatal_status_process_command");
     app.alert.environmentName = toStr(cfg_util.load("alert.environment.name"), "alert.environment.name");
-    app.alert.lockFile = toStr(cfg_util.load("alert.lock_file"), "alert.lock_file");
+    app.alert.lockFile = toStr(cfg_util.load("alert.lock.file"), "alert.lock.file");
     app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
 
     return app;
