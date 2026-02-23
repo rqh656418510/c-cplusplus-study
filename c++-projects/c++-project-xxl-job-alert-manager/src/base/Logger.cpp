@@ -71,7 +71,8 @@ Logger::Logger() {
 
             // 获取当前时间
             char time_buf[128] = {0};
-            snprintf(time_buf, sizeof(time_buf), "%d-%d-%d %d:%d:%d => %d [%s] ", now_tm->tm_year + 1900,
+
+            snprintf(time_buf, sizeof(time_buf), "%4d-%02d-%02d %02d:%02d:%02d => %d [%s] ", now_tm->tm_year + 1900,
                      now_tm->tm_mon + 1, now_tm->tm_mday, now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec,
                      log_thread_id, log_level_name.c_str());
 

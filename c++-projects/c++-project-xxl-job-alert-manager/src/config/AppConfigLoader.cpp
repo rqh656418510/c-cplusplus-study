@@ -54,7 +54,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
 
     AppConfig app;
 
-    // MySQL
+    // MySQL Config
     app.mysql.ip = toStr(cfg_util.load("mysql.ip"), "mysql.ip");
     app.mysql.port = toInt(cfg_util.load("mysql.port"), "mysql.port");
     app.mysql.user = toStr(cfg_util.load("mysql.user"), "mysql.user");
@@ -67,32 +67,34 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connection_timeout"), "mysql.connection.pool.connection_timeout");
     app.mysql.connectionPoolHeartbeatIntervalTime = toInt(cfg_util.load("mysql.connection.pool.heartbeat_interval_time"), "mysql.connection.pool.heartbeat_interval_time");
     
-    // WxQy Account
+    // WxQy Account Config
     app.wxQyAccount.agentId = toInt(cfg_util.load("wxqy.account.agent_id"), "wxqy.account.agent_id");
     app.wxQyAccount.toUser = toStr(cfg_util.load("wxqy.account.to_user"), "wxqy.account.to_user");
     app.wxQyAccount.corpId = toStr(cfg_util.load("wxqy.account.corp_id"), "wxqy.account.corp_id");
     app.wxQyAccount.corpSecret = toStr(cfg_util.load("wxqy.account.corp_secret"), "wxqy.account.corp_secret");
 
-    // WxQy API
+    // WxQy API Config
     app.wxQyApi.host = toStr(cfg_util.load("wxqy.api.host"), "wxqy.api.host");
     app.wxQyApi.getTokenPath = toStr(cfg_util.load("wxqy.api.get_token"), "wxqy.api.get_token");
     app.wxQyApi.sendMsgPath = toStr(cfg_util.load("wxqy.api.send_msg"), "wxqy.api.send_msg");
     app.wxQyApi.wxQyRefreshTokenIntervalTime = toInt(cfg_util.load("wxqy.api.refresh_token_interval_time"), "wxqy.api.refresh_token_interval_time");
     app.wxQyApi.wxQyRetryRefreshIntervalTime = toInt(cfg_util.load("wxqy.api.retry_refresh_interval_time"), "wxqy.api.retry_refresh_interval_time");
     
-    // Alert
-    app.alert.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
-    app.alert.xxljobStopStatusMaxLogIdleTime = toInt(cfg_util.load("alert.xxljob.stop_status_max_log_idle_time"), "alert.xxljob.stop_status_max_log_idle_time");
-    app.alert.xxljobStopStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.stop_status_process_max_times_per_day"), "alert.xxljob.stop_status_process_max_times_per_day");
-    app.alert.xxljobStopStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.stop_status_consecutive_failure_threshold"), "alert.xxljob.stop_status_consecutive_failure_threshold");
-    app.alert.xxljobStopStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.stop_status_process_command"), "alert.xxljob.stop_status_process_command");
-    app.alert.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
-    app.alert.xxljobFatalStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.fatal_status_process_max_times_per_day"), "alert.xxljob.fatal_status_process_max_times_per_day");
-    app.alert.xxljobFatalStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.fatal_status_consecutive_failure_threshold"), "alert.xxljob.fatal_status_consecutive_failure_threshold");
-    app.alert.xxljobFatalStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.fatal_status_process_command"), "alert.xxljob.fatal_status_process_command");
-    app.alert.environmentName = toStr(cfg_util.load("alert.environment.name"), "alert.environment.name");
-    app.alert.lockFile = toStr(cfg_util.load("alert.lock.file"), "alert.lock.file");
-    app.alert.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
+    // Alert Core Config
+    app.alertCore.xxljobStopStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_scan_interval_time"), "alert.xxljob.stop_status_scan_interval_time");
+    app.alertCore.xxljobStopStatusMaxLogIdleTime = toInt(cfg_util.load("alert.xxljob.stop_status_max_log_idle_time"), "alert.xxljob.stop_status_max_log_idle_time");
+    app.alertCore.xxljobStopStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.stop_status_process_max_times_per_day"), "alert.xxljob.stop_status_process_max_times_per_day");
+    app.alertCore.xxljobStopStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.stop_status_consecutive_failure_threshold"), "alert.xxljob.stop_status_consecutive_failure_threshold");
+    app.alertCore.xxljobStopStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.stop_status_process_command"), "alert.xxljob.stop_status_process_command");
+    app.alertCore.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
+    app.alertCore.xxljobFatalStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.fatal_status_process_max_times_per_day"), "alert.xxljob.fatal_status_process_max_times_per_day");
+    app.alertCore.xxljobFatalStatusConsecutiveFailureThreshold = toInt(cfg_util.load("alert.xxljob.fatal_status_consecutive_failure_threshold"), "alert.xxljob.fatal_status_consecutive_failure_threshold");
+    app.alertCore.xxljobFatalStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.fatal_status_process_command"), "alert.xxljob.fatal_status_process_command");
+
+    // Alert Common Config
+    app.alertCommon.envName = toStr(cfg_util.load("alert.env.name"), "alert.env.name");
+    app.alertCommon.lockFile = toStr(cfg_util.load("alert.lock.file"), "alert.lock.file");
+    app.alertCommon.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
 
     return app;
 }

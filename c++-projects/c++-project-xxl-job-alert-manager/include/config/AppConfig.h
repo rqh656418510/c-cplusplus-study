@@ -36,8 +36,8 @@ struct WxQyApiConfig {
     int wxQyRetryRefreshIntervalTime;  // 企业微信AccessToken刷新失败后的重试间隔，单位秒（wxqy.api.retry_refresh_interval_time）
 };
 
-// 监控告警配置
-struct AlertConfig {
+// 监控告警核心配置
+struct AlertCoreConfig {
     int xxljobStopStatusScanIntervalTime;  // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
     int xxljobStopStatusMaxLogIdleTime;  // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.stop_status_max_log_idle_time）
     int xxljobStopStatusProcessMaxTimesPerDay;  // 每天最多执行“处理XXL-JOB停止运行”的命令次数（alert.xxljob.stop_status_process_max_times_per_day）
@@ -47,7 +47,11 @@ struct AlertConfig {
     int xxljobFatalStatusProcessMaxTimesPerDay;  // 每天最多执行“处理XXL-JOB调度失败”的命令次数（alert.xxljob.fatal_status_process_max_times_per_day）
     int xxljobFatalStatusConsecutiveFailureThreshold;  // 连续失败阈值后处理（alert.xxljob.fatal_status_consecutive_failure_threshold）
     std::string xxljobFatalStatusProcessCommand;  // 处理XXL-JOB调度失败的命令（alert.xxljob.fatal_status_process_command）
-    std::string environmentName;  //监控告警程序的运行环境（alert.environment.name）
+};
+
+// 监控告警基础配置
+struct AlertCommonConfig {
+    std::string envName;   // 监控告警程序的运行环境（alert.env.name）
     std::string lockFile;  // 监控告警程序的锁文件（alert.lock.file）
     std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
 };
@@ -57,5 +61,6 @@ struct AppConfig {
     MySQLConfig mysql;              // MySQL相关配置
     WxQyApiConfig wxQyApi;          // 企业微信API相关配置
     WxQyAccountConfig wxQyAccount;  // 企业微信账号相关配置
-    AlertConfig alert;              // 监控告警相关配置
+    AlertCoreConfig alertCore;      // 监控告警核心配置
+    AlertCommonConfig alertCommon;  // 监控告警基础配置
 };

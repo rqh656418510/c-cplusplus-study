@@ -54,7 +54,7 @@ XxlJobLog XxlJobLogDao::selectLastestFatal() {
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 分钟数（查询范围）
-    int minutes = config.alert.xxljobFatalStatusScanIntervalTime / 60;
+    int minutes = config.alertCore.xxljobFatalStatusScanIntervalTime / 60;
     if (minutes <= 0) {
         minutes = 1;
     }

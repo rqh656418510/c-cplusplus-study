@@ -20,10 +20,10 @@ void Application::init(const std::string& configFile) {
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 设置全局的日志输出级别
-    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alert.logLevel));
+    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alertCommon.logLevel));
 
     // 通过锁文件加排他锁，防止应用程序被启动多个实例
-    this->appLockFd_ = lockfile(config.alert.lockFile.c_str());
+    this->appLockFd_ = lockfile(config.alertCommon.lockFile.c_str());
     if (this->appLockFd_ < 0) {
         // 关闭日志打印器
         Logger::getInstance().stop();
