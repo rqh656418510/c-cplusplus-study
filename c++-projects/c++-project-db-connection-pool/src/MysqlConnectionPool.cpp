@@ -20,7 +20,7 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
             this->_connectionQueue.push(connection);
             // 计数器加一
@@ -37,13 +37,8 @@ MysqlConnectionPool::MysqlConnectionPool() : _connectionCount(0), _closed(false)
 
 // 私有析构函数
 MysqlConnectionPool::~MysqlConnectionPool() {
-    try {
-        // 关闭连接池，释放所有连接
-        this->close();
-    } catch (...) {
-        // 析构函数禁止抛异常
-        LOG("# ERR: %s\n", "Failed to destroy connection pool");
-    }
+    // 关闭连接池，释放所有连接
+    this->close();
 }
 
 // 获取连接池单例对象
@@ -112,39 +107,43 @@ bool MysqlConnectionPool::loadConfigFile() {
 
 // 关闭连接池
 void MysqlConnectionPool::close() {
-    // 判断连接池是否已关闭
-    if (this->_closed) {
-        return;
-    }
+    try {
+        // 判断连接池是否已关闭
+        if (this->_closed) {
+            return;
+        }
 
-    // 设置关闭状态
-    this->_closed = true;
+        // 设置关闭状态
+        this->_closed = true;
 
-    // 通知所有线程连接池关闭
-    _cv.notify_all();
+        // 通知所有线程连接池关闭
+        _cv.notify_all();
 
-    // 等待生产线程结束运行
-    if (_produceThread.joinable()) {
-        _produceThread.join();
-    }
+        // 等待生产线程结束运行
+        if (_produceThread.joinable()) {
+            _produceThread.join();
+        }
 
-    // 等待空闲扫描线程结束运行
-    if (_scanIdleThread.joinable()) {
-        _scanIdleThread.join();
-    }
+        // 等待空闲扫描线程结束运行
+        if (_scanIdleThread.joinable()) {
+            _scanIdleThread.join();
+        }
 
-    // 获取互斥锁
-    unique_lock<mutex> lock(this->_queueMutex);
+        // 获取互斥锁
+        unique_lock<mutex> lock(this->_queueMutex);
 
-    while (!(this->_connectionQueue.empty())) {
-        // 获取队头的连接
-        MysqlConnection *phead = this->_connectionQueue.front();
-        // 出队操作
-        this->_connectionQueue.pop();
-        // 计数器减一
-        this->_connectionCount--;
-        // 释放连接占用的内存空间
-        delete phead;
+        while (!(this->_connectionQueue.empty())) {
+            // 获取队头的连接
+            MysqlConnection *phead = this->_connectionQueue.front();
+            // 出队操作
+            this->_connectionQueue.pop();
+            // 计数器减一
+            this->_connectionCount--;
+            // 释放连接占用的内存空间
+            delete phead;
+        }
+    } catch (...) {
+        LOG("# ERR: %s\n", "Failed to close connection pool");
     }
 }
 
@@ -195,7 +194,7 @@ shared_ptr<MysqlConnection> MysqlConnectionPool::getConnection() {
         // 判断连接池是否已关闭
         if (!this->_closed) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            pconn->refreshAliveTime();
+            pconn->refreshIdleStartTime();
             // 入队操作（将连接归还到队列中）
             this->_connectionQueue.push(pconn);
             // 通知正在等待获取连接的线程
@@ -243,7 +242,7 @@ void MysqlConnectionPool::produceConnection() {
         // 判断是否连接成功
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
-            connection->refreshAliveTime();
+            connection->refreshIdleStartTime();
             // 入队操作
             this->_connectionQueue.push(connection);
             // 计数器加一
@@ -283,7 +282,7 @@ void MysqlConnectionPool::scanIdleConnection() {
         while (!this->_connectionQueue.empty() && this->_connectionQueue.size() > this->_initSize) {
             // 扫描队头的连接是否超过最大空闲时间
             MysqlConnection *phead = this->_connectionQueue.front();
-            if (phead->getAliveTime() >= this->_maxIdleTime * 1000) {
+            if (phead->getIdleTotalTimes() >= this->_maxIdleTime * 1000) {
                 // 出队操作
                 this->_connectionQueue.pop();
                 // 计数器减一
