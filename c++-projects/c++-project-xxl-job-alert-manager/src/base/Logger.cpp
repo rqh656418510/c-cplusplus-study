@@ -49,8 +49,11 @@ Logger::Logger() {
             // 打开日志文件
             FILE* pf = fopen(file_name, "a+");
             if (pf == nullptr) {
-                std::cout << "logger file " << file_name << " open failed!" << std::endl;
-                // 退出程序
+                // 打印日志内容到控制台
+                char buf[512];
+                snprintf(buf, sizeof(buf), "Logger file [%s] open failed", file_name);
+                log_direct(buf, LogLevel::FATAL);
+                // 退出应用程序
                 exit(EXIT_FAILURE);
             }
 
