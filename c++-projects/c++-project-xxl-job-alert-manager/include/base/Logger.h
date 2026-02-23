@@ -121,8 +121,8 @@ private:
     // 私有析构函数
     ~Logger();
 
-    LogLevel logLevel_;                 // 记录日志级别
-    std::thread writeThread_;           // 日志写入线程
-    BlockingQueue<LogMessage> lckQue_;  // 日志缓冲队列
-    std::atomic_bool stoped_{false};    // 停止记录日志的标识
+    LogLevel logLevel_;                // 记录日志级别
+    std::thread writeThread_;          // 日志写入线程
+    BlockingQueue<LogMessage> queue_;  // 日志缓冲队列
+    std::atomic_bool stoped_{false};   // 停止记录日志的标识
 };
