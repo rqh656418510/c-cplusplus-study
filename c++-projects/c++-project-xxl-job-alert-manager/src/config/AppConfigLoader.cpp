@@ -11,7 +11,11 @@ std::string AppConfigLoader::CONFIG_FILE = "alert.conf";
 
 // 私有构造函数
 AppConfigLoader::AppConfigLoader() {
-    // 加载配置文件
+    // 可选配置参数集合
+    optional_.emplace("alert.xxljob.stop_status_process_command", "");
+    optional_.emplace("alert.xxljob.fatal_status_process_command", "");
+
+    // 加载配置文件内容
     config_ = load(CONFIG_FILE.c_str());
 }
 
@@ -31,23 +35,23 @@ const AppConfig& AppConfigLoader::getConfig() const {
     return config_;
 }
 
-// 转换数字
-int toInt(const std::string& v, const char* key) {
+// 配置参数转换为数字
+int AppConfigLoader::toInt(const std::string& v, const char* key) {
     if (v.empty()) {
         LOG_FATAL("Config [%s] is missing", key);
     }
     return std::stoi(v);
 }
 
-// 转换字符串
-std::string toStr(const std::string& v, const char* key) {
-    if (v.empty()) {
+// 配置参数转换为字符串
+std::string AppConfigLoader::toStr(const std::string& v, const char* key) {
+    if (v.empty() && optional_.find(key) == optional_.end()) {
         LOG_FATAL("Config [%s] is missing", key);
     }
     return v;
 }
 
-// 加载配置文件
+// 加载配置文件内容
 AppConfig AppConfigLoader::load(const char* configFile) {
     ConfigFileUtil cfg_util;
     cfg_util.loadConfigFile(configFile);

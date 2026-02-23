@@ -8,6 +8,7 @@
 
 #include "AlertManager.h"
 #include "NonCopyable.h"
+#include "XxlJobLog.h"
 
 // XXL-JOB监控器（单例模式）
 class XxlJobMonitor : NonCopyable {
@@ -34,6 +35,12 @@ private:
     // 循环监控XXL-JOB是否调度失败
     void monitorFatalStatusLoop();
 
+    // 处理 XXL-JOB 停止运行状态
+    void processStopStatus();
+
+    // 处理 XXL-JOB 调度失败状态
+    void processFatalStatus(const XxlJobLog& fatalLog);
+
     // 告警管理器
     AlertManager alertManager_;
 
@@ -58,13 +65,25 @@ private:
     // 监控XXL-JOB是否调度失败的线程
     std::thread monitorFatalStatusThread_;
 
+    // 连续监控到XXL-JOB停止运行的次数
+    std::atomic_int consecutiveStopStatusCount_;
+
+    // 当天已执行"处理XXL-JOB停止运行"命令的次数
+    std::atomic_int timesProcessedStopStatusToday_;
+
+    // 最后一次执行"处理XXL-JOB停止运行"命令的日期 (YYYY-MM-DD 格式)
+    std::string lastProcessedStopStatusDate_;
+
+    // 保护 lastProcessedStopStatusDate_ 的互斥锁
+    std::mutex processedStopStatusDateMutex_;
+
     // 连续监控到XXL-JOB调度失败的次数
-    std::atomic_int consecutiveFatalCount_;
+    std::atomic_int consecutiveFatalStatusCount_;
 
     // 当天已执行"处理XXL-JOB调度失败"命令的次数
     std::atomic_int timesProcessedFatalStatusToday_;
 
-    // 最后一次执行"处理XXL-JOB调度失败"命令的日期 (YYYY-MM-DD 格式)，用于判断是否跨天
+    // 最后一次执行"处理XXL-JOB调度失败"命令的日期 (YYYY-MM-DD 格式)
     std::string lastProcessedFatalStatusDate_;
 
     // 保护 lastProcessedFatalStatusDate_ 的互斥锁

@@ -16,7 +16,7 @@ public:
     std::string load(const std::string& key);
 
 private:
-    // 配置信息（暂不考虑线程安全问题）
+    // 配置信息集合（非线程安全）
     std::unordered_map<std::string, std::string> m_configMap;
 
     // 去掉字符串前后的空白字符

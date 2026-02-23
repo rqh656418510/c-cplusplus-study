@@ -4,6 +4,7 @@
 #include <string>
 
 #include "AppConfigLoader.h"
+#include "Copyable.h"
 #include "NetworkHelper.h"
 #include "json.hpp"
 
@@ -11,7 +12,7 @@
 using json = nlohmann::json;
 
 // XXL-JOB任务调度日志表的映射类
-class XxlJobLog {
+class XxlJobLog : Copyable {
 public:
     XxlJobLog() = default;
     ~XxlJobLog() = default;
@@ -111,7 +112,7 @@ public:
     }
 
     // ---------- Other ----------
-    std::string parseAlertMsg() {
+    std::string parseAlertMsg() const {
         // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 

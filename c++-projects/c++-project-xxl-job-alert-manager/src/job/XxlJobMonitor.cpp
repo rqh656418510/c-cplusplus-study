@@ -18,7 +18,10 @@ XxlJobMonitor::XxlJobMonitor()
     : monitorRunning_(false),
       lastAlertFatalTriggerTime_(-1),
       idleAlertSended_(false),
-      consecutiveFatalCount_(0),
+      consecutiveStopStatusCount_(0),
+      timesProcessedStopStatusToday_(0),
+      lastProcessedStopStatusDate_(""),
+      consecutiveFatalStatusCount_(0),
       timesProcessedFatalStatusToday_(0),
       lastProcessedFatalStatusDate_("") {
     // 初始化告警管理器
@@ -106,15 +109,8 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
             // 判断是否有任务调度日志记录
             if (lastestLog.getId() <= 0) {
-                // 仅在尚未发送过空闲告警时发送，避免重复告警
-                if (!idleAlertSended_.load()) {
-                    char buf[1024] = {0};
-                    snprintf(buf, sizeof(buf), "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
-                             Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
-                             config.alertCommon.envName.c_str());
-                    alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
-                    idleAlertSended_.store(true);
-                }
+                // 处理停止运行状态
+                processStopStatus();
             } else {
                 // 当前系统时间
                 time_t t_now = time(nullptr);
@@ -130,19 +126,12 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 如果在指定时间内没有任务调度日志记录，则发送告警消息
                 double diff_seconds = difftime(t_now, t_lastest_trigger_time);
                 if (diff_seconds >= config.alertCore.xxljobStopStatusMaxLogIdleTime) {
-                    // 仅在尚未发送过空闲告警时发送，避免重复告警
-                    if (!idleAlertSended_.load()) {
-                        char buf[1024] = {0};
-                        snprintf(
-                            buf, sizeof(buf), "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
-                            Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
-                            config.alertCommon.envName.c_str());
-                        alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
-                        idleAlertSended_.store(true);
-                    }
+                    // 处理停止运行状态
+                    processStopStatus();
                 } else {
-                    // 如果恢复了正常（有新的任务调度日志），重置空闲告警标志
+                    // 如果恢复了正常（有新的任务调度日志），重置空闲告警标志和连续停止运行计数器
                     idleAlertSended_.store(false);
+                    consecutiveStopStatusCount_.store(0);
                 }
             }
         } catch (const std::exception& e) {
@@ -157,6 +146,80 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                                 [this]() { return !monitorRunning_.load(); })) {
             // 当被唤醒时，说明已停止监控，退出监控线程
             break;
+        }
+    }
+}
+
+// 处理 XXL-JOB 停止运行状态
+void XxlJobMonitor::processStopStatus() {
+    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+
+    // 仅在尚未发送过空闲告警时发送，避免重复告警
+    if (!idleAlertSended_.load()) {
+        char buf[1024] = {0};
+        snprintf(buf, sizeof(buf), "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+                 Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
+                 config.alertCommon.envName.c_str());
+        alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
+        idleAlertSended_.store(true);
+    }
+
+    // 处理XXL-JOB停止运行的命令
+    const std::string stopStatusProcessCommand = stopStatusProcessCommand;
+    if (stopStatusProcessCommand.empty()) {
+        return;
+    }
+
+    // 递增连续停止运行计数器
+    int consecutive_stop_status_count = consecutiveStopStatusCount_.load() + 1;
+    consecutiveStopStatusCount_.store(consecutive_stop_status_count);
+
+    // 检查是否达到连续停止运行阈值
+    if (consecutive_stop_status_count >= config.alertCore.xxljobStopStatusConsecutiveThreshold) {
+        // 获取当前时间
+        time_t now = time(nullptr);
+        struct tm* tm_now = localtime(&now);
+        char date_buf[16] = {0};
+        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
+        std::string current_date(date_buf);
+
+        // 检查是否跨天，如果跨天则重置计数器
+        {
+            std::unique_lock<std::mutex> lock(processedStopStatusDateMutex_);
+            if (lastProcessedStopStatusDate_ != current_date) {
+                // 跨天，重置计数器
+                lastProcessedStopStatusDate_ = current_date;
+                timesProcessedStopStatusToday_.store(0);
+            }
+        }
+
+        // 检查当天是否还有剩余的命令执行次数
+        int times_processed = timesProcessedStopStatusToday_.load();
+        if (times_processed < config.alertCore.xxljobStopStatusProcessMaxTimesPerDay) {
+            // 执行处理命令
+            LOG_INFO("Executing xxl-job stop status process command: %s. Times processed today: %d / %d",
+                     stopStatusProcessCommand.c_str(), times_processed + 1,
+                     config.alertCore.xxljobStopStatusProcessMaxTimesPerDay);
+
+            int ret_code = system(stopStatusProcessCommand.c_str());
+            if (ret_code == 0) {
+                // 命令执行成功，更新计数器
+                timesProcessedStopStatusToday_.store(times_processed + 1);
+                // 重置连续停止运行计数器
+                consecutiveStopStatusCount_.store(0);
+                LOG_INFO("XXL-JOB stop status process command executed succeeded. Command: %s",
+                         stopStatusProcessCommand.c_str());
+            } else {
+                LOG_ERROR("XXL-JOB stop status process command executed failed, code: %d. Command: %s", ret_code,
+                          stopStatusProcessCommand.c_str());
+            }
+        } else {
+            // 当天已达到最大处理次数
+            LOG_WARN(
+                "Maximum times per day reached for xxl-job stop status process command. Times "
+                "processed today: %d / %d. Command: %s",
+                times_processed, config.alertCore.xxljobStopStatusProcessMaxTimesPerDay,
+                stopStatusProcessCommand.c_str());
         }
     }
 }
@@ -177,75 +240,11 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
 
                 // 判断是否存在任务调度失败日志记录
                 if (lastestFatalLog.getId() > 0) {
-                    // 最新失败触发时间
-                    time_t t_lastest_fatal_trigger_time = Timestamp::toUtcTimestamp(lastestFatalLog.getTriggerTime());
-                    if (t_lastest_fatal_trigger_time == static_cast<time_t>(-1)) {
-                        LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s",
-                                  lastestFatalLog.getTriggerTime().c_str());
-                        continue;
-                    }
-
-                    // 如果不是已告警过，则发送告警消息
-                    if (t_lastest_fatal_trigger_time > lastAlertFatalTriggerTime_.load()) {
-                        // 发送告警消息
-                        alertManager_.alert(AlertLevel::ERROR, "XXL-JOB 监控告警", lastestFatalLog.parseAlertMsg());
-                        // 更新已告警状态
-                        lastAlertFatalTriggerTime_.store(t_lastest_fatal_trigger_time);
-                    }
-
-                    // 递增连续调度失败计数器
-                    int consecutive_fatal_count = consecutiveFatalCount_.load() + 1;
-                    consecutiveFatalCount_.store(consecutive_fatal_count);
-
-                    // 检查是否达到连续调度失败阈值
-                    if (consecutive_fatal_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
-                        // 获取当前时间
-                        time_t now = time(nullptr);
-                        struct tm* tm_now = localtime(&now);
-                        char date_buf[16] = {0};
-                        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
-                        std::string current_date(date_buf);
-
-                        // 检查是否跨天，如果跨天则重置计数器
-                        {
-                            std::unique_lock<std::mutex> lock(processedFatalStatusDateMutex_);
-                            if (lastProcessedFatalStatusDate_ != current_date) {
-                                // 跨天，重置计数器
-                                lastProcessedFatalStatusDate_ = current_date;
-                                timesProcessedFatalStatusToday_.store(0);
-                            }
-                        }
-
-                        // 检查当天是否还有剩余的执行次数
-                        int times_processed = timesProcessedFatalStatusToday_.load();
-                        if (times_processed < config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay) {
-                            // 执行处理命令
-                            LOG_INFO(
-                                "Executing xxl-job fatal status process command: %s. Times processed today: %d / %d",
-                                config.alertCore.xxljobFatalStatusProcessCommand.c_str(), times_processed + 1,
-                                config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay);
-
-                            int ret_code = system(config.alertCore.xxljobFatalStatusProcessCommand.c_str());
-                            if (ret_code == 0) {
-                                // 命令执行成功，更新计数器
-                                timesProcessedFatalStatusToday_.store(times_processed + 1);
-                                // 重置连续调度失败计数器
-                                consecutiveFatalCount_.store(0);
-                                LOG_INFO("XXL-JOB fatal status process command executed successfully");
-                            } else {
-                                LOG_ERROR("XXL-JOB fatal status process command failed, return code: %d", ret_code);
-                            }
-                        } else {
-                            // 当天已达到最大处理次数
-                            LOG_WARN(
-                                "Maximum times per day reached for xxl-job fatal status process command. Times "
-                                "processed today: %d / %d",
-                                times_processed, config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay);
-                        }
-                    }
+                    // 处理调度失败状态
+                    processFatalStatus(lastestFatalLog);
                 } else {
-                    // 没有失败日志，重置连续调度失败计数器
-                    consecutiveFatalCount_.store(0);
+                    // 没有调度失败日志，重置连续调度失败计数器
+                    consecutiveFatalStatusCount_.store(0);
                 }
             }
         } catch (const std::exception& e) {
@@ -260,6 +259,86 @@ void XxlJobMonitor::monitorFatalStatusLoop() {
                                 [this]() { return !monitorRunning_.load(); })) {
             // 当被唤醒时，说明已停止监控，退出监控线程
             break;
+        }
+    }
+}
+
+// 处理 XXL-JOB 调度失败状态
+void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
+    // 获取全局配置信息
+    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+
+    // 最新失败触发时间
+    time_t t_lastest_fatal_trigger_time = Timestamp::toUtcTimestamp(fatalLog.getTriggerTime());
+    if (t_lastest_fatal_trigger_time == static_cast<time_t>(-1)) {
+        LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
+        return;
+    }
+
+    // 如果不是已告警过，则发送告警消息
+    if (t_lastest_fatal_trigger_time > lastAlertFatalTriggerTime_.load()) {
+        // 发送告警消息
+        alertManager_.alert(AlertLevel::ERROR, "XXL-JOB 监控告警", fatalLog.parseAlertMsg());
+        // 更新已告警状态
+        lastAlertFatalTriggerTime_.store(t_lastest_fatal_trigger_time);
+    }
+
+    // 处理调度失败的命令
+    const std::string fatalStatusProcessCommand = config.alertCore.xxljobFatalStatusProcessCommand;
+    if (fatalStatusProcessCommand.empty()) {
+        return;
+    }
+
+    // 递增连续调度失败计数器
+    int consecutive_fatal_status_count = consecutiveFatalStatusCount_.load() + 1;
+    consecutiveFatalStatusCount_.store(consecutive_fatal_status_count);
+
+    // 检查是否达到连续调度失败阈值
+    if (consecutive_fatal_status_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
+        // 获取当前时间
+        time_t now = time(nullptr);
+        struct tm* tm_now = localtime(&now);
+        char date_buf[16] = {0};
+        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
+        std::string current_date(date_buf);
+
+        // 检查是否跨天，如果跨天则重置计数器
+        {
+            std::unique_lock<std::mutex> lock(processedFatalStatusDateMutex_);
+            if (lastProcessedFatalStatusDate_ != current_date) {
+                // 跨天，重置计数器
+                lastProcessedFatalStatusDate_ = current_date;
+                timesProcessedFatalStatusToday_.store(0);
+            }
+        }
+
+        // 检查当天是否还有剩余的命令执行次数
+        int times_processed = timesProcessedFatalStatusToday_.load();
+        if (times_processed < config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay) {
+            // 执行处理命令
+            LOG_INFO("Executing xxl-job fatal status process command: %s. Times processed today: %d / %d",
+                     fatalStatusProcessCommand.c_str(), times_processed + 1,
+                     config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay);
+
+            int ret_code = system(fatalStatusProcessCommand.c_str());
+            if (ret_code == 0) {
+                // 命令执行成功，更新计数器
+                timesProcessedFatalStatusToday_.store(times_processed + 1);
+                // 重置连续调度失败计数器
+                consecutiveFatalStatusCount_.store(0);
+                LOG_INFO("XXL-JOB fatal status process command executed succeeded. Command: %s",
+                         fatalStatusProcessCommand.c_str());
+            } else {
+                LOG_ERROR("XXL-JOB fatal status process command executed failed, code: %d. Command: %s", ret_code,
+                          fatalStatusProcessCommand.c_str());
+            }
+        } else {
+            // 当天已达到最大处理次数
+            LOG_WARN(
+                "Maximum times per day reached for xxl-job fatal status process command. Times "
+                "processed today: %d / %d. Command: %s",
+                times_processed, config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay,
+                fatalStatusProcessCommand.c_str());
         }
     }
 }
