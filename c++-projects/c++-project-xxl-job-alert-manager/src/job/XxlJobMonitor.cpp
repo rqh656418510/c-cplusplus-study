@@ -165,7 +165,7 @@ void XxlJobMonitor::processStopStatus() {
     }
 
     // 处理XXL-JOB停止运行的命令
-    const std::string stopStatusProcessCommand = stopStatusProcessCommand;
+    const std::string stopStatusProcessCommand = config.alertCore.xxljobStopStatusProcessCommand;
     if (stopStatusProcessCommand.empty()) {
         return;
     }
