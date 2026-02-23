@@ -47,7 +47,16 @@ public:
     void refreshLastHeartbeatTime();
 
 private:
+    std::string ip_;        // MySQL服务器的IP地址
+    unsigned short port_;   // MySQL服务器的端口
+    std::string username_;  // MySQL的登录用户名
+    std::string password_;  // MySQL的登录密码
+    std::string dbname_;    // 连接的数据库名称
+
     MYSQL* conn_;                               // 表示和MySQL Server的一条连接（非线程安全）
     std::atomic<long long> idleStartTime_;      // 记录连接进入空闲状态的时间戳（单位毫秒）
     std::atomic<long long> lastHeartbeatTime_;  // 记录连接上次发送心跳的时间戳（单位毫秒）
+
+    // 连接断开后尝试重连
+    bool reconnect();
 };

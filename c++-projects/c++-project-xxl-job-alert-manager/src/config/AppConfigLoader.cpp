@@ -67,6 +67,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.mysql.table = toStr(cfg_util.load("mysql.table"), "mysql.table");
     app.mysql.connectionPoolInitSize = toInt(cfg_util.load("mysql.connection.pool.init_size"), "mysql.connection.pool.init_size");
     app.mysql.connectionPoolMaxSize = toInt(cfg_util.load("mysql.connection.pool.max_size"), "mysql.connection.pool.max_size");
+    app.mysql.connectionPoolMaxReconnect = toInt(cfg_util.load("mysql.connection.pool.max_reconnect"), "mysql.connection.pool.max_reconnect");
     app.mysql.connectionPoolMaxIdleTime = toInt(cfg_util.load("mysql.connection.pool.max_idle_time"), "mysql.connection.pool.max_idle_time");
     app.mysql.connectionPoolConnectionTimeout = toInt(cfg_util.load("mysql.connection.pool.connection_timeout"), "mysql.connection.pool.connection_timeout");
     app.mysql.connectionPoolHeartbeatIntervalTime = toInt(cfg_util.load("mysql.connection.pool.heartbeat_interval_time"), "mysql.connection.pool.heartbeat_interval_time");
