@@ -158,7 +158,7 @@ void XxlJobMonitor::processStopStatus() {
     // 仅在尚未发送过空闲告警时发送，避免重复告警
     if (!idleAlertSended_.load()) {
         char buf[1024] = {0};
-        snprintf(buf, sizeof(buf), "【XXL-JOB 已停止运行】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+        snprintf(buf, sizeof(buf), "【XXL-JOB 服务端已停止】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
                  Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
                  config.alertCommon.envName.c_str());
         alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
@@ -210,8 +210,15 @@ void XxlJobMonitor::processStopStatus() {
                 timesProcessedStopStatusToday_.store(times_processed + 1);
                 // 重置连续停止运行计数器
                 consecutiveStopStatusCount_.store(0);
+                // 打印日志信息
                 LOG_INFO("XXL-JOB stop status process command executed succeeded. Command: %s",
                          stopStatusProcessCommand.c_str());
+                // 发送告警消息
+                char buf[1024] = {0};
+                snprintf(buf, sizeof(buf), "【XXL-JOB 服务端已重启】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+                         Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
+                         config.alertCommon.envName.c_str());
+                alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
             } else {
                 LOG_ERROR("XXL-JOB stop status process command executed failed, code: %d. Command: %s", ret_code,
                           stopStatusProcessCommand.c_str());
@@ -331,8 +338,15 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
                 timesProcessedFatalStatusToday_.store(times_processed + 1);
                 // 重置连续调度失败计数器
                 consecutiveFatalStatusCount_.store(0);
+                // 打印日志信息
                 LOG_INFO("XXL-JOB fatal status process command executed succeeded. Command: %s",
                          fatalStatusProcessCommand.c_str());
+                // 发送告警消息
+                char buf[1024] = {0};
+                snprintf(buf, sizeof(buf), "【XXL-JOB 客户端已重启】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
+                         Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
+                         config.alertCommon.envName.c_str());
+                alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
             } else {
                 LOG_ERROR("XXL-JOB fatal status process command executed failed, code: %d. Command: %s", ret_code,
                           fatalStatusProcessCommand.c_str());
