@@ -177,6 +177,8 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
 
             // 归还连接时，判断连接是否已损坏和连接池是否已关闭
             if (pconn->isBrokened() || this->closed_) {
+                // 计算器减一
+                this->connectionCount_--;
                 // 释放连接
                 delete pconn;
             } else {
