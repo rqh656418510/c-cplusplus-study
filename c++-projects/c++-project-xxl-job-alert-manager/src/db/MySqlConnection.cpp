@@ -173,8 +173,8 @@ bool MySqlConnection::sendHeartbeat() {
         return connected;
     }
 
-    // 发送心跳，0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
-    if (mysql_ping(conn_) == 0) {
+    // 发送Ping指令
+    if (this->ping()) {
         LOG_DEBUG("Connection send heartbeat succeeded");
         return true;
     }
@@ -187,6 +187,12 @@ bool MySqlConnection::sendHeartbeat() {
     bool connected = reconnect();
 
     return connected;
+}
+
+// 发送Ping指令
+bool MySqlConnection::ping() {
+    // 发送Ping指令，0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
+    return mysql_ping(conn_) == 0;
 }
 
 // 连接断开后尝试重连

@@ -58,6 +58,9 @@ private:
     std::atomic<long long> idleStartTime_{0};      // 记录连接进入空闲状态的时间戳（单位毫秒）
     std::atomic<long long> lastHeartbeatTime_{0};  // 记录连接上次发送心跳的时间戳（单位毫秒）
 
+    // 发送Ping指令
+    bool ping();
+
     // 连接断开后尝试重连
     bool reconnect();
 };
