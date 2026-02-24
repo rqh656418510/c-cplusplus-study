@@ -66,7 +66,7 @@ int Application::lockfile(const char* path) {
 void Application::run() {
     try {
         // 打印日志信息
-        LOG_INFO("Alert manager started");
+        LOG_INFO("Alert manager application started");
 
         // 启动AccessToken刷新器
         WxQyTokenRefresher::getInstance().start();
@@ -82,11 +82,11 @@ void Application::run() {
         // 正常退出循环后关闭应用程序
         shutdown();
     } catch (const std::exception& e) {
-        LOG_ERROR("Alert manager exited, fatal exception: {}", e.what());
+        LOG_ERROR("Alert manager application exited, fatal exception: {}", e.what());
         // 让Systemd可以触发[Restart=on-failure]
         std::abort();
     } catch (...) {
-        LOG_ERROR("Alert manager exited, fatal unknown exception");
+        LOG_ERROR("Alert manager application exited, fatal unknown exception");
         // 让Systemd可以触发[Restart=on-failure]
         std::abort();
     }
@@ -112,7 +112,7 @@ void Application::shutdown() {
     }
 
     // 打印日志信息
-    LOG_INFO("Alert manager stopped");
+    LOG_INFO("Alert manager application stopped");
 
     // 停止日志记录线程（阻塞等待）
     Logger::getInstance().stop();
