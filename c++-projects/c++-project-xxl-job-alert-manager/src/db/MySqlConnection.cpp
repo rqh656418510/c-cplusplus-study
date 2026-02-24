@@ -84,7 +84,7 @@ bool MySqlConnection::update(const std::string& sql) {
         unsigned int err_no = mysql_errno(conn_);
         if (err_no == CR_SERVER_GONE_ERROR || err_no == CR_SERVER_LOST) {
             // 打印日志信息
-            LOG_ERROR("Detected lost connection (err=%u) during execute sql, try reconnecting", err_no);
+            LOG_ERROR("Detected lost connection (err=%u) during execute sql, try to reconnect", err_no);
             // 尝试重连（更新操作不一定是幂等操作，比如INSERT，因此重连成功后不重试执行SQL语句）
             reconnect();
         }
@@ -138,10 +138,10 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     // 查询操作执行失败后，判断是否需要重连
     if (err_no == CR_SERVER_GONE_ERROR || err_no == CR_SERVER_LOST) {
         // 打印日志信息
-        LOG_ERROR("Detected lost connection (err=%u) during execute sql, try reconnecting", err_no);
+        LOG_ERROR("Detected lost connection (err=%u) during execute sql, try to reconnect", err_no);
         // 尝试重连
         if (reconnect()) {
-            // 再次执行查询操作（SELECT 为幂等操作）
+            // 重连成功后，再次执行查询操作（SELECT 为幂等操作）
             err_no = 0;
             res = try_query(err_no);
             if (res) {
@@ -154,6 +154,20 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     }
 
     return nullptr;
+}
+
+// 发送Ping指令
+bool MySqlConnection::ping() const {
+    // 调用结果：0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
+    bool succeeded = mysql_ping(conn_) == 0;
+
+    // 打印日志信息
+    if (!succeeded) {
+        LOG_ERROR("Connection ping failed");
+        LOG_ERROR(mysql_error(conn_));
+    }
+
+    return succeeded;
 }
 
 // 为连接发送心跳
@@ -188,20 +202,6 @@ bool MySqlConnection::sendHeartbeat() {
     return connected;
 }
 
-// 发送Ping指令
-bool MySqlConnection::ping() {
-    // 发送Ping指令，0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
-    bool succeeded = mysql_ping(conn_) == 0;
-
-    // 打印日志信息
-    if (!succeeded) {
-        LOG_ERROR("Connection ping failed");
-        LOG_ERROR(mysql_error(conn_));
-    }
-
-    return succeeded;
-}
-
 // 重新建立连接
 bool MySqlConnection::reconnect() {
     try {
@@ -210,8 +210,10 @@ bool MySqlConnection::reconnect() {
         const int maxReconnect = config.mysql.connectionPoolMaxReconnect;
         const int reconnectIntervalTime = config.mysql.connectionPoolReconnectIntervalTime;
 
-        // 判断是否需要重连
+        // 判断是否允许重连
         if (maxReconnect <= 0) {
+            // 标记连接已损坏
+            brokened_ = true;
             return false;
         }
 
@@ -224,6 +226,9 @@ bool MySqlConnection::reconnect() {
         // 初始化连接
         conn_ = mysql_init(nullptr);
         if (conn_ == nullptr) {
+            // 标记连接已损坏
+            brokened_ = true;
+            // 打印日志信息
             LOG_ERROR("Failed to init connection during reconnect");
             return false;
         }
@@ -236,17 +241,19 @@ bool MySqlConnection::reconnect() {
 
             // 判断连接是否有效
             if (p != nullptr) {
+                // 标记连接没损坏
+                brokened_ = false;
                 // 打印日志信息
-                LOG_DEBUG("Reconnect succeeded");
+                LOG_DEBUG("Connection reconnect succeeded");
                 // 设置字符集编码
                 if (mysql_set_character_set(conn_, "utf8mb4") != 0) {
-                    LOG_ERROR("Set charset failed after reconnect: %s", mysql_error(conn_));
+                    LOG_ERROR("Set charset failed after connection reconnect: %s", mysql_error(conn_));
                 }
                 return true;
             }
 
             // 打印日志信息
-            LOG_ERROR("Reconnect failed: %d / %d. Error: %s", i + 1, maxReconnect, mysql_error(conn_));
+            LOG_ERROR("Connection reconnect failed: %d / %d. Error: %s", i + 1, maxReconnect, mysql_error(conn_));
 
             // 重连的时间间隔
             if (i + 1 < maxReconnect) {
@@ -254,9 +261,9 @@ bool MySqlConnection::reconnect() {
             }
         }
     } catch (const std::exception& e) {
-        LOG_ERROR("Reconnect failed, exception: %s", e.what());
+        LOG_ERROR("Connection reconnect failed, exception: %s", e.what());
     } catch (...) {
-        LOG_ERROR("Reconnect failed, unknown exception");
+        LOG_ERROR("Connection reconnect failed, unknown exception");
     }
 
     // 如果重连失败，必须确保连接指针已释放
@@ -265,7 +272,34 @@ bool MySqlConnection::reconnect() {
         conn_ = nullptr;
     }
 
+    // 标记连接已损坏
+    brokened_ = true;
+
     return false;
+}
+
+// 判断连接是否已损坏
+bool MySqlConnection::isBrokened() const {
+    return brokened_;
+}
+
+// 设置连接是否已损坏
+void MySqlConnection::setBrokened(bool broken) {
+    brokened_ = broken;
+}
+
+// 刷新连接上次使用的时间戳
+void MySqlConnection::refreshLastUsedTime() {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    lastUsedTime_.store(now_ms, std::memory_order_relaxed);
+}
+
+// 获取连接上次使用距今的时间间隔（毫秒）
+long long MySqlConnection::getLastUsedIntervalTime() const {
+    auto now = std::chrono::steady_clock::now();
+    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    return now_ms - lastUsedTime_.load(std::memory_order_relaxed);
 }
 
 // 刷新连接进入空闲状态的时间戳
@@ -289,7 +323,7 @@ void MySqlConnection::refreshLastHeartbeatTime() {
     lastHeartbeatTime_.store(now_ms, std::memory_order_relaxed);
 }
 
-// 获取连接上次发送心跳的时间戳（单位毫秒）
+// 获取连接上次发送心跳距今的时间间隔（毫秒）
 long long MySqlConnection::getLastHeartbeatIntervalTime() const {
     auto now = std::chrono::steady_clock::now();
     long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();

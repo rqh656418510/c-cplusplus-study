@@ -32,8 +32,23 @@ public:
     // 执行查询操作（select）
     MYSQL_RES* query(const std::string& sql);
 
+    // 发送Ping指令
+    bool ping() const;
+
     // 为连接发送心跳
     bool sendHeartbeat();
+
+    // 判断连接是否已损坏
+    bool isBrokened() const;
+
+    // 设置连接是否已损坏
+    void setBrokened(bool broken);
+
+    // 刷新连接上次使用的时间戳
+    void refreshLastUsedTime();
+
+    // 获取连接上次使用距今的时间间隔（毫秒）
+    long long getLastUsedIntervalTime() const;
 
     // 刷新连接进入空闲状态的时间戳
     void refreshIdleStartTime();
@@ -41,11 +56,11 @@ public:
     // 获取连接进入空闲状态的总时长（单位毫秒）
     long long getIdleTotalTimes() const;
 
-    // 获取连接上次发送心跳距今的时间间隔（毫秒）
-    long long getLastHeartbeatIntervalTime() const;
-
     // 刷新连接上次发送心跳的时间戳
     void refreshLastHeartbeatTime();
+
+    // 获取连接上次发送心跳距今的时间间隔（毫秒）
+    long long getLastHeartbeatIntervalTime() const;
 
 private:
     std::string ip_;        // MySQL服务器的IP地址
@@ -55,11 +70,10 @@ private:
     std::string dbname_;    // 连接的数据库名称
 
     MYSQL* conn_;                                  // 表示和MySQL Server的一条连接（非线程安全）
+    std::atomic_bool brokened_{false};             // 标记连接是否已损坏
+    std::atomic<long long> lastUsedTime_{0};       // 记录连接上次使用的时间戳（单位毫秒）
     std::atomic<long long> idleStartTime_{0};      // 记录连接进入空闲状态的时间戳（单位毫秒）
     std::atomic<long long> lastHeartbeatTime_{0};  // 记录连接上次发送心跳的时间戳（单位毫秒）
-
-    // 发送Ping指令
-    bool ping();
 
     // 重新建立连接
     bool reconnect();
