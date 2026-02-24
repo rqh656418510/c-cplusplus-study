@@ -85,7 +85,7 @@ bool MySqlConnection::update(const std::string& sql) {
         if (err_no == CR_SERVER_GONE_ERROR || err_no == CR_SERVER_LOST) {
             // 打印日志信息
             LOG_ERROR("Detected lost connection (err=%u) during execute sql, try reconnecting", err_no);
-            // 尝试重连（更新操作不一定是幂等，比如INSERT，因此重连成功后不重试执行SQL语句）
+            // 尝试重连（更新操作不一定是幂等操作，比如INSERT，因此重连成功后不重试执行SQL语句）
             reconnect();
         }
 
