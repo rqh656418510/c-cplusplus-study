@@ -160,7 +160,9 @@ sudo systemctl daemon-reload
 
 # 设置开机启动
 sudo systemctl enable alert-manager
+```
 
+``` sh
 # 启动程序
 sudo systemctl start alert-manager
 
@@ -172,7 +174,9 @@ sudo systemctl stop alert-manager
 
 # 重启程序
 sudo systemctl restart alert-manager
+```
 
+``` sh
 # 查看系统日志
 sudo journalctl -u alert-manager -f
 
