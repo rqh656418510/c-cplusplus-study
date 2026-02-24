@@ -147,7 +147,7 @@ bool MySqlConnection::sendHeartbeat() {
 // 连接断开后尝试重连
 bool MySqlConnection::reconnect() {
     try {
-        // 全局配置信息
+        // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
         // 关闭原有连接（如果存在）

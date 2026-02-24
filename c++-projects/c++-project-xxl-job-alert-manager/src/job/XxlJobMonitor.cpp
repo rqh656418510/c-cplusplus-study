@@ -152,7 +152,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
 
 // 处理 XXL-JOB 停止运行状态
 void XxlJobMonitor::processStopStatus() {
-    // 全局配置信息
+    // 获取全局配置信息
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
     // 仅在尚未发送过空闲告警时发送，避免重复告警

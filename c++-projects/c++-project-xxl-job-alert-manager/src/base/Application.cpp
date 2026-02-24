@@ -113,4 +113,7 @@ void Application::shutdown() {
 
     // 打印日志信息
     LOG_INFO("Alert manager stopped");
+
+    // 停止日志记录线程（阻塞等待）
+    Logger::getInstance().stop();
 }
