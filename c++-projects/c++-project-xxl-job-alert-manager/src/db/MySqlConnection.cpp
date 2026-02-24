@@ -163,8 +163,10 @@ bool MySqlConnection::reconnect() {
             return false;
         }
 
-        // 尝试重新建立连接
         const int maxReconnect = config.mysql.connectionPoolMaxReconnect;
+        const int reconnectIntervalTime = config.mysql.connectionPoolReconnectIntervalTime;
+
+        // 尝试重新建立连接
         for (int i = 0; i < maxReconnect; ++i) {
             // 建立连接
             MYSQL* p = mysql_real_connect(conn_, ip_.c_str(), username_.c_str(), password_.c_str(), dbname_.c_str(),
@@ -184,7 +186,7 @@ bool MySqlConnection::reconnect() {
 
             // 重连的时间间隔
             if (i + 1 < maxReconnect) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100 * (i + 1)));
+                std::this_thread::sleep_for(std::chrono::milliseconds(reconnectIntervalTime * (i + 1)));
             }
         }
     } catch (const std::exception& e) {

@@ -14,6 +14,7 @@ struct MySQLConfig {
     std::string table;                        // XXL-JOB调度日志表的名称（mysql.table）
     int connectionPoolInitSize;               // 连接池的初始连接数（mysql.connection.pool.init_size）
     int connectionPoolMaxReconnect;           // 连接断开后的最大重连次数（mysql.connection.pool.max_reconnect）
+    int connectionPoolReconnectIntervalTime;  // 重连的时间间隔，单位毫秒（mysql.connection.pool.reconnect_interval_time）
     int connectionPoolMaxSize;                // 连接池的最大连接数（mysql.connection.pool.max_size）
     int connectionPoolMaxIdleTime;            // 连接池的最大空闲回收时间，单位秒（mysql.connection.pool.max_idle_time）
     int connectionPoolConnectionTimeout;      // 从连接池获取连接的超时时间，单位毫秒（mysql.connection.pool.connection_timeout）
