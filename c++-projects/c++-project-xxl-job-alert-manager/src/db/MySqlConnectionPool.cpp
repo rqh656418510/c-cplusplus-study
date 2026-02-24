@@ -234,7 +234,7 @@ void MySqlConnectionPool::scanIdleConnection() {
 
         {
             // 打印日志信息
-            LOG_DEBUG("Connection pool recycle idle connection and send heartbeat");
+            LOG_DEBUG("Connection pool recycle idle connection");
 
             // 获取互斥锁
             std::unique_lock<std::mutex> lock(this->queueMutex_);
@@ -286,7 +286,7 @@ void MySqlConnectionPool::scanIdleConnection() {
             // 遍历队列里的所有连接（空闲连接）
             for (auto conn : this->connectionQueue_) {
                 // 判断是否满足发送心跳的时间间隔
-                if (conn != nullptr && conn->getLastHeartbeatIntervalTime() >= heartbeatIntervalTime_) {
+                if (conn != nullptr && conn->getLastHeartbeatIntervalTime() >= this->heartbeatIntervalTime_ * 1000) {
                     // 保存需要发送心跳的连接
                     needHeartbeatList.push_back(conn);
                 }
