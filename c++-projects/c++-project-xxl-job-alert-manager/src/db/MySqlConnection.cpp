@@ -283,11 +283,6 @@ bool MySqlConnection::isBrokened() const {
     return brokened_;
 }
 
-// 设置连接是否已损坏
-void MySqlConnection::setBrokened(bool broken) {
-    brokened_ = broken;
-}
-
 // 刷新连接上次使用的时间戳
 void MySqlConnection::refreshLastUsedTime() {
     auto now = std::chrono::steady_clock::now();

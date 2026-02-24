@@ -175,7 +175,7 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
             // 获取互斥锁
             std::unique_lock<std::mutex> lock(this->queueMutex_);
 
-            // 判断连接是否已损坏和连接池是否已关闭
+            // 归还连接时，判断连接是否已损坏和连接池是否已关闭
             if (pconn->isBrokened() || this->closed_) {
                 // 释放连接
                 delete pconn;

@@ -41,9 +41,6 @@ public:
     // 判断连接是否已损坏
     bool isBrokened() const;
 
-    // 设置连接是否已损坏
-    void setBrokened(bool broken);
-
     // 刷新连接上次使用的时间戳
     void refreshLastUsedTime();
 
