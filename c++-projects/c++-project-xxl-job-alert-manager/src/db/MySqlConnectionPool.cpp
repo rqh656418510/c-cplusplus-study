@@ -30,6 +30,8 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
             connection->refreshIdleStartTime();
+            // 刷新连接上次发送心跳的时间戳
+            connection->refreshLastHeartbeatTime();
             // 入队操作
             this->connectionQueue_.push_back(connection);
             // 计数器加一
@@ -124,7 +126,7 @@ int MySqlConnectionPool::getSize() const {
 std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
     // 判断连接池是否已关闭
     if (this->closed_) {
-        LOG_ERROR("Connection pool has closed");
+        LOG_ERROR("Failed to get connection, becasue connection pool has closed");
         return nullptr;
     }
 
@@ -141,7 +143,7 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
             if (std::cv_status::timeout == status) {
                 // 如果等待超时，再次判断连接队列是否为空
                 if (this->connectionQueue_.empty()) {
-                    LOG_ERROR("Failed to get mysql connection, queue is empty");
+                    LOG_ERROR("Failed to get connection, becasue queue is empty");
                     return nullptr;
                 }
             }
@@ -180,6 +182,8 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
             } else {
                 // 刷新连接进入空闲状态后的起始存活时间点
                 pconn->refreshIdleStartTime();
+                // 刷新连接上次发送心跳的时间戳
+                pconn->refreshLastHeartbeatTime();
                 // 刷新连接上次使用的时间戳
                 pconn->refreshLastUsedTime();
                 // 入队操作（将连接归还到队列中）
@@ -189,13 +193,16 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
             }
         });
 
-        // 刷新连接上次使用的时间戳
-        sp->refreshLastUsedTime();
-
         if (this->connectionQueue_.empty()) {
             // 如果连接队列为空，则通知生产线程生产连接
             this->cv_.notify_all();
         }
+
+        // 刷新连接上次发送心跳的时间戳
+        sp->refreshLastHeartbeatTime();
+
+        // 刷新连接上次使用的时间戳
+        sp->refreshLastUsedTime();
 
         return sp;
     }
@@ -232,6 +239,8 @@ void MySqlConnectionPool::produceConnection() {
         if (connected) {
             // 刷新连接进入空闲状态后的起始存活时间点
             connection->refreshIdleStartTime();
+            // 刷新连接上次发送心跳的时间戳
+            connection->refreshLastHeartbeatTime();
             // 入队操作
             this->connectionQueue_.push_back(connection);
             // 计数器加一

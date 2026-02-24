@@ -69,7 +69,7 @@ bool MySqlConnection::update(const std::string& sql) {
     LOG_DEBUG("Execute sql: %s", sql.c_str());
 
     // 判断连接是否有效，无效则自动重连
-    if (!conn_ && !reconnect()) {
+    if ((!conn_ || brokened_) && !reconnect()) {
         LOG_ERROR("%s:%d %s execute failed, connection invalid", __FILE__, __LINE__, sql.c_str());
         return false;
     }
@@ -123,7 +123,7 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     };
 
     // 判断连接是否有效，无效则自动重连
-    if (!conn_ && !reconnect()) {
+    if ((!conn_ || brokened_) && !reconnect()) {
         LOG_ERROR("%s:%d %s execute failed, connection invalid", __FILE__, __LINE__, sql.c_str());
         return nullptr;
     }
