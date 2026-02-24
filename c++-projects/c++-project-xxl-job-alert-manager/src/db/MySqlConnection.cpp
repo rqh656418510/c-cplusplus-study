@@ -181,7 +181,6 @@ bool MySqlConnection::sendHeartbeat() {
 
     // 打印日志信息
     LOG_ERROR("Connection send heartbeat failed");
-    LOG_ERROR(mysql_error(conn_));
 
     // 尝试重连
     bool connected = reconnect();
@@ -192,7 +191,15 @@ bool MySqlConnection::sendHeartbeat() {
 // 发送Ping指令
 bool MySqlConnection::ping() {
     // 发送Ping指令，0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
-    return mysql_ping(conn_) == 0;
+    bool succeeded = mysql_ping(conn_) == 0;
+
+    // 打印日志信息
+    if (!succeeded) {
+        LOG_ERROR("Connection ping failed");
+        LOG_ERROR(mysql_error(conn_));
+    }
+
+    return succeeded;
 }
 
 // 重新建立连接
