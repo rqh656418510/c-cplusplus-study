@@ -219,6 +219,9 @@ bool MySqlConnection::reconnect() {
 
         // 关闭原有连接（如果存在）
         if (conn_ != nullptr) {
+            // 标记连接已损坏
+            brokened_ = true;
+            // 关闭连接
             mysql_close(conn_);
             conn_ = nullptr;
         }
@@ -268,6 +271,7 @@ bool MySqlConnection::reconnect() {
 
     // 如果重连失败，必须确保连接指针已释放
     if (conn_ != nullptr) {
+        // 关闭连接
         mysql_close(conn_);
         conn_ = nullptr;
     }
