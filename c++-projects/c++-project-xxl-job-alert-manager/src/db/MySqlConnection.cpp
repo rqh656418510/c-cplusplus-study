@@ -195,7 +195,7 @@ bool MySqlConnection::ping() {
     return mysql_ping(conn_) == 0;
 }
 
-// 连接断开后尝试重连
+// 重新建立连接
 bool MySqlConnection::reconnect() {
     try {
         // 获取全局配置信息

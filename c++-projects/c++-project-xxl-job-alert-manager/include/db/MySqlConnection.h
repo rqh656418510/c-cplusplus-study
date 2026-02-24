@@ -61,6 +61,6 @@ private:
     // 发送Ping指令
     bool ping();
 
-    // 连接断开后尝试重连
+    // 重新建立连接
     bool reconnect();
 };
