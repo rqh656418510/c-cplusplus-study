@@ -125,7 +125,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 }
 
                 // 获取间隔时间
-                double diff_milli_seconds = now_milli_seconds - lastest_trigger_time;
+                int64_t diff_milli_seconds = now_milli_seconds - lastest_trigger_time;
 
                 // NTP 时钟回拨（时间倒退）保护
                 if (diff_milli_seconds < 0) {
@@ -166,8 +166,15 @@ void XxlJobMonitor::processStopStatus() {
 
     // 仅在短时间内没有执行过处理命令，才允许再次触发告警和执行处理命令
     if (lastProcessedStopStatusTime_.load() > 0) {
+        // 获取执行处理命令的时间间隔
         int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
         int64_t diff_milli_seconds = now_milli_seconds - lastProcessedStopStatusTime_;
+        // NTP 时钟回拨（时间倒退）保护
+        if (diff_milli_seconds < 0) {
+            LOG_WARN("System clock moved backward detected, skip this round to process stop status");
+            return;
+        }
+        // 控制执行处理命令的时间间隔
         if (diff_milli_seconds < config.alertCore.xxljobStopStatusProcessCommandExecuteIntervalTime * 1000) {
             return;
         }
@@ -298,8 +305,15 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
 
     // 仅在短时间内没有执行过处理命令，才允许再次触发告警和执行处理命令
     if (lastProcessedFatalStatusTime_.load() > 0) {
+        // 获取执行处理命令的时间间隔
         int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
         int64_t diff_milli_seconds = now_milli_seconds - lastProcessedFatalStatusTime_;
+        // NTP 时钟回拨（时间倒退）保护
+        if (diff_milli_seconds < 0) {
+            LOG_WARN("System clock moved backward detected, skip this round to process fatal status");
+            return;
+        }
+        // 控制执行处理命令的时间间隔
         if (diff_milli_seconds < config.alertCore.xxljobFatalStatusProcessCommandExecuteIntervalTime * 1000) {
             return;
         }
