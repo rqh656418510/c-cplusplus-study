@@ -13,11 +13,11 @@
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
 
-// 执行"处理XXL-JOB停止运行"命令的时间间隔（单位：秒）
-static const int EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_SECONDS = 3 * 60;
+// 执行"处理XXL-JOB停止运行"命令的时间间隔（单位：毫秒）
+static const int EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS = 3 * 60 * 1000;
 
-// 执行"处理XXL-JOB调度失败"命令的时间间隔（单位：秒）
-static const int EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_SECONDS = 3 * 60;
+// 执行"处理XXL-JOB调度失败"命令的时间间隔（单位：毫秒）
+static const int EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS = 3 * 60 * 1000;
 
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor()
@@ -171,9 +171,9 @@ void XxlJobMonitor::processStopStatus() {
 
     // 仅在短时间内没有执行过处理命令，才允许再次触发告警和执行处理命令
     if (lastProcessedStopStatusTime_.load() > 0) {
-        int64_t now_seconds = Timestamp::now().getTimestamp() / 1000;
-        int diff_seconds = now_seconds - lastProcessedStopStatusTime_;
-        if (diff_seconds < EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_SECONDS) {
+        int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
+        int64_t diff_milli_seconds = now_milli_seconds - lastProcessedStopStatusTime_;
+        if (diff_milli_seconds < EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS) {
             return;
         }
     }
@@ -199,21 +199,21 @@ void XxlJobMonitor::processStopStatus() {
     int consecutive_stop_status_count = consecutiveStopStatusCount_.load() + 1;
     consecutiveStopStatusCount_.store(consecutive_stop_status_count);
 
-    // 检查是否达到连续停止运行阈值
-    if (consecutive_stop_status_count >= config.alertCore.xxljobStopStatusConsecutiveThreshold) {
+    // 检查是否跨天，如果跨天则重置计数器
+    if (lastProcessedStopStatusTime_.load() > 0) {
         // 获取当前系统日期
         std::string current_date = Timestamp::now().toDateString();
-
-        // 检查是否跨天，如果跨天则重置计数器
-        if (lastProcessedStopStatusTime_.load() > 0) {
-            Timestamp last_process_timestamp(lastProcessedStopStatusTime_.load() * 1000);
-            std::string last_process_date = last_process_timestamp.toDateString();
-            if (current_date != last_process_date) {
-                // 跨天，重置执行处理命令计数器
-                timesProcessedStopStatusToday_.store(0);
-            }
+        // 获取上次执行处理命令的日期
+        Timestamp last_process_timestamp(lastProcessedStopStatusTime_.load() * 1000);
+        std::string last_process_date = last_process_timestamp.toDateString();
+        // 如果跨天，则重置执行处理命令计数器
+        if (current_date != last_process_date) {
+            timesProcessedStopStatusToday_.store(0);
         }
+    }
 
+    // 检查是否达到连续停止运行阈值
+    if (consecutive_stop_status_count >= config.alertCore.xxljobStopStatusConsecutiveThreshold) {
         // 检查当天是否还有剩余的命令执行次数
         int times_processed = timesProcessedStopStatusToday_.load();
         if (times_processed < config.alertCore.xxljobStopStatusProcessMaxTimesPerDay) {
@@ -303,9 +303,9 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
 
     // 仅在短时间内没有执行过处理命令，才允许再次触发告警和执行处理命令
     if (lastProcessedFatalStatusTime_.load() > 0) {
-        int64_t now_seconds = Timestamp::now().getTimestamp() / 1000;
-        int diff_seconds = now_seconds - lastProcessedFatalStatusTime_;
-        if (diff_seconds < EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_SECONDS) {
+        int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
+        int64_t diff_milli_seconds = now_milli_seconds - lastProcessedFatalStatusTime_;
+        if (diff_milli_seconds < EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS) {
             return;
         }
     }
@@ -336,21 +336,21 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     int consecutive_fatal_status_count = consecutiveFatalStatusCount_.load() + 1;
     consecutiveFatalStatusCount_.store(consecutive_fatal_status_count);
 
-    // 检查是否达到连续调度失败阈值
-    if (consecutive_fatal_status_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
+    // 检查是否跨天，如果跨天则重置计数器
+    if (lastProcessedFatalStatusTime_.load() > 0) {
         // 获取当前系统日期
         std::string current_date = Timestamp::now().toDateString();
-
-        // 检查是否跨天，如果跨天则重置计数器
-        if (lastProcessedFatalStatusTime_.load() > 0) {
-            Timestamp last_process_timestamp(lastProcessedFatalStatusTime_.load() * 1000);
-            std::string last_process_date = last_process_timestamp.toDateString();
-            if (current_date != last_process_date) {
-                // 跨天，重置执行处理命令计数器
-                timesProcessedFatalStatusToday_.store(0);
-            }
+        // 获取上次执行处理命令的日期
+        Timestamp last_process_timestamp(lastProcessedFatalStatusTime_.load() * 1000);
+        std::string last_process_date = last_process_timestamp.toDateString();
+        // 如果跨天，则重置执行处理命令计数器
+        if (current_date != last_process_date) {
+            timesProcessedFatalStatusToday_.store(0);
         }
+    }
 
+    // 检查是否达到连续调度失败阈值
+    if (consecutive_fatal_status_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
         // 检查当天是否还有剩余的命令执行次数
         int times_processed = timesProcessedFatalStatusToday_.load();
         if (times_processed < config.alertCore.xxljobFatalStatusProcessMaxTimesPerDay) {

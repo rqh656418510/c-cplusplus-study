@@ -141,7 +141,7 @@ int64_t Timestamp::toUtcTimestampUs(const std::string& datetime) {
         return static_cast<int64_t>(-1);
     }
 
-    int mill_seconds = (ms_str[0] - '0') * 100 + (ms_str[1] - '0') * 10 + (ms_str[2] - '0');
+    int milli_seconds = (ms_str[0] - '0') * 100 + (ms_str[1] - '0') * 10 + (ms_str[2] - '0');
 
     // 转换为 UTC 秒
     time_t seconds = timegm(&tm_time);
@@ -150,7 +150,7 @@ int64_t Timestamp::toUtcTimestampUs(const std::string& datetime) {
     }
 
     // 转换为微秒
-    int64_t us = static_cast<int64_t>(seconds) * 1000000LL + static_cast<int64_t>(mill_seconds) * 1000LL;
+    int64_t us = static_cast<int64_t>(seconds) * 1000000LL + static_cast<int64_t>(milli_seconds) * 1000LL;
 
     return us;
 }
