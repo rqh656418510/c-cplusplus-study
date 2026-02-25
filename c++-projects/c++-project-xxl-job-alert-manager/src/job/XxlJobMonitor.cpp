@@ -113,34 +113,34 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 // 处理停止运行状态
                 processStopStatus();
             } else {
-                // 获取当前系统时间
-                int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
-
                 // 最新触发时间（以毫秒为单位）
-                int64_t lastest_trigger_time = TimeHelper::toUtcTimestampMs(lastestLog.getTriggerTime());
+                int64_t lastest_trigger_time = TimeHelper::toLocalTimestampMs(lastestLog.getTriggerTime());
                 if (lastest_trigger_time == static_cast<int64_t>(-1)) {
+                    // 打印日志信息
                     LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
                               lastestLog.getTriggerTime().c_str());
-                    continue;
-                }
-
-                // 获取间隔时间
-                int64_t diff_milli_seconds = now_milli_seconds - lastest_trigger_time;
-
-                // NTP 时钟回拨（时间倒退）保护
-                if (diff_milli_seconds < 0) {
-                    LOG_WARN("System clock moved backward detected, skip this round check");
-                    continue;
-                }
-
-                // 如果在指定时间内没有任务调度日志记录，则发送告警消息
-                if (diff_milli_seconds >= config.alertCore.xxljobStopStatusMaxLogIdleTime * 1000) {
-                    // 处理停止运行状态
-                    processStopStatus();
                 } else {
-                    // 如果恢复了正常（有新的任务调度日志），重置空闲告警标志和连续停止运行计数器
-                    idleAlertSended_.store(false);
-                    consecutiveStopStatusCount_.store(0);
+                    // 获取当前系统时间
+                    int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
+
+                    // 获取间隔时间
+                    int64_t diff_milli_seconds = now_milli_seconds - lastest_trigger_time;
+
+                    // NTP 时钟回拨（时间倒退）保护
+                    if (diff_milli_seconds < 0) {
+                        // 打印日志信息
+                        LOG_WARN("System clock moved backward detected, skip this round to monitor stop status");
+                    } else {
+                        // 如果在指定时间内没有任务调度日志记录，则发送告警消息
+                        if (diff_milli_seconds >= config.alertCore.xxljobStopStatusMaxLogIdleTime * 1000) {
+                            // 处理停止运行状态
+                            processStopStatus();
+                        } else {
+                            // 如果恢复了正常（有新的任务调度日志），重置空闲告警标志和连续停止运行计数器
+                            idleAlertSended_.store(false);
+                            consecutiveStopStatusCount_.store(0);
+                        }
+                    }
                 }
             }
         } catch (const std::exception& e) {
@@ -320,7 +320,7 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     }
 
     // 最新失败触发时间（以毫秒为单位）
-    int64_t fatal_trigger_time = TimeHelper::toUtcTimestampMs(fatalLog.getTriggerTime());
+    int64_t fatal_trigger_time = TimeHelper::toLocalTimestampMs(fatalLog.getTriggerTime());
     if (fatal_trigger_time == static_cast<int64_t>(-1)) {
         LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
         return;
