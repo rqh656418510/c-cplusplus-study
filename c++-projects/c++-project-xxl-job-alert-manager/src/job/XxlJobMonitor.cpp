@@ -114,7 +114,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 processStopStatus();
             } else {
                 // 最新触发时间（以毫秒为单位）
-                int64_t lastest_trigger_time = TimeHelper::toLocalTimestampMs(lastestLog.getTriggerTime());
+                int64_t lastest_trigger_time = TimeHelper::localToUtcTimestampMs(lastestLog.getTriggerTime());
                 if (lastest_trigger_time == static_cast<int64_t>(-1)) {
                     // 打印日志信息
                     LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
@@ -320,7 +320,7 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     }
 
     // 最新失败触发时间（以毫秒为单位）
-    int64_t fatal_trigger_time = TimeHelper::toLocalTimestampMs(fatalLog.getTriggerTime());
+    int64_t fatal_trigger_time = TimeHelper::localToUtcTimestampMs(fatalLog.getTriggerTime());
     if (fatal_trigger_time == static_cast<int64_t>(-1)) {
         LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
         return;

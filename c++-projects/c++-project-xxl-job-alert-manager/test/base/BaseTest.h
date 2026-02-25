@@ -27,36 +27,36 @@ public:
     // 将时间字符串转换为UTC时间戳（秒）
     void toUtcTimestampSec() {
         std::string datetime = "2026-02-25 17:18:20";
-        LOG_INFO("Current utc timestamp(s): %s", std::to_string(TimeHelper::toUtcTimestampSec(datetime)).c_str());
+        LOG_INFO("To utc timestamp(s): %s", std::to_string(TimeHelper::toUtcTimestampSec(datetime)).c_str());
     }
 
     // 将时间字符串转换为UTC时间戳（毫秒）
     void toUtcTimestampMs() {
         std::string datetime = "2026-02-25 17:18:20";
-        LOG_INFO("Current utc timestamp(ms): %s", std::to_string(TimeHelper::toUtcTimestampMs(datetime)).c_str());
+        LOG_INFO("To utc timestamp(ms): %s", std::to_string(TimeHelper::toUtcTimestampMs(datetime)).c_str());
     }
 
     // 将时间字符串转换为UTC时间戳（微秒）
     void toUtcTimestampUs() {
         std::string datetime = "2026-02-25 17:18:20.123";
-        LOG_INFO("Current utc timestamp(us): %s", std::to_string(TimeHelper::toUtcTimestampUs(datetime)).c_str());
+        LOG_INFO("To utc timestamp(us): %s", std::to_string(TimeHelper::toUtcTimestampUs(datetime)).c_str());
     }
 
-    // 将本地时间字符串转换为本地时间戳（秒）
-    void toLocalTimestampSec() {
+    // 将本地时间字符串转换为UTC时间戳（秒）
+    void localToUtcTimestampSec() {
         std::string datetime = "2026-02-25 17:18:20";
-        LOG_INFO("Current local timestamp(s): %s", std::to_string(TimeHelper::toLocalTimestampSec(datetime)).c_str());
+        LOG_INFO("Local to utc timestamp(s): %s", std::to_string(TimeHelper::localToUtcTimestampSec(datetime)).c_str());
     }
 
-    // 将本地时间字符串转换为时间戳（毫秒）
-    void toLocalTimestampMs() {
+    // 将本地时间字符串转换为UTC时间戳（毫秒）
+    void localToUtcTimestampMs() {
         std::string datetime = "2026-02-25 17:18:20";
-        LOG_INFO("Current local timestamp(ms): %s", std::to_string(TimeHelper::toLocalTimestampMs(datetime)).c_str());
+        LOG_INFO("Local to utc timestamp(ms): %s", std::to_string(TimeHelper::localToUtcTimestampMs(datetime)).c_str());
     }
 
-    // 将本地时间字符串转换为时间戳（微秒）
-    void toLocalTimestampUs() {
+    // 将本地时间字符串转换为UTC时间戳（微秒）
+    void localToUtcTimestampUs() {
         std::string datetime = "2026-02-25 17:18:20.123";
-        LOG_INFO("Current local timestamp(us): %s", std::to_string(TimeHelper::toLocalTimestampUs(datetime)).c_str());
+        LOG_INFO("Local to utc timestamp(us): %s", std::to_string(TimeHelper::localToUtcTimestampUs(datetime)).c_str());
     }
 };

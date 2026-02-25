@@ -30,14 +30,14 @@ void baseTest() {
     // 将时间字符串转换为UTC时间戳（微秒）
     // baseTest.toUtcTimestampUs();
 
-    // 将本地时间字符串转换为本地时间戳（秒）
-    // baseTest.toLocalTimestampSec();
+    // 将本地时间字符串转换为UTC时间戳（秒）
+    // baseTest.localToUtcTimestampSec();
 
-    // 将本地时间字符串转换为本地时间戳（毫秒）
-    // baseTest.toLocalTimestampMs();
+    // 将本地时间字符串转换为UTC时间戳（毫秒）
+    // baseTest.localToUtcTimestampMs();
 
-    // 将本地时间字符串转换为本地时间戳（微秒）
-    // baseTest.toLocalTimestampUs();
+    // 将本地时间字符串转换为UTC时间戳（微秒）
+    // baseTest.localToUtcTimestampUs();
 }
 
 // 配置测试
