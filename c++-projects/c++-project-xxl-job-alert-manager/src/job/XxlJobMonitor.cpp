@@ -114,7 +114,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 processStopStatus();
             } else {
                 // 获取当前系统时间
-                time_t t_now = time(nullptr);
+                int64_t t_now_seconds = Timestamp::now().getTimestamp() / 1000 / 1000;
 
                 // 最新触发时间
                 int64_t t_lastest_trigger_time = TimeHelper::toUtcTimestampSec(lastestLog.getTriggerTime());
@@ -125,7 +125,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 }
 
                 // 获取间隔时间
-                double diff_seconds = difftime(t_now, t_lastest_trigger_time);
+                double diff_seconds = t_now_seconds - t_lastest_trigger_time;
 
                 // NTP 时钟回拨（时间倒退）保护
                 if (diff_seconds < 0) {
