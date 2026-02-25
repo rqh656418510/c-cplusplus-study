@@ -47,8 +47,8 @@ private:
     // 定期扫描任务调度日志的开关
     std::atomic_bool monitorRunning_;
 
-    // 上次告警的任务调度失败日志的触发时间
-    std::atomic<time_t> lastAlertFatalTriggerTime_;
+    // 上次告警的任务调度失败日志的触发时间戳（单位：秒）
+    std::atomic<int64_t> lastAlertFatalTriggerTime_;
 
     // 是否已发送空闲（无新的任务调度日志）告警，用于防止重复发送
     std::atomic_bool idleAlertSended_;
@@ -71,7 +71,7 @@ private:
     // 当天已执行"处理XXL-JOB停止运行"命令的次数
     std::atomic_int timesProcessedStopStatusToday_;
 
-    // 最后一次执行"处理XXL-JOB停止运行"命令的时间戳
+    // 上一次执行"处理XXL-JOB停止运行"命令的时间戳（单位：毫秒）
     std::atomic<int64_t> lastProcessedStopStatusTime_;
 
     // 连续监控到XXL-JOB调度失败的次数
@@ -80,6 +80,6 @@ private:
     // 当天已执行"处理XXL-JOB调度失败"命令的次数
     std::atomic_int timesProcessedFatalStatusToday_;
 
-    // 最后一次执行"处理XXL-JOB调度失败"命令的时间戳
+    // 上一次执行"处理XXL-JOB调度失败"命令的时间戳（单位：毫秒）
     std::atomic<int64_t> lastProcessedFatalStatusTime_;
 };

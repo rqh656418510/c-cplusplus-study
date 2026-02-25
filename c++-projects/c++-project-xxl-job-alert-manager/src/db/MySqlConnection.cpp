@@ -290,41 +290,41 @@ bool MySqlConnection::isBrokened() const {
 // 刷新连接上次使用的时间戳
 void MySqlConnection::refreshLastUsedTime() {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     lastUsedTime_.store(now_ms, std::memory_order_relaxed);
 }
 
 // 获取连接上次使用距今的时间间隔（毫秒）
-long long MySqlConnection::getLastUsedIntervalTime() const {
+int64_t MySqlConnection::getLastUsedIntervalTime() const {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - lastUsedTime_.load(std::memory_order_relaxed);
 }
 
 // 刷新连接进入空闲状态的时间戳
 void MySqlConnection::refreshIdleStartTime() {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     idleStartTime_.store(now_ms, std::memory_order_relaxed);
 }
 
 // 获取连接进入空闲状态的总时长（单位毫秒）
-long long MySqlConnection::getIdleTotalTimes() const {
+int64_t MySqlConnection::getIdleTotalTimes() const {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - idleStartTime_.load(std::memory_order_relaxed);
 }
 
 // 刷新连接上次发送心跳的时间戳
 void MySqlConnection::refreshLastHeartbeatTime() {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     lastHeartbeatTime_.store(now_ms, std::memory_order_relaxed);
 }
 
 // 获取连接上次发送心跳距今的时间间隔（毫秒）
-long long MySqlConnection::getLastHeartbeatIntervalTime() const {
+int64_t MySqlConnection::getLastHeartbeatIntervalTime() const {
     auto now = std::chrono::steady_clock::now();
-    long long now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - lastHeartbeatTime_.load(std::memory_order_relaxed);
 }

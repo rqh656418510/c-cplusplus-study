@@ -13,7 +13,22 @@ void baseTest() {
     BaseTest baseTest;
 
     // 获取当前时间
-    // baseTest.nowDateTime();
+    // baseTest.getTimestamp();
+
+    // 当前时间戳转换为日期字符串
+    // baseTest.toDateString();
+
+    // 当前时间戳转换为日期时间字符串
+    // baseTest.toDateTimeString();
+
+    // 将字符串转换为时间戳（秒）
+    // baseTest.toUtcTimestampSec();
+
+    // 将字符串转换为时间戳（毫秒）
+    // baseTest.toUtcTimestampMs();
+
+    // 将字符串转换为时间戳（微秒）
+    // baseTest.toUtcTimestampUs();
 }
 
 // 配置测试

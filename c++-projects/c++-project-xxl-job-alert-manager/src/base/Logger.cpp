@@ -37,7 +37,7 @@ Logger::Logger() {
     // 启动专门写日志文件的线程
     writeThread_ = std::thread([this]() {
         for (;;) {
-            // 获取当前日期
+            // 获取当前时间（真实系统时间，受NTP影响）
             std::time_t now = std::time(nullptr);
             std::tm* now_tm = std::localtime(&now);
 
@@ -125,7 +125,7 @@ void Logger::log_direct(const char* message, LogLevel level) {
     char time_buf[32];
     char log_buf[1024];
 
-    // 获取当前时间
+    // 获取当前时间（真实系统时间，受NTP影响）
     std::time_t now = std::time(nullptr);
     std::tm* tm_now = std::localtime(&now);
 
