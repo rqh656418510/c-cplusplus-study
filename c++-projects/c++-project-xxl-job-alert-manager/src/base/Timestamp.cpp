@@ -11,7 +11,7 @@ Timestamp::Timestamp() : microSecondsSinceEpoch_(0) {
 Timestamp::Timestamp(int64_t microSecondsSinceEpochArg) : microSecondsSinceEpoch_(microSecondsSinceEpochArg) {
 }
 
-// 获取时间戳（单位：微秒）
+// 获取UTC时间戳（单位：微秒）
 int64_t Timestamp::getTimestamp() const {
     return microSecondsSinceEpoch_;
 }

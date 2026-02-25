@@ -13,7 +13,7 @@ public:
     // 构造函数，使用微秒数进行初始化
     explicit Timestamp(int64_t microSecondsSinceEpochArg);
 
-    // 获取时间戳（单位：微秒）
+    // 获取UTC时间戳（单位：微秒）
     int64_t getTimestamp() const;
 
     // 将时间戳转换为字符串（格式为 YYYY-MM-DD）
