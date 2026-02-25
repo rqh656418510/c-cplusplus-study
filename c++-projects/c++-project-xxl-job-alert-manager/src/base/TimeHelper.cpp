@@ -3,7 +3,7 @@
 #include <chrono>
 #include <ctime>
 
-// 将字符串（格式为 YYYY-MM-DD HH:MM:SS）转换为UTC时间戳（单位：秒）
+// 将时间字符串（格式为 YYYY-MM-DD HH:MM:SS）转换为UTC时间戳（单位：秒）
 int64_t TimeHelper::toUtcTimestampSec(const std::string& datetime) {
     // 字符串长度必须固定为 19，比如：2025-11-16 17:45:30
     if (datetime.size() != 19) {
@@ -30,7 +30,7 @@ int64_t TimeHelper::toUtcTimestampSec(const std::string& datetime) {
     return static_cast<int64_t>(seconds);
 }
 
-// 将字符串（格式为 YYYY-MM-DD HH:MM:SS）转换为UTC时间戳（单位：毫秒）
+// 将时间字符串（格式为 YYYY-MM-DD HH:MM:SS）转换为UTC时间戳（单位：毫秒）
 int64_t TimeHelper::toUtcTimestampMs(const std::string& datetime) {
     // 字符串长度必须固定为 19，比如：2025-11-16 17:45:30
     if (datetime.size() != 19) {
@@ -58,7 +58,7 @@ int64_t TimeHelper::toUtcTimestampMs(const std::string& datetime) {
     return static_cast<int64_t>(seconds) * 1000LL;
 }
 
-// 将字符串（格式为 YYYY-MM-DD HH:MM:SS.mmm）转换为UTC时间戳（单位：微秒）
+// 将时间字符串（格式为 YYYY-MM-DD HH:MM:SS.mmm）转换为UTC时间戳（单位：微秒）
 int64_t TimeHelper::toUtcTimestampUs(const std::string& datetime) {
     // 字符串长度必须固定为 23，比如：2025-11-16 17:45:30.123
     if (datetime.size() != 23) {
