@@ -114,18 +114,18 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 processStopStatus();
             } else {
                 // 获取当前系统时间
-                int64_t t_now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
+                int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
 
-                // 最新触发时间
-                int64_t t_lastest_trigger_time = TimeHelper::toUtcTimestampMs(lastestLog.getTriggerTime());
-                if (t_lastest_trigger_time == static_cast<int64_t>(-1)) {
+                // 最新触发时间（以毫秒为单位）
+                int64_t lastest_trigger_time = TimeHelper::toUtcTimestampMs(lastestLog.getTriggerTime());
+                if (lastest_trigger_time == static_cast<int64_t>(-1)) {
                     LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
                               lastestLog.getTriggerTime().c_str());
                     continue;
                 }
 
                 // 获取间隔时间
-                double diff_milli_seconds = t_now_milli_seconds - t_lastest_trigger_time;
+                double diff_milli_seconds = now_milli_seconds - lastest_trigger_time;
 
                 // NTP 时钟回拨（时间倒退）保护
                 if (diff_milli_seconds < 0) {
@@ -306,18 +306,18 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     }
 
     // 最新失败触发时间（以毫秒为单位）
-    int64_t t_fatal_trigger_time = TimeHelper::toUtcTimestampMs(fatalLog.getTriggerTime());
-    if (t_fatal_trigger_time == static_cast<int64_t>(-1)) {
+    int64_t fatal_trigger_time = TimeHelper::toUtcTimestampMs(fatalLog.getTriggerTime());
+    if (fatal_trigger_time == static_cast<int64_t>(-1)) {
         LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
         return;
     }
 
     // 如果不是已告警过，则发送告警消息
-    if (t_fatal_trigger_time > lastAlertFatalTriggerTime_.load()) {
+    if (fatal_trigger_time > lastAlertFatalTriggerTime_.load()) {
         // 发送告警消息
         alertManager_.alert(AlertLevel::ERROR, "XXL-JOB 监控告警", fatalLog.parseAlertMsg());
         // 更新已告警状态
-        lastAlertFatalTriggerTime_.store(t_fatal_trigger_time);
+        lastAlertFatalTriggerTime_.store(fatal_trigger_time);
     }
 
     // 获取处理调度失败的命令
