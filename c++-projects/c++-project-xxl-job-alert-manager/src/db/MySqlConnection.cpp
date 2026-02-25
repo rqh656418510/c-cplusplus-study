@@ -289,6 +289,7 @@ bool MySqlConnection::isBrokened() const {
 
 // 刷新连接上次使用的时间戳
 void MySqlConnection::refreshLastUsedTime() {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     lastUsedTime_.store(now_ms, std::memory_order_relaxed);
@@ -296,6 +297,7 @@ void MySqlConnection::refreshLastUsedTime() {
 
 // 获取连接上次使用距今的时间间隔（毫秒）
 int64_t MySqlConnection::getLastUsedIntervalTime() const {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - lastUsedTime_.load(std::memory_order_relaxed);
@@ -303,6 +305,7 @@ int64_t MySqlConnection::getLastUsedIntervalTime() const {
 
 // 刷新连接进入空闲状态的时间戳
 void MySqlConnection::refreshIdleStartTime() {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     idleStartTime_.store(now_ms, std::memory_order_relaxed);
@@ -310,6 +313,7 @@ void MySqlConnection::refreshIdleStartTime() {
 
 // 获取连接进入空闲状态的总时长（单位毫秒）
 int64_t MySqlConnection::getIdleTotalTimes() const {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - idleStartTime_.load(std::memory_order_relaxed);
@@ -317,6 +321,7 @@ int64_t MySqlConnection::getIdleTotalTimes() const {
 
 // 刷新连接上次发送心跳的时间戳
 void MySqlConnection::refreshLastHeartbeatTime() {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     lastHeartbeatTime_.store(now_ms, std::memory_order_relaxed);
@@ -324,6 +329,7 @@ void MySqlConnection::refreshLastHeartbeatTime() {
 
 // 获取连接上次发送心跳距今的时间间隔（毫秒）
 int64_t MySqlConnection::getLastHeartbeatIntervalTime() const {
+    // 【特别注意】这里使用的是 steady_clock，而不是 system_clock，不受 NTP 影响
     auto now = std::chrono::steady_clock::now();
     int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     return now_ms - lastHeartbeatTime_.load(std::memory_order_relaxed);

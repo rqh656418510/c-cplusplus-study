@@ -9,6 +9,7 @@
 #include "AppConfigLoader.h"
 #include "Logger.h"
 #include "NetworkHelper.h"
+#include "TimeHelper.h"
 #include "Timestamp.h"
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
@@ -122,7 +123,7 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 time_t t_now = time(nullptr);
 
                 // 最新触发时间
-                int64_t t_lastest_trigger_time = Timestamp::toUtcTimestampSec(lastestLog.getTriggerTime());
+                int64_t t_lastest_trigger_time = TimeHelper::toUtcTimestampSec(lastestLog.getTriggerTime());
                 if (t_lastest_trigger_time == static_cast<int64_t>(-1)) {
                     LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
                               lastestLog.getTriggerTime().c_str());
@@ -311,7 +312,7 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     }
 
     // 最新失败触发时间
-    int64_t t_fatal_trigger_time = Timestamp::toUtcTimestampSec(fatalLog.getTriggerTime());
+    int64_t t_fatal_trigger_time = TimeHelper::toUtcTimestampSec(fatalLog.getTriggerTime());
     if (t_fatal_trigger_time == static_cast<int64_t>(-1)) {
         LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
         return;
