@@ -114,10 +114,10 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 processStopStatus();
             } else {
                 // 获取当前系统时间
-                int64_t t_now_seconds = Timestamp::now().getTimestamp() / 1000 / 1000;
+                int64_t t_now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
 
                 // 最新触发时间
-                int64_t t_lastest_trigger_time = TimeHelper::toUtcTimestampSec(lastestLog.getTriggerTime());
+                int64_t t_lastest_trigger_time = TimeHelper::toUtcTimestampMs(lastestLog.getTriggerTime());
                 if (t_lastest_trigger_time == static_cast<int64_t>(-1)) {
                     LOG_ERROR("XXL-JOB log lastest trigger time parse failed, time: %s",
                               lastestLog.getTriggerTime().c_str());
@@ -125,16 +125,16 @@ void XxlJobMonitor::monitorStopStatusLoop() {
                 }
 
                 // 获取间隔时间
-                double diff_seconds = t_now_seconds - t_lastest_trigger_time;
+                double diff_milli_seconds = t_now_milli_seconds - t_lastest_trigger_time;
 
                 // NTP 时钟回拨（时间倒退）保护
-                if (diff_seconds < 0) {
+                if (diff_milli_seconds < 0) {
                     LOG_WARN("System clock moved backward detected, skip this round check");
                     continue;
                 }
 
                 // 如果在指定时间内没有任务调度日志记录，则发送告警消息
-                if (diff_seconds >= config.alertCore.xxljobStopStatusMaxLogIdleTime) {
+                if (diff_milli_seconds >= config.alertCore.xxljobStopStatusMaxLogIdleTime * 1000) {
                     // 处理停止运行状态
                     processStopStatus();
                 } else {
@@ -305,8 +305,8 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
         }
     }
 
-    // 最新失败触发时间
-    int64_t t_fatal_trigger_time = TimeHelper::toUtcTimestampSec(fatalLog.getTriggerTime());
+    // 最新失败触发时间（以毫秒为单位）
+    int64_t t_fatal_trigger_time = TimeHelper::toUtcTimestampMs(fatalLog.getTriggerTime());
     if (t_fatal_trigger_time == static_cast<int64_t>(-1)) {
         LOG_ERROR("XXL-JOB log lastest fatal trigger time parse failed, time: %s", fatalLog.getTriggerTime().c_str());
         return;

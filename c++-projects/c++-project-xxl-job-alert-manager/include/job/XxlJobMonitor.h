@@ -47,7 +47,7 @@ private:
     // 定期扫描任务调度日志的开关
     std::atomic_bool monitorRunning_;
 
-    // 上次告警的任务调度失败日志的触发时间戳（单位：秒）
+    // 上次告警的任务调度失败日志的触发时间戳（单位：毫秒）
     std::atomic<int64_t> lastAlertFatalTriggerTime_;
 
     // 是否已发送空闲（无新的任务调度日志）告警，用于防止重复发送
