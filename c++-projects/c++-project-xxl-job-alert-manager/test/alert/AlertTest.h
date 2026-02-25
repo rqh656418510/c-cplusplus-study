@@ -69,7 +69,7 @@ public:
         XxlJobLog jobLog;
         jobLog.setId(54529936);
         jobLog.setExecutorHandler("optionProvidePricePush");
-        jobLog.setTriggerTime(Timestamp::now().toString());
+        jobLog.setTriggerTime(Timestamp::now().toDateTimeString());
         jobLog.setTriggerCode(500);
         jobLog.setTriggerMsg(msg);
 

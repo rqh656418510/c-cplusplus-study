@@ -20,10 +20,10 @@ XxlJobMonitor::XxlJobMonitor()
       idleAlertSended_(false),
       consecutiveStopStatusCount_(0),
       timesProcessedStopStatusToday_(0),
-      lastProcessedStopStatusDate_(""),
+      lastProcessedStopStatusTime_(0),
       consecutiveFatalStatusCount_(0),
       timesProcessedFatalStatusToday_(0),
-      lastProcessedFatalStatusDate_("") {
+      lastProcessedFatalStatusTime_(0) {
     // 初始化告警管理器
     alertManager_.registerChannel(AlertLevel::ERROR, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
     alertManager_.registerChannel(AlertLevel::CRITICAL, AlertChannelFactory::getInstance().createAsyncWxQyAlert());
@@ -159,7 +159,7 @@ void XxlJobMonitor::processStopStatus() {
     if (!idleAlertSended_.load()) {
         char buf[1024] = {0};
         snprintf(buf, sizeof(buf), "【XXL-JOB 服务端已停止】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
-                 Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
+                 Timestamp::now().toDateTimeString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
                  config.alertCommon.envName.c_str());
         alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
         idleAlertSended_.store(true);
@@ -179,19 +179,16 @@ void XxlJobMonitor::processStopStatus() {
     // 检查是否达到连续停止运行阈值
     if (consecutive_stop_status_count >= config.alertCore.xxljobStopStatusConsecutiveThreshold) {
         // 获取当前时间
-        time_t now = time(nullptr);
-        struct tm* tm_now = localtime(&now);
-        char date_buf[16] = {0};
-        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
-        std::string current_date(date_buf);
+        std::string current_date = Timestamp::now().toDateString();
 
         // 检查是否跨天，如果跨天则重置计数器
-        {
-            std::unique_lock<std::mutex> lock(processedStopStatusDateMutex_);
-            if (lastProcessedStopStatusDate_ != current_date) {
-                // 跨天，重置计数器
-                lastProcessedStopStatusDate_ = current_date;
+        if (lastProcessedStopStatusTime_ != 0) {
+            Timestamp last_process_timestamp(lastProcessedStopStatusTime_);
+            std::string last_process_date = last_process_timestamp.toDateString();
+            if (current_date != last_process_date) {
+                // 跨天，重置计数器并同时更新时间戳，确保状态一致
                 timesProcessedStopStatusToday_.store(0);
+                lastProcessedStopStatusTime_ = Timestamp::now().getTimestamp();
             }
         }
 
@@ -205,8 +202,12 @@ void XxlJobMonitor::processStopStatus() {
 
             // 执行处理命令
             int ret_code = system(stopStatusProcessCommand.c_str());
+
+            // 如果处理命令执行成功
             if (ret_code == 0) {
-                // 命令执行成功，更新计数器
+                // 更新执行处理命令的时间
+                lastProcessedStopStatusTime_ = Timestamp::now().getTimestamp();
+                // 更新执行处理命令计数器
                 timesProcessedStopStatusToday_.store(times_processed + 1);
                 // 重置连续停止运行计数器
                 consecutiveStopStatusCount_.store(0);
@@ -216,8 +217,8 @@ void XxlJobMonitor::processStopStatus() {
                 // 发送告警消息
                 char buf[1024] = {0};
                 snprintf(buf, sizeof(buf), "【XXL-JOB 服务端已重启】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
-                         Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
-                         config.alertCommon.envName.c_str());
+                         Timestamp::now().toDateTimeString().c_str(),
+                         NetworkHelper::getInstance().getPublicIp().c_str(), config.alertCommon.envName.c_str());
                 alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
             } else {
                 LOG_ERROR("XXL-JOB stop status process command executed failed, code: %d. Command: %s", ret_code,
@@ -307,19 +308,16 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     // 检查是否达到连续调度失败阈值
     if (consecutive_fatal_status_count >= config.alertCore.xxljobFatalStatusConsecutiveThreshold) {
         // 获取当前时间
-        time_t now = time(nullptr);
-        struct tm* tm_now = localtime(&now);
-        char date_buf[16] = {0};
-        strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm_now);
-        std::string current_date(date_buf);
+        std::string current_date = Timestamp::now().toDateString();
 
         // 检查是否跨天，如果跨天则重置计数器
-        {
-            std::unique_lock<std::mutex> lock(processedFatalStatusDateMutex_);
-            if (lastProcessedFatalStatusDate_ != current_date) {
-                // 跨天，重置计数器
-                lastProcessedFatalStatusDate_ = current_date;
+        if (lastProcessedFatalStatusTime_ != 0) {
+            Timestamp last_process_timestamp(lastProcessedFatalStatusTime_);
+            std::string last_process_date = last_process_timestamp.toDateString();
+            if (current_date != last_process_date) {
+                // 跨天，重置计数器并同时更新时间戳，确保状态一致
                 timesProcessedFatalStatusToday_.store(0);
+                lastProcessedFatalStatusTime_ = Timestamp::now().getTimestamp();
             }
         }
 
@@ -333,8 +331,12 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
 
             // 执行处理命令
             int ret_code = system(fatalStatusProcessCommand.c_str());
+
+            // 如果处理命令执行成功
             if (ret_code == 0) {
-                // 命令执行成功，更新计数器
+                // 更新执行处理命令的时间
+                lastProcessedFatalStatusTime_ = Timestamp::now().getTimestamp();
+                // 更新执行处理命令计数器
                 timesProcessedFatalStatusToday_.store(times_processed + 1);
                 // 重置连续调度失败计数器
                 consecutiveFatalStatusCount_.store(0);
@@ -344,8 +346,8 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
                 // 发送告警消息
                 char buf[1024] = {0};
                 snprintf(buf, sizeof(buf), "【XXL-JOB 客户端已重启】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s",
-                         Timestamp::now().toString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
-                         config.alertCommon.envName.c_str());
+                         Timestamp::now().toDateTimeString().c_str(),
+                         NetworkHelper::getInstance().getPublicIp().c_str(), config.alertCommon.envName.c_str());
                 alertManager_.alert(AlertLevel::CRITICAL, "XXL-JOB 监控告警", std::string(buf));
             } else {
                 LOG_ERROR("XXL-JOB fatal status process command executed failed, code: %d. Command: %s", ret_code,
