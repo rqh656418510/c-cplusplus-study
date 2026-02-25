@@ -40,15 +40,17 @@ struct WxQyApiConfig {
 
 // 监控告警核心配置
 struct AlertCoreConfig {
-    int xxljobStopStatusScanIntervalTime;         // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
-    int xxljobStopStatusMaxLogIdleTime;           // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.stop_status_max_log_idle_time）
-    int xxljobStopStatusConsecutiveThreshold;     // 连续监控到XXL-JOB停止运行达到该次数后，才会执行处理命令（alert.xxljob.stop_status_consecutive_threshold）
-    int xxljobStopStatusProcessMaxTimesPerDay;    // 每天最多执行“处理XXL-JOB停止运行”的命令次数（alert.xxljob.stop_status_process_max_times_per_day）
-    std::string xxljobStopStatusProcessCommand;   // 处理XXL-JOB停止运行的命令（alert.xxljob.stop_status_process_command）
-    int xxljobFatalStatusScanIntervalTime;        // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
-    int xxljobFatalStatusConsecutiveThreshold;    // 连续监控到XXL-JOB调度失败达到该次数后，才会执行处理命令（alert.xxljob.fatal_status_consecutive_threshold）
-    int xxljobFatalStatusProcessMaxTimesPerDay;   // 每天最多执行“处理XXL-JOB调度失败”的命令次数（alert.xxljob.fatal_status_process_max_times_per_day）
-    std::string xxljobFatalStatusProcessCommand;  // 处理XXL-JOB调度失败的命令（alert.xxljob.fatal_status_process_command）
+    int xxljobStopStatusScanIntervalTime;                    // 监控XXL-JOB是否停止运行的时间间隔，单位秒（alert.xxljob.stop_status_scan_interval_time）
+    int xxljobStopStatusMaxLogIdleTime;                      // 任务调度日志记录的最大空闲时间，单位秒（alert.xxljob.stop_status_max_log_idle_time）
+    int xxljobStopStatusConsecutiveThreshold;                // 连续监控到XXL-JOB停止运行达到该次数后，才会执行处理命令（alert.xxljob.stop_status_consecutive_threshold）
+    int xxljobStopStatusProcessMaxTimesPerDay;               // 每天最多执行“处理XXL-JOB停止运行”的命令次数（alert.xxljob.stop_status_process_max_times_per_day）
+    std::string xxljobStopStatusProcessCommand;              // 处理XXL-JOB停止运行的命令（alert.xxljob.stop_status_process_command）
+    int xxljobStopStatusProcessCommandExecuteIntervalTime;   // 执行“处理XXL-JOB停止运行”的命令的时间间隔，单位秒（alert.xxljob.stop_status_process_command_execute_interval_time）
+    int xxljobFatalStatusScanIntervalTime;                   // 监控XXL-JOB是否调度失败的时间间隔，单位秒（alert.xxljob.fatal_status_scan_interval_time）
+    int xxljobFatalStatusConsecutiveThreshold;               // 连续监控到XXL-JOB调度失败达到该次数后，才会执行处理命令（alert.xxljob.fatal_status_consecutive_threshold）
+    int xxljobFatalStatusProcessMaxTimesPerDay;              // 每天最多执行“处理XXL-JOB调度失败”的命令次数（alert.xxljob.fatal_status_process_max_times_per_day）
+    std::string xxljobFatalStatusProcessCommand;             // 处理XXL-JOB调度失败的命令（alert.xxljob.fatal_status_process_command）
+    int xxljobFatalStatusProcessCommandExecuteIntervalTime;  // 执行“处理XXL-JOB调度失败”的命令的时间间隔，单位秒（alert.xxljob.fatal_status_process_command_execute_interval_time）
 };
 
 // 监控告警基础配置

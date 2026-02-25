@@ -14,12 +14,6 @@
 #include "XxlJobLogDao.h"
 #include "XxlJobMonitor.h"
 
-// 执行"处理XXL-JOB停止运行"命令的时间间隔（单位：毫秒）
-static const int EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS = 3 * 60 * 1000;
-
-// 执行"处理XXL-JOB调度失败"命令的时间间隔（单位：毫秒）
-static const int EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS = 3 * 60 * 1000;
-
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor()
     : monitorRunning_(false),
@@ -174,7 +168,7 @@ void XxlJobMonitor::processStopStatus() {
     if (lastProcessedStopStatusTime_.load() > 0) {
         int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
         int64_t diff_milli_seconds = now_milli_seconds - lastProcessedStopStatusTime_;
-        if (diff_milli_seconds < EXECUTE_STOP_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS) {
+        if (diff_milli_seconds < config.alertCore.xxljobStopStatusProcessCommandExecuteIntervalTime * 1000) {
             return;
         }
     }
@@ -306,7 +300,7 @@ void XxlJobMonitor::processFatalStatus(const XxlJobLog& fatalLog) {
     if (lastProcessedFatalStatusTime_.load() > 0) {
         int64_t now_milli_seconds = Timestamp::now().getTimestamp() / 1000;
         int64_t diff_milli_seconds = now_milli_seconds - lastProcessedFatalStatusTime_;
-        if (diff_milli_seconds < EXECUTE_FATAL_STATUS_PROCESS_COMMAND_INTERVAL_MILLI_SECONDS) {
+        if (diff_milli_seconds < config.alertCore.xxljobFatalStatusProcessCommandExecuteIntervalTime * 1000) {
             return;
         }
     }

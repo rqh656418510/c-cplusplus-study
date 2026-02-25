@@ -92,10 +92,12 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alertCore.xxljobStopStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.stop_status_process_max_times_per_day"), "alert.xxljob.stop_status_process_max_times_per_day");
     app.alertCore.xxljobStopStatusConsecutiveThreshold = toInt(cfg_util.load("alert.xxljob.stop_status_consecutive_threshold"), "alert.xxljob.stop_status_consecutive_threshold");
     app.alertCore.xxljobStopStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.stop_status_process_command"), "alert.xxljob.stop_status_process_command");
+    app.alertCore.xxljobStopStatusProcessCommandExecuteIntervalTime = toInt(cfg_util.load("alert.xxljob.stop_status_process_command_execute_interval_time"), "alert.xxljob.stop_status_process_command_execute_interval_time");
     app.alertCore.xxljobFatalStatusScanIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_scan_interval_time"), "alert.xxljob.fatal_status_scan_interval_time");
     app.alertCore.xxljobFatalStatusProcessMaxTimesPerDay = toInt(cfg_util.load("alert.xxljob.fatal_status_process_max_times_per_day"), "alert.xxljob.fatal_status_process_max_times_per_day");
     app.alertCore.xxljobFatalStatusConsecutiveThreshold = toInt(cfg_util.load("alert.xxljob.fatal_status_consecutive_threshold"), "alert.xxljob.fatal_status_consecutive_threshold");
     app.alertCore.xxljobFatalStatusProcessCommand = toStr(cfg_util.load("alert.xxljob.fatal_status_process_command"), "alert.xxljob.fatal_status_process_command");
+    app.alertCore.xxljobFatalStatusProcessCommandExecuteIntervalTime = toInt(cfg_util.load("alert.xxljob.fatal_status_process_command_execute_interval_time"), "alert.xxljob.fatal_status_process_command_execute_interval_time");
 
     // Alert Common Config
     app.alertCommon.envName = toStr(cfg_util.load("alert.env.name"), "alert.env.name");
