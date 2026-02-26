@@ -21,13 +21,13 @@ void baseTest() {
     // 当前时间戳转换为日期时间字符串
     // baseTest.toDateTimeString();
 
-    // 将时间字符串转换为UTC时间戳（秒）
+    // 将UTC时间字符串转换为UTC时间戳（秒）
     // baseTest.toUtcTimestampSec();
 
-    // 将时间字符串转换为UTC时间戳（毫秒）
+    // 将UTC时间字符串转换为UTC时间戳（毫秒）
     // baseTest.toUtcTimestampMs();
 
-    // 将时间字符串转换为UTC时间戳（微秒）
+    // 将UTC时间字符串转换为UTC时间戳（微秒）
     // baseTest.toUtcTimestampUs();
 
     // 将本地时间字符串转换为UTC时间戳（秒）
