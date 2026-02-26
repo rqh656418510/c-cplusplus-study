@@ -5,7 +5,9 @@
 
 #include "AppConfigLoader.h"
 #include "Copyable.h"
+#include "Logger.h"
 #include "NetworkHelper.h"
+#include "Timestamp.h"
 #include "json.hpp"
 
 // 类型重定义
@@ -16,6 +18,9 @@ class XxlJobLog : Copyable {
 public:
     XxlJobLog() = default;
     ~XxlJobLog() = default;
+
+    // 声明JSON序列化函数为友元函数，确保在类内部可见
+    friend void to_json(json& j, const XxlJobLog& log);
 
     // ---------- Getter ----------
     int64_t getId() const {
@@ -116,34 +121,36 @@ public:
         // 获取全局配置信息
         const AppConfig& config = AppConfigLoader::getInstance().getConfig();
 
-        // 拼接告警消息
-        char buf[2048];
-        snprintf(buf, sizeof(buf),
-                 "【XXL-JOB 调度失败】\n"
-                 "【IP】%s\n"
-                 "【Env】%s\n"
-                 "【Job】%s\n"
-                 "【Time】%s\n"
-                 "【Code】%d\n"
-                 "【Message】%s",
-                 NetworkHelper::getInstance().getPublicIp().c_str(), config.alertCommon.envName.c_str(),
-                 executorHandler_.c_str(), triggerTime_.c_str(), triggerCode_, triggerMsg_.c_str());
-        std::string content(buf);
+        // JSON序列化告警数据
+        std::string data;
+        try {
+            json j = *this;
+            data = j.dump();
+        } catch (...) {
+            data = triggerMsg_;
+            LOG_ERROR("Serialize alert data failed");
+        }
 
-        // 去掉多余内容
+        // 告警数据去掉多余内容
         size_t pos;
         std::string target = "<span style=\"color:#00c0ef;\" > >>>>>>>>>>>触发调度<<<<<<<<<<< </span>";
-        while ((pos = content.find(target)) != std::string::npos) {
-            content.replace(pos, target.length(), "");
+        while ((pos = data.find(target)) != std::string::npos) {
+            data.replace(pos, target.length(), "");
         }
 
-        // 去掉 <br><br>
-        while ((pos = content.find("<br><br>")) != std::string::npos) {
-            content.replace(pos, 8, "");
+        // 告警数据去掉 <br><br>
+        while ((pos = data.find("<br><br>")) != std::string::npos) {
+            data.replace(pos, 8, "");
         }
+
+        // 拼接告警消息
+        char buf[2048];
+        snprintf(buf, sizeof(buf), "【XXL-JOB 调度失败】\n告警时间: %s\n告警 IP 地址: %s\n告警环境: %s\n告警数据: %s",
+                 Timestamp::now().toDateTimeString().c_str(), NetworkHelper::getInstance().getPublicIp().c_str(),
+                 config.alertCommon.envName.c_str(), data.c_str());
 
         // 返回告警消息
-        return content;
+        return std::string(buf);
     }
 
 private:
