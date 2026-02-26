@@ -154,13 +154,15 @@ int main(int argc, char** argv) {
     // 获取用户配置文件
     std::string configFile = getConfigFile(argc, argv);
 
-    // 设置默认日志级别
-    Logger::getInstance().setLogLevel(LogLevel::DEBUG);
-
     // 设置全局的配置文件
     if (!configFile.empty()) {
         AppConfigLoader::CONFIG_FILE = configFile;
     }
+
+    // 设置默认日志级别
+    std::string logLevelStr = AppConfigLoader::getInstance().getConfig().alertCommon.logLevel;
+    LogLevel logLevel = Logger::stringToLogLevel(logLevelStr);
+    Logger::getInstance().setLogLevel(logLevel);
 
     // 基础测试
     baseTest();
