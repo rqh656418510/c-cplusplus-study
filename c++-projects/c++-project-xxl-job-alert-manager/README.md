@@ -17,13 +17,13 @@
 
 ### 开发工具
 
-| 软件                       | 版本        | 说明                                                                 |
-| -------------------------- | ----------- | -------------------------------------------------------------------- |
-| C++                        | `11`        |                                                                      |
-| OpenSSL                    | `3.0.18`    | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
-| MySQL C API（Connector/C） | `8.4.5`     | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
-| MySQL Server               | `8.4.5`     |                                                                      |
-| Linux System               | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
+| 软件                       | 版本                    | 说明                                                                 |
+| -------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| C++                        | `11`                    |                                                                      |
+| OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
+| MySQL C API（Connector/C） | `8.4.5`                 | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
+| MySQL Server               | `8.4.5`                 |                                                                      |
+| Linux System               | `Debian 12`、`CentOS 7` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
 
 ### 项目配置
 
@@ -58,6 +58,7 @@ wxqy.account.corp_secret=xxxxxxxxxx
 ### 项目编译
 
 > 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
+> 提示：在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
 
 ``` sh
 # 进入项目根目录
@@ -69,8 +70,6 @@ chmod +x autobuild.sh
 # 执行一键编译构建脚本
 ./autobuild.sh
 ```
-
-> 在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
 
 ### 项目运行
 
@@ -97,7 +96,7 @@ Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警�
 # 创建工作目录
 mkdir -p /home/centos/alert
 
-# 拷贝可执行文件到工作目录
+# 拷贝可执行文件和配置文件到工作目录
 cp -r {YOUR_PROJECT_PATH}/bin/* /home/centos/alert
 ```
 
@@ -155,24 +154,24 @@ WantedBy=multi-user.target
 - 通过 Systemd 管理监控告警程序
 
 ``` sh
-# 重新加载系统配置
+# 重新加载系统配置文件
 sudo systemctl daemon-reload
 
-# 设置开机启动
+# 设置应用程序开机启动
 sudo systemctl enable alert-manager
 ```
 
 ``` sh
-# 启动程序
+# 启动应用程序
 sudo systemctl start alert-manager
 
-# 查看状态
+# 查看运行状态
 sudo systemctl status alert-manager
 
-# 关闭程序
+# 关闭应用程序
 sudo systemctl stop alert-manager
 
-# 重启程序
+# 重启应用程序
 sudo systemctl restart alert-manager
 ```
 
@@ -180,7 +179,7 @@ sudo systemctl restart alert-manager
 # 查看系统日志
 sudo journalctl -u alert-manager -f
 
-# 查询应用日志
+# 查询应用程序日志
 tail -f -n 50 /home/centos/alert/2026-2-12.log
 ```
 
