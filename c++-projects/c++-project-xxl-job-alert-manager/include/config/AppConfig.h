@@ -24,8 +24,8 @@ struct MySQLConfig {
 // 企业微信账号配置
 struct WxQyAccountConfig {
     int agentId;             // 企业微信应用的AgentId（wxqy.account.agent_id）
-    std::string toUser;      // 接收消息的企业微信用户ID（wxqy.account.to_user）
-    std::string corpId;      // 企业微信的公司ID（CorpId）（wxqy.account.corp_id）
+    std::string toUser;      // 接收消息的企业微信用户ID，多个ID使用|分隔（wxqy.account.to_user）
+    std::string corpId;      // 企业微信的公司ID（wxqy.account.corp_id）
     std::string corpSecret;  // 企业微信应用的Secret（wxqy.account.corp_secret）
 };
 
