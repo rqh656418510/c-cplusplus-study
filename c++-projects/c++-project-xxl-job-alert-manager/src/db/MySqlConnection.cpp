@@ -196,7 +196,7 @@ bool MySqlConnection::sendHeartbeat() {
     // 打印日志信息
     LOG_ERROR("Connection send heartbeat failed");
 
-    // 尝试重连
+    // Ping指令发送失败，尝试重连
     bool connected = reconnect();
 
     return connected;
@@ -258,7 +258,7 @@ bool MySqlConnection::reconnect() {
             // 打印日志信息
             LOG_ERROR("Connection reconnect failed: %d / %d. Error: %s", i + 1, maxReconnect, mysql_error(conn_));
 
-            // 重连的时间间隔
+            // 控制重连的时间间隔
             if (i + 1 < maxReconnect) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(reconnectIntervalTime * (i + 1)));
             }
@@ -269,7 +269,7 @@ bool MySqlConnection::reconnect() {
         LOG_ERROR("Connection reconnect failed, unknown exception");
     }
 
-    // 如果重连失败，必须确保连接指针已释放
+    // 重连失败后，必须确保连接指针已释放
     if (conn_ != nullptr) {
         // 关闭连接
         mysql_close(conn_);
