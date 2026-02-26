@@ -25,7 +25,7 @@ XxlJobLog XxlJobLogDao::selectLastest() {
     // 获取MySQL连接
     std::shared_ptr<MySqlConnection> conn = MySqlConnectionPool::getInstance()->getConnection();
 
-    // 判断连接是否有效
+    // 判断MySQL连接的智能指针是否有效
     if (!conn) {
         return log;
     }
@@ -76,7 +76,7 @@ XxlJobLog XxlJobLogDao::selectLastestFatal() {
     // 获取MySQL连接
     std::shared_ptr<MySqlConnection> conn = MySqlConnectionPool::getInstance()->getConnection();
 
-    // 判断连接是否有效
+    // 判断MySQL连接的智能指针是否有效
     if (!conn) {
         return log;
     }
