@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <string>
 
 // MySQL 连接配置
@@ -58,6 +59,7 @@ struct AlertCommonConfig {
     std::string envName;   // 监控告警程序的运行环境（alert.env.name）
     std::string lockFile;  // 监控告警程序的锁文件（alert.lock.file）
     std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
+    double version;        // 监控告警程序的版本号（alert.version）
 };
 
 // 全局配置

@@ -30,6 +30,9 @@ private:
     // 配置参数转换为数字
     int toInt(const std::string& v, const char* key);
 
+    // 配置参数转换为小数
+    int toDubbo(const std::string& v, const char* key);
+
     // 配置参数转换为字符串
     std::string toStr(const std::string& v, const char* key);
 

@@ -43,6 +43,14 @@ int AppConfigLoader::toInt(const std::string& v, const char* key) {
     return std::stoi(v);
 }
 
+// 配置参数转换为小数
+int AppConfigLoader::toDubbo(const std::string& v, const char* key) {
+    if (v.empty()) {
+        LOG_FATAL("Config [%s] is missing", key);
+    }
+    return std::stod(v);
+}
+
 // 配置参数转换为字符串
 std::string AppConfigLoader::toStr(const std::string& v, const char* key) {
     if (v.empty() && optional_.find(key) == optional_.end()) {
@@ -103,6 +111,7 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alertCommon.envName = toStr(cfg_util.load("alert.env.name"), "alert.env.name");
     app.alertCommon.lockFile = toStr(cfg_util.load("alert.lock.file"), "alert.lock.file");
     app.alertCommon.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
+    app.alertCommon.version = toDubbo(cfg_util.load("alert.version"), "alert.version");
 
     return app;
 }
