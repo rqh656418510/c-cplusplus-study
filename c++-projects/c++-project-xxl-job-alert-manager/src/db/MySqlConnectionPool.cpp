@@ -358,5 +358,8 @@ void MySqlConnectionPool::scanIdleConnection() {
                 }
             }
         }  // 立刻释放互斥锁
+
+        LOG_DEBUG("Current size of connection queue: %d", this->connectionQueue_.size());
+        LOG_DEBUG("Current total number of connections: %d", this->connectionCount_.load());
     }
 }
