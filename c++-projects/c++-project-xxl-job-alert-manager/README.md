@@ -23,7 +23,7 @@
 | OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
 | MySQL C API（Connector/C） | `8.4.5`                 | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
 | MySQL Server               | `8.4.5`                 |                                                                      |
-| Linux System               | `Debian 12`、`CentOS 7` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
+| Linux System               | `CentOS 7`、`Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
 
 ### 项目配置
 
@@ -88,7 +88,7 @@ cd c++-project-xxl-job-alert-manager/bin
 
 ### 服务管理
 
-Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 配置为例）：
+Linux 平台（比如 CentOS、Debian）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 7 配置为例）：
 
 - 拷贝可执行文件
 
