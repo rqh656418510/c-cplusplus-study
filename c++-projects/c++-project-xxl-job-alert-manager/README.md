@@ -59,7 +59,7 @@ wxqy.account.corp_secret=xxxxxxxxxx
 
 > 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
 
-> 提示：在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
+> 提示：在 CentOS 7 系统上，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来一键安装所需的依赖软件。
 
 ``` sh
 # 进入项目根目录
