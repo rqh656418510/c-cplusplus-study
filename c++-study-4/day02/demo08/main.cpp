@@ -59,35 +59,21 @@ public:
     }
 };
 
-// 派生类
-class Women : public Human {
-public:
-public:
-    Women() {
-        cout << "Women::Women()" << endl;
-    }
-
-    ~Women() {
-        cout << "Women::~Women()" << endl;
-    }
-
-    void eat() {
-        cout << "Women eat food" << endl;
-    }
-
-    virtual void play() override {
-        cout << "WoMen play game" << endl;
-    }
-};
-
 int main() {
+    Human* human1 = new Human();
+    human1->play();  // 调用父类的成员函数 Human::play()
+    delete human1;
+
+    cout << "====================" << endl;
+
     // 父类的指针指向子类的对象
-    Human* human = new Men();
+    Human* human2 = new Men();
 
-    human->eat();   // 调用父类的成员函数
-    human->play();  // 调用子类的成员函数（多态）
+    human2->eat();          // 不会发生多态，调用父类的成员函数 Human::eat()
+    human2->play();         // 会发生多态，调用子类的成员函数 Men::play()
+    human2->Human::play();  // 通过作用域调用父类的成员函数 Human::play()
 
-    delete human;
+    delete human2;
 
     return 0;
 }
