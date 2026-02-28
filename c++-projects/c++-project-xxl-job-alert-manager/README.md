@@ -23,7 +23,7 @@
 | OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
 | MySQL C API（Connector/C） | `8.4.5`                 | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
 | MySQL Server               | `8.4.5`                 |                                                                      |
-| Linux System               | `Debian 12`、`CentOS 7` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
+| Linux System               | `CentOS 7`、`Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
 
 ### 告警策略
 
@@ -68,7 +68,8 @@ wxqy.account.corp_secret=xxxxxxxxxx
 ### 项目编译
 
 > 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
-> 提示：在 CentOS 7 系统上，编译项目之前可以执行命令 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 一键安装所需的依赖软件。
+
+> 提示：在 CentOS 7 系统上，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来一键安装所需的依赖软件。
 
 ``` sh
 # 进入项目根目录
@@ -98,7 +99,7 @@ cd c++-project-xxl-job-alert-manager/bin
 
 ### 服务管理
 
-Linux 平台（比如 Debian、CentOS）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 配置为例）：
+Linux 平台（比如 CentOS、Debian）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 7 配置为例）：
 
 - 拷贝可执行文件
 
