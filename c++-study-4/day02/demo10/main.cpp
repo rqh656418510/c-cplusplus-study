@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// 基类
 class Human {
 public:
     Human() {
@@ -75,7 +76,7 @@ int main() {
     // 获取运行时的具体类型
     cout << typeid(*human).name() << endl;
 
-    // 判断运行时的具体类型
+    // 判断运行时的具体类型（不能使用 name() 来比较类型是否相同）
     if (typeid(*human) == typeid(Men)) {
         cout << "*human 指针指向 Men" << endl;
     }
