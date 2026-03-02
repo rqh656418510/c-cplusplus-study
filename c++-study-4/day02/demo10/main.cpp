@@ -20,6 +20,7 @@ public:
         cout << "Human::~Human()" << endl;
     }
 
+    // 虚函数
     virtual void sleep() {
         cout << "Human::sleep()" << endl;
     }
@@ -46,7 +47,6 @@ public:
         cout << "Men::~Men()" << endl;
     }
 
-    // 虚函数
     virtual void sleep() override {
         cout << "Men::sleep()" << endl;
     }
@@ -70,6 +70,14 @@ int main() {
     if (men != nullptr) {
         // 向下类型转换后，最终调用子类的成员函数 Men::eat()
         men->eat();
+    }
+
+    // 获取运行时的具体类型
+    cout << typeid(*human).name() << endl;
+
+    // 判断运行时的具体类型
+    if (typeid(*human) == typeid(Men)) {
+        cout << "*human 指针指向 Men" << endl;
     }
 
     delete human;
