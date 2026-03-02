@@ -34,7 +34,6 @@ public:
 // 派生类
 class Men : public Human {
 public:
-public:
     Men() {
         cout << "Men::Men()" << endl;
     }
@@ -50,7 +49,6 @@ public:
 
 // 派生类
 class Women : public Human {
-public:
 public:
     Women() {
         cout << "Women::Women()" << endl;

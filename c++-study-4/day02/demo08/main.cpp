@@ -41,7 +41,6 @@ public:
 // 派生类
 class Men : public Human {
 public:
-public:
     Men() {
         cout << "Men::Men()" << endl;
     }

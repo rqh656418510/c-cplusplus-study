@@ -18,7 +18,7 @@ public:
         cout << "Human::Human(string, int)" << endl;
     }
 
-    ~Human() {
+    virtual ~Human() {
         cout << "Human::~Human()" << endl;
     }
 
