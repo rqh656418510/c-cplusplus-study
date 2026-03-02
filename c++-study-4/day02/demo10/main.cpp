@@ -58,10 +58,14 @@ public:
 int main() {
     // 父类的指针指向子类的对象
     Human* human = new Men("Jim", 18);
+
+    // 多态调用
     human->sleep();
 
     // 安全的向下类型转换
     Men* men = dynamic_cast<Men*>(human);
+
+    // 向下类型转换后，调用子类的成员函数
     men->eat();
 
     delete human;
