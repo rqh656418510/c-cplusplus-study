@@ -46,6 +46,7 @@ public:
         cout << "Men::~Men()" << endl;
     }
 
+    // 虚函数
     virtual void sleep() override {
         cout << "Men::sleep()" << endl;
     }
@@ -59,14 +60,17 @@ int main() {
     // 父类的指针指向子类的对象
     Human* human = new Men("Jim", 18);
 
-    // 多态调用
+    // 多态调用，最终调用子类的成员函数 Men::sleep()
     human->sleep();
 
-    // 安全的向下类型转换
+    // 安全的向下类型转换（父类 --> 子类）
     Men* men = dynamic_cast<Men*>(human);
 
-    // 向下类型转换后，调用子类的成员函数
-    men->eat();
+    // 判断类型转换是否成功
+    if (men != nullptr) {
+        // 向下类型转换后，最终调用子类的成员函数 Men::eat()
+        men->eat();
+    }
 
     delete human;
 
