@@ -17,6 +17,7 @@ public:
         cout << "Human::Human(string, int)" << endl;
     }
 
+    // 虚析构函数
     virtual ~Human() {
         cout << "Human::~Human()" << endl;
     }
@@ -54,6 +55,9 @@ public:
         cout << "Men::sleep()" << endl;
     }
 };
+
+// 定义不想被继承的基类
+class Car final {};
 
 int main() {
     // 父类的指针指向子类的对象
