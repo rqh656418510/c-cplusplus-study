@@ -3,6 +3,7 @@
 #include <mysql/errmsg.h>
 #include <mysql/mysql.h>
 
+#include <iostream>
 #include <atomic>
 #include <chrono>
 #include <ctime>

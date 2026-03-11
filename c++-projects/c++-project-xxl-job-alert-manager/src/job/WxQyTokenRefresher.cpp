@@ -3,7 +3,6 @@
 #include <chrono>
 #include <exception>
 #include <functional>
-#include <iostream>
 #include <thread>
 
 #include "AppConfigLoader.h"

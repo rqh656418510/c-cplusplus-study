@@ -2,7 +2,6 @@
 
 #include <chrono>
 #include <exception>
-#include <iostream>
 #include <thread>
 
 #include "AppConfigLoader.h"
@@ -19,6 +18,7 @@ MySqlConnection::~MySqlConnection() {
         if (conn_ != nullptr) {
             // 关闭连接
             mysql_close(conn_);
+            conn_ = nullptr;
         }
     } catch (const std::exception& e) {
         LOG_ERROR("Failed to close connection, exception: %s", e.what());

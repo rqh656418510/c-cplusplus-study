@@ -1,4 +1,3 @@
-
 #include "XxlJobLogDao.h"
 
 #include <iostream>
@@ -6,7 +5,6 @@
 
 #include "AppConfigLoader.h"
 #include "MySqlConnectionPool.h"
-#include "XxlJobMonitor.h"
 
 // 查询最新的任务调度日志记录
 XxlJobLog XxlJobLogDao::selectLastest() {

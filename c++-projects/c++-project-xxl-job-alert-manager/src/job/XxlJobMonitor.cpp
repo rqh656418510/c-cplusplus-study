@@ -3,7 +3,6 @@
 #include <chrono>
 #include <ctime>
 #include <functional>
-#include <iostream>
 
 #include "AlertChannelFactory.h"
 #include "AppConfigLoader.h"
@@ -12,7 +11,6 @@
 #include "TimeHelper.h"
 #include "Timestamp.h"
 #include "XxlJobLogDao.h"
-#include "XxlJobMonitor.h"
 
 // 私有构造函数
 XxlJobMonitor::XxlJobMonitor()
