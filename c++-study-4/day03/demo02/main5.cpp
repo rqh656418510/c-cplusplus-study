@@ -30,11 +30,16 @@ public:
     }
 
     // 成员函数（当函数的返回值是临时对象时，编译器可能会调用拷贝构造函数生成一个临时对象，并将该临时对象作为函数返回值）
-    MyValue Double(MyValue& mv) {
+    MyValue Double1(MyValue& mv) {
         MyValue tmp;
         tmp.val1 = mv.val1 * 2;
         tmp.val2 = mv.val2 * 2;
         return tmp;
+    }
+
+    // 优化后的写法，为了避免编译器可能调用拷贝构造函数生成一个临时对象
+    MyValue Double2(MyValue& mv) {
+        return MyValue(mv.val1 * 2, mv.val2 * 2);
     }
 
 public:
@@ -44,6 +49,17 @@ public:
 
 int main() {
     MyValue mv(10, 20);
-    mv.Double(mv);
+
+    std::cout << "------------" << std::endl;
+
+    // 不接管临时对象，临时对象会立即析构
+    mv.Double1(mv);
+
+    // 其他常见写法（接管临时对象，临时对象不会立即析构）
+    // MyValue mv2 = mv.Double1(mv);
+    // MyValue&& refVal = mv.Double1(mv);  // 临时对象是右值，所以可以被右值引用绑定
+
+    std::cout << "------------" << std::endl;
+
     return 0;
 }
