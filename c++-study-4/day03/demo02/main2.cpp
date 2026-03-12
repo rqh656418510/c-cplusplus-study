@@ -8,17 +8,17 @@ class MyValue {
 public:
     // 有参构造函数
     MyValue(int v1 = 0, int v2 = 0) : val1(v1), val2(v2) {
-        std::cout << "CTempValue()" << std::endl;
+        std::cout << "MyValue()" << std::endl;
     }
 
     // 拷贝构造函数
     MyValue(const MyValue& mv) : val1(mv.val1), val2(mv.val2) {
-        std::cout << "CTempValue(const CTempValue&)" << std::endl;
+        std::cout << "MyValue(const MyValue&)" << std::endl;
     }
 
     // 析构函数
     ~MyValue() {
-        std::cout << "~CTempValue()" << std::endl;
+        std::cout << "~MyValue()" << std::endl;
     }
 
     // 成员函数（以传值的方式给函数传递参数，会产生临时对象）
