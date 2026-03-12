@@ -41,6 +41,8 @@ public:
 };
 
 void test01() {
+    std::cout << "======== test01() =======" << std::endl;
+
     MyValue mv(10, 20);     // 会调用有参构造函数
     int sum = mv.sum1(mv);  // 会调用拷贝构造函数（性能差）
 
@@ -49,6 +51,8 @@ void test01() {
 }
 
 void test02() {
+    std::cout << "======== test02() =======" << std::endl;
+
     MyValue mv(30, 40);     // 会调用有参构造函数
     int sum = mv.sum2(mv);  // 不会调用拷贝构造函数（性能高）
 
@@ -58,7 +62,6 @@ void test02() {
 
 int main() {
     test01();
-    std::cout << "=================================" << std::endl;
     test02();
     return 0;
 }
