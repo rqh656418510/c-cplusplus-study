@@ -16,8 +16,8 @@ public:
         std::cout << "B(const B&)" << std::endl;
     }
 
-    // 虚析构函数
-    virtual ~B() {
+    // 析构函数
+    ~B() {
         std::cout << "~B()" << std::endl;
     }
 
@@ -45,8 +45,8 @@ public:
         std::cout << "A(const A&)" << std::endl;
     }
 
-    // 虚析构函数
-    virtual ~A() {
+    // 析构函数
+    ~A() {
         std::cout << "~A()" << std::endl;
         delete m_pb;
     }
