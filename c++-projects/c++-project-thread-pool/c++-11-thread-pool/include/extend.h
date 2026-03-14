@@ -51,7 +51,7 @@ public:
     // 禁用带左值的赋值运算符
     Any &operator=(const Any &) = delete;
 
-    // 带右值的拷贝构造函数（移动拷贝构造）
+    // 带右值的拷贝构造函数（移动构造函数）
     Any(Any&& other) = default;
 
     // 带右值的赋值运算符（移动赋值运算符）
