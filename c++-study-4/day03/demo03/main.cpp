@@ -40,7 +40,7 @@ public:
         std::cout << "A(A &&)" << std::endl;
     }
 
-    // 拷贝构造函数
+    // 拷贝构造函数，m_pb(new B(*(a.m_pb))) 表示深拷贝（会分配新的内存空间）
     A(const A& a) : m_pb(new B(*(a.m_pb))) {
         std::cout << "A(const A&)" << std::endl;
     }
