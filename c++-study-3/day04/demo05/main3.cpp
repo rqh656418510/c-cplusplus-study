@@ -173,8 +173,10 @@ public:
 
         iterator(Vector<T, Alloc> *pvec = nullptr, T *p = nullptr) : _pVec(pvec), _ptr(p) {
             // 维护迭代器的单向链表结构
-            Iterator_Base *itb = new Iterator_Base(this, _pVec->_head._next);
-            _pVec->_head._next = itb;
+            if (_pVec != nullptr) {
+                Iterator_Base *itb = new Iterator_Base(this, _pVec->_head._next);
+                _pVec->_head._next = itb;
+            }
         }
 
         // 重载不等于运算符
