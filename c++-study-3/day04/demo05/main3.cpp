@@ -83,7 +83,7 @@ public:
 
     // 赋值运算符重载
     Vector<T> &operator=(const Vector<T> &v) {
-        if (this == v) {
+        if (this == &v) {
             return *this;
         }
 
