@@ -314,7 +314,7 @@ private:
         Iterator_Base *cur = &this->_head;
         Iterator_Base *next = this->_head._next;
         while (next != nullptr) {
-            if (next->_cur->_ptr >= start && next->_cur->_ptr <= end) {
+            if (next->_cur && next->_cur->_ptr >= start && next->_cur->_ptr <= end) {
                 // 迭代器失效，将迭代器持有的容器指针置为空
                 next->_cur->_pVec = nullptr;
                 // 在迭代器链表中，删除当前迭代器节点，并继续判断后面的迭代器节点是否失效
