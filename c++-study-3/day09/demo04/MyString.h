@@ -40,7 +40,7 @@ public:
         strcpy(_pstr, str._pstr);
     }
 
-    // 带右值引用参数的拷贝构造函数
+    // 带右值引用参数的移动构造函数
     MyString(MyString&& str) {
         cout << "MyString(MyString&& str)" << endl;
         // 浅拷贝临时对象（可以提高代码执行效率，减少内存的拷贝次数）
@@ -48,7 +48,7 @@ public:
         str._pstr = nullptr;
     }
 
-    // 带左值引用参数的赋值运算符重载
+    // 带左值引用参数的拷贝赋值运算符
     MyString& operator=(const MyString& str) {
         cout << "operator=(const MyString &str)" << endl;
         // 防止自赋值
@@ -66,7 +66,7 @@ public:
         return *this;
     }
 
-    // 带右值引用参数的赋值运算符重载
+    // 带右值引用参数的移动赋值运算符
     MyString& operator=(MyString&& str) {
         cout << "operator=(MyString&& str)" << endl;
         // 防止自赋值

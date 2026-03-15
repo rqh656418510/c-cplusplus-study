@@ -256,7 +256,7 @@ private:
 int main() {
     Vector<MyString> v1;
     cout << "----------------------------------" << endl;
-    v1.push_back(MyString("bbb"));  // 调用的是 MyString 带右值引用参数的拷贝构造函数
+    v1.push_back(MyString("bbb"));  // 调用的是 MyString 带右值引用参数的移动构造函数
     cout << "----------------------------------" << endl;
     return 0;
 }

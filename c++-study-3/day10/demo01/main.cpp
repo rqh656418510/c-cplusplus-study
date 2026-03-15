@@ -26,16 +26,16 @@ public:
     // 显式删除带左值引用参数的拷贝构造函数
     CSmartPtr(const CSmartPtr<T> &) = delete;
 
-    // 显式删除带左值引用参数的赋值运算符重载函数
+    // 显式删除带左值引用参数的拷贝赋值运算符函数
     CSmartPtr<T> &operator=(const CSmartPtr<T> &) = delete;
 
-    // 带右值引用参数的拷贝构造函数，支持移动构造（即支持 move 移动语义）
+    // 带右值引用参数的移动构造函数，支持移动构造（即支持 move 移动语义）
     CSmartPtr(CSmartPtr<T> &&src) noexcept : _ptr(src._ptr) {
         cout << "CSmartPtr(CSmartPtr<T> &&src)" << endl;
         src._ptr = nullptr;
     }
 
-    // 带右值引用参数的赋值运算符重载函数，支持移动赋值（即支持 move 移动语义）
+    // 带右值引用参数的移动赋值运算符函数，支持移动赋值（即支持 move 移动语义）
     CSmartPtr<T> &operator=(CSmartPtr<T> &&src) noexcept {
         cout << "CSmartPtr<T> &operator=(CSmartPtr<T> &&src)" << endl;
         // 避免自赋值
