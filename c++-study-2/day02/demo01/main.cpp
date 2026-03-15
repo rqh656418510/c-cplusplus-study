@@ -3,8 +3,6 @@
  */
 
 #include <iostream>
-#include "../demo09/circle.h"
-
 
 using namespace std;
 

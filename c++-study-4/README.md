@@ -36,17 +36,17 @@ C++ 从基础到进阶（王建伟 - 80 集）
 
 ## 常用命令
 
-### Linux 编译与运行
+### Linux 单个源文件编译与运行
 
 ``` shell
 # 编译（可同时指定多个".cpp"文件，不需要指定".h"文件）
 $ g++ helloworld.cpp -o helloworld
 
 # 运行
-$ ./**helloworld**
+$ ./helloworld
 ```
 
-### Windows 编译与运行
+### Windows 单个源文件编译与运行
 
 在 Windows 系统的开始菜单栏里，找到 `Developer Command Prompt for VS 2019` 应用程序，双击运行后，在 `Command` 窗口内执行以下命令来编译 C++ 源文件：
 

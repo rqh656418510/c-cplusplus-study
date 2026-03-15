@@ -165,4 +165,3 @@ add_executable(day09-demo18-1 day09/demo18/main.cpp)
 add_executable(day09-demo18-2 day09/demo18/main2.cpp)
 add_executable(day09-demo18-3 day09/demo18/main3.cpp)
 add_executable(day09-demo19-1 day09/demo19/main.cpp)
-
