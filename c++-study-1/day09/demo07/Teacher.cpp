@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "Teacher.h"
 
 // 构造函数

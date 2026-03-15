@@ -100,7 +100,7 @@ void CalProgSal(programmer* base)
 	base->getSal();
 }
 
-void main()
+int main()
 {
 	junior_programmer jp("小王", "初级", 4000);
 	mid_programmer mp("小张", "中级", 8600);
@@ -112,5 +112,5 @@ void main()
 	CalProgSal(&ap);
 	CalProgSal(&ar);
 
-	return;
+	return 0;
 }

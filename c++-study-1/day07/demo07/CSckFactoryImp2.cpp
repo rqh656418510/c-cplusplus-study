@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstring>
+
 #include "CSckFactoryImp2.h"
 
 // 客户端初始化

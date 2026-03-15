@@ -26,7 +26,7 @@ T Max(T a, T b, T c)
 	return Max(Max(a, b), c);
 }
 
-void main()
+int main()
 {
 	int a = 1;
 	int b = 2;
@@ -35,5 +35,5 @@ void main()
 	cout << Max(3.0, 4.0) << endl; // 如果函数模板产生更好的匹配 使用函数模板
 	cout << Max(5.0, 6.0, 7.0) << endl; // 函数模板的重载
 	cout << Max('a', 100) << endl;  //调用普通函数，可以进行隐式类型转换 
-	return;
+	return 0;
 }

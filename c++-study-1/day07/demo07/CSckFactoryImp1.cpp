@@ -1,4 +1,4 @@
-#pragma once
+#include <cstring>
 
 #include "CSckFactoryImp1.h"
 

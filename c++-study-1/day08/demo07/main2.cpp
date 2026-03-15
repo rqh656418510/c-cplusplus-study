@@ -8,6 +8,7 @@
 #include <mutex>
 #include <vector>
 #include <thread>
+#include <atomic>
 
 using namespace std;
 

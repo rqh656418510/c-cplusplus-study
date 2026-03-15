@@ -8,7 +8,7 @@ int main() {
 
 	// 自动调用有参构造函数
 	MyString str1("Tom");
-	MyString str2(NULL);
+	MyString str2(nullptr);
 	MyString str3("Peter");
 
 	// 自动调用拷贝构造函数

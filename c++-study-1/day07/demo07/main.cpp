@@ -15,6 +15,8 @@ Windows 系统运行命令：main
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <cstring>
+
 #include "main.h"
 #include "CSckFactoryImp1.h"
 #include "CSckFactoryImp2.h"

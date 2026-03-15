@@ -35,7 +35,7 @@ template <typename T>
 class B : public A<T> {
 
 public:
-	B(T a, T b) : A(a) {
+	B(T a, T b) : A<T>(a) {
 		this->b = b;
 	}
 
