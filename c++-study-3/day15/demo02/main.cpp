@@ -103,3 +103,7 @@ private:
     Alloc _allocator;   // 空间配置器
 
 };
+
+int main() {
+    return 0;
+}

@@ -307,10 +307,13 @@ private:
     // 扩容操作
     void resize() {
         int size = _end - _first;
+        int length = _last - _first;
+
         // 开辟数组的内存空间
         T* _ptemp = _allocator.allocate(size * 2);
+
         // 在指定的内存空间中构造对象
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < length; i++) {
             _allocator.construct(_ptemp + i, _first[i]);
         }
 
@@ -323,7 +326,7 @@ private:
         _allocator.deallocate(_first);
 
         _first = _ptemp;
-        _last = _first + size;
+        _last = _first + length;
         _end = _first + size * 2;
     }
 
