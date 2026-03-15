@@ -224,7 +224,9 @@ public:
             if (_pVec == nullptr) {
                 throw "Iterator invalid!";
             }
-            return iterator(_ptr++);
+            iterator tmp = *this;
+            _ptr++;
+            return tmp;
         }
 
         // 解引用运算符重载
