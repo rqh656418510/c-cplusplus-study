@@ -17,13 +17,15 @@
 
 ### 开发工具
 
-| 软件                       | 版本                    | 说明                                                                 |
-| -------------------------- | ----------------------- | -------------------------------------------------------------------- |
-| C++                        | `11`                    |                                                                      |
-| OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL               |
-| MySQL C API（Connector/C） | `8.4.5`                 | [MySQL C API 库使用教程](https://www.techgrow.cn/posts/c9e38d0.html) |
-| MySQL Server               | `8.4.5`                 |                                                                      |
-| Linux System               | `CentOS 7`、`Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台                         |
+| 软件                       | 版本                    | 说明                                                   |
+| -------------------------- | ----------------------- | ------------------------------------------------------ |
+| C++                        | `11`                    |                                                        |
+| CMake                      | `3.25.1`                |                                                        |
+| Libcurl                    | `7.88.1`                |                                                        |
+| OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
+| MySQL C API（Connector/C） | `8.4.5`                 |                                                        |
+| MySQL Server               | `8.4.5`                 |                                                        |
+| Linux System               | `CentOS 7`、`Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
 
 ### 告警策略
 
@@ -67,7 +69,7 @@ wxqy.account.corp_secret=xxxxxxxxxx
 
 ### 项目编译
 
-> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C），详细教程请参考 [这里](https://www.techgrow.cn/posts/c9e38d0.html)。
+> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C）依赖软件。
 
 > 提示：在 CentOS 7 系统上，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来一键安装所需的依赖软件。
 
@@ -186,6 +188,8 @@ sudo systemctl stop alert-manager
 sudo systemctl restart alert-manager
 ```
 
+- 查看监控告警程序的日志信息
+
 ``` sh
 # 查看系统日志
 sudo journalctl -u alert-manager -f
@@ -194,9 +198,18 @@ sudo journalctl -u alert-manager -f
 tail -f -n 50 /home/centos/alert/2026-2-12.log
 ```
 
-### 参考项目
+- 查看监控告警程序占用的内存大小
 
-- [基于 C++ 实现 MySQL 数据库连接池](https://github.com/rqh656418510/c-cplusplus-study/tree/main/c%2B%2B-projects/c%2B%2B-project-db-connection-pool)
+``` shell
+# 获取应用程序的进程 ID
+ps -aux|grep alert-manager
+
+# 查看应用程序占用的内存大小，RSS 字段表示实际占用物理内存（KB）
+ps -o pid,ppid,cmd,%mem,rss,vsz -p <pid>
+
+# 或者，查看最后一行内容，RSS 字段表示实际占用物理内存（KB）
+pmap -x <pid>
+```
 
 ### 企业微信官方文档
 
