@@ -7,6 +7,7 @@
 - 单例模式
 - 智能指针
 - 文件读写
+- 日志系统
 - 数据库连接池
 - 企业微信 API
 - HTTP 网络编程
@@ -17,16 +18,16 @@
 
 ### 开发工具
 
-| 软件                       | 版本                    | 说明                                                   |
-| -------------------------- | ----------------------- | ------------------------------------------------------ |
-| C++                        | `11`                    |                                                        |
-| GCC                        | `4.8.5`                 |                                                        |
-| CMake                      | `3.25.1`                |                                                        |
-| Libcurl                    | `7.88.1`                |                                                        |
-| OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
-| MySQL C API（Connector/C） | `8.4.5`                 |                                                        |
-| MySQL Server               | `8.4.5`                 |                                                        |
-| Linux System               | `CentOS 7`、`Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
+| 软件                       | 低版本     | 高版本      | 说明                                                   |
+| -------------------------- | ---------- | ----------- | ------------------------------------------------------ |
+| C++                        | `11`       | `11`        |                                                        |
+| GCC                        | `4.8.5`    | `12.2.0`    |                                                        |
+| CMake                      | `3.25.1`   | `3.27.7`    |                                                        |
+| Libcurl                    | `7.29.0`   | `7.88.1`    |                                                        |
+| OpenSSL                    | `1.0.2`    | `3.0.18`    | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
+| MySQL C API（Connector/C） | `8.4.5`    | `8.4.5`     |                                                        |
+| MySQL Server               | `8.4.5`    | `8.4.5`     |                                                        |
+| Linux System               | `CentOS 7` | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
 
 ### 告警策略
 
@@ -60,7 +61,7 @@ mysql.table=xxl_job_log
 # ==================== 企业微信账号配置 ====================
 # 企业微信应用的AgentId
 wxqy.account.agent_id=1000001
-# 接收消息的企业微信用户ID
+# 接收消息的企业微信用户ID（多个ID使用|分隔）
 wxqy.account.to_user=ZhangSan
 # 企业微信的公司ID（CorpId）
 wxqy.account.corp_id=xxxxxxxxxx
