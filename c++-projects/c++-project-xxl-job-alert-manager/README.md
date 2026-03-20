@@ -6,9 +6,9 @@
 
 - 单例模式
 - 智能指针
-- 配置文件读取
-- 企业微信 API
+- 文件读写
 - 数据库连接池
+- 企业微信 API
 - HTTP 网络编程
 - 多线程并发编程
 - MySQL 数据库操作
@@ -20,6 +20,7 @@
 | 软件                       | 版本                    | 说明                                                   |
 | -------------------------- | ----------------------- | ------------------------------------------------------ |
 | C++                        | `11`                    |                                                        |
+| GCC                        | `4.8.5`                 |                                                        |
 | CMake                      | `3.25.1`                |                                                        |
 | Libcurl                    | `7.88.1`                |                                                        |
 | OpenSSL                    | `3.0.18`                | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
@@ -92,16 +93,16 @@ chmod +x autobuild.sh
 # 进入项目 bin 目录
 cd c++-project-xxl-job-alert-manager/bin
 
-# 运行可执行文件（默认配置文件为 ./alert.conf）
+# 运行可执行文件（默认使用的配置文件为 ./alert.conf）
 ./alert-manager
 
-# 或者运行可执行文件时指定配置文件
+# 或者在运行可执行文件时，指定配置文件（支持绝对路径或相对路径）
 ./alert-manager -i alert.conf
 ```
 
 ### 服务管理
 
-Linux 平台（比如 CentOS、Debian）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 7 配置为例）：
+Linux 平台（比如 CentOS 7、Debian 12）可以通过 Systemd 管理监控告警程序，具体配置如下（以 CentOS 7 配置为例）：
 
 - 拷贝可执行文件
 
@@ -164,13 +165,15 @@ StandardError=journal
 WantedBy=multi-user.target
 ```
 
-- 通过 Systemd 管理监控告警程序
-
 ``` sh
 # 重新加载系统配置文件
 sudo systemctl daemon-reload
+```
 
-# 设置应用程序开机启动
+- 通过 Systemd 管理监控告警程序
+
+``` sh
+# 设置应用程序开机自启动
 sudo systemctl enable alert-manager
 ```
 
@@ -204,10 +207,10 @@ tail -f -n 50 /home/centos/alert/2026-2-12.log
 # 获取应用程序的进程 ID
 ps -aux|grep alert-manager
 
-# 查看应用程序占用的内存大小，RSS 字段表示实际占用物理内存（KB）
+# 查看应用程序占用的内存大小，RSS 字段表示实际占用物理内存（单位：KB）
 ps -o pid,ppid,cmd,%mem,rss,vsz -p <pid>
 
-# 或者，查看最后一行内容，RSS 字段表示实际占用物理内存（KB）
+# 或者，查看最后一行内容，RSS 字段表示实际占用物理内存（单位：KB）
 pmap -x <pid>
 ```
 
