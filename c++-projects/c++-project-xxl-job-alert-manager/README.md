@@ -25,8 +25,8 @@
 | CMake                      | `3.25.1`   | `3.27.7`    |                                                        |
 | Libcurl                    | `7.29.0`   | `7.88.1`    |                                                        |
 | OpenSSL                    | `1.0.2`    | `3.0.18`    | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
-| MySQL C API（Connector/C） | `8.4.5`    | `8.4.5`     |                                                        |
-| MySQL Server               | `8.4.5`    | `8.4.5`     |                                                        |
+| MySQL C API（Connector/C） | `5.7.33`   | `8.4.5`     |                                                        |
+| MySQL Server               | `5.7.33`   | `8.4.5`     |                                                        |
 | Linux System               | `CentOS 7` | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
 
 ### 告警策略
