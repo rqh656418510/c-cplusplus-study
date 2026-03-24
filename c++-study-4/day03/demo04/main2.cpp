@@ -22,7 +22,11 @@ public:
 
 public:
     int m_value_grand;
+    static int m_value_static;  // 声明静态成员变量
 };
+
+// 定义类外初始化静态成员变量
+int Grand::m_value_static = 5;
 
 // 单继承
 class A : public Grand {
@@ -80,7 +84,9 @@ public:
     int m_value_c;
 };
 
-int main() {
+void test01() {
+    cout << "============test01()===========" << endl;
+
     C c1(10, 20, 30);
 
     // c1.info();   // 编译失败，因为编译器不知道调用的式父类 A 还是父类 B 的 info() 函数，存在二义性
@@ -88,6 +94,19 @@ int main() {
 
     c1.infoA();  // 输出 10
     c1.infoB();  // 输出 20
+}
 
+void test02() {
+    cout << "============test02()===========" << endl;
+
+    A a1(6);
+    A::m_value_static = 15;
+    cout << A::m_value_static << endl;
+    cout << C::m_value_static << endl;
+}
+
+int main() {
+    test01();
+    test02();
     return 0;
 }
