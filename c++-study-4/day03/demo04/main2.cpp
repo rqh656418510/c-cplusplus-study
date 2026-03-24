@@ -1,9 +1,8 @@
 /**
  * 继承的构造函数、多重继承、虚继承
  *
- * (b) 多重继承
+ * (b) 多重继承的使用
  */
-
 #include <iostream>
 
 using namespace std;
@@ -11,9 +10,11 @@ using namespace std;
 class Grand {
 public:
     Grand(int i) : m_value_grand(i) {
+        cout << "Grand(int)" << endl;
     }
 
     virtual ~Grand() {
+        cout << "~Grand()" << endl;
     }
 
     void info() {
@@ -22,19 +23,17 @@ public:
 
 public:
     int m_value_grand;
-    static int m_value_static;  // 声明静态成员变量
 };
-
-// 定义类外初始化静态成员变量
-int Grand::m_value_static = 5;
 
 // 单继承
 class A : public Grand {
 public:
     A(int i) : Grand(i), m_value_a(i) {
+        cout << "A(int)" << endl;
     }
 
     virtual ~A() {
+        cout << "~A()" << endl;
     }
 
     void info() {
@@ -48,9 +47,11 @@ public:
 class B {
 public:
     B(int i) : m_value_b(i) {
+        cout << "B(int)" << endl;
     }
 
     virtual ~B() {
+        cout << "~B()" << endl;
     }
 
     void info() {
@@ -65,9 +66,11 @@ public:
 class C : public A, public B {
 public:
     C(int i, int j, int k) : A(i), B(j), m_value_c(k) {
+        cout << "C(int, int, int)" << endl;
     }
 
     virtual ~C() {
+        cout << "~C()" << endl;
     }
 
     void infoA() {
@@ -84,9 +87,7 @@ public:
     int m_value_c;
 };
 
-void test01() {
-    cout << "============test01()===========" << endl;
-
+int main() {
     C c1(10, 20, 30);
 
     // c1.info();   // 编译失败，因为编译器不知道调用的式父类 A 还是父类 B 的 info() 函数，存在二义性
@@ -94,19 +95,6 @@ void test01() {
 
     c1.infoA();  // 输出 10
     c1.infoB();  // 输出 20
-}
 
-void test02() {
-    cout << "============test02()===========" << endl;
-
-    A a1(6);
-    A::m_value_static = 15;
-    cout << A::m_value_static << endl;
-    cout << C::m_value_static << endl;
-}
-
-int main() {
-    test01();
-    test02();
     return 0;
 }
