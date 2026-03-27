@@ -41,7 +41,7 @@
 
 ### 项目配置
 
-- 打开 `config/alert.conf` 配置文件，更改 MySQL 连接信息和企业微信账号信息，如下所示：
+- 打开 `config/alert.conf` 配置文件，更改 MySQL 连接信息和企业微信账号信息，其他监控告警的配置信息可以按需修改，如下所示：
 
 ``` conf
 # ==================== MySQL连接配置 ====================
@@ -71,9 +71,7 @@ wxqy.account.corp_secret=xxxxxxxxxx
 
 ### 项目编译
 
-> 注意：在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C）依赖软件。
-
-> 提示：在 CentOS 7 系统上，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来一键安装所需的依赖软件。
+> 特别注意，在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C）依赖软件。如果是使用 CentOS 7，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来快速安装所需的依赖软件。
 
 ``` sh
 # 进入项目根目录
@@ -88,7 +86,7 @@ chmod +x autobuild.sh
 
 ### 项目运行
 
-> 注意：在运行项目之前，请务必确保 XXL-JOB 数据库已经初始化完成（开发环境可以执行 `sql/mysql.sql` 脚本来初始化数据库）
+> 特别注意，在运行项目之前，请务必确保 XXL-JOB 数据库已经初始化完成（开发环境可以执行 `sql/mysql.sql` 脚本来初始化数据库）
 
 ``` sh
 # 进入项目 bin 目录
