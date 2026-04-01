@@ -1,7 +1,7 @@
 /**
  * 类型转换构造函数、类型转换运算符
  *
- * (a) 类型转换构造运算符
+ * (d) 类型转换的二义性问题
  */
 
 #include <iostream>
@@ -23,6 +23,12 @@ public:
         return m_num;
     }
 
+    // 类型转换运算符，将类类型转换为其他类型
+    operator double() const {
+        cout << "operator int() const" << endl;
+        return m_num;
+    }
+
 private:
     int m_num;
 };
@@ -30,17 +36,8 @@ private:
 int main() {
     MyInt i(30);
 
-    // 将类类型转换为其他类型（隐式调用类型转换运算符）
-    int i2 = i + 10;
-    cout << i2 << endl;
-
-    // 将类类型转换为其他类型（显式调用类型转换运算符）
-    int i3 = i.operator int() + 15;
-    cout << i3 << endl;
-
-    // 将类类型转换为其他类型（显式调用类型转换运算符）
-    int i4 = static_cast<int>(i) + 25;
-    cout << i4 << endl;
+    // 编译出错，存在二义性，编译器不知道调用 operator int() 还是 operator double() 运算符
+    // int i2 = i + 10;
 
     return 0;
 }
