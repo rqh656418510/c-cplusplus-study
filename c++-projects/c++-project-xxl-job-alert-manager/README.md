@@ -200,7 +200,7 @@ sudo journalctl -u alert-manager -f
 tail -f -n 50 /home/centos/alert/2026-2-12.log
 ```
 
-- 查看监控告警程序占用的内存大小
+- 查看监控告警程序实际占用的物理内存大小
 
 ``` shell
 # 获取应用程序的进程 ID
