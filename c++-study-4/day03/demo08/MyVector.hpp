@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// 定义类模板
+// 定义类模板（使用类型模板参数和非类型模板参数）
 template <typename T, int C = 10>
 class MyVector {
 public:
