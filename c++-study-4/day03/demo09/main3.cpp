@@ -4,7 +4,7 @@
  * (c) 默认模板参数的使用
  */
 
-#include <exception>
+#include <stdexcept>
 #include <iostream>
 
 using namespace std;
