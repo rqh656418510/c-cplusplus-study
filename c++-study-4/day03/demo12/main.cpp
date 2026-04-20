@@ -17,7 +17,7 @@ public:
     }
 
     void print(T t, U u) {
-        cout << "printf() 泛化版本" << endl;
+        cout << "printf(T, U) 泛化版本" << endl;
     }
 };
 
