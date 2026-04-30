@@ -1,4 +1,4 @@
-#include "MyClass.h"
+﻿#include "MyClass.h"
 
 // 成员函数定义
 template <typename T>

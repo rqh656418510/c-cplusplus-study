@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RTTI、dynamic_cast、typeid、虚函数表
  */
 
