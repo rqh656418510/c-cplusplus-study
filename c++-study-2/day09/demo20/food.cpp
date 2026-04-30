@@ -1,4 +1,4 @@
-#include "food.h"
+﻿#include "food.h"
 #include "wall.h"
 
 Food::Food(Wall& tempWall) :wall(tempWall)

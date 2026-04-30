@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 
 /**
  * 1. putchar（字符输出函数）与 getchar(字符输入函数)

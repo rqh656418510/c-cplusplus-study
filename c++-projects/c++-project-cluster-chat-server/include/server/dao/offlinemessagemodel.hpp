@@ -1,4 +1,4 @@
-#ifndef OFFLINEMESSAGEMODEL_H
+﻿#ifndef OFFLINEMESSAGEMODEL_H
 #define OFFLINEMESSAGEMODEL_H
 
 #include <json.hpp>

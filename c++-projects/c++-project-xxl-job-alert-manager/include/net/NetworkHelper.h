@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <arpa/inet.h>
 #include <ifaddrs.h>

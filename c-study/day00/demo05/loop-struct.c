@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 
 /**
  *  1. 使用goto语句和if语句构成循环

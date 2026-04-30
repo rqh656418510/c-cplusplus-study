@@ -1,4 +1,4 @@
-#include "AsyncAlert.h"
+﻿#include "AsyncAlert.h"
 
 #include <exception>
 #include <functional>

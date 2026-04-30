@@ -1,4 +1,4 @@
-#include "AlertChannelFactory.h"
+﻿#include "AlertChannelFactory.h"
 
 #include "AsyncAlert.h"
 #include "CompositeAlert.h"

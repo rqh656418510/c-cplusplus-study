@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef WIN32
     #define LOG(format, ...) printf(format, __VA_ARGS__);

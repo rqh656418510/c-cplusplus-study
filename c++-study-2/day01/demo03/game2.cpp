@@ -1,4 +1,4 @@
-#include "game2.h"
+﻿#include "game2.h"
 
 void game2::getAtk() {
     int atk = 200;

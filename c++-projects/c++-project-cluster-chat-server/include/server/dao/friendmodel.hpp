@@ -1,4 +1,4 @@
-#ifndef FRIENDMODEL_H
+﻿#ifndef FRIENDMODEL_H
 #define FRIENDMODEL_H
 
 #include <vector>

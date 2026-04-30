@@ -1,4 +1,4 @@
-#ifndef USERMODEL_H
+﻿#ifndef USERMODEL_H
 #define USERMODEL_H
 
 #include "json.hpp"

@@ -1,4 +1,4 @@
-#include "NetworkHelper.h"
+﻿#include "NetworkHelper.h"
 
 #include <curl/curl.h>
 

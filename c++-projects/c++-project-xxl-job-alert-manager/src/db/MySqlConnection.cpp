@@ -1,4 +1,4 @@
-#include "MySqlConnection.h"
+﻿#include "MySqlConnection.h"
 
 #include <chrono>
 #include <exception>

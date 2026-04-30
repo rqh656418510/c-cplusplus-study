@@ -1,4 +1,4 @@
-#ifndef PUBLIC_H
+﻿#ifndef PUBLIC_H
 #define PUBLIC_H
 
 /**

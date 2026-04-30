@@ -1,4 +1,4 @@
-#include "MysqlConnection.h"
+﻿#include "MysqlConnection.h"
 
 // 构造函数
 MysqlConnection::MysqlConnection() {

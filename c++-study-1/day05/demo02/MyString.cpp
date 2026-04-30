@@ -1,4 +1,4 @@
-#include "MyString.h"
+﻿#include "MyString.h"
 
 // 无参构造函数
 MyString::MyString() {

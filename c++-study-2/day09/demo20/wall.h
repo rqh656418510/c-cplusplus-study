@@ -1,4 +1,4 @@
-#ifndef _WALL_HEAD
+﻿#ifndef _WALL_HEAD
 #define _WALL_HEAD
 
 #include <iostream>

@@ -1,4 +1,4 @@
-#include <cstring>
+﻿#include <cstring>
 
 #include "CSckFactoryImp1.h"
 

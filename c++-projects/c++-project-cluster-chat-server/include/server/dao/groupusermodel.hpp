@@ -1,4 +1,4 @@
-#ifndef GROUPUSERMODEL_H
+﻿#ifndef GROUPUSERMODEL_H
 #define GROUPUSERMODEL_H
 
 #include <vector>

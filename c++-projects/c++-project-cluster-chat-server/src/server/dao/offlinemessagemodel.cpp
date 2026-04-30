@@ -1,4 +1,4 @@
-#include "offlinemessagemodel.hpp"
+﻿#include "offlinemessagemodel.hpp"
 
 #include <iostream>
 #include <string>

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CSocketProtocol.h"
 #include "CEncDesProtocol.h"

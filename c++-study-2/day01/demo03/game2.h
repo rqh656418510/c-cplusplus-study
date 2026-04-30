@@ -1,4 +1,4 @@
-#ifndef C___STUDY_GAME2_H
+﻿#ifndef C___STUDY_GAME2_H
 #define C___STUDY_GAME2_H
 
 #include <iostream>

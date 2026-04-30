@@ -1,4 +1,4 @@
-#include "Buffer.h"
+﻿#include "Buffer.h"
 
 #include <assert.h>
 #include <errno.h>

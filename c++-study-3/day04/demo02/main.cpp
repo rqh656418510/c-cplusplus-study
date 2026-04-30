@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 模拟实现C++的string类代码
  */
 #include <iostream>

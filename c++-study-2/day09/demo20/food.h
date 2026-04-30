@@ -1,4 +1,4 @@
-#ifndef _FOOD_HEAD
+﻿#ifndef _FOOD_HEAD
 #define _FOOD_HEAD
 
 #include <iostream>
