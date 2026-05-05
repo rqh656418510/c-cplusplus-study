@@ -14,6 +14,7 @@ AppConfigLoader::AppConfigLoader() {
     // 可选配置参数集合
     optional_.emplace("alert.xxljob.stop_status_process_command", "");
     optional_.emplace("alert.xxljob.fatal_status_process_command", "");
+    optional_.emplace("alert.log.file.directory", ".");
 
     // 加载配置文件内容
     config_ = load(CONFIG_FILE.c_str());
@@ -111,6 +112,8 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     app.alertCommon.envName = toStr(cfg_util.load("alert.env.name"), "alert.env.name");
     app.alertCommon.lockFile = toStr(cfg_util.load("alert.lock.file"), "alert.lock.file");
     app.alertCommon.logLevel = toStr(cfg_util.load("alert.log.level"), "alert.log.level");
+    app.alertCommon.logFileDirectory = toStr(cfg_util.load("alert.log.file.directory"), "alert.log.file.directory");
+    app.alertCommon.logFileMaxRetentionDays = toInt(cfg_util.load("alert.log.file.max_retention_days"), "alert.log.file.max_retention_days");
     app.alertCommon.version = toDubbo(cfg_util.load("alert.version"), "alert.version");
 
     return app;

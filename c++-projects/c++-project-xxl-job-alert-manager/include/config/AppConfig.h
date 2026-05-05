@@ -56,10 +56,12 @@ struct AlertCoreConfig {
 
 // 监控告警基础配置
 struct AlertCommonConfig {
-    std::string envName;   // 监控告警程序的运行环境（alert.env.name）
-    std::string lockFile;  // 监控告警程序的锁文件（alert.lock.file）
-    std::string logLevel;  // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
-    double version;        // 监控告警程序的版本号（alert.version）
+    std::string envName;            // 监控告警程序的运行环境（alert.env.name）
+    std::string lockFile;           // 监控告警程序的锁文件（alert.lock.file）
+    std::string logLevel;           // 监控告警程序的日志输出级别，优先级：DEBUG < INFO < WARN < ERROR < FATAL（alert.log.level）
+    std::string logFileDirectory;   // 按日期滚动的日志文件所在目录，未配置或空则为 "."（alert.log.file.directory）
+    int logFileMaxRetentionDays;    // 日志文件最大保留天数，超过该天数的历史日志文件可被删除（alert.log.file.max_retention_days）
+    double version;                 // 监控告警程序的版本号（alert.version）
 };
 
 // 全局配置

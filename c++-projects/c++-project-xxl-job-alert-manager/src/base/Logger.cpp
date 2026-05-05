@@ -1,8 +1,14 @@
 ﻿#include "Logger.h"
 
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <algorithm>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <exception>
 #include <iostream>
@@ -23,11 +29,116 @@
     #define FUNC_NAME __func__
 #endif
 
+// clang-format on
+
 // 定义默认日志级别
 static LogLevel DEFAULT_LOG_LEVEL = INFO;
 static std::string DEFAULT_LOG_LEVEL_NAME = "INFO";
 
-// clang-format on
+// 去掉首尾的空白字符，去掉末尾多余的 '/'，空字符串视为 "."
+std::string normalizeLogFileDirectory(std::string dir) {
+    auto not_space = [](unsigned char c) { return c != ' ' && c != '\t' && c != '\r' && c != '\n'; };
+    while (!dir.empty() && !not_space(static_cast<unsigned char>(dir.front()))) {
+        dir.erase(0, 1);
+    }
+    while (!dir.empty() && !not_space(static_cast<unsigned char>(dir.back()))) {
+        dir.pop_back();
+    }
+    if (dir.empty()) {
+        return ".";
+    }
+    while (dir.size() > 1 && dir.back() == '/') {
+        dir.pop_back();
+    }
+    return dir;
+}
+
+// 将文件名解析为日历日期（文件名格式必须为 YYYY-MM-DD.log）
+bool parseDailyLogFileName(const char* name, int* y, int* m, int* d) {
+    int yy = 0;
+    int mm = 0;
+    int dd = 0;
+    if (std::sscanf(name, "%d-%d-%d.log", &yy, &mm, &dd) != 3) {
+        return false;
+    }
+    if (yy < 1970 || yy > 2100 || mm < 1 || mm > 12 || dd < 1 || dd > 31) {
+        return false;
+    }
+    *y = yy;
+    *m = mm;
+    *d = dd;
+    return true;
+}
+
+// 将年、月、日转换为本地时间（0 点 0 分 0 秒）
+std::time_t localMidnightForYmd(int year, int month, int day) {
+    std::tm t = {};
+    t.tm_year = year - 1900;
+    t.tm_mon = month - 1;
+    t.tm_mday = day;
+    t.tm_hour = 0;
+    t.tm_min = 0;
+    t.tm_sec = 0;
+    return std::mktime(&t);
+}
+
+// 删除 directory 目录下早于「今天 0 点 − maxRetentionDays」的 YYYY-MM-DD.log 普通文件
+void removeExpiredDailyLogFiles(int maxRetentionDays, const char* directory) {
+    if (maxRetentionDays <= 0 || directory == nullptr) {
+        return;
+    }
+
+    std::time_t now = std::time(nullptr);
+    std::tm* today_tm = std::localtime(&now);
+    if (today_tm == nullptr) {
+        return;
+    }
+
+    std::tm limit_tm = *today_tm;
+    limit_tm.tm_hour = 0;
+    limit_tm.tm_min = 0;
+    limit_tm.tm_sec = 0;
+    limit_tm.tm_mday -= maxRetentionDays;
+    std::time_t limit_time = std::mktime(&limit_tm);
+    if (limit_time == static_cast<std::time_t>(-1)) {
+        return;
+    }
+
+    DIR* dir = opendir(directory);
+    if (dir == nullptr) {
+        return;
+    }
+
+    while (struct dirent* ent = readdir(dir)) {
+        if (ent->d_name[0] == '.') {
+            continue;
+        }
+        int y = 0;
+        int m = 0;
+        int d = 0;
+        if (!parseDailyLogFileName(ent->d_name, &y, &m, &d)) {
+            continue;
+        }
+
+        char path[512];
+        std::snprintf(path, sizeof(path), "%s/%s", directory, ent->d_name);
+
+        struct stat st;
+        if (stat(path, &st) != 0 || !S_ISREG(st.st_mode)) {
+            continue;
+        }
+
+        std::time_t file_day = localMidnightForYmd(y, m, d);
+        if (file_day == static_cast<std::time_t>(-1)) {
+            continue;
+        }
+        if (file_day < limit_time && unlink(path) != 0) {
+            // 日志文件删除失败时不打印日志信息，避免与写日志线程互相干扰；静默忽略
+        }
+    }
+
+    closedir(dir);
+}
 
 // 构造函数
 Logger::Logger() {
@@ -36,22 +147,57 @@ Logger::Logger() {
 
     // 启动专门写日志文件的线程
     writeThread_ = std::thread([this]() {
+        int last_year = -1;
+        int last_mon = -1;
+        int last_mday = -1;
+
         for (;;) {
             // 获取当前时间（真实系统时间，受NTP影响）
             std::time_t now = std::time(nullptr);
             std::tm* now_tm = std::localtime(&now);
+            if (now_tm == nullptr) {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+
+            int cy = now_tm->tm_year + 1900;
+            int cm = now_tm->tm_mon + 1;
+            int cd = now_tm->tm_mday;
+
+            // 获取日志目录
+            std::string log_dir;
+            {
+                std::lock_guard<std::mutex> lock(logFileDirMutex_);
+                log_dir = logFileDirectory_;
+            }
+
+            // 删除过期的日志文件
+            if (cy != last_year || cm != last_mon || cd != last_mday) {
+                removeExpiredDailyLogFiles(logFileMaxRetentionDays_.load(std::memory_order_relaxed), log_dir.c_str());
+                last_year = cy;
+                last_mon = cm;
+                last_mday = cd;
+            }
 
             // 获取日志文件的名称
             char file_name[128];
             snprintf(file_name, sizeof(file_name), "%04d-%02d-%02d.log", now_tm->tm_year + 1900, now_tm->tm_mon + 1,
                      now_tm->tm_mday);
 
+            // 拼接日志文件的完整路径
+            char log_path[768];
+            if (log_dir == ".") {
+                std::snprintf(log_path, sizeof(log_path), "%s", file_name);
+            } else {
+                std::snprintf(log_path, sizeof(log_path), "%s/%s", log_dir.c_str(), file_name);
+            }
+
             // 打开日志文件
-            FILE* pf = fopen(file_name, "a+");
+            FILE* pf = fopen(log_path, "a+");
             if (pf == nullptr) {
                 // 打印日志内容到控制台
                 char buf[512];
-                snprintf(buf, sizeof(buf), "Logger file [%s] open failed", file_name);
+                snprintf(buf, sizeof(buf), "Logger file [%s] open failed", log_path);
                 log_direct(buf, LogLevel::FATAL);
                 // 退出应用程序
                 exit(EXIT_FAILURE);
@@ -174,6 +320,21 @@ void Logger::stop() {
 // 设置日志级别
 void Logger::setLogLevel(LogLevel level) {
     this->logLevel_ = level;
+}
+
+// 设置日志文件最大保留天数
+void Logger::setLogFileMaxRetentionDays(int days) {
+    if (days < 0) {
+        days = 0;
+    }
+    logFileMaxRetentionDays_.store(days, std::memory_order_relaxed);
+}
+
+// 设置日志目录
+void Logger::setLogFileDirectory(const std::string& directory) {
+    std::string normalized = normalizeLogFileDirectory(directory);
+    std::lock_guard<std::mutex> lock(logFileDirMutex_);
+    logFileDirectory_ = normalized;
 }
 
 // 获取日志级别

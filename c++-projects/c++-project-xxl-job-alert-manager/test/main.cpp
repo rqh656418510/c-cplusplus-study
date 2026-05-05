@@ -2,9 +2,11 @@
 #include <iostream>
 
 #include "AlertTest.h"
+#include "AppConfigLoader.h"
 #include "BaseTest.h"
 #include "ConfigTest.h"
 #include "JobTest.h"
+#include "Logger.h"
 #include "MySqlTest.h"
 #include "NetworkTest.h"
 
@@ -159,10 +161,13 @@ int main(int argc, char** argv) {
         AppConfigLoader::CONFIG_FILE = configFile;
     }
 
-    // 设置默认日志级别
-    std::string logLevelStr = AppConfigLoader::getInstance().getConfig().alertCommon.logLevel;
-    LogLevel logLevel = Logger::stringToLogLevel(logLevelStr);
-    Logger::getInstance().setLogLevel(logLevel);
+    // 获取全局配置信息
+    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
+
+    // 设置默认的日志输出级别、日志目录、日志文件最大保留天数
+    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alertCommon.logLevel));
+    Logger::getInstance().setLogFileDirectory(config.alertCommon.logFileDirectory);
+    Logger::getInstance().setLogFileMaxRetentionDays(config.alertCommon.logFileMaxRetentionDays);
 
     // 基础测试
     baseTest();
