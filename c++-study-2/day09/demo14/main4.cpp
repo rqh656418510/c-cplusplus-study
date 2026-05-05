@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 1. 常用的查找算法 - binary_search
  *
  * 注意：binary_search 查找算法在无序序列中不可用

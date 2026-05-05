@@ -1,4 +1,4 @@
-#ifndef TIMES_H
+﻿#ifndef TIMES_H
 #define TIMES_H
 
 #include <boost/date_time/c_local_time_adjustor.hpp>

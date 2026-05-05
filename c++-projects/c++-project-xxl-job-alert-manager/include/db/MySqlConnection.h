@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <mysql/errmsg.h>
 #include <mysql/mysql.h>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 重载new和delete运算符来实现对象池
  */
 #include <iostream>

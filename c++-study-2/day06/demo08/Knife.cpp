@@ -1,4 +1,4 @@
-#include "Knife.h"
+﻿#include "Knife.h"
 
 Knife::Knife() {
     this->m_BaseDamage = 10;

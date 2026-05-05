@@ -1,4 +1,4 @@
-#ifndef CHATSERVICE_H
+﻿#ifndef CHATSERVICE_H
 #define CHATSERVICE_H
 
 /**

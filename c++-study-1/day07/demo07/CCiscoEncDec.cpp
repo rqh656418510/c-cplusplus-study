@@ -1,4 +1,4 @@
-#include "des.h"
+﻿#include "des.h"
 #include "CCiscoEncDec.h"
 
 // 编码数据

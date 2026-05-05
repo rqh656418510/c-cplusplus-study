@@ -1,4 +1,4 @@
-/**
+﻿/**
  * bind1st和bind2nd什么时候会用到
  *
  * <p> 在 C++ 11 及更新版本中，`bind1st` 和 `bind2nd` 已被 `bind` 取代

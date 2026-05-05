@@ -1,4 +1,4 @@
-#include "CompositeAlert.h"
+﻿#include "CompositeAlert.h"
 
 #include <exception>
 

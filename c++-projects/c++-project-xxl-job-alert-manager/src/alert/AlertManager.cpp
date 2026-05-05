@@ -1,4 +1,4 @@
-
+﻿
 #include "AlertManager.h"
 
 #include <exception>

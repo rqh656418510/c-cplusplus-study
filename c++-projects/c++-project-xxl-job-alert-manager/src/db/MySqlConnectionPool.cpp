@@ -1,4 +1,4 @@
-#include "MySqlConnectionPool.h"
+﻿#include "MySqlConnectionPool.h"
 
 #include <algorithm>
 #include <exception>

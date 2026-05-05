@@ -1,4 +1,4 @@
-#include "MysqlConnectionPool.h"
+﻿#include "MysqlConnectionPool.h"
 
 #include <boost/filesystem.hpp>
 

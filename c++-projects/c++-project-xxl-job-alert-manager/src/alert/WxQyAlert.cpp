@@ -1,4 +1,4 @@
-#include "WxQyAlert.h"
+﻿#include "WxQyAlert.h"
 
 #include <string>
 

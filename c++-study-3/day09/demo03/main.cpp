@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MyString在vector上的应用
  */
 

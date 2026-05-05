@@ -1,4 +1,4 @@
-#include "Monster.h"
+﻿#include "Monster.h"
 
 Monster::Monster() {
     this->m_Hp = 300;

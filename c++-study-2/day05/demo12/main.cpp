@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 继承方式
  */
 #include <iostream>

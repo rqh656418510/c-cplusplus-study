@@ -1,4 +1,4 @@
-#ifndef _SNAKE_HEAD
+﻿#ifndef _SNAKE_HEAD
 #define _SNAKE_HEAD
 
 #include <iostream>

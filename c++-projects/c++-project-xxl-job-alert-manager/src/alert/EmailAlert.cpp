@@ -1,4 +1,4 @@
-#include "EmailAlert.h"
+﻿#include "EmailAlert.h"
 
 #include <string>
 

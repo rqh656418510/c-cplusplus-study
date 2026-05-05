@@ -1,4 +1,4 @@
-#include "Array.h"
+﻿#include "Array.h"
 
 Array::Array(int length) {
 	cout << "有参构造函数被调用" << endl;

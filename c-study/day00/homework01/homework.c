@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <math.h>
 
 // gcc homework-1.c -lm -o homework-1.exe && ./homework-1.exe

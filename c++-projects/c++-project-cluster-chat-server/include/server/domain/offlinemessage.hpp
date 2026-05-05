@@ -1,4 +1,4 @@
-#ifndef OFFLINEMESSAGE_H
+﻿#ifndef OFFLINEMESSAGE_H
 #define OFFLINEMESSAGE_H
 
 #include <iostream>

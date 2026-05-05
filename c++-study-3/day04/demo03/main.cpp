@@ -1,4 +1,4 @@
-/**
+﻿/**
  * string字符串对象的迭代器iterator实现
  */
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "snake.h"
+﻿#include "snake.h"
 
 Snake::Snake(Wall& tempWall, Food& tempFood) :wall(tempWall), food(tempFood) {
 	pHead = NULL;

@@ -1,4 +1,4 @@
-#ifndef GROUPUSER_H
+﻿#ifndef GROUPUSER_H
 #define GROUPUSER_H
 
 #include <iostream>

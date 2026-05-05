@@ -1,4 +1,4 @@
-#ifndef GROUPMODEL_H
+﻿#ifndef GROUPMODEL_H
 #define GROUPMODEL_H
 
 #include <vector>

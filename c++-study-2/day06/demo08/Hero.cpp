@@ -1,4 +1,4 @@
-#include "Hero.h"
+﻿#include "Hero.h"
 #include "Weapon.h"
 
 Hero::Hero() {

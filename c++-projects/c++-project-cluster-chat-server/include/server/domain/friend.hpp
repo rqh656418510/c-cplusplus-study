@@ -1,4 +1,4 @@
-#ifndef FRIEND_H
+﻿#ifndef FRIEND_H
 #define FRIEND_H
 
 // Friend 表映射的实体类
