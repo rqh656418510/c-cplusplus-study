@@ -14,6 +14,7 @@ AppConfigLoader::AppConfigLoader() {
     // 可选配置参数集合
     optional_.emplace("alert.xxljob.stop_status_process_command", "");
     optional_.emplace("alert.xxljob.fatal_status_process_command", "");
+    optional_.emplace("alert.log.file.max_retention_days", "30");
     optional_.emplace("alert.log.file.directory", ".");
 
     // 加载配置文件内容
@@ -38,23 +39,37 @@ const AppConfig& AppConfigLoader::getConfig() const {
 
 // 配置参数转换为数字
 int AppConfigLoader::toInt(const std::string& v, const char* key) {
-    if (v.empty()) {
+    std::string s = v;
+    const auto opt_it = optional_.find(key);
+    if (s.empty() && opt_it != optional_.end()) {
+        s = opt_it->second;
+    }
+    if (s.empty()) {
         LOG_FATAL("Config [%s] is missing", key);
     }
-    return std::stoi(v);
+    return std::stoi(s);
 }
 
 // 配置参数转换为小数
 int AppConfigLoader::toDubbo(const std::string& v, const char* key) {
-    if (v.empty()) {
+    std::string s = v;
+    const auto opt_it = optional_.find(key);
+    if (s.empty() && opt_it != optional_.end()) {
+        s = opt_it->second;
+    }
+    if (s.empty()) {
         LOG_FATAL("Config [%s] is missing", key);
     }
-    return std::stod(v);
+    return std::stod(s);
 }
 
 // 配置参数转换为字符串
 std::string AppConfigLoader::toStr(const std::string& v, const char* key) {
-    if (v.empty() && optional_.find(key) == optional_.end()) {
+    const auto opt_it = optional_.find(key);
+    if (v.empty() && opt_it != optional_.end()) {
+        return opt_it->second;
+    }
+    if (v.empty()) {
         LOG_FATAL("Config [%s] is missing", key);
     }
     return v;
@@ -63,7 +78,18 @@ std::string AppConfigLoader::toStr(const std::string& v, const char* key) {
 // 加载配置文件内容
 AppConfig AppConfigLoader::load(const char* configFile) {
     ConfigFileUtil cfg_util;
+
+    // 加载配置文件
     cfg_util.loadConfigFile(configFile);
+
+    // 在任何 LOG_* 落盘前初始化 Logger
+    Logger& logger = Logger::getInstance();
+    logger.setLogLevel(Logger::stringToLogLevel(toStr(cfg_util.load("alert.log.level"), "alert.log.level")));
+    logger.setLogFileDirectory(toStr(cfg_util.load("alert.log.file.directory"), "alert.log.file.directory"));
+    logger.setLogFileMaxRetentionDays(toInt(cfg_util.load("alert.log.file.max_retention_days"), "alert.log.file.max_retention_days"));
+    
+    // 打印配置信息
+    cfg_util.logLoadedEntriesToLogger();
 
     AppConfig app;
 

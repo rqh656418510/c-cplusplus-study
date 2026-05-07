@@ -161,13 +161,8 @@ int main(int argc, char** argv) {
         AppConfigLoader::CONFIG_FILE = configFile;
     }
 
-    // 获取全局配置信息
-    const AppConfig& config = AppConfigLoader::getInstance().getConfig();
-
-    // 设置默认的日志输出级别、日志目录、日志文件最大保留天数
-    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alertCommon.logLevel));
-    Logger::getInstance().setLogFileDirectory(config.alertCommon.logFileDirectory);
-    Logger::getInstance().setLogFileMaxRetentionDays(config.alertCommon.logFileMaxRetentionDays);
+    // 获取全局配置信息（加载过程中会按配置初始化 Logger）
+    AppConfigLoader::getInstance().getConfig();
 
     // 基础测试
     baseTest();

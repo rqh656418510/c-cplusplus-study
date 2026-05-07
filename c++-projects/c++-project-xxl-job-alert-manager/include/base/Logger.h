@@ -109,7 +109,7 @@ public:
     // 设置日志级别
     void setLogLevel(LogLevel level);
 
-    // 设置按日期滚动的日志文件（YYYY-MM-DD.log）在进程工作目录下的最大保留天数；<=0 表示不自动删除
+    // 设置日志文件的最大保留天数；<=0 表示不自动删除
     void setLogFileMaxRetentionDays(int days);
 
     // 设置日志目录（为空或 "." 表示当前工作目录）

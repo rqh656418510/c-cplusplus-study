@@ -12,6 +12,9 @@ public:
     // 加载配置文件（INI格式）
     void loadConfigFile(const char* config_file);
 
+    // 打印加载到的配置项到日志文件（必须在日志级别、日志目录已配置后调用）
+    void logLoadedEntriesToLogger() const;
+
     // 获取配置项信息
     std::string load(const std::string& key);
 

@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -35,7 +36,7 @@
 static LogLevel DEFAULT_LOG_LEVEL = INFO;
 static std::string DEFAULT_LOG_LEVEL_NAME = "INFO";
 
-// 去掉首尾的空白字符，去掉末尾多余的 '/'，空字符串视为 "."
+// 去掉目录路径首尾的空白字符，去掉末尾多余的 '/'，空字符串视为 "."
 std::string normalizeLogFileDirectory(std::string dir) {
     auto not_space = [](unsigned char c) { return c != ' ' && c != '\t' && c != '\r' && c != '\n'; };
     while (!dir.empty() && !not_space(static_cast<unsigned char>(dir.front()))) {
@@ -51,6 +52,42 @@ std::string normalizeLogFileDirectory(std::string dir) {
         dir.pop_back();
     }
     return dir;
+}
+
+// 判断 path 是否为已存在的目录
+static bool directoryExists(const std::string& path) {
+    struct stat st;
+    return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
+// 创建日志目录及其父目录（"." 不会创建），等价于 Linux 的 mkdir -p 命令
+static bool ensureLogDirectoryExists(const std::string& path) {
+    if (path.empty() || path == ".") {
+        return true;
+    }
+
+    if (directoryExists(path)) {
+        return true;
+    }
+
+    const size_t slash = path.find_last_of('/');
+    if (slash == std::string::npos) {
+        if (mkdir(path.c_str(), 0755) != 0 && errno != EEXIST) {
+            return false;
+        }
+        return directoryExists(path);
+    }
+
+    const std::string parent = path.substr(0, slash);
+    if (!parent.empty() && parent != "/" && !ensureLogDirectoryExists(parent)) {
+        return false;
+    }
+
+    if (mkdir(path.c_str(), 0755) != 0 && errno != EEXIST) {
+        return false;
+    }
+
+    return directoryExists(path);
 }
 
 // 将文件名解析为日历日期（文件名格式必须为 YYYY-MM-DD.log）
@@ -322,7 +359,7 @@ void Logger::setLogLevel(LogLevel level) {
     this->logLevel_ = level;
 }
 
-// 设置日志文件最大保留天数
+// 设置日志文件的最大保留天数；<=0 表示不自动删除
 void Logger::setLogFileMaxRetentionDays(int days) {
     if (days < 0) {
         days = 0;
@@ -330,9 +367,21 @@ void Logger::setLogFileMaxRetentionDays(int days) {
     logFileMaxRetentionDays_.store(days, std::memory_order_relaxed);
 }
 
-// 设置日志目录
+// 设置日志目录（为空或 "." 表示当前工作目录）
 void Logger::setLogFileDirectory(const std::string& directory) {
+    // 规范化日志目录路径
     std::string normalized = normalizeLogFileDirectory(directory);
+
+    // 确保日志目录存在并可写
+    if (!ensureLogDirectoryExists(normalized)) {
+        char buf[1024];
+        std::snprintf(buf, sizeof(buf), "Logger cannot create log directory [%s]: %s", normalized.c_str(),
+                      std::strerror(errno));
+        log_direct(buf, LogLevel::FATAL);
+        exit(EXIT_FAILURE);
+    }
+
+    // 更新日志目录
     std::lock_guard<std::mutex> lock(logFileDirMutex_);
     logFileDirectory_ = normalized;
 }

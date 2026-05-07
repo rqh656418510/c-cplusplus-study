@@ -16,13 +16,8 @@ void Application::init(const std::string& configFile) {
         AppConfigLoader::CONFIG_FILE = configFile;
     }
 
-    // 获取全局配置信息
+    // 获取全局配置信息（加载过程中会按配置初始化 Logger）
     const AppConfig& config = AppConfigLoader::getInstance().getConfig();
-
-    // 设置全局的日志输出级别、日志目录、日志文件最大保留天数
-    Logger::getInstance().setLogLevel(Logger::stringToLogLevel(config.alertCommon.logLevel));
-    Logger::getInstance().setLogFileDirectory(config.alertCommon.logFileDirectory);
-    Logger::getInstance().setLogFileMaxRetentionDays(config.alertCommon.logFileMaxRetentionDays);
 
     // 通过锁文件加排他锁，防止应用程序被启动多个实例
     this->appLockFd_ = lockfile(config.alertCommon.lockFile.c_str());

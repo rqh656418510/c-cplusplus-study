@@ -53,13 +53,17 @@ void ConfigFileUtil::loadConfigFile(const char* config_file) {
 
         // 存储配置项
         m_configMap.insert({key, value});
-
-        // 打印日志信息
-        LOG_INFO("%s=%s", key.c_str(), value.c_str());
     }
 
     // 关闭文件
     fclose(pf);
+}
+
+// 打印加载到的配置项到日志文件（必须在日志级别、日志目录已配置后调用）
+void ConfigFileUtil::logLoadedEntriesToLogger() const {
+    for (const auto& kv : m_configMap) {
+        LOG_INFO("%s=%s", kv.first.c_str(), kv.second.c_str());
+    }
 }
 
 // 获取配置项信息
