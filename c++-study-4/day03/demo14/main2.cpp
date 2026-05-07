@@ -5,9 +5,38 @@
  */
 
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
+// 定义可变参类模板
+template <int curCount, int argsTotal, typename... T>
+class myclasst {
+public:
+    static void print(const tuple<T...>& t) {
+        cout << get<curCount>(t) << endl;
+        // 递归调用
+        myclasst<curCount + 1, argsTotal, T...>::print(t);
+    }
+};
+
+// 特化终止，用于结束递归调用
+template <int curCount, typename... T>
+class myclasst<curCount, curCount, T...> {
+public:
+    static void print(const tuple<T...>& t) {
+        cout << "特化终止" << endl;
+    }
+};
+
+// 定义可变参函数模板
+template <typename... T>
+void print(const tuple<T...>& t) {
+    myclasst<0, sizeof...(T), T...>::print(t);
+}
+
 int main() {
+    tuple<int, float, double> t(2, 2.5f, 3.14);
+    print(t);
     return 0;
 }
