@@ -24,7 +24,7 @@ public:
 
 // 使用递归继承展开参数包
 template <typename First, typename... Others>
-class myclasst<First, Others...> : private myclasst<Others...> {  // 类偏特化
+class myclasst<First, Others...> : private myclasst<Others...> {  // 继承关系
 public:
     // 默认构造函数
     myclasst() {
