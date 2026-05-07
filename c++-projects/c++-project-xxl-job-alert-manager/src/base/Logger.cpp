@@ -189,12 +189,28 @@ Logger::Logger() {
         int last_mday = -1;
 
         for (;;) {
+            // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
+            LogMessage message = queue_.pop();
+
+            // 只有打印已停止且队列里不存在有效任务时，才退出循环，否则继续执行直到队列为空为止
+            if (queue_.isExited() && message.logContent_.empty()) {
+                // 跳出外层 For 循环，结束日志写入线程的运行
+                break;
+            }
+
             // 获取当前时间（真实系统时间，受NTP影响）
             std::time_t now = std::time(nullptr);
             std::tm* now_tm = std::localtime(&now);
+            std::tm tm_fallback;
             if (now_tm == nullptr) {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                continue;
+                std::tm* g = std::gmtime(&now);
+                if (g != nullptr) {
+                    tm_fallback = *g;
+                    now_tm = &tm_fallback;
+                } else {
+                    std::memset(&tm_fallback, 0, sizeof(tm_fallback));
+                    now_tm = &tm_fallback;
+                }
             }
 
             int cy = now_tm->tm_year + 1900;
@@ -238,17 +254,6 @@ Logger::Logger() {
                 log_direct(buf, LogLevel::FATAL);
                 // 退出应用程序
                 exit(EXIT_FAILURE);
-            }
-
-            // 从日志缓冲队列获取日志信息（会阻塞当前线程，直到日志队列不为空）
-            LogMessage message = queue_.pop();
-
-            // 只有打印已停止且队列里不存在有效任务时，才退出循环，否则继续执行直到队列为空为止
-            if (queue_.isExited() && message.logContent_.empty()) {
-                // 关闭日志文件
-                fclose(pf);
-                // 跳出外层 For 循环，结束日志写入线程的运行
-                break;
             }
 
             // 获取打印日志信息的线程的 ID（由外部传入，是 Linux 内核线程 ID）
