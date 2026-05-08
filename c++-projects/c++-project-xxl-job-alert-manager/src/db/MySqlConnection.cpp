@@ -37,10 +37,8 @@ bool MySqlConnection::connect(const std::string& ip, unsigned short port, const 
     password_ = password;
     dbname_ = dbname;
 
-    // 旧版本的MySQL，需要关闭自动重连的标记（生产环境不应依赖MySQL的自动重连机制，应由连接池统一管理连接的创建、重连与关闭等）
+    // 配置旧版本的MySQL，关闭自动重连的标记（生产环境不应依赖MySQL的自动重连机制，应由连接池统一管理连接的创建、重连与关闭等）
     // bool reconnect = false;
-
-    // 配置连接
     // mysql_options(conn_, MYSQL_OPT_RECONNECT, &reconnect);
 
     // 建立连接
