@@ -42,7 +42,7 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo13          可变参模板
     ├── demo14          可变参模板****续、模板模板参数
 └── day04
-    ├── demo01          直接内存管理(new-delete)、创建新工程观察内存泄漏
+    ├── demo01          直接内存管理(new-delete)、观察内存泄漏
     ├── demo02          new、delete探秘，智能指针概述、shared_ptr
     ├── demo03          shared_ptr常用操作、计数、自定义删除器等等
 ```
