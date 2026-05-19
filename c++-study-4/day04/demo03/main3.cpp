@@ -8,7 +8,5 @@
 using namespace std;
 
 int main() {
-    shared_ptr<int> sp = make_shared<int>(100);
-    shared_ptr<int> sp2(sp);  // 智能指针 sp 与 sp2 指向同一个对象
     return 0;
 }
