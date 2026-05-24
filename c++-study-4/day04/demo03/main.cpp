@@ -1,7 +1,7 @@
 /**
  * shared_ptr常用操作、计数、自定义删除器等等
  *
- * <a> shared_ptr 常用操作
+ * <a> shared_ptr 常用操作、计数
  */
 
 #include <iostream>
@@ -43,8 +43,8 @@ void test03() {
 void test04() {
     shared_ptr<int> sp = make_shared<int>(100);
     shared_ptr<int> sp2 = sp;  // 引用计数为 2
-    sp.reset();                // 非唯一指向时：不释放原对象的内存，引用计数减为 1，p1 置空，此时 p2 仍有效
-    sp2.reset();               // 唯一指向时：释放原对象的内存，引用计数减为 0，p2 置空
+    sp.reset();                // 非唯一指向时：不释放原对象的内存，引用计数减为 1，sp 置空，此时 sp2 仍有效
+    sp2.reset();               // 唯一指向时：释放原对象的内存，引用计数减为 0，sp2 置空
 }
 
 // reset()
@@ -67,6 +67,38 @@ void test06() {
     sp.reset(new int(100));  // 空指针也可以通过 reset() 来初始化
 }
 
+// * 解引用
+void test07() {
+    shared_ptr<int> sp = make_shared<int>(100);
+    cout << *sp << endl;  // 输出 100
+}
+
+// get()
+void test08() {
+    shared_ptr<int> sp = make_shared<int>(100);
+    int *p = sp.get();
+    *p = 150;
+    cout << *p << endl;  // 输出 150
+}
+
+// swap()
+void test09() {
+    shared_ptr<int> sp = make_shared<int>(100);
+    shared_ptr<int> sp2 = make_shared<int>(300);
+    sp.swap(sp2);
+
+    cout << *sp << endl;   // 输出 300
+    cout << *sp2 << endl;  // 输出 100
+}
+
+// = nullptr
+void test10() {
+    shared_ptr<int> sp = make_shared<int>(100);
+    shared_ptr<int> sp2 = sp;  // 引用计数为 2
+    sp = nullptr;              // 非唯一指向时：不释放原对象的内存，引用计数减为 1，sp 置空，此时 sp2 仍有效
+    sp2 = nullptr;             // 唯一指向时：释放原对象的内存，引用计数减为 0，sp2 置空
+}
+
 int main() {
     test01();
     test02();
@@ -74,5 +106,9 @@ int main() {
     test04();
     test05();
     test06();
+    test07();
+    test08();
+    test09();
+    test10();
     return 0;
 }
