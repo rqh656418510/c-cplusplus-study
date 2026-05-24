@@ -1,5 +1,5 @@
 /**
- * shared_ptr常用操作、计数、自定义删除器等等
+ * weak_ptr概述、weak_ptr常用操作、尺寸
  */
 
 #include <iostream>

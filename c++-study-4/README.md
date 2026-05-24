@@ -45,6 +45,7 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo01          直接内存管理(new-delete)、观察内存泄漏
     ├── demo02          new、delete探秘，智能指针概述、shared_ptr
     ├── demo03          shared_ptr常用操作、计数、自定义删除器等等
+    ├── demo04          weak_ptr概述、weak_ptr常用操作、尺寸
 ```
 
 ## 常用命令
