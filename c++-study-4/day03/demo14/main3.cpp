@@ -11,7 +11,7 @@
 using namespace std;
 
 // 定义类模板（使用了模板模板参数）
-template <typename T, template <typename> typename Container>
+template <typename T, template <typename> class Container>
 class MyClass {
 public:
     MyClass() {

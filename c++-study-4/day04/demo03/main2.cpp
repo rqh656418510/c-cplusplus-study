@@ -59,7 +59,8 @@ void test04() {
 
 // 在 shared_ptr 的 <> 里面加上 []，同样可以正确释放数组内存
 void test05() {
-    shared_ptr<MyClass[]> sp2(new MyClass[3]);
+    // 从 C++ 17 开始正式支持以下写法
+    // shared_ptr<MyClass[]> sp2(new MyClass[3]);
 }
 
 // 函数模板
