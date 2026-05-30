@@ -87,6 +87,16 @@ void test07() {
     wp.reset();
 }
 
+// 指针大小问题
+void test08() {
+    weak_ptr<int> wp;
+    int *p;
+    int length1 = sizeof(p);   // 8 个字节（64 位系统）
+    int length2 = sizeof(wp);  // 16 个字节（64 位系统）
+    cout << "length1 = " << length1 << endl;
+    cout << "length2 = " << length2 << endl;
+}
+
 int main() {
     test01();
     test02();
@@ -95,5 +105,6 @@ int main() {
     test05();
     test06();
     test07();
+    test08();
     return 0;
 }
