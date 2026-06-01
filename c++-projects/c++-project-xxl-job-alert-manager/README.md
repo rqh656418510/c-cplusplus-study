@@ -209,7 +209,7 @@ ps -aux|grep alert-manager
 # 查看应用程序占用的内存大小，RSS 字段表示实际占用物理内存（单位：KB）
 ps -o pid,ppid,cmd,%mem,rss,vsz -p <pid>
 
-# 或者，查看最后一行内容，RSS 字段表示实际占用物理内存（单位：KB）
+# 或者使用 pmap，查看最后一行内容，RSS 字段表示实际占用物理内存（单位：KB）
 pmap -x <pid>
 ```
 
