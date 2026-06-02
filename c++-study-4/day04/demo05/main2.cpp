@@ -73,7 +73,7 @@ void test05() {
     shared_ptr<CB> sp_cb = make_shared<CB>();
     sp_ca->m_cb = sp_cb;
     sp_cb->m_ca = sp_ca;
-    // 离开作用域后，由于存在循环引用，CA 和 CB 的对象都不会自动析构（释放内存）
+    // 离开作用域后，由于存在循环引用，CA 和 CB 的对象都不会自动析构（释放内存），导致内存泄漏
 }
 
 int main() {
