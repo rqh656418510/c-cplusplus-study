@@ -36,9 +36,51 @@ void test03() {
     // shared_ptr<int> sp2(p); // 错误写法，不能将 get() 返回的裸指针绑定到其他 shared_ptr，否则会重复释放内存，导致程序运行崩溃
 }
 
+class MyClass {
+public:
+    shared_ptr<MyClass> getSelf() {
+        return shared_ptr<MyClass>(this);  // 错误写法（危险操作）
+    }
+};
+
+// 不要将 this 作为 shared_ptr 返回
+void test04() {
+    shared_ptr<MyClass> p1 = make_shared<MyClass>();
+    // shared_ptr<MyClass> p2 = p1->getSelf();  // p1 和 p2 独立管理同一对象（不共享引用计数），会导致重复释放内存
+}
+
+class CB;
+
+class CA {
+public:
+    shared_ptr<CB> m_cb;
+    ~CA() {
+        cout << "~CA()" << endl;
+    }
+};
+
+class CB {
+public:
+    shared_ptr<CA> m_ca;
+    ~CB() {
+        cout << "~CB()" << endl;
+    }
+};
+
+// 应避免 shared_ptr 发生循环引用
+void test05() {
+    shared_ptr<CA> sp_ca = make_shared<CA>();
+    shared_ptr<CB> sp_cb = make_shared<CB>();
+    sp_ca->m_cb = sp_cb;
+    sp_cb->m_ca = sp_ca;
+    // 离开作用域后，由于存在循环引用，CA 和 CB 的对象都不会自动析构（释放内存）
+}
+
 int main() {
     // test01();
     // test02();
     // test03();
+    // test04();
+    // test05();
     return 0;
 }
