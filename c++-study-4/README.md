@@ -47,6 +47,8 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo03          shared_ptr常用操作、计数、自定义删除器等等
     ├── demo04          weak_ptr概述、weak_ptr常用操作、尺寸
     ├── demo05          shared_ptr使用场景、陷阱、性能分析、使用建议
+    ├── demo06          unique_ptr概述、常用操作
+    ├── demo07          返回unique_ptr、删除器、尺寸、智能指针
 ```
 
 ## 常用命令
