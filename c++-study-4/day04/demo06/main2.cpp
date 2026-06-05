@@ -56,11 +56,35 @@ void test05() {
     unique_ptr<MyClass[]> up(new MyClass[3]);
 }
 
+// get()
+void test06() {
+    unique_ptr<int> sp(new int(100));
+    int* p = sp.get();
+    *p = 50;
+    cout << *p << endl;  // 输出 50
+}
+
+// * 解引用
+void test07() {
+    unique_ptr<int> sp(new int(100));
+    cout << *sp << endl;  // 输出 100
+}
+
+// swap()
+void test08() {
+    unique_ptr<int> sp1(new int(100));
+    unique_ptr<int> sp2(new int(200));
+    sp1.swap(sp2);  // 交换两个智能指针指向的对象
+}
+
 int main() {
     test01();
     test02();
     test03();
     test04();
     test05();
+    test06();
+    test07();
+    test08();
     return 0;
 }
