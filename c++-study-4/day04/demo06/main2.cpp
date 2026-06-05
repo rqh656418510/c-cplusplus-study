@@ -52,7 +52,7 @@ public:
 
 // 指向数组
 void test05() {
-    // 从 C++ 17 开始正式支持以下写法，在 unique_ptr 的 <> 里面加上 []，可以正确释放数组内存
+    // 从 C++ 17 开始正式支持以下写法，使用数组特化版本 unique_ptr<T[]>，可以正确释放数组内存
     unique_ptr<MyClass[]> up(new MyClass[3]);
 }
 
