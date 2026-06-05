@@ -36,6 +36,24 @@ void test03() {
 
 // = nullptr
 void test04() {
+    unique_ptr<int> up(new int(100));
+    up = nullptr;  // up 所指向对象的内存会被释放，up 置为空指针
+}
+
+// 自定义类（带自定义的析构函数）
+class MyClass {
+public:
+    MyClass() {
+    }
+    ~MyClass() {
+        cout << "~MyClass()" << endl;
+    }
+};
+
+// 指向数组
+void test05() {
+    // 从 C++ 17 开始正式支持以下写法，在 unique_ptr 的 <> 里面加上 []，可以正确释放数组内存
+    unique_ptr<MyClass[]> up(new MyClass[3]);
 }
 
 int main() {
@@ -43,5 +61,6 @@ int main() {
     test02();
     test03();
     test04();
+    test05();
     return 0;
 }
