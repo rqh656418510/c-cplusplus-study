@@ -103,9 +103,9 @@ void test10() {
 
 // 转换为 shared_ptr 类型
 void test11() {
-    unique_ptr<int> up(new int(100));
-    shared_ptr<int> sp = move(up);  // 将左值转换为右值
-                                    // 移动完成后，up 置为空指针，sp 指向 up 原来所指向的对象
+    unique_ptr<int> up(new int(100));  // 左值
+    shared_ptr<int> sp = move(up);     // 将左值转换为右值
+                                       // 移动完成后，up 置为空指针，sp 指向 up 原来所指向的对象
 }
 
 int main() {

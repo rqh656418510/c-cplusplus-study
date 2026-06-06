@@ -24,7 +24,7 @@ void test01() {
 
 // 自定义删除器
 void test02() {
-    // 自定义的删除器还可以是 Lamba 表达式
+    // 自定义的删除器还可以是 Lambda 表达式
     shared_ptr<int> sp(new int(100), [](int *p) {
         delete p;
         cout << "delete int *" << endl;
