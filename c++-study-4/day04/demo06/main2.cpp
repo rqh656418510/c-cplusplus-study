@@ -72,9 +72,40 @@ void test07() {
 
 // swap()
 void test08() {
-    unique_ptr<int> sp1(new int(100));
-    unique_ptr<int> sp2(new int(200));
-    sp1.swap(sp2);  // 交换两个智能指针指向的对象
+    unique_ptr<int> up1(new int(100));
+    unique_ptr<int> up2(new int(200));
+    up1.swap(up2);  // 交换两个智能指针指向的对象
+}
+
+// 智能指针名称作为判断条件
+void test09() {
+    unique_ptr<int> up(new int(100));
+    if (up != nullptr) {
+        cout << "not nullptr" << endl;  // 执行输出
+    }
+
+    up.reset();
+    if (up != nullptr) {
+        cout << "not nullptr" << endl;
+    } else {
+        cout << "nullptr" << endl;  // 执行输出
+    }
+}
+
+unique_ptr<int> func() {
+    return unique_ptr<int>(new int(100));  // 返回一个右值（临时对象都是右值）
+}
+
+// 转换为 shared_ptr 类型
+void test10() {
+    shared_ptr<int> sp = func();  // 这里会额外创建一个控制块（用于存储引用计数、删除器等）
+}
+
+// 转换为 shared_ptr 类型
+void test11() {
+    unique_ptr<int> up(new int(100));
+    shared_ptr<int> sp = move(up);  // 将左值转换为右值
+                                    // 移动完成后，up 置为空指针，sp 指向 up 原来所指向的对象
 }
 
 int main() {
@@ -86,5 +117,8 @@ int main() {
     test06();
     test07();
     test08();
+    test09();
+    test10();
+    test11();
     return 0;
 }
