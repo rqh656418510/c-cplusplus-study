@@ -1,5 +1,5 @@
 /**
- * 线程启动、结束，创建线程多法、join，detach
+ * 线程传参详解，detach()大坑，成员函数做线程函数
  */
 
 #include <iostream>
