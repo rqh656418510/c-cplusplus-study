@@ -91,7 +91,21 @@ void test04() {
     // 类型不相同，不可以放入到元素类型为该对象类型的容器里面
     vector<unique_ptr<int, decltype(lambda1)>> vec;
     vec.emplace_back(move(up1));
-    // vec.emplace_back(move(up2));  // up1 与 up2 的删除器类型不相同，两者不属于同一种类型，不可以放入到元素类型为该对象类型的同一个容器里面
+    // vec.emplace_back(move(up2));  // up1 与 up2 的删除器类型不相同，两者不属于同一种类型，不可以放入同一个容器中
+}
+
+// unique_ptr 的大小
+void test05() {
+    int *p;
+    unique_ptr<int> up;
+    int length1 = sizeof(p);   // 8 个字节（64 位系统）
+    int length2 = sizeof(up);  // 8 个字节（64 位系统）
+    cout << length1 << endl;
+    cout << length2 << endl;
+
+    unique_ptr<int, void (*)(int *)> up3(new int(100), myDeleter);
+    int length3 = sizeof(up3);
+    cout << length3 << endl;  // 16 个字节（64 位系统）
 }
 
 int main() {
@@ -99,5 +113,6 @@ int main() {
     // test02();
     // test03();
     // test04();
+    test05();
     return 0;
 }
