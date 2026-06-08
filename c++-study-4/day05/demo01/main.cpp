@@ -1,5 +1,7 @@
 /**
  * 线程启动、结束，创建线程多法、join，detach
+ *
+ * (a) thread 与 join() 的使用
  */
 
 #include <chrono>
