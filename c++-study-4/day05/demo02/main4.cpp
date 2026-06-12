@@ -54,7 +54,7 @@ int main() {
     // 注意：这里的 MyClass 临时对象是在主线程中构造出来的，而且是在主线程结束运行之前构造出来，因此是安全的
     std::thread t(func, m_i, MyClass(m_c));
 
-    // 将主线程与子线程分离（即子线程变为守护线程），主线程无需等待子线程执行完成才继续往下执行
+    // 设置主线程需等待子线程执行完成才继续往下执行
     t.join();
 
     std::cout << "main thread end." << std::endl;
