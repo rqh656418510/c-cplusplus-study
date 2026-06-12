@@ -43,7 +43,7 @@ int main() {
     // 局部变量
     std::unique_ptr<MyClass> m_c(new MyClass(200));
 
-    // 在创建子线程时，传递智能指针
+    // 在创建子线程时，传递智能指针作为线程函数参数
     std::thread t(func, std::move(m_c));
 
     // 主线程需等待子线程执行完成才继续往下执行
