@@ -20,7 +20,7 @@ int main() {
 
     std::vector<std::thread> threads;
 
-    // 创建 10 个线程，同时这 10 个线程会立即执行（多个线程之前的启动顺序不确定）
+    // 创建 10 个线程，同时这 10 个线程会立即执行（多个线程之间的启动顺序是不确定的）
     for (int i = 0; i < 10; i++) {
         threads.emplace_back(std::thread(func, i));
     }
