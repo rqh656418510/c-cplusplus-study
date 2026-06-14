@@ -5,54 +5,98 @@
  */
 
 #include <chrono>
+#include <condition_variable>
 #include <iostream>
+#include <list>
+#include <mutex>
 #include <thread>
-#include <vector>
 
-// 共享数据（有读有写）
-std::vector<int> g_v = {1, 2, 3};
+class MyClass {
+public:
+    // 将收到的玩家命令写入队列（生产者）
+    void inMsgRecvQueue() {
+        for (int i = 0; i < 1000; i++) {
+            {
+                // 获取互斥锁（作用域结束后会自动释放锁）
+                std::lock_guard<std::mutex> lock(msgRecvQueueMutex);
 
-void func(int num) {
-    std::cout << "sub thread " << num << " start." << std::endl;
+                // 将玩家命令写入队列
+                msgRecvQueue.push_back(i);
+            }
 
-    // 前两个线程：执行写操作
-    if (num < 2) {
-        // 写操作：添加一个新元素
-        g_v.push_back(num);
-        std::cout << "sub thread " << num << " write value " << num << std::endl;
-    }
-    // 后三个线程：执行读操作
-    else {
-        // 读操作：读取 vector 的所有元素
-        std::cout << "sub thread " << num << " reads: ";
-        for (int val : g_v) {
-            std::cout << val << " ";
+            // 唤醒等待操作队列的其他线程
+            queueNotEmptyCondition.notify_one();
+
+            // 模拟网络收包间隔
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-        std::cout << std::endl;
+
+        // 通知消费者退出
+        {
+            std::lock_guard<std::mutex> lock(msgRecvQueueMutex);
+            stop = true;
+        }
+
+        // 唤醒所有等待线程
+        queueNotEmptyCondition.notify_all();
     }
 
-    // 模拟一些工作耗时
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // 从队列中读取玩家命令（消费者）
+    void outMsgRecvQueue() {
+        while (true) {
+            // 获取互斥锁（作用域结束后会自动释放锁）
+            std::unique_lock<std::mutex> lock(msgRecvQueueMutex);
 
-    std::cout << "sub thread " << num << " end." << std::endl;
-}
+            // 当前线程等待队列不为空或者收到退出信号
+            queueNotEmptyCondition.wait(lock, [this]() { return stop || !msgRecvQueue.empty(); });
+
+            // 收到退出信号且队列为空
+            if (stop && msgRecvQueue.empty()) {
+                break;
+            }
+
+            // 取出队列元素
+            int command = msgRecvQueue.front();
+
+            // 移除队列元素
+            msgRecvQueue.pop_front();
+
+            // 尽早释放锁，提高并发性能
+            lock.unlock();
+
+            // 解析并执行玩家命令
+            handleCommand(command);
+        }
+    }
+
+private:
+    // 模拟处理玩家命令
+    void handleCommand(int command) {
+        std::cout << "已处理玩家命令: " << command << std::endl;
+    }
+
+private:
+    std::list<int> msgRecvQueue;                     // 消息队列（共享数据）
+    std::mutex msgRecvQueueMutex;                    // 保护消息队列线程安全的互斥锁
+    std::condition_variable queueNotEmptyCondition;  // 消息队列不为空的条件
+    bool stop = false;                               // 线程退出标志
+};
 
 int main() {
-    std::cout << "main thread start." << std::endl;
+    // 局部变量
+    MyClass mc;
 
-    std::vector<std::thread> threads;
+    // 创建并启动写线程（生产者）
+    std::thread t_write(&MyClass::inMsgRecvQueue, &mc);
 
-    // 创建 5 个线程，其中 2 个线程执行写操作，3 个线程执行读操作
-    // 由于读写同时发生，可能会导致未定义行为（比如读取到不一致的值、程序崩溃等）
-    for (int i = 0; i < 5; i++) {
-        threads.emplace_back(func, i);
-    }
+    // 创建并启动读线程（消费者）
+    std::thread t_read(&MyClass::outMsgRecvQueue, &mc);
 
-    // 等待所有线程执行完毕
-    for (auto& t : threads) {
-        t.join();
-    }
+    // 等待写线程执行完毕
+    t_write.join();
 
-    std::cout << "main thread end." << std::endl;
+    // 等待读线程执行完毕
+    t_read.join();
+
     return 0;
 }
