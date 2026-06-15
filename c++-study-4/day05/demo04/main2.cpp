@@ -1,7 +1,7 @@
 /**
  * 互斥量概念、用法、死锁演示及解决详解
  *
- * (a) mutex 的使用，包括 lock() 和 unlock()
+ * (b) mutex + lock_guard 的使用
  */
 
 #include <atomic>
@@ -15,14 +15,13 @@ public:
     // 将收到的玩家命令写入队列
     void inMsgRecvQueue() {
         for (int i = 0; i < 1000; ++i) {
-            // 加锁
-            msgRecvQueueMutex.lock();
+            {
+                // 加锁（出了作用域后会自动解锁）
+                std::lock_guard<std::mutex> lock(msgRecvQueueMutex);
 
-            // 插入队列
-            msgRecvQueue.push_back(i);
-
-            // 解锁
-            msgRecvQueueMutex.unlock();
+                // 插入队列
+                msgRecvQueue.push_back(i);
+            }
 
             // 模拟网络收包间隔
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -37,26 +36,23 @@ public:
         while (true) {
             int command = -1;
 
-            // 加锁
-            msgRecvQueueMutex.lock();
+            {
+                // 加锁（出了作用域后会自动解锁）
+                std::lock_guard<std::mutex> lock(msgRecvQueueMutex);
 
-            // 判断程序停止标记
-            if (stop && msgRecvQueue.empty()) {
-                // 解锁
-                msgRecvQueueMutex.unlock();
-                break;
+                // 判断程序停止标记
+                if (stop && msgRecvQueue.empty()) {
+                    break;
+                }
+
+                // 操作队列
+                if (!msgRecvQueue.empty()) {
+                    // 取出队列元素
+                    command = msgRecvQueue.front();
+                    // 移除队列元素
+                    msgRecvQueue.pop_front();
+                }
             }
-
-            // 操作队列
-            if (!msgRecvQueue.empty()) {
-                // 取出队列元素
-                command = msgRecvQueue.front();
-                // 移除队列元素
-                msgRecvQueue.pop_front();
-            }
-
-            // 解锁
-            msgRecvQueueMutex.unlock();
 
             // 打印
             if (command != -1) {
