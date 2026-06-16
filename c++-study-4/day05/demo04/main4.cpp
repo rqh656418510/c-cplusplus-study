@@ -1,7 +1,7 @@
 /**
  * 互斥量概念、用法、死锁演示及解决详解
  *
- * (c) 触发线程死锁的案例
+ * (d) 解决线程死锁的案例（使用统一获取锁的顺序）
  */
 
 #include <chrono>
@@ -41,16 +41,6 @@ public:
     }
 
     void func2() {
-        std::cout << "thread 2 wait to get locker 2" << std::endl;
-
-        // 等待获取锁 2
-        lock2.lock();
-
-        std::cout << "thread 2 already got locker 2" << std::endl;
-
-        // 等待一段时间再获锁 1
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
         std::cout << "thread 2 wait to get locker 1" << std::endl;
 
         // 等待获取锁 1
@@ -58,15 +48,25 @@ public:
 
         std::cout << "thread 2 already got locker 1" << std::endl;
 
-        // 释放锁 1
-        lock1.unlock();
+        // 等待一段时间再获锁 2
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-        std::cout << "thread 2 already released locker 1" << std::endl;
+        std::cout << "thread 2 wait to get locker 2" << std::endl;
+
+        // 等待获取锁 2
+        lock2.lock();
+
+        std::cout << "thread 2 already got locker 2" << std::endl;
 
         // 释放锁 2
         lock2.unlock();
 
         std::cout << "thread 2 already released locker 2" << std::endl;
+
+        // 释放锁 1
+        lock1.unlock();
+
+        std::cout << "thread 2 already released locker 1" << std::endl;
     }
 
 private:
