@@ -1,7 +1,7 @@
 /**
  * 单例设计模式共享数据分析、解决，call_once
  *
- * (b) 单例设计模式使用 - 懒汉单例模式
+ * (b) 单例设计模式使用 - 懒汉单例模式（基于静态局部变量）
  */
 
 #include <iostream>
@@ -28,7 +28,7 @@ private:
     MyClass operator=(const MyClass&) = delete;
 
 public:
-    // 获取单例对象
+    // 获取单例对象（静态方法）
     static MyClass* getInstance() {
         // 静态局部变量（线程安全）
         static MyClass instance;

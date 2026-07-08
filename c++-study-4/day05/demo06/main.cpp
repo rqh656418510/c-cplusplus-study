@@ -28,12 +28,13 @@ private:
     MyClass operator=(const MyClass&) = delete;
 
 public:
-    // 获取单例对象
+    // 获取单例对象（静态方法）
     static MyClass* getInstance() {
         return m_instance;
     }
 
 private:
+    // 静态成员变量
     static MyClass* m_instance;
 };
 
