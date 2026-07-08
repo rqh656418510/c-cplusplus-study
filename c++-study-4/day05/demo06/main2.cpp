@@ -1,7 +1,7 @@
 /**
  * 单例设计模式共享数据分析、解决，call_once
  *
- * (a) 单例设计模式使用 - 饿汉单例模式
+ * (b) 单例设计模式使用 - 懒汉单例模式
  */
 
 #include <iostream>
@@ -30,15 +30,11 @@ private:
 public:
     // 获取单例对象
     static MyClass* getInstance() {
-        return m_instance;
+        // 静态局部变量（线程安全）
+        static MyClass instance;
+        return &instance;
     }
-
-private:
-    static MyClass* m_instance;
 };
-
-// 类外初始化静态变量（单例对象），分配内存空间
-MyClass* MyClass::m_instance = new MyClass();
 
 int main() {
     // 获取单例对象
