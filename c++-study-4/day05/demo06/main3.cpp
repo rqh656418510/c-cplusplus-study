@@ -25,7 +25,7 @@ private:
     MyClass(const MyClass&) = delete;
 
     // 删除赋值操作运算符
-    MyClass operator=(const MyClass&) = delete;
+    MyClass& operator=(const MyClass&) = delete;
 
 public:
     // 获取单例对象（静态方法）
