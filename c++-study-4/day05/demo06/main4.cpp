@@ -58,7 +58,7 @@ public:
         return ptr;
     }
 
-    // GC 类，用于自动释放单例对象的内存
+    // 内部定义的 GC 类，用于自动释放单例对象的内存
     class GcClass {
     public:
         // 构造函数
