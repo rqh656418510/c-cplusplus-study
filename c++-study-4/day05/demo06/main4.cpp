@@ -1,7 +1,7 @@
 /**
  * 单例设计模式共享数据分析、解决，call_once
  *
- * (c) 单例设计模式使用 - 懒汉单例模式（基于 DCL 双重检查锁）
+ * (d) 单例设计模式使用 - 懒汉单例模式（基于 DCL 双重检查锁，优化单例对象释放）
  */
 
 #include <atomic>
@@ -46,6 +46,9 @@ public:
                 // 初始化单例对象
                 ptr = new MyClass();
 
+                // 静态局部变量（用于自动释放单例对象的内存）
+                static GcClass gc;
+
                 // 设置单例对象
                 m_instance.store(ptr, std::memory_order_release);
             }
@@ -55,19 +58,23 @@ public:
         return ptr;
     }
 
-    // 销毁单例对象（静态方法）
-    static void destroyInstance() {
-        // 获取互斥锁
-        std::lock_guard<std::mutex> lock(m_mutex);
-
-        // 获取单例对象
-        MyClass* ptr = m_instance.exchange(nullptr);
-
-        // 释放单例对象
-        if (ptr != nullptr) {
-            delete ptr;
+    // GC 类，用于自动释放单例对象的内存
+    class GcClass {
+    public:
+        // 构造函数
+        GcClass() {
         }
-    }
+
+        // 析构函数
+        ~GcClass() {
+            MyClass* ptr = MyClass::getInstance();
+            if (ptr == nullptr) {
+                // 释放单例对象的内存
+                delete ptr;
+                ptr = nullptr;
+            }
+        }
+    };
 
 private:
     static std::mutex m_mutex;                // 互斥锁（静态变量）
@@ -89,9 +96,6 @@ int main() {
     std::cout << "address: " << mc << std::endl;
     std::cout << "address: " << mc2 << std::endl;
     std::cout << "equals: " << (mc == mc2 ? "true" : "false") << std::endl;
-
-    // 释放单例对象
-    MyClass::destroyInstance();
 
     return 0;
 }
