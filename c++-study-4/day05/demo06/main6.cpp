@@ -32,7 +32,7 @@ private:
     }
 
 public:
-    // 获取单例对象（静态方法），返回引用，避免指针被调用者误删
+    // 获取单例对象（静态方法）
     static MyClass& getInstance() {
         // 创建单例对象（永远只执行一次）
         std::call_once(m_flag, createInstance);
