@@ -28,6 +28,7 @@ private:
 public:
     // 获取单例对象（静态方法）
     static MyClass* getInstance() {
+        // 这里的代码存在线程安全问题（共享数据问题）
         if (m_instance == nullptr) {
             // 初始化单例对象
             m_instance = new MyClass();
