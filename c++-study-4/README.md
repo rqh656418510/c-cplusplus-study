@@ -56,6 +56,12 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo04          互斥量概念、用法、死锁演示及解决详解   
     ├── demo05          unique_lock详解
     ├── demo06          单例设计模式共享数据分析、解决，call_once
+    ├── demo07          condition_variable、wait
+    ├── demo08          async、future、packaged_task、pro
+    ├── demo09          future其他成员函数、shared_future、ato
+    ├── demo10          std atomic续谈、std async深入谈
+    ├── demo11          windows临界区、其他各种mutex互斥量
+    ├── demo12          补充知识、线程池浅谈、数量谈、总结
 ```
 
 ## 常用命令
