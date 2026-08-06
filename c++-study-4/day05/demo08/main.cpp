@@ -1,5 +1,7 @@
 /**
  * async、future、packaged_task 使用
+ *
+ * (a) `std::async` + 普通函数的使用
  */
 
 #include <chrono>

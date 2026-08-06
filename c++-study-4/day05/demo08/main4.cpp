@@ -1,7 +1,7 @@
 /**
- * async、future、packaged_task 使用
+* async、future、packaged_task 使用
  *
- * (b) `std::async` + 类成员函数的使用
+ * (d) `std::async` + `std::launch::async` 的使用
  */
 
 #include <chrono>
@@ -24,12 +24,11 @@ public:
 
 int main() {
     std::cout << "main() run, thread id " << std::this_thread::get_id() << std::endl;
-    // 启动一个子线程
     MyClass mc;
-    // 第二个参数是对象引用，第三个参数是线程函数的参数
-    std::future<int> result = std::async(&MyClass::process, &mc, 5000);
+    // 第一个参数是执行策略，第三个参数是对象引用，第四个参数是线程函数的参数
+    std::future<int> result = std::async(std::launch::async, &MyClass::process, &mc, 5000);
     std::cout << "continue ..." << std::endl;
-    // 获取子线程的执行结果（阻塞等待线程执行完成）
+    // 使用 std::launch::async 执行策略后，会立即创建子线程执行任务，主线程调用 get() 后会阻塞等待任务执行完成并获取执行结果
     const int num = result.get();
     std::cout << "result = " << num << std::endl;
     std::cout << "main() end, thread id " << std::this_thread::get_id() << std::endl;
