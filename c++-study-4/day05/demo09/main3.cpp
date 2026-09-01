@@ -8,7 +8,7 @@
 #include <thread>
 #include <atomic>
 
-// 定义全局变量
+// 定义全局变量（使用原子类型）
 static std::atomic<int> g_count(0);
 
 void process()
@@ -21,16 +21,16 @@ void process()
 
 int main()
 {
-    // 创建线程 1
+    // 创建子线程 1
     std::thread t1(process);
 
-    // 创建线程 2
+    // 创建子线程 2
     std::thread t2(process);
 
-    // 等待线程 1 执行完成
+    // 等待子线程 1 执行完成
     t1.join();
 
-    // 等待线程 2 执行完成
+    // 等待子线程 2 执行完成
     t2.join();
 
     // 预期输出结果是：2000000
