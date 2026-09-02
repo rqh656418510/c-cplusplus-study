@@ -14,7 +14,7 @@ static std::atomic<int> g_count(0);
 
 void process() {
     for (int i = 0; i < 1000000; ++i) {
-        // 下面这种写法不支持原子操作
+        // 下面这种写法不支持原子操作，存在线程安全问题
         g_count = g_count + 1;
     }
 }
