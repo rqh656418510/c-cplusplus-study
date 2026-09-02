@@ -25,7 +25,7 @@ int process(const int milliseconds) {
 int main() {
     std::cout << "main() run, thread id " << std::this_thread::get_id() << std::endl;
 
-    // 第一个参数是执行策略，第二个参数是线程函数，第三个参数是线程函数的参数
+    // 第一个参数是启动策略，第二个参数是线程函数，第三个参数是线程函数的参数
     std::future<int> result = std::async(std::launch::async | std::launch::deferred, process, 5000);
 
     std::cout << "continue ..." << std::endl;

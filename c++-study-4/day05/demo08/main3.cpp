@@ -25,7 +25,7 @@ public:
 int main() {
     std::cout << "main() run, thread id " << std::this_thread::get_id() << std::endl;
     MyClass mc;
-    // 第一个参数是执行策略，第三个参数是对象引用，第四个参数是线程函数的参数
+    // 第一个参数是启动策略，第三个参数是对象引用，第四个参数是线程函数的参数
     std::future<int> result = std::async(std::launch::deferred, &MyClass::process, &mc, 5000);
     std::cout << "continue ..." << std::endl;
     // 使用 std::launch::deferred 执行策略后，不会创建子线程，当 get() 被调用后才会在当前主线程（非子线程）开始执行任务
