@@ -1,7 +1,7 @@
 /**
  * std::atomic续谈、std::async深入谈
  *
- * （d) std::async 自动选择启动策略
+ * （e) 判断 std::async 使用哪种启动策略
  */
 
 #include <chrono>
@@ -28,11 +28,28 @@ int main() {
     // 第一个参数是启动策略，第二个参数是线程函数，第三个参数是线程函数的参数
     std::future<int> result = std::async(std::launch::async | std::launch::deferred, process, 5000);
 
-    std::cout << "continue ..." << std::endl;
-
-    // 上面的两种启动策略任意选择一种（选择的结果是不确定的，由标准库实现自行选择）
-    const int num = result.get();
-    std::cout << "num = " << num << std::endl;
+    // 判断 std::async 使用哪种启动策略
+    const std::future_status status = result.wait_for(std::chrono::seconds(0));
+    if ( status == std::future_status::deferred ) {
+        // 延迟执行策略
+        std::cout << "thread deferred" << std::endl;
+        const int num = result.get();
+        std::cout << "result = " << num << std::endl;
+    } else {
+        // 异步执行策略
+        if (status == std::future_status::ready) {
+            // 线程执行完成并返回结果
+            std::cout << "thread finish" << std::endl;
+            const int num = result.get();
+            std::cout << "result = " << num << std::endl;
+        }
+        else {
+            // 线程执行超时
+            std::cout << "thread timeout" << std::endl;
+            const int num = result.get();
+            std::cout << "result = " << num << std::endl;
+        }
+    }
 
     std::cout << "main() end, thread id " << std::this_thread::get_id() << std::endl;
 
