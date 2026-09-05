@@ -1,7 +1,7 @@
 /**
 * windows临界区、其他各种mutex互斥量
  *
- * （b) windows 临界区自动析构
+ * （b) windows 临界区自动释放
  */
 
 #include <atomic>
