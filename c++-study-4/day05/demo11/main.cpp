@@ -5,20 +5,21 @@
  */
 
 #include <atomic>
+#include <chrono>
 #include <iostream>
 #include <list>
 #include <mutex>
 #include <thread>
 #include <Windows.h>
 
-#define __WINDOWSJQ_  // 标记 Windows 系统环境
+#define WINDOWS_CRITICAL_SECTION  // 标记 Windows 系统环境
 
 class MyClass {
 public:
     // 将收到的玩家命令写入队列
     void inMsgRecvQueue() {
         for (int i = 0; i < 1000; ++i) {
-            #ifdef __WINDOWSJQ_
+            #ifdef WINDOWS_CRITICAL_SECTION
                 // 加锁
                 EnterCriticalSection(&winsec);
 
@@ -50,7 +51,7 @@ public:
         while (true) {
             int command = -1;
 
-            #ifdef __WINDOWSJQ_
+            #ifdef WINDOWS_CRITICAL_SECTION
                 // 加锁
                 EnterCriticalSection(&winsec);
 
@@ -103,14 +104,14 @@ public:
 
     // 构造函数
     MyClass() {
-        #ifdef __WINDOWSJQ_
+        #ifdef WINDOWS_CRITICAL_SECTION
             InitializeCriticalSection(&winsec);  // 初始化临界区
         #endif
     }
 
     // 析构函数
     ~MyClass() {
-        #ifdef __WINDOWSJQ_
+        #ifdef WINDOWS_CRITICAL_SECTION
             DeleteCriticalSection(&winsec);  // 删除临界区
         #endif
     }
@@ -120,7 +121,7 @@ private:
     std::mutex msgRecvQueueMutex;  // 保护消息队列线程安全的互斥锁
     std::atomic_bool stop{false};  // 程序停止标记
 
-    #ifdef __WINDOWSJQ_
+    #ifdef WINDOWS_CRITICAL_SECTION
         CRITICAL_SECTION winsec;  // Windows 系统中的临界区，作用非常类似于 C++ 11 中的 std::mutex
     #endif
     
