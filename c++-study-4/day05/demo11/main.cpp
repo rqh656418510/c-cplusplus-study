@@ -10,9 +10,10 @@
 #include <list>
 #include <mutex>
 #include <thread>
-#include <Windows.h>
 
-#define WINDOWS_CRITICAL_SECTION  // 标记 Windows 系统环境
+// #include <Windows.h>
+
+// #define WINDOWS_CRITICAL_SECTION  // 标记 Windows 系统环境
 
 class MyClass {
 public:

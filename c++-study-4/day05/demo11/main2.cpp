@@ -10,9 +10,10 @@
 #include <list>
 #include <mutex>
 #include <thread>
-#include <windows.h>
 
-#define WINDOWS_CRITICAL_SECTION  // 标记 Windows 系统环境
+// #include <windows.h>
+
+// #define WINDOWS_CRITICAL_SECTION  // 标记 Windows 系统环境
 
 #ifdef  WINDOWS_CRITICAL_SECTION
     // RAII 类，用于自动释放 Windows 的临界区，防止忘记释放临界区导致线程死锁问题的发生，类似于 C++ 11 中的 std::lock_guard
