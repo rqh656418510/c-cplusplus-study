@@ -62,6 +62,12 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo10          std atomic续谈、std async深入谈
     ├── demo11          windows临界区、其他各种mutex互斥量
     ├── demo12          补充知识、线程池浅谈、数量谈、总结
+└── day06
+    ├── demo01          new、delete的进一步认识
+    ├── demo02          new细节探秘，重载类operator new delete
+    ├── demo03          内存池概念、代码实现和详细分析
+    ├── demo04          嵌入式指针概念及范例、内存池改进版
+    ├── demo05          重载全局new、delete，定位new及重载等
 ```
 
 ## 常用命令
