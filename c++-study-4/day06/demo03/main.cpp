@@ -56,7 +56,7 @@ void* MyClass::operator new(std::size_t size) {
             ++tmplink;
         }
 
-        // 最后一块内存没有下一块空闲内存
+        // 最后一块内存没有指向下一块空闲内存
         tmplink->m_next = nullptr;
 
         // 内存分配计数统计
