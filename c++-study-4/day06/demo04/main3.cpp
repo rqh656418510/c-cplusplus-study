@@ -1,7 +1,7 @@
 /**
  * 嵌入式指针概念及范例、内存池改进版
  *
- * (b) 使用嵌入指针优化内存池
+ * (c) 使用嵌入指针优化内存池
  */
 
 #include <cstdlib>
@@ -94,29 +94,30 @@ private:
     std::vector<void*> m_memory_blocks;  // 保存每次调用 malloc() 返回的原始内存地址
 };
 
+// 宏定义 - 声明内存池
+#define DECLARE_POOL_ALLOCATOR()         \
+public:                                  \
+    static MyAllocator allocator;        \
+    void* operator new(size_t size) {    \
+        return allocator.allocate(size); \
+    }                                    \
+    void operator delete(void* p) {      \
+        allocator.deallocate(p);         \
+    }
+
+// 宏定义 - 定义内存池
+#define IMPLEMENT_POOL_ALLOCATOR(ClassName) \
+    MyAllocator ClassName::allocator;       \
+
 // 普通类
 class Student {
-public:
-    // 内存分配器（静态成员）
-    static MyAllocator allocator;
-
-    // 重载 new 运算符
-    static void* operator new(size_t size) {
-        return allocator.allocate(size);
-    }
-
-    // 重载 delete 运算符
-    static void operator delete(void* p) {
-        allocator.deallocate(p);
-    }
-
+    DECLARE_POOL_ALLOCATOR()
 private:
     int age = 0;
     int code = 0;
 };
 
-// 静态成员初始化
-MyAllocator Student::allocator;
+IMPLEMENT_POOL_ALLOCATOR(Student)
 
 int main() {
     Student* students[100];
