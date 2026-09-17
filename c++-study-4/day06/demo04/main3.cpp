@@ -94,6 +94,8 @@ private:
     std::vector<void*> m_memory_blocks;  // 保存每次调用 malloc() 返回的原始内存地址
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
 // 宏定义 - 声明内存池
 #define DECLARE_POOL_ALLOCATOR()         \
 public:                                  \
@@ -108,6 +110,8 @@ public:                                  \
 // 宏定义 - 定义内存池
 #define IMPLEMENT_POOL_ALLOCATOR(ClassName) \
     MyAllocator ClassName::allocator;       \
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 // 普通类
 class Student {
