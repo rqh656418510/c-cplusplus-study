@@ -42,6 +42,12 @@ public:
         return ptr;
     }
 
+    // 重载 delete 运算符
+    static void operator delete(void *ptr) {
+        std::cout << "MyClass::operator delete(void *ptr)" << std::endl;
+        free(ptr);
+    }
+
 private:
     int m_a;
 };
