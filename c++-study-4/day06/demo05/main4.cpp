@@ -1,7 +1,7 @@
 /**
  * 重载全局new、delete，定位new及重载等
  *
- * (c) 定位 new 的重载
+ * (c) 多种 new 运算符重载
  */
 
 #include <cstdlib>
@@ -22,7 +22,7 @@ public:
         std::cout << "MyClass::~MyClass()" << std::endl;
     }
 
-    // 重载 new 运算符（需要分配内存空间）
+    // 重载 new 运算符
     static void *operator new(size_t size) {
         std::cout << "MyClass::operator new(size_t size)" << std::endl;
         void *ptr = malloc(size);
@@ -32,10 +32,13 @@ public:
         return ptr;
     }
 
-    // 重载定位 new 运算符（不需要分配内存空间）
-    static void *operator new(size_t size, void *ptr) {
-        std::cout << "MyClass::operator new(size_t size, void *ptr)" << std::endl;
-        // 直接返回传入的内存地址
+    // 重载 new 运算符
+    static void *operator new(size_t size, int val) {
+        std::cout << "MyClass::operator new(size_t size, int val)" << std::endl;
+        void *ptr = malloc(size);
+        if (ptr == nullptr) {
+            throw std::bad_alloc();
+        }
         return ptr;
     }
 
@@ -44,20 +47,11 @@ private:
 };
 
 int main() {
-    // 预先分配内存
-    void *ptr = (void *)new char[sizeof(MyClass)];
+    MyClass *mc1 = new MyClass();
+    delete mc1;
 
-    // 定位 new，会调用无参构造函数
-    MyClass *mc = new (ptr) MyClass();
-
-    // 或者，定位 new，调用有参构造函数
-    // MyClass *mc = new (ptr) MyClass(2);
-
-    // 显示调用析构函数
-    mc->~MyClass();
-
-    // 释放原始内存
-    delete[] (char *)ptr;
+    MyClass *mc2 = new (123) MyClass();
+    delete mc2;
 
     return 0;
 }
