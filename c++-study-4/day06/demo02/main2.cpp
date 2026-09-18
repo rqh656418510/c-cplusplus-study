@@ -4,8 +4,9 @@
  * (b) 重载 new、delete 运算符
  */
 
+#include <cstdlib>
 #include <iostream>
-#include <memory>
+#include <new>
 
 using namespace std;
 
