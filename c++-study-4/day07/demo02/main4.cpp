@@ -32,7 +32,8 @@ int main() {
 
     for (int i = 0; i < 3; ++i) {
         cout << "---------- begin ----------" << endl;
-        list.push_back(MyClass());
+        // 默认会调用 MyClass 的无参构造函数
+        list.emplace_back();
         cout << "---------- end ------------" << endl;
     }
 
