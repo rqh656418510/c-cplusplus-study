@@ -1,11 +1,11 @@
 /**
  * 容器的说明和简单应用例续
  *
- * stack（栈）的使用
+ * queue（队列）的使用
  */
 
 #include <iostream>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -32,14 +32,14 @@ public:
 };
 
 int main() {
-    stack<MyClass> s;
+    queue<MyClass> s;
 
     for (int i = 0; i < 3; ++i) {
         s.emplace(i);
     }
 
     for (int i = 0; i < 3; ++i) {
-        MyClass& mc = s.top();
+        MyClass& mc = s.front();
         cout << mc.m_i << endl;
         s.pop();
     }
