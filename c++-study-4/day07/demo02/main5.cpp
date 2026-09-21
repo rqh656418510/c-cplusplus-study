@@ -36,7 +36,7 @@ int main() {
 
     for (int i = 0; i < 3; ++i) {
         cout << "---------- begin ----------" << endl;
-        // 默认会调用 MyClass 的无参构造函数
+        // 默认会调用 MyClass 的有参构造函数
         list.emplace_front(i);
         cout << "---------- end ------------" << endl;
     }
