@@ -1,19 +1,25 @@
 /**
  * 分配器概述、使用，工作原理说
+ *
+ * (a) std::allocator 的使用
  */
 
 #include <iostream>
 #include <list>
 
-using namespace std;
-
 int main() {
-    list<int> myList;
+    std::list<int> myList1;
 
     // 等效于上面的写法
-    list<int, allocator<int>> myList2;
+    std::list<int, std::allocator<int>> myList2;
 
-    // 10:28
+    for (int i = 0; i < 5; ++i) {
+        myList2.push_back(i);
+    }
+
+    for (int& iter : myList2) {
+        std::cout << &iter << std::endl;
+    }
 
     return 0;
 }
