@@ -22,7 +22,7 @@ void fun2() {
     std::vector<int> v = {1, 2, 3};
 
     // 只读正向迭代器
-    for (std::vector<int>::const_iterator it = v.begin(); it != v.end(); ++it) {
+    for (std::vector<int>::const_iterator it = v.cbegin(); it != v.cend(); ++it) {
         // 不可以更改元素值
         std::cout << *it << std::endl;
     }
@@ -43,7 +43,7 @@ void fun4() {
     std::vector<int> v = {1, 2, 3};
 
     // 只读反向迭代器
-    for (std::vector<int>::const_reverse_iterator it = v.rbegin(); it != v.rend(); ++it) {
+    for (std::vector<int>::const_reverse_iterator it = v.crbegin(); it != v.crend(); ++it) {
         // 不可以更改元素值
         std::cout << *it << std::endl;
     }
