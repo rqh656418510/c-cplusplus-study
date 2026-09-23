@@ -43,7 +43,7 @@ int main() {
 
     int i = 1;
     for (auto iter = list.begin(); iter != list.end(); ++iter) {
-        cout << "第 " << i << " 个对象的地址：" << &(*iter) << "，值：" << iter->m_i << endl;
+        cout << "Object " << i << " address: " << &(*iter) << ", value: " << iter->m_i << endl;
         ++i;
     }
 

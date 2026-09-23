@@ -37,7 +37,7 @@ int main() {
     }
 
     for (int i = 0; i < deq.size(); ++i) {
-        printf("对象 deq[%d] 的地址：0x%llx\n", i, &deq[i]);
+        printf("Address of object deq[%d]: 0x%llx\n", i, &deq[i]);
     }
 
     return 0;

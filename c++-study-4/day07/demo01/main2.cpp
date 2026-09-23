@@ -30,13 +30,13 @@ private:
 int main() {
     vector<MyClass> vec;
 
-    for (int i = 0; i < 3; ++i) {
+for (int i = 0; i < 3; ++i) {
         cout << "---------- begin ----------" << endl;
-        cout << "容器插入元素之前 size = " << vec.size() << endl;
-        cout << "容器插入元素之前 capacity = " << vec.capacity() << endl;
+        cout << "Container size before insertion = " << vec.size() << endl;
+        cout << "Container capacity before insertion = " << vec.capacity() << endl;
         vec.push_back(MyClass());
-        cout << "容器插入元素之后 size = " << vec.size() << endl;
-        cout << "容器插入元素之后 capacity = " << vec.capacity() << endl;
+        cout << "Container size after insertion = " << vec.size() << endl;
+        cout << "Container capacity after insertion = " << vec.capacity() << endl;
         cout << "---------- end ------------" << endl;
     }
 
