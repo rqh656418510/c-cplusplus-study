@@ -12,7 +12,7 @@ int main() {
     std::vector<int> numbers = {69, 23, 35, 13, 56};
 
     // 第三个参数是可调用对象（如普通函数、函数对象、Lambda 表达式）
-    std::for_each(numbers.begin(), numbers.end(), [](const int number) { std::cout << number << " "; });
+    std::for_each(numbers.begin(), numbers.end(), [](const int& number) { std::cout << number << " "; });
 
     return 0;
 }
