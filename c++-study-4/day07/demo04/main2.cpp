@@ -13,7 +13,7 @@
 #include <typeinfo>
 #include <vector>
 
-// 重载函数
+// 重载函数，打印迭代器类型
 void _display_category(std::random_access_iterator_tag tag) {
     std::cout << "random_access_iterator_tag" << std::endl;
 }
