@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <functional>
 
 int main() {
     std::vector<int> numbers = {69, 23, 35, 13, 56};
