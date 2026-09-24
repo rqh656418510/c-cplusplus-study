@@ -12,7 +12,7 @@
 int main() {
     std::vector<int> numbers = {69, 23, 35, 13, 56};
 
-    // 使用 C++ 标准库中的函数对象进行降序排序（从大到小）
+    // 使用 C++ 标准库中的函数对象进行降序排序（从大到小），std::greater<int>() 会生成一个临时对象（可调用对象）
     std::sort(numbers.begin(), numbers.end(), std::greater<int>());
 
     for_each(numbers.begin(), numbers.end(), [](const int& number) { std::cout << number << " "; });
