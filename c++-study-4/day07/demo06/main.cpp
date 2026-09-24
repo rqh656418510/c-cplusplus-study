@@ -11,7 +11,7 @@
 class CompareInt {
 public:
     bool operator()(const int i, const int j) const {
-        // 升序排序（从大到小）
+        // 升序排序（从小到大）
         return i > j;
     }
 };
