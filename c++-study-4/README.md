@@ -77,6 +77,13 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo06          算法概述、内部处理、使用范例
     ├── demo07          函数对象回顾、系统函数对象及范例
     ├── demo08          适配器概念、分类、范例及总结
+└── day08
+    ├── demo01          函数调用运算符、function类模板
+    ├── demo02          万能引用universal reference
+    ├── demo03          理解模板类型推断、查看类型推断结果
+    ├── demo04          引用折叠，转发、完美转发，forward
+    ├── demo05          理解auto类型推断，auto应用场合
+    ├── demo06          详解decltype含义，decltype主要用途
 ```
 
 ## 常用命令
