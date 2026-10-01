@@ -1,7 +1,7 @@
 /**
  * 函数调用运算符、function类模板
  *
- * (b) function类模板
+ * (b) function 类模板
  */
 
 #include <functional>
