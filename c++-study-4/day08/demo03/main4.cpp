@@ -1,7 +1,7 @@
 /**
  * 理解模板类型推断、查看类型推断结果
  *
- * (b) 指针类型
+ * (d) 值类型
  */
 
 #ifdef _WIN32
@@ -10,7 +10,7 @@
 #include <iostream>
 
 template <typename T>
-void func(T* val) {
+void func(T val) {
     std::cout << "---------------begin---------------" << std::endl;
     using boost::typeindex::type_id_with_cvr;
     // 查看模板参数 T 的类型推断结果
@@ -21,7 +21,7 @@ void func(T* val) {
 }
 
 template <typename T>
-void func2(const T* val) {
+void func2(const T val) {
     std::cout << "---------------begin---------------" << std::endl;
     using boost::typeindex::type_id_with_cvr;
     // 查看模板参数 T 的类型推断结果
@@ -34,16 +34,16 @@ void func2(const T* val) {
 int main() {
     int a = 150;
     const int b = a;
-    const int* c = &a;
+    const int& c = a;
 
-    func(&a);  // 实参传递指针
-    func(&b);  // 实参传递指向常量的指针
-    func(c);   // 实参传递指向常量的指针
+    func(a);  // 实参传递值
+    func(b);  // 实参传递常量对象
+    func(c);  // 实参传递常量引用
     std::cout << "*********************************\n" << std::endl;
 
-    func2(&a);  // 实参传递指针
-    func2(&b);  // 实参传递指向常量的指针
-    func2(c);   // 实参传递指向常量的指针
+    func2(a);  // 实参传递值
+    func2(b);  // 实参传递常量对象
+    func2(c);  // 实参传递常量引用
     std::cout << "*********************************\n" << std::endl;
 
     return 0;

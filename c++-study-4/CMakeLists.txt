@@ -195,6 +195,8 @@ add_executable(day08-demo02 day08/demo02/main.cpp)
 add_executable(day08-demo02-2 day08/demo02/main2.cpp)
 add_executable(day08-demo03 day08/demo03/main.cpp)
 add_executable(day08-demo03-2 day08/demo03/main2.cpp)
+add_executable(day08-demo03-3 day08/demo03/main3.cpp)
+add_executable(day08-demo03-4 day08/demo03/main4.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
@@ -220,5 +222,7 @@ if (WIN32)
     # 链接 Boost 库
     target_include_directories(day08-demo03   PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo03-2 PRIVATE ${Boost_INCLUDE_DIRS})
+    target_include_directories(day08-demo03-3 PRIVATE ${Boost_INCLUDE_DIRS})
+    target_include_directories(day08-demo03-4 PRIVATE ${Boost_INCLUDE_DIRS})
 
 endif()
