@@ -1,7 +1,7 @@
 /**
  * 理解模板类型推断、查看类型推断结果
  *
- * (d) 值类型
+ * (e) 数组类型
  */
 
 #ifdef _WIN32
@@ -21,7 +21,7 @@ void func(T val) {
 }
 
 template <typename T>
-void func2(const T val) {
+void func2(T& val) {
     std::cout << "---------------begin---------------" << std::endl;
     using boost::typeindex::type_id_with_cvr;
     // 查看模板参数 T 的类型推断结果
@@ -32,22 +32,12 @@ void func2(const T val) {
 }
 
 int main() {
-    int a = 150;
-    const int b = a;
-    const int& c = a;
-    char str[] = "I Love C++";
-    const char* const ptr = str;
+    const char str[] = "I Love C++";
 
-    func(a);    // 实参传递值
-    func(b);    // 实参传递常量对象
-    func(c);    // 实参传递常量引用
-    func(ptr);  // 实参传递指向常量的常量指针
+    func(str);  // 实参传递数组
     std::cout << "*********************************\n" << std::endl;
 
-    func2(a);    // 实参传递值
-    func2(b);    // 实参传递常量对象
-    func2(c);    // 实参传递常量引用
-    func2(ptr);  // 实参传递指向常量的常量指针
+    func2(str);  // 实参传递数组
     std::cout << "*********************************\n" << std::endl;
 
     return 0;
