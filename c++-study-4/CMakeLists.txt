@@ -198,11 +198,27 @@ add_executable(day08-demo03-2 day08/demo03/main2.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
+    # Boost 版本号
+    set(BOOST_VERSION "1.92")
+
+    # Boost 库的安装路径
     set(BOOST_ROOT "D:/DevSoftwareInstall/boost_1_92_0")
 
-    find_package(Boost 1.92 REQUIRED)
+    # 判断 Boost 安装路径是否存在
+    if (NOT EXISTS "${BOOST_ROOT}")
+        message(FATAL_ERROR "Boost 安装路径不存在: ${BOOST_ROOT}，请检查后重新配置。")
+    endif()
 
-    target_include_directories(day08-demo03 PRIVATE ${Boost_INCLUDE_DIRS})
+    # 进一步判断安装路径下是否是有效的 Boost 目录
+    if (NOT EXISTS "${BOOST_ROOT}/boost/version.hpp")
+        message(FATAL_ERROR "路径 ${BOOST_ROOT} 存在，但未找到 boost/version.hpp，可能不是有效的 Boost 根目录。")
+    endif()
+
+    # 设置 Boost 库的查找路径
+    find_package(Boost ${BOOST_VERSION} REQUIRED)
+
+    # 链接 Boost 库
+    target_include_directories(day08-demo03   PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo03-2 PRIVATE ${Boost_INCLUDE_DIRS})
 
 endif()

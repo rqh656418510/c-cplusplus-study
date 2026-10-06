@@ -4,14 +4,20 @@
  * (a) 理解模板类型推断
  */
 
-#include <iostream>
+#ifdef _WIN32
+
 #include <boost/type_index.hpp>
+#include <iostream>
 
-template<typename T>
-void func(T &tmp) {
-
+template <typename T>
+void func(T& tmp) {
 }
 
 int main() {
     return 0;
 }
+
+#else
+int main() {
+}
+#endif
