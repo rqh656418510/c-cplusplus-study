@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
+
 project(c___study_4)
 
 set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+# Linux 环境下需要链接 pthread 库
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CXX_FLAGS "-lpthread")
 endif()
 
+# 添加可执行文件
 add_executable(day01-demo01 day01/demo01/main.cpp)
 add_executable(day01-demo02 day01/demo02/main.cpp)
 add_executable(day01-demo03 day01/demo03/main.cpp)
@@ -192,3 +195,14 @@ add_executable(day08-demo02 day08/demo02/main.cpp)
 add_executable(day08-demo02-2 day08/demo02/main2.cpp)
 add_executable(day08-demo03 day08/demo03/main.cpp)
 add_executable(day08-demo03-2 day08/demo03/main2.cpp)
+
+# Windows 环境引入 Boost 库
+if (WIN32)
+    set(BOOST_ROOT "D:/DevSoftwareInstall/boost_1_92_0")
+
+    find_package(Boost 1.92 REQUIRED)
+
+    target_include_directories(day08-demo03 PRIVATE ${Boost_INCLUDE_DIRS})
+    target_include_directories(day08-demo03-2 PRIVATE ${Boost_INCLUDE_DIRS})
+
+endif()

@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <boost/type_index.hpp>
 
 template<typename T>
 void func(T &tmp) {
