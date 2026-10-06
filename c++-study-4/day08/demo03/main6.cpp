@@ -1,7 +1,7 @@
 /**
  * 理解模板类型推断、查看类型推断结果
  *
- * (e) 数组类型
+ * (f) 函数名做实参
  */
 
 #ifdef _WIN32
@@ -31,15 +31,13 @@ void func2(T& val) {
     std::cout << "---------------end---------------" << std::endl;
 }
 
+void process() {
+    std::cout << "process()" << std::endl;
+}
+
 int main() {
-    const char str[] = "I Love C++";
-
-    func(str);  // 实参传递数组
-    std::cout << "*********************************\n" << std::endl;
-
-    func2(str);  // 实参传递数组
-    std::cout << "*********************************\n" << std::endl;
-
+    func(process);   // 实参传递函数名称
+    func2(process);  // 实参传递函数名称
     return 0;
 }
 
