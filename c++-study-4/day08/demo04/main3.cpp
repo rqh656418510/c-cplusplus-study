@@ -1,7 +1,7 @@
 /**
  * 引用折叠，转发、完美转发，forward
  *
- * (b) 转发
+ * (c) std::forward 实现完美转发
  */
 
 #include <iostream>
