@@ -22,7 +22,7 @@ void process(T&& t) {
     std::cout << "---------------begin---------------" << std::endl;
     printInfo(t);                   // 表达式 t 在函数体内永远是左值
     printInfo(std::forward<T>(t));  // 完美转发，恢复参数原有的值类别（左值或右值）
-    printInfo(std::move(t));        // 强制将左值转换为右值
+    printInfo(std::move(t));        // 不管原来是什么值类别（左值或右值），强制转换为右值
     std::cout << "---------------end---------------" << std::endl;
 }
 
