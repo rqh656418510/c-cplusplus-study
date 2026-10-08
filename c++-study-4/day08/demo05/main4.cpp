@@ -1,7 +1,7 @@
 /**
  * 理解auto类型推断，auto应用场合
  *
- * (b) auto - 数组类型推导
+ * (d) auto - 特殊类型推导
  */
 
 #ifdef _WIN32
