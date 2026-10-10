@@ -28,8 +28,8 @@ int main() {
     auto& str2 = arr1;  // arr1 类型为 char[9]，auto& 绑定到数组本身，auto = char[9]，str2 类型为 char(&)[9]
     print_type<decltype(str2)>("auto str2 = arr1");
 
-    // 案例 3：auto 推导 const 数组（传值方式），数组退化为指针 + 顶层 const 保留到指向对象
-    auto str3 = arr2;  // arr2 类型为 const char[11]，按值推导时退化为 const char*，故 auto = const char*，str3 类型为 const char*
+    // 案例 3：auto 推导 const 数组（传值方式），数组退化为指针，元素的 const 属性保留
+    auto str3 = arr2;  // arr2 类型为 const char[11]，数组退化为指向首元素的指针，auto 推导为 const char*，str3 类型为 const char*
     print_type<decltype(str3)>("auto str3 = arr2");
 
     // 案例 4：auto& 推导 const 数组（引用方式），保留数组类型和 const
@@ -48,8 +48,8 @@ int main() {
     auto&& str7 = arr2;  // arr2 类型为 const char[11]，是左值；auto&& 遇到左值时 auto 推导为 const char(&)[11]，与 && 发生引用折叠后仍为 const char(&)[11]，故 str7 类型为 const char(&)[11]
     print_type<decltype(str7)>("auto str7 = arr2");
 
-    // 案例 8：auto* 推导数组（传值方式，先退化为指针再匹配）
-    auto* str8 = arr1;  // arr1 类型为 char[9]，按值使用时退化为 char*；与 auto* 匹配得 auto = char，故 str8 类型为 char*
+    // 案例 8：auto* 推导数组，根据声明形式推导出指针类型
+    auto* str8 = arr1;  // arr1 类型为 char[9]，根据 auto* 的声明形式，auto 推导为 char，str8 类型为 char*
     print_type<decltype(str8)>("auto str8 = arr1");
 
     return 0;

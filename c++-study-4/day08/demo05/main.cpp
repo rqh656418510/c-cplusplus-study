@@ -54,7 +54,7 @@ int main() {
     print_type<decltype(a8)>("auto& a8 = qx");
 
     // 案例 9：auto 用于 new 表达式
-    auto a9 = new auto(100);  // auto = int*，a9 类型为 int*
+    auto a9 = new auto(100);  // new 后的 auto 根据初始值 100 被推导为 int，new 表达式返回 int*，故 a9 类型为 int*
     print_type<decltype(a9)>("auto a9 = new auto(100)");
 
     // 案例 10：const auto* 指针推导
