@@ -45,14 +45,21 @@ int main() {
     auto fp6 = [](int x) { return x * 2; };  // 闭包类型唯一且匿名，auto = 该闭包类型，fp6 类型为该闭包类型
     print_type<decltype(fp6)>("auto fp6 = [](int x){ return x*2; }");
 
-    // 案例 7：无捕获的 lambda 可隐式转换为函数指针
-    int (*fp7)(int) = fp6;  // fp6 为闭包类型，可转换为 int(*)(int)，fp7 类型为 int(*)(int)
-    print_type<decltype(fp7)>("int (*fp7)(int) = fp6");
+    // 案例 7：auto 推导有捕获的 lambda，同样得到唯一的闭包类型
+    int y = 10;
+    auto fp7 = [y](int x) { return x + y; };  // 闭包类型唯一且匿名（且含捕获成员），auto = 该闭包类型，fp7 类型为该闭包类型
+    print_type<decltype(fp7)>("auto fp7 = [y](int x){ return x + y; }");
 
-    // 案例 8：有捕获的 lambda 不能转换为函数指针（编译错误，仅作说明）
-    // int y = 10;
-    // auto fp8 = [y](int x) { return x + y; };
-    // int (*fp9)(int) = fp8;   // 编译失败：有捕获的 lambda 不能转为函数指针
+    // 案例 8：auto& 推导有捕获的 lambda，保留闭包类型引用
+    auto& fp8 = fp7;  // fp7 为闭包类型左值，auto& 绑定到该闭包对象本身，auto = 闭包类型，fp8 类型为该闭包类型的引用
+    print_type<decltype(fp8)>("auto& fp8 = fp7");
+
+    // 案例 9：无捕获的 lambda 可隐式转换为函数指针
+    int (*fp9)(int) = fp6;  // fp6 为闭包类型（无捕获），可转换为 int(*)(int)，fp9 类型为 int(*)(int)
+    print_type<decltype(fp9)>("int (*fp9)(int) = fp6");
+
+    // 案例 10：有捕获的 lambda 不能隐式转换为函数指针（编译错误）
+    // int (*fp10)(int) = fp7;   // 编译失败：有捕获的 lambda 不能转为函数指针
 
     return 0;
 }
