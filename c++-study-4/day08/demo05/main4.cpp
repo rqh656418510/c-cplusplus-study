@@ -45,6 +45,10 @@ int main() {
     // 案例 7：auto 推导元素类型不一致的花括号初始化列表（编译错误）
     // auto a7 = {1, 2.5};  // 编译失败：std::initializer_list 的元素类型无法统一推导
 
+    // 案例 8：auto 直接列表初始化单个元素
+    auto a8{1};  // C++ 11/14 中，auto 推导为 std::initializer_list<int>，C++ 17 及之后，auto 推导为 int
+    print_type<decltype(a8)>("auto a8{1}");
+
     return 0;
 }
 
