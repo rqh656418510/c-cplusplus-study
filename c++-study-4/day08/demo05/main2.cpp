@@ -40,11 +40,11 @@ int main() {
     auto str5 = arr3;  // arr3 类型为 int[3]，按值推导时数组退化为 int*，故 auto = int*，str5 类型为 int*
     print_type<decltype(str5)>("auto str5 = arr3");
 
-    // 案例 6：auto&& 推导非 const 左值数组
+    // 案例 6：auto&&（万能引用）推导非 const 左值数组
     auto&& str6 = arr1;  // arr1 类型为 char[9]，是左值；auto&& 遇到左值时 auto 推导为 char(&)[9]，与 && 发生引用折叠后仍为 char(&)[9]，故 str6 类型为 char(&)[9]
     print_type<decltype(str6)>("auto str6 = arr1");
 
-    // 案例 7：auto&& 推导 const 左值数组
+    // 案例 7：auto&&（万能引用）推导 const 左值数组
     auto&& str7 = arr2;  // arr2 类型为 const char[11]，是左值；auto&& 遇到左值时 auto 推导为 const char(&)[11]，与 && 发生引用折叠后仍为 const char(&)[11]，故 str7 类型为 const char(&)[11]
     print_type<decltype(str7)>("auto str7 = arr2");
 
