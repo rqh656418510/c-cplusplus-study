@@ -33,12 +33,12 @@ int main() {
     auto& fp3 = add;  // auto& 绑定到函数本身，auto = int(int, int)，fp3 类型为 int(&)(int, int)
     print_type<decltype(fp3)>("auto& fp3 = add");
 
-    // 案例 4：auto* 推导函数名（指针方式），先退化为函数指针再匹配
-    auto* fp4 = add;  // add 退化为 int(*)(int, int)，与 auto* 匹配得 auto = int(int, int)，故 fp4 类型为 int(*)(int, int)
+    // 案例 4：auto* 推导函数名（指针方式）
+    auto* fp4 = add;  // add 是函数左值，auto* 根据声明形式推导出 auto 为函数类型 int(int, int)，最终 fp4 的类型为 int(*)(int, int)，即指向函数的指针
     print_type<decltype(fp4)>("auto* fp4 = add");
 
     // 案例 5：auto&& 推导函数名（万能引用，左值）
-    auto&& fp5 = add;  // add 是左值，auto&& 推 auto = int(&)(int, int)，折叠后 fp5 类型为 int(&)(int, int)
+    auto&& fp5 = add;  // add 是左值，auto&& 推 auto = int(&)(int, int)，经引用折叠后 fp5 类型为 int(&)(int, int)
     print_type<decltype(fp5)>("auto&& fp5 = add");
 
     // 案例 6：auto 推导无捕获的 lambda，得到闭包类型（非函数指针）
