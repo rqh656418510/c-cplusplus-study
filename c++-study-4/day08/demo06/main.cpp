@@ -57,6 +57,23 @@ int main() {
     decltype(h)&& i = y;  // decltype(h) = int&，int& && 经引用折叠变为 int&，i 类型为 int&
     print_type<decltype(i)>("decltype(i)");
 
+    // 案例 8：auto 推导数组——数组退化为指针
+    int arr[3] = {1, 2, 3};
+    auto k = arr;  // arr 退化为指向首元素的指针，auto = int*，k 类型为 int*
+    print_type<decltype(k)>("decltype(k)");
+
+    // 案例 9：decltype 作用于数组名——保留完整数组类型，不退化为指针
+    decltype(arr) l;  // decltype(arr) = int[3]，l 类型为 int[3]
+    print_type<decltype(l)>("decltype(l)");
+
+    // 案例 10：decltype 作用于数组下标表达式——返回左值，得到元素引用类型
+    decltype(arr[0]) m = x;  // decltype(arr[0]) = int&，m 类型为 int&
+    print_type<decltype(m)>("decltype(m)");
+
+    // 案例 11：decltype 作用于数组名加括号——退化为左值表达式，得到数组引用类型
+    decltype((arr)) n = arr;  // decltype((arr)) = int(&)[3]，n 类型为 int(&)[3]
+    print_type<decltype(n)>("decltype(n)");
+
     return 0;
 }
 
