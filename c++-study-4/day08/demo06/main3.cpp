@@ -7,6 +7,7 @@
 #ifdef _WIN32
 
 #include <boost/type_index.hpp>
+#include <functional>
 #include <iostream>
 
 int f() {
@@ -51,6 +52,10 @@ int main() {
     // 案例 6：decltype 作用于加括号的函数名——退化为左值表达式，返回函数引用
     decltype((f)) i = f;  // decltype((f)) = int(&)(), i 类型为 int(&)()
     print_type<decltype(i)>("decltype(i)");
+
+    // 案例 7：decltype 结合 std::function 使用
+    std::function<decltype(f)> j = f;  // decltype(f) = int()，作为模板参数传入 std::function，得到 std::function<int()>，j 类型为 std::function<int()>，可用于包装函数 f
+    print_type<decltype(j)>("decltype(j)");
 
     return 0;
 }

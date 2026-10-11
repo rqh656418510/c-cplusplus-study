@@ -1,7 +1,7 @@
 /**
  * 详解decltype含义，decltype主要用途
  *
- * (a) decltype 作用于变量名
+ * (a) decltype 作用于变量名（未加括号）
  */
 
 #ifdef _WIN32
