@@ -1,7 +1,7 @@
 /**
  * 详解decltype含义，decltype主要用途
  *
- * (d) decltype 使用
+ * (d) decltype 使用 - 应付可变类型
  */
 
 #ifdef _WIN32
