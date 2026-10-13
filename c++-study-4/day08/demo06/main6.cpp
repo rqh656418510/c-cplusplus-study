@@ -1,7 +1,7 @@
 /**
  * 详解decltype含义，decltype主要用途
  *
- * (f) decltype 使用 - decltype(auto) 的使用方式
+ * (f) decltype 使用 - decltype(auto) 的使用方式，C++ 14 开始支持
  */
 
 #include <iostream>
