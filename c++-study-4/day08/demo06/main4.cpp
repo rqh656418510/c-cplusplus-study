@@ -1,7 +1,7 @@
 /**
  * 详解decltype含义，decltype主要用途
  *
- * (d) decltype 使用 - 应付可变类型
+ * (d) decltype 使用 - 应付模板编程中可变类型
  */
 
 #ifdef _WIN32
@@ -12,7 +12,7 @@
 template <typename T>
 class MyClass {
 public:
-    // 使用 decltype 推导 T 的 begin() 函数返回值类型，并将其作为迭代器的类型
+    // 定义迭代器变量 iter，使用 decltype 推导 T 的 begin() 函数返回值类型，并将其作为迭代器的类型
     // decltype(T().begin()) 仅用于编译期类型推导，不会实际创建 T 的临时对象，也不会调用 begin() 函数
     // 这里的 T().begin() 是用于描述表达式类型的语法形式，而不是实际执行的函数调用
     decltype(T().begin()) iter;
