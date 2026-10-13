@@ -84,6 +84,11 @@ C++ 从基础到进阶（王建伟 - 80 集）
     ├── demo04          引用折叠，转发、完美转发，forward
     ├── demo05          理解auto类型推断，auto应用场合
     ├── demo06          详解decltype含义，decltype主要用途
+    ├── demo07          可调用对象、std function、std bind
+    ├── demo08          lambda表达式，for_each、find_if简介
+    ├── demo09          lambda表达式捕获模式的陷阱分析和展示
+    ├── demo10          可变参数函数、initializer_list、省略号形参
+    ├── demo11          萃取(traits)技术概念、范例等
 ```
 
 ## 常用命令
