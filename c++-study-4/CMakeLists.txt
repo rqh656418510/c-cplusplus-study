@@ -252,8 +252,5 @@ if (WIN32)
     target_include_directories(day08-demo06-2 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo06-3 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo06-4 PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(day08-demo06-5 PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(day08-demo06-6 PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(day08-demo06-7 PRIVATE ${Boost_INCLUDE_DIRS})
 
 endif()
