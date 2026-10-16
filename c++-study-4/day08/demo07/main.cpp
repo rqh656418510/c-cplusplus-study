@@ -1,5 +1,5 @@
 /**
- * 可调用对象、std function、std bind
+ * 可调用对象、std::function、std::bind
  *
  * (a) 可被转换为函数指针的类对象（函数对象 / 仿函数）
  */
