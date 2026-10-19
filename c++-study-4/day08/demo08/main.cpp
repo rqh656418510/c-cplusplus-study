@@ -1,7 +1,7 @@
 /**
- * 可调用对象、std::function、std::bind
+ * lambda表达式，for_each、find_if简介
  *
- * (e) std::bind 使用
+ * (a) Lambda 表达式使用
  */
 
 #include <functional>

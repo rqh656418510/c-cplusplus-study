@@ -12,7 +12,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 # 添加可执行文件
-add_executable(day01-demo01 day01/demo01/main.cpp)
+add_executable(day01-demo01 day01/demo01/main.cpp
+        day08/demo08/main.cpp)
 add_executable(day01-demo02 day01/demo02/main.cpp)
 add_executable(day01-demo03 day01/demo03/main.cpp)
 add_executable(day01-demo04 day01/demo04/main.cpp)
@@ -219,7 +220,7 @@ add_executable(day08-demo07-2 day08/demo07/main2.cpp)
 add_executable(day08-demo07-3 day08/demo07/main3.cpp)
 add_executable(day08-demo07-4 day08/demo07/main4.cpp)
 add_executable(day08-demo07-5 day08/demo07/main5.cpp)
-add_executable(day08-demo07-6 day08/demo07/main6.cpp)
+add_executable(day08-demo08 day08/demo08/main.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
