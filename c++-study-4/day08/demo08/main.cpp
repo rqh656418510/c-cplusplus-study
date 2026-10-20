@@ -4,7 +4,21 @@
  * (a) Lambda 表达式使用
  */
 
+#include <functional>
 #include <iostream>
+
+class CT {
+public:
+    void process() {
+        // [this] 捕获
+        auto f1 = [this] { return m_i++; };
+        f1();
+        std::cout << m_i << std::endl;
+    }
+
+private:
+    int m_i = 0;
+};
 
 // 基础用法
 void test01() {
@@ -34,7 +48,7 @@ void test02() {
     std::cout << "b = " << b << std::endl;
 
     // 按引用捕获
-    auto f3 = [&c] { std::cout << "c: " << c++ << std::endl; };
+    auto f3 = [&] { std::cout << "c: " << c++ << std::endl; };
     f3();
     std::cout << "c = " << c << std::endl;
 }
@@ -47,8 +61,19 @@ void test03() {
     f1();
 }
 
+// 捕获 this 指针
 void test04() {
     std::cout << "--------------- test04() ---------------" << std::endl;
+    CT ct;
+    ct.process();
+}
+
+// Lambda 表达式存储
+void test05() {
+    std::cout << "--------------- test05() ---------------" << std::endl;
+    std::function<int(int, int)> fun = [](const int x, const int y) -> int { return x + y; };
+    const int result = fun(3, 5);
+    std::cout << "result: " << result << std::endl;
 }
 
 int main() {
@@ -56,5 +81,6 @@ int main() {
     test02();
     test03();
     test04();
+    test05();
     return 0;
 }
