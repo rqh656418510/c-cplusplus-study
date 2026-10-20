@@ -4,8 +4,10 @@
  * (a) Lambda 表达式使用
  */
 
+#include <algorithm>
 #include <functional>
 #include <iostream>
+#include <vector>
 
 class CT {
 public:
@@ -73,7 +75,23 @@ void test05() {
     std::cout << "--------------- test05() ---------------" << std::endl;
     std::function<int(int, int)> fun = [](const int x, const int y) -> int { return x + y; };
     const int result = fun(3, 5);
-    std::cout << "result: " << result << std::endl;
+    std::cout << "result: " << result << std::endl; 
+}
+
+// 作为标准库算法的谓词
+void test06() {
+    std::cout << "--------------- test06() ---------------" << std::endl;
+    std::vector<int> v{3, 8, 5, 10, 13};
+
+    // 变量容器
+    std::for_each(v.begin(), v.end(), [](int i) { std::cout << i << " "; });
+    std::cout << std::endl;
+
+    // 查找元素
+    auto it = std::find_if(v.begin(), v.end(), [](int x) { return x > 9; });
+    if (it != v.end()) {
+        std::cout << *it << std::endl;
+    }
 }
 
 int main() {
@@ -82,5 +100,6 @@ int main() {
     test03();
     test04();
     test05();
+    test06();
     return 0;
 }
