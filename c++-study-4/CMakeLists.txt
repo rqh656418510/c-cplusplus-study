@@ -12,8 +12,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 # 添加可执行文件
-add_executable(day01-demo01 day01/demo01/main.cpp
-        day08/demo08/main.cpp)
+add_executable(day01-demo01 day01/demo01/main.cpp)
 add_executable(day01-demo02 day01/demo02/main.cpp)
 add_executable(day01-demo03 day01/demo03/main.cpp)
 add_executable(day01-demo04 day01/demo04/main.cpp)
