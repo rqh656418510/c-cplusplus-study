@@ -222,6 +222,7 @@ add_executable(day08-demo07-5 day08/demo07/main5.cpp)
 add_executable(day08-demo08 day08/demo08/main.cpp)
 add_executable(day08-demo09 day08/demo09/main.cpp)
 add_executable(day08-demo09-2 day08/demo09/main2.cpp)
+add_executable(day08-demo09-3 day08/demo09/main3.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
