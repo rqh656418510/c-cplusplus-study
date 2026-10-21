@@ -13,8 +13,12 @@ std::vector<std::function<bool(int)>> vec;
 class MyClass {
 public:
     void addItem() {
-        // 按值捕获成员变量，相当于捕获了 this 指针（[this]）
-        vec.push_back([=](const int val) { return val % m_num == 0; });
+        // 错误写法：按值捕获成员变量，相当于捕获了 this 指针（[this]），存在悬垂 this 指针导致的未定义行为
+        // vec.push_back([=](const int val) { return val % m_num == 0; });
+
+        // 正确写法：拷贝成员变量到临时变量，Lambda 表达式按值捕获临时变量，然后在函数体内使用临时变量的副本
+        int tmp = m_num;
+        vec.push_back([tmp](const int val) { return val % tmp == 0; });
     }
 
 private:
@@ -26,7 +30,7 @@ int main() {
     mc->addItem();
     delete mc;
 
-    int result = vec[0](10);  // 存在悬垂 this 指针导致的未定义行为
+    int result = vec[0](10);
     std::cout << result << std::endl;
 
     return 0;
