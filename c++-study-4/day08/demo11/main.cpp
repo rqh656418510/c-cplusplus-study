@@ -11,8 +11,8 @@
 
 using namespace std;
 
-template <typename T>
-void printTraitsInfo(const T& t) {
+template<typename T>
+void printTraitsInfo(const T &t) {
     cout << "------------begin------------" << endl;
     cout << "type name: " << typeid(T).name() << endl;
     cout << "is_void = " << is_void<T>::value << endl;                                                        // 类型是否是 void
@@ -24,7 +24,7 @@ void printTraitsInfo(const T& t) {
     cout << "is_move_constructible = " << is_move_constructible<T>::value << endl;                            // 是否有移动构造函数
     cout << "is_destructible = " << is_destructible<T>::value << endl;                                        // 是否有析构函数
     cout << "is_polymorphic = " << is_polymorphic<T>::value << endl;                                          // 是否含有虚函数
-    cout << "is_trivially_default_constructible = " << is_trivially_default_constructible<T>::value << endl;  // 是否为平凡默认构造
+    cout << "has_trivial_default_constructor = " << has_trivial_default_constructor<T>::value << endl;        // 是否有平凡默认构造
     cout << "has_virtual_destructor = " << has_virtual_destructor<T>::value << endl;                          // 是否有虚析构函数
     cout << "------------end------------" << endl;
 }
@@ -32,8 +32,8 @@ void printTraitsInfo(const T& t) {
 class A {
 public:
     A() = default;            // 默认构造函数
-    A(A&& ta) = delete;       // 移动构造：如果不写delete，系统一般就会认为有这个成员函数
-    A(const A& ta) = delete;  // 拷贝构造
+    A(A &&ta) = delete;       // 移动构造：如果不写delete，系统一般就会认为有这个成员函数
+    A(const A &ta) = delete;  // 拷贝构造
     virtual ~A() {            // 虚析构
     }
 };

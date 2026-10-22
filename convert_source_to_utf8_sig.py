@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
 # -----------------------------------------------------------------------------
-# 用法说明：
+# 用途说明：
 #   将 C/C++ 源码文件转换为 UTF-8 with signature（BOM，utf-8-sig）。
+# 
+# 运行环境：
+#   Python 3.7+
 #
 # 默认处理扩展名：
 #   .h .c .cpp .hpp .cc .cxx .hh
 #
-# 示例命令：
+# 使用示例命令：
 #   python convert_source_to_utf8_sig.py --root .
 #   python convert_source_to_utf8_sig.py --root . --dry-run
 #   python convert_source_to_utf8_sig.py --root . --ext .h .c .cpp .hpp .cc .cxx .hh
