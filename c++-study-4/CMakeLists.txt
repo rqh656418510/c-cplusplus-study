@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Debug)
 
 # Linux 环境下需要链接 pthread 库
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CXX_FLAGS "-lpthread")
-endif()
+endif ()
 
 # 添加可执行文件
 add_executable(day01-demo01 day01/demo01/main.cpp)
@@ -226,6 +226,7 @@ add_executable(day08-demo09-3 day08/demo09/main3.cpp)
 add_executable(day08-demo10 day08/demo10/main.cpp)
 add_executable(day08-demo10-2 day08/demo10/main2.cpp)
 add_executable(day08-demo10-3 day08/demo10/main3.cpp)
+add_executable(day08-demo11 day08/demo11/main.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
@@ -238,18 +239,18 @@ if (WIN32)
     # 判断 Boost 安装路径是否存在
     if (NOT EXISTS "${BOOST_ROOT}")
         message(FATAL_ERROR "Boost 安装路径不存在: ${BOOST_ROOT}，请检查后重新配置。")
-    endif()
+    endif ()
 
     # 进一步判断安装路径下是否是有效的 Boost 目录
     if (NOT EXISTS "${BOOST_ROOT}/boost/version.hpp")
         message(FATAL_ERROR "路径 ${BOOST_ROOT} 存在，但未找到 boost/version.hpp，可能不是有效的 Boost 根目录。")
-    endif()
+    endif ()
 
     # 设置 Boost 库的查找路径
     find_package(Boost ${BOOST_VERSION} REQUIRED)
 
     # 链接 Boost 库
-    target_include_directories(day08-demo03   PRIVATE ${Boost_INCLUDE_DIRS})
+    target_include_directories(day08-demo03 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo03-2 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo03-3 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo03-4 PRIVATE ${Boost_INCLUDE_DIRS})
@@ -265,4 +266,4 @@ if (WIN32)
     target_include_directories(day08-demo06-3 PRIVATE ${Boost_INCLUDE_DIRS})
     target_include_directories(day08-demo06-4 PRIVATE ${Boost_INCLUDE_DIRS})
 
-endif()
+endif ()
