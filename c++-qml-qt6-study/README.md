@@ -4,6 +4,7 @@
 
 ``` text
 001_lesson - 第一个 QML 程序
+002_lesson - Login UI 示例程序
 ```
 
 ### 运行命令
