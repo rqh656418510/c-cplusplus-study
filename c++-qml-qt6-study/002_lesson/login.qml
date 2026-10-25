@@ -9,10 +9,35 @@ ApplicationWindow {
     height: 800
     visible: true       // 默认不显示窗口
     title: "Login UI"
+    color: "#00000000"
+    flags: Qt.FramelessWindowHint  // 隐藏窗口的标题栏
+    property int dragX: 0
+    property int dragY: 0
+    property bool dragging: false // 是否正在拖动（自定义属性）
     // 外部矩形
     Rectangle {
         width: parent.width
         height: parent.height
+        radius: 10
+        // 鼠标区域（实现窗口拖动）
+        MouseArea {
+            width: parent.width
+            height: 100
+            onPressed: {
+                root.dragX = mouseX;
+                root.dragY = mouseY;
+                root.dragging = true;
+            }
+            onReleased: {
+                root.dragging = false;
+            }
+            onPositionChanged: {
+                if (root.dragging) {
+                    root.x += mouseX - root.dragX;
+                    root.y += mouseY - root.dragY;
+                }
+            }
+        }
         // 背景渐变色
         gradient: Gradient {
             GradientStop {
@@ -25,7 +50,7 @@ ApplicationWindow {
             }
             orientation: Gradient.Horizontal  // 水平渐变
         }
-        // 中间矩形
+        // 内部矩形
         Rectangle {
             width: 800
             height: 500
@@ -64,6 +89,14 @@ ApplicationWindow {
                     border.color: "#e6e6e6"
                     radius: 25
                 }
+                // 图标
+                Image {
+                    x: 30
+                    y: 15
+                    width: 20
+                    height: 20
+                    source: username.activeFocus ? "images/u2.png" : "images/u1.png"
+                }
             }
             // 密码
             TextField {
@@ -83,18 +116,65 @@ ApplicationWindow {
                     border.color: username.background.color
                     radius: username.background.radius
                 }
+                // 图标
+                Image {
+                    x: 30
+                    y: 15
+                    width: 20
+                    height: 20
+                    source: password.activeFocus ? "images/p2.png" : "images/p1.png"
+                }
             }
             // 登录按钮
             Button {
+                id: submit
                 x: username.x
                 y: password.y + password.height + 10
                 width: username.width
                 height: username.height
                 font.pixelSize: 20
                 text: qsTr("登 录")
-                onClicked: {
-                    print("登录：" + username.text + " : " + password.text);
+                background: Rectangle {
+                    radius: 25
+                    color: {
+                        if (submit.down) {
+                            return "#00b846";
+                        }
+                        if (submit.hovered) {
+                            return "#333333";
+                        }
+                        return "#57b846";
+                    }
                 }
+                // 按钮事件
+                onClicked: {
+                    print("登录，" + username.text + " : " + password.text);
+                }
+            }
+        }
+    }
+    // 关闭窗口的按钮
+    Rectangle {
+        x: root.width - 35
+        y: 5
+        width: 30
+        height: 30
+        color: "#00000000"
+        Text {
+            text: "×"
+            font.pixelSize: 28
+            anchors.centerIn: parent
+        }
+        // 鼠标区域（实现关闭窗口）
+        MouseArea {
+            anchors.fill: parent
+            onEntered: parent.color = "#1BFFFFFF"
+            onExited: parent.color = "#00000000"
+            onPressed: parent.color = "#3BFFFFFF"
+            onReleased: parent.color = "#1BFFFFFF"
+            // 点击事件
+            onClicked: {
+                root.close();
             }
         }
     }
