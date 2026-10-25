@@ -7,19 +7,19 @@ ApplicationWindow {
     id: root
     width: 1280
     height: 800
-    visible: true       // 默认不显示窗口
+    visible: true       // 默认显示窗口
     title: "Login UI"
     color: "#00000000"
     flags: Qt.FramelessWindowHint  // 隐藏窗口的标题栏
     property int dragX: 0
     property int dragY: 0
-    property bool dragging: false // 是否正在拖动（自定义属性）
-    // 外部矩形
+    property bool dragging: false // 是否正在拖动（自定义窗口拖动状态属性）
+    // 主窗口背景矩形
     Rectangle {
         width: parent.width
         height: parent.height
         radius: 10
-        // 鼠标区域（实现窗口拖动）
+        // 鼠标区域，用于拖动无边框窗口
         MouseArea {
             width: parent.width
             height: 100
@@ -35,6 +35,8 @@ ApplicationWindow {
                 if (root.dragging) {
                     root.x += mouseX - root.dragX;
                     root.y += mouseY - root.dragY;
+                    root.dragX = mouseX;
+                    root.dragY = mouseY;
                 }
             }
         }
@@ -48,9 +50,9 @@ ApplicationWindow {
                 position: 1
                 color: "#c850c0"
             }
-            orientation: Gradient.Horizontal  // 水平渐变
+            orientation: Gradient.Horizontal  // 设置背景水平渐变色
         }
-        // 内部矩形
+        // 登录面板矩形
         Rectangle {
             width: 800
             height: 500
@@ -58,9 +60,36 @@ ApplicationWindow {
             anchors.centerIn: parent  // 居中显示
             // 图片
             Image {
+                id: image
                 x: 57
                 y: 100
                 source: "images/q2.png"
+                // 定义图片旋转状态，并通过 Transition 实现状态切换动画
+                states: [
+                    State {
+                        name: "rotated"
+                        PropertyChanges {
+                            target: image
+                            rotation: 180
+                        }
+                    }
+                ]
+                transitions: Transition {
+                    RotationAnimation {
+                        duration: 1000   // 动画持续时间（毫秒）
+                        direction: RotationAnimation.Counterclockwise
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (image.state == "rotated") {
+                            image.state = "";
+                        } else {
+                            image.state = "rotated";
+                        }
+                    }
+                }
             }
             // 标题
             Text {
@@ -81,9 +110,9 @@ ApplicationWindow {
                 height: 50
                 font.pixelSize: 20
                 leftPadding: 60
-                color: "#666666"   // 输入词颜色
-                placeholderText: qsTr("用户名或邮箱") // 提示词
-                placeholderTextColor: "#999999"  // 提示词颜色
+                color: "#666666"   // 输入文本颜色
+                placeholderText: qsTr("用户名或邮箱") // 占位提示文本
+                placeholderTextColor: "#999999"  // 占位提示文本颜色
                 background: Rectangle {
                     color: "#e6e6e6"
                     border.color: "#e6e6e6"
@@ -97,6 +126,12 @@ ApplicationWindow {
                     height: 20
                     source: username.activeFocus ? "images/u2.png" : "images/u1.png"
                 }
+                // 输入框入场动画，使其沿 Y 轴移动
+                NumberAnimation on y {
+                    from: username.y - 50
+                    to: username.y
+                    duration: 300  // 动画持续时间（毫秒）
+                }
             }
             // 密码
             TextField {
@@ -107,9 +142,9 @@ ApplicationWindow {
                 height: username.height
                 font.pixelSize: username.font.pixelSize
                 leftPadding: username.leftPadding
-                color: username.color   // 输入词颜色
-                placeholderText: qsTr("密码")  // 提示词
-                placeholderTextColor: username.placeholderTextColor  // 提示词颜色
+                color: username.color   // 输入文本颜色
+                placeholderText: qsTr("密码")  // 占位提示文本
+                placeholderTextColor: username.placeholderTextColor  // 占位提示文本颜色
                 echoMode: TextInput.Password
                 background: Rectangle {
                     color: username.background.color
@@ -146,7 +181,7 @@ ApplicationWindow {
                         return "#57b846";
                     }
                 }
-                // 按钮事件
+                // 处理登录按钮点击事件
                 onClicked: {
                     print("登录，" + username.text + " : " + password.text);
                 }
@@ -165,7 +200,7 @@ ApplicationWindow {
             font.pixelSize: 28
             anchors.centerIn: parent
         }
-        // 鼠标区域（实现关闭窗口）
+        // 鼠标区域，用于处理关闭按钮的交互
         MouseArea {
             anchors.fill: parent
             onEntered: parent.color = "#1BFFFFFF"
