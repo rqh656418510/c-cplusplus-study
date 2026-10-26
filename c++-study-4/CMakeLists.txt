@@ -11,7 +11,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CMAKE_CXX_FLAGS "-lpthread")
 endif ()
 
-# 添加可执行文件
+# 添加可执行文件（第一部分学习内容）
 add_executable(day01-demo01 day01/demo01/main.cpp)
 add_executable(day01-demo02 day01/demo02/main.cpp)
 add_executable(day01-demo03 day01/demo03/main.cpp)
@@ -232,6 +232,7 @@ add_executable(day08-demo11-3 day08/demo11/main3.cpp)
 
 #####################################################
 
+# 添加可执行文件（第二部分学习内容）
 add_executable(day09-demo01 day09/demo01/main.cpp)
 
 # Windows 环境引入 Boost 库
