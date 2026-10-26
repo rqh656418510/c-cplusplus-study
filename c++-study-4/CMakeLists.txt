@@ -234,6 +234,8 @@ add_executable(day08-demo11-3 day08/demo11/main3.cpp)
 
 # 添加可执行文件（第二部分学习内容）
 add_executable(day09-demo01 day09/demo01/main.cpp)
+add_executable(day09-demo02 day09/demo02/main.cpp)
+add_executable(day09-demo03 day09/demo03/main.cpp)
 
 # Windows 环境引入 Boost 库
 if (WIN32)
