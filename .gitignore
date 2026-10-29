@@ -4,6 +4,7 @@ HELP.md
 /bin/
 /out/
 /build/
+build/
 cmake-build-debug
 !gradle/wrapper/gradle-wrapper.jar
 
@@ -43,3 +44,5 @@ Debug
 ### VS Code ###
 .vscode/
 
+### QT Creator ###
+.qtcreator
