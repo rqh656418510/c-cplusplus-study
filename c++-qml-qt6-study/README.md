@@ -5,6 +5,9 @@
 ``` text
 001_lesson - 第一个 QML 程序
 002_lesson - Login UI 示例程序
+003_lesson - Qt Creator 创建 QML 和 C++ 项目
+004_lesson - 访问同目录 QML 文件
+005_lesson - 访问外部库或 QML 目录文件
 ```
 
 ### 运行命令

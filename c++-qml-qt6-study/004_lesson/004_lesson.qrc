@@ -1,0 +1,7 @@
+<RCC>
+    <qresource>
+        <file>004_lesson.qml</file>
+        <file>004_lesson.qmlproject</file>
+        <file>MyType.qml</file>
+    </qresource>
+</RCC>
