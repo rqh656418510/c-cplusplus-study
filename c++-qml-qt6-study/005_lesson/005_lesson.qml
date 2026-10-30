@@ -23,6 +23,9 @@ Window {
         width: 80
         height: 40
         text: MyJs.getSubmitText()   // 通过别名调用 JS 代码
+        onClicked: {
+            MyJs.onBtnClick();   // 通过别名调用 JS 代码
+        }
     }
 
     // 本地目录下的 QML 文件在导入后，直接使用其大写开头的文件名（去掉 .qml 后缀）作为组件类型
