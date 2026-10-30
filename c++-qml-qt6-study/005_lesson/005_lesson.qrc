@@ -3,5 +3,6 @@
         <file>005_lesson.qml</file>
         <file>005_lesson.qmlproject</file>
         <file>MyLib/MyText.qml</file>
+        <file>myjs.js</file>
     </qresource>
 </RCC>

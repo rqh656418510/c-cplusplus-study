@@ -1,0 +1,6 @@
+<RCC>
+    <qresource>
+        <file>006_lesson.qml</file>
+        <file>006_lesson.qmlproject</file>
+    </qresource>
+</RCC>
