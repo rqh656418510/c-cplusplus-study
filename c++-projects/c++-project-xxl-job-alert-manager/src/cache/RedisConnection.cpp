@@ -1,8 +1,9 @@
 #include "RedisConnection.h"
 
+#include <sys/time.h>
+
 #include <cstdarg>
 #include <exception>
-#include <sys/time.h>
 
 #include "Logger.h"
 
@@ -71,8 +72,7 @@ bool RedisConnection::connect(const std::string& ip, int port, const std::string
 
     // 非空密码时执行 AUTH
     if (!password.empty()) {
-        redisReply* reply =
-            static_cast<redisReply*>(redisCommand(ctx_, "AUTH %b", password.data(), password.size()));
+        redisReply* reply = static_cast<redisReply*>(redisCommand(ctx_, "AUTH %b", password.data(), password.size()));
         if (!checkReply(reply, "AUTH")) {
             if (reply != nullptr) {
                 freeReplyObject(reply);
@@ -441,7 +441,7 @@ bool RedisConnection::setHash(const std::string& key, const std::map<std::string
 // 设置 hash 的单个字段
 bool RedisConnection::hset(const std::string& key, const std::string& field, const std::string& value) {
     redisReply* reply = execFormat(false, "HSET %b %b %b", key.data(), key.size(), field.data(), field.size(),
-                                  value.data(), value.size());
+                                   value.data(), value.size());
     if (!checkReply(reply, "HSET")) {
         if (reply != nullptr) {
             freeReplyObject(reply);
@@ -483,7 +483,7 @@ bool RedisConnection::hmset(const std::string& key, const std::map<std::string, 
 // 仅在字段不存在时设置 hash 字段（字段已存在时返回 false）
 bool RedisConnection::hsetnx(const std::string& key, const std::string& field, const std::string& value) {
     redisReply* reply = execFormat(false, "HSETNX %b %b %b", key.data(), key.size(), field.data(), field.size(),
-                                  value.data(), value.size());
+                                   value.data(), value.size());
     if (!checkReply(reply, "HSETNX")) {
         if (reply != nullptr) {
             freeReplyObject(reply);
@@ -664,7 +664,8 @@ bool RedisConnection::checkReply(redisReply* reply, const char* cmd) const {
 
 // 执行 Redis 命令，同一次调用最多重连一次，以下两种情况互斥：
 // (1) 发送命令前连接已失效：先重连，再发送当前命令（此时无论是否 retry 都会发送一次命令）
-// (2) 发送命令时连接看似有效、因断线发送失败：会重连。一旦重连成功，当 retry 为 true（读操作）时重发当前命令一次，为 false（写操作）时不重发当前命令以免重复执行
+// (2) 发送命令时连接看似有效、因断线发送失败：会重连。一旦重连成功，当 retry 为 true（读操作）时重发当前命令一次，为
+// false（写操作）时不重发当前命令以免重复执行
 redisReply* RedisConnection::execFormat(bool retry, const char* format, ...) {
     const bool alreadyInvalid = !isValid();
     if (alreadyInvalid && !reconnect()) {
@@ -705,8 +706,8 @@ redisReply* RedisConnection::execArgv(const std::vector<std::string>& args, bool
         argvlen.push_back(args[i].size());
     }
 
-    redisReply* reply = static_cast<redisReply*>(
-        redisCommandArgv(ctx_, static_cast<int>(args.size()), argv.data(), argvlen.data()));
+    redisReply* reply =
+        static_cast<redisReply*>(redisCommandArgv(ctx_, static_cast<int>(args.size()), argv.data(), argvlen.data()));
 
     // 仅情况 (2)：发送前连接有效且 I/O 失败时重连；retry 为 true 时重发当前命令
     if (reply == nullptr && !alreadyInvalid && reconnect() && retry) {
