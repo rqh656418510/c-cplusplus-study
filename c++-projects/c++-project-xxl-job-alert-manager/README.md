@@ -98,11 +98,14 @@ yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel
 - HiRedis 可以使用以下命令编译安装，适用于任意 Linux 发行版
 
 ``` sh
-# Git 克隆代码
-git clone https://github.com/redis/hiredis.git
+# 下载源码包（1.3.0 版本）
+wget https://github.com/redis/hiredis/archive/refs/tags/v1.3.0.tar.gz
 
-# 进入源码目录
-cd hiredis
+# 解压文件
+tar -xvf v1.3.0.tar.gz
+
+# 进入解压目录
+cd hiredis-1.3.0
 
 # 编译源码
 make -j$(nproc)
