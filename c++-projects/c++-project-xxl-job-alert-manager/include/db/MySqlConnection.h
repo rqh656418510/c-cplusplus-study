@@ -11,7 +11,7 @@
 
 #include "NonCopyable.h"
 
-// MySQL数据库操作类
+// MySQL操作类（非线程安全）
 class MySqlConnection : NonCopyable {
 public:
     // 初始化数据库连接
@@ -30,7 +30,7 @@ public:
     // 执行查询操作（select）
     MYSQL_RES* query(const std::string& sql);
 
-    // 发送Ping指令
+    // 发送Ping命令
     bool ping() const;
 
     // 为连接发送心跳

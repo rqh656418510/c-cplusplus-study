@@ -12,7 +12,7 @@
 #include "MySqlConnection.h"
 #include "NonCopyable.h"
 
-// MySQL连接池（单例模式）
+// MySQL连接池（线程安全 + 单例模式）
 class MySqlConnectionPool : NonCopyable {
 public:
     // 关闭连接池

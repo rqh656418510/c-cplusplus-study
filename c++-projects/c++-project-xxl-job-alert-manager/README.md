@@ -12,6 +12,7 @@
 - 企业微信 API
 - HTTP 网络编程
 - 多线程并发编程
+- Redis 缓存操作
 - MySQL 数据库操作
 - CMake 构建与编译
 - JSON 序列化与反序列化
@@ -25,6 +26,7 @@
 | CMake                      | `3.25.1`   | `3.27.7`    |                                                        |
 | Libcurl                    | `7.29.0`   | `7.88.1`    |                                                        |
 | OpenSSL                    | `1.0.2`    | `3.0.18`    | [libcurl](https://github.com/curl/curl) 库依赖 OpenSSL |
+| Hiredis                    | `1.3.0`    | `1.3.0`     | [Hiredis](https://github.com/redis/hiredis)            |
 | MySQL C API（Connector/C） | `5.7.33`   | `8.4.5`     |                                                        |
 | MySQL Server               | `5.7.33`   | `8.4.5`     |                                                        |
 | Linux System               | `CentOS 7` | `Debian 12` | 本项目只支持 Linux 平台，不兼容 Windows 平台           |
@@ -41,7 +43,7 @@
 
 ### 项目配置
 
-- 打开 `config/alert.conf` 配置文件，更改 MySQL 连接信息和企业微信账号信息，其他监控告警的配置信息可以按需修改，如下所示：
+- 打开 `config/alert.conf` 配置文件，更改 MySQL 连接信息、Redis 连接信息和企业微信账号信息，其他监控告警的配置信息可以按需修改，如下所示：
 
 ``` conf
 # ==================== MySQL连接配置 ====================
@@ -58,6 +60,20 @@ mysql.db=xxl_job
 # 任务调度日志表的名称
 mysql.table=xxl_job_log
 
+# ==================== Redis连接配置 ====================
+# Redis服务器的IP地址
+redis.ip=127.0.0.1
+# Redis服务器的端口
+redis.port=6379
+# Redis的登录密码（省略或留空表示无密码）
+redis.password=
+# Redis的数据库编号
+redis.db=0
+# Redis连接超时时间（单位毫秒，默认 5000）
+redis.connection.timeout=5000
+# Redis连接断线是否允许重连（1 允许，0 不允许，默认允许）
+redis.reconnect=1
+
 # ==================== 企业微信账号配置 ====================
 # 企业微信应用的AgentId
 wxqy.account.agent_id=1000001
@@ -69,9 +85,42 @@ wxqy.account.corp_id=xxxxxxxxxx
 wxqy.account.corp_secret=xxxxxxxxxx
 ```
 
-### 项目编译
+### 项目依赖
 
-> 特别注意，在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C）依赖软件。如果是使用 CentOS 7，编译项目之前可以执行 `yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel` 命令来快速安装所需的依赖软件。
+在编译项目之前，请务必在本地 Linux 操作系统中安装好 CMake、OpenSSL、Libcurl、MySQL C API（Connector/C）、HiRedis 依赖软件。
+
+- 若使用 CentOS 7，可以在编译项目前执行以下命令，快速安装所需依赖软件（不含 HiRedis）
+
+``` sh
+yum install cmake3 openssl openssl-devel libcurl-devel mysql-devel
+```
+
+- HiRedis 可以使用以下命令编译安装，适用于任意 Linux 发行版
+
+``` sh
+# Git 克隆代码
+git clone https://github.com/redis/hiredis.git
+
+# 进入源码目录
+cd hiredis
+
+# 编译源码
+make -j$(nproc)
+
+# 执行安装
+sudo make install
+
+# 更新系统的共享库缓存
+sudo ldconfig /usr/local/lib/
+
+# 查看 Hiredis 库的头文件
+ls -al /usr/local/include/hiredis
+
+# 查看 Hiredis 库的静态库和动态库
+ls -al /usr/local/lib | grep hiredis
+```
+
+### 项目编译
 
 ``` sh
 # 进入项目根目录

@@ -28,6 +28,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/net
     ${CMAKE_SOURCE_DIR}/include/config
     ${CMAKE_SOURCE_DIR}/include/db
+    ${CMAKE_SOURCE_DIR}/include/cache
     ${CMAKE_SOURCE_DIR}/include/alert
     ${CMAKE_SOURCE_DIR}/include/job
 )

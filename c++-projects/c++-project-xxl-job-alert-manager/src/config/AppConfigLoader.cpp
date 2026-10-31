@@ -16,6 +16,10 @@ AppConfigLoader::AppConfigLoader() {
     optional_.emplace("alert.xxljob.fatal_status_process_command", "");
     optional_.emplace("alert.log.file.max_retention_days", "30");
     optional_.emplace("alert.log.file.directory", ".");
+    optional_.emplace("redis.password", "");
+    optional_.emplace("redis.db", "0");
+    optional_.emplace("redis.connection.timeout", "5000");
+    optional_.emplace("redis.reconnect", "1");
 
     // 加载配置文件内容
     config_ = load(CONFIG_FILE.c_str());
@@ -92,6 +96,14 @@ AppConfig AppConfigLoader::load(const char* configFile) {
     cfg_util.logLoadedEntriesToLogger();
 
     AppConfig app;
+
+    // Redis Config
+    app.redis.ip = toStr(cfg_util.load("redis.ip"), "redis.ip");
+    app.redis.port = toInt(cfg_util.load("redis.port"), "redis.port");
+    app.redis.password = toStr(cfg_util.load("redis.password"), "redis.password");
+    app.redis.db = toInt(cfg_util.load("redis.db"), "redis.db");
+    app.redis.connectionTimeout = toInt(cfg_util.load("redis.connection.timeout"), "redis.connection.timeout");
+    app.redis.reconnect = toInt(cfg_util.load("redis.reconnect"), "redis.reconnect") != 0;
 
     // MySQL Config
     app.mysql.ip = toStr(cfg_util.load("mysql.ip"), "mysql.ip");

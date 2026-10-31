@@ -46,7 +46,7 @@ MySqlConnectionPool::MySqlConnectionPool() : connectionCount_(0), closed_(false)
     scanIdleThread_ = std::thread(std::bind(&MySqlConnectionPool::scanIdleConnection, this));
 
     // 打印日志信息
-    LOG_INFO("Connection pool inited");
+    LOG_INFO("MySQL connection pool inited");
 }
 
 // 析构函数
@@ -104,11 +104,11 @@ void MySqlConnectionPool::close() {
         }
 
         // 打印日志信息
-        LOG_INFO("Connection pool stoped");
+        LOG_INFO("MySQL connection pool stoped");
     } catch (const std::exception &e) {
-        LOG_ERROR("Connection pool stop failed, exception: %s", e.what());
+        LOG_ERROR("MySQL connection pool stop failed, exception: %s", e.what());
     } catch (...) {
-        LOG_ERROR("Connection pool stop failed, unknown exception");
+        LOG_ERROR("MySQL connection pool stop failed, unknown exception");
     }
 }
 
@@ -126,7 +126,7 @@ int MySqlConnectionPool::getSize() const {
 std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
     // 判断连接池是否已关闭
     if (this->closed_) {
-        LOG_ERROR("Failed to get connection, becasue connection pool has closed");
+        LOG_ERROR("Failed to get mysql connection, becasue mysql connection pool has closed");
         return nullptr;
     }
 
@@ -143,7 +143,7 @@ std::shared_ptr<MySqlConnection> MySqlConnectionPool::getConnection() {
             if (std::cv_status::timeout == status) {
                 // 如果等待超时，再次判断连接队列是否为空
                 if (this->connectionQueue_.empty()) {
-                    LOG_ERROR("Failed to get connection, becasue queue is empty");
+                    LOG_ERROR("Failed to get mysql connection, becasue queue is empty");
                     return nullptr;
                 }
             }
@@ -267,7 +267,7 @@ void MySqlConnectionPool::scanIdleConnection() {
 
         {
             // 打印日志信息
-            LOG_DEBUG("Connection pool recycle idle connection");
+            LOG_DEBUG("MySQL connection pool recycle idle mysql connection");
 
             // 获取互斥锁
             std::unique_lock<std::mutex> lock(this->queueMutex_);
@@ -359,7 +359,7 @@ void MySqlConnectionPool::scanIdleConnection() {
             }
         }  // 立刻释放互斥锁
 
-        LOG_DEBUG("Current size of connection queue: %d", this->connectionQueue_.size());
-        LOG_DEBUG("Current total number of connections: %d", this->connectionCount_.load());
+        LOG_DEBUG("Current size of mysql connection queue: %d", this->connectionQueue_.size());
+        LOG_DEBUG("Current total number of mysql connections: %d", this->connectionCount_.load());
     }
 }

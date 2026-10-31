@@ -21,9 +21,9 @@ MySqlConnection::~MySqlConnection() {
             conn_ = nullptr;
         }
     } catch (const std::exception& e) {
-        LOG_ERROR("Failed to close connection, exception: %s", e.what());
+        LOG_ERROR("Failed to close mysql connection, exception: %s", e.what());
     } catch (...) {
-        LOG_ERROR("Failed to close connection, unknow exception");
+        LOG_ERROR("Failed to close mysql connection, unknow exception");
     }
 }
 
@@ -68,7 +68,7 @@ bool MySqlConnection::update(const std::string& sql) {
 
     // 判断连接是否有效，无效则自动重连
     if ((!conn_ || brokened_) && !reconnect()) {
-        LOG_ERROR("%s:%d %s execute failed, connection invalid", __FILE__, __LINE__, sql.c_str());
+        LOG_ERROR("%s:%d %s execute failed, mysql connection invalid", __FILE__, __LINE__, sql.c_str());
         return false;
     }
 
@@ -82,7 +82,7 @@ bool MySqlConnection::update(const std::string& sql) {
         unsigned int err_no = mysql_errno(conn_);
         if (err_no == CR_SERVER_GONE_ERROR || err_no == CR_SERVER_LOST) {
             // 打印日志信息
-            LOG_ERROR("Detected lost connection (err=%u) during execute sql, try to reconnect", err_no);
+            LOG_ERROR("Detected lost mysql connection (err=%u) during execute sql, try to reconnect", err_no);
             // 尝试重连（更新操作不一定是幂等操作，比如INSERT，因此重连成功后不重试执行SQL语句）
             reconnect();
         }
@@ -122,7 +122,7 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
 
     // 判断连接是否有效，无效则自动重连
     if ((!conn_ || brokened_) && !reconnect()) {
-        LOG_ERROR("%s:%d %s execute failed, connection invalid", __FILE__, __LINE__, sql.c_str());
+        LOG_ERROR("%s:%d %s execute failed, mysql connection invalid", __FILE__, __LINE__, sql.c_str());
         return nullptr;
     }
 
@@ -136,7 +136,7 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     // 查询操作执行失败后，判断是否需要重连
     if (err_no == CR_SERVER_GONE_ERROR || err_no == CR_SERVER_LOST) {
         // 打印日志信息
-        LOG_ERROR("Detected lost connection (err=%u) during execute sql, try to reconnect", err_no);
+        LOG_ERROR("Detected lost mysql connection (err=%u) during execute sql, try to reconnect", err_no);
         // 尝试重连
         if (reconnect()) {
             // 重连成功后，再次执行查询操作（SELECT 为幂等操作）
@@ -154,14 +154,14 @@ MYSQL_RES* MySqlConnection::query(const std::string& sql) {
     return nullptr;
 }
 
-// 发送Ping指令
+// 发送Ping命令
 bool MySqlConnection::ping() const {
     // 调用结果：0 → 成功（连接可用），非 0 → 失败（连接断开或异常）
     bool succeeded = mysql_ping(conn_) == 0;
 
     // 打印日志信息
     if (!succeeded) {
-        LOG_ERROR("Connection ping failed");
+        LOG_ERROR("MySQL connection ping failed");
         LOG_ERROR(mysql_error(conn_));
     }
 
@@ -177,24 +177,24 @@ bool MySqlConnection::sendHeartbeat() {
 
         // 打印日志信息
         if (connected) {
-            LOG_DEBUG("Connection send heartbeat succeeded");
+            LOG_DEBUG("MySQL connection send heartbeat succeeded");
         } else {
-            LOG_ERROR("Connection send heartbeat failed");
+            LOG_ERROR("MySQL connection send heartbeat failed");
         }
 
         return connected;
     }
 
-    // 发送Ping指令
+    // 发送Ping命令
     if (this->ping()) {
-        LOG_DEBUG("Connection send heartbeat succeeded");
+        LOG_DEBUG("MySQL connection send heartbeat succeeded");
         return true;
     }
 
     // 打印日志信息
-    LOG_ERROR("Connection send heartbeat failed");
+    LOG_ERROR("MySQL connection send heartbeat failed");
 
-    // Ping指令发送失败，尝试重连
+    // Ping命令发送失败，尝试重连
     bool connected = reconnect();
 
     return connected;
@@ -230,7 +230,7 @@ bool MySqlConnection::reconnect() {
             // 标记连接已损坏
             brokened_ = true;
             // 打印日志信息
-            LOG_ERROR("Failed to init connection during reconnect");
+            LOG_ERROR("Failed to init mysql connection during reconnect");
             return false;
         }
 
@@ -245,16 +245,16 @@ bool MySqlConnection::reconnect() {
                 // 标记连接没损坏
                 brokened_ = false;
                 // 打印日志信息
-                LOG_DEBUG("Connection reconnect succeeded");
+                LOG_DEBUG("MySQL connection reconnect succeeded");
                 // 设置字符集编码
                 if (mysql_set_character_set(conn_, "utf8mb4") != 0) {
-                    LOG_ERROR("Set charset failed after connection reconnect: %s", mysql_error(conn_));
+                    LOG_ERROR("Set charset failed after mysql connection reconnect: %s", mysql_error(conn_));
                 }
                 return true;
             }
 
             // 打印日志信息
-            LOG_ERROR("Connection reconnect failed: %d / %d. Error: %s", i + 1, maxReconnect, mysql_error(conn_));
+            LOG_ERROR("MySQL connection reconnect failed: %d / %d. Error: %s", i + 1, maxReconnect, mysql_error(conn_));
 
             // 控制重连的时间间隔
             if (i + 1 < maxReconnect) {
@@ -262,9 +262,9 @@ bool MySqlConnection::reconnect() {
             }
         }
     } catch (const std::exception& e) {
-        LOG_ERROR("Connection reconnect failed, exception: %s", e.what());
+        LOG_ERROR("MySQL connection reconnect failed, exception: %s", e.what());
     } catch (...) {
-        LOG_ERROR("Connection reconnect failed, unknown exception");
+        LOG_ERROR("MySQL connection reconnect failed, unknown exception");
     }
 
     // 重连失败后，必须确保连接指针已释放

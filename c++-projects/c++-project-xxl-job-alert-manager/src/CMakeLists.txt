@@ -14,6 +14,13 @@ find_library(MYSQL_LIBRARY
     REQUIRED
 )
 
+# 搜索 HiRedis 的静态库或动态库
+find_library(HIREDIS_LIBRARY
+    NAMES hiredis
+    PATHS /usr/local/lib /usr/lib /usr/lib64 /usr/lib/x86_64-linux-gnu
+    REQUIRED
+)
+
 # 指定编译生成可执行文件
 add_executable(alert-manager ${SRC_FILES})
 
@@ -34,4 +41,5 @@ target_link_libraries(alert-manager PRIVATE
     OpenSSL::Crypto
     CURL::libcurl
     ${MYSQL_LIBRARY}
+    ${HIREDIS_LIBRARY}
 )

@@ -18,12 +18,20 @@ find_library(MYSQL_LIBRARY
     REQUIRED
 )
 
+# 搜索 HiRedis 的静态库或动态库
+find_library(HIREDIS_LIBRARY
+    NAMES hiredis
+    PATHS /usr/local/lib /usr/lib
+    REQUIRED
+)
+
 # 指定项目中的测试头文件
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/base
     ${CMAKE_CURRENT_SOURCE_DIR}/net
     ${CMAKE_CURRENT_SOURCE_DIR}/config
     ${CMAKE_CURRENT_SOURCE_DIR}/db
+    ${CMAKE_CURRENT_SOURCE_DIR}/cache
     ${CMAKE_CURRENT_SOURCE_DIR}/alert
     ${CMAKE_CURRENT_SOURCE_DIR}/job
 )
@@ -48,4 +56,5 @@ target_link_libraries(alert-manager-test PRIVATE
     OpenSSL::Crypto
     CURL::libcurl
     ${MYSQL_LIBRARY}
+    ${HIREDIS_LIBRARY}
 )

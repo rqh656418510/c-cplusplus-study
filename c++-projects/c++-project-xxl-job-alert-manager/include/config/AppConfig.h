@@ -5,6 +5,16 @@
 #include <iostream>
 #include <string>
 
+// Redis 连接配置
+struct RedisConfig {
+    std::string ip;         // Redis服务器的IP地址（redis.ip）
+    int port;               // Redis服务器的端口（redis.port）
+    std::string password;   // Redis的登录密码，空字符串表示无密码（redis.password）
+    int db;                 // Redis的数据库编号（redis.db）
+    int connectionTimeout;  // Redis连接超时时间，单位毫秒（redis.connection.timeout）
+    bool reconnect;         // Redis连接断线是否允许重连（redis.reconnect）
+};
+
 // MySQL 连接配置
 struct MySQLConfig {
     int port;                                 // MySQL服务器的端口（mysql.port）
@@ -67,6 +77,7 @@ struct AlertCommonConfig {
 // 全局配置
 struct AppConfig {
     MySQLConfig mysql;              // MySQL相关配置
+    RedisConfig redis;              // Redis相关配置
     WxQyApiConfig wxQyApi;          // 企业微信API相关配置
     WxQyAccountConfig wxQyAccount;  // 企业微信账号相关配置
     AlertCoreConfig alertCore;      // 监控告警核心配置

@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "MySqlTest.h"
 #include "NetworkTest.h"
+#include "RedisTest.h"
 
 // 基础测试
 void baseTest() {
@@ -82,6 +83,29 @@ void alertTest() {
 
     // 发送XXL-JOB告警消息
     // alertTest.sendXxlJobAlertMsg();
+}
+
+// Redis测试
+void redisTest() {
+    RedisTest redisTest;
+
+    // 连接 Redis 服务器
+    // redisTest.connectRedis();
+
+    // string 类型操作
+    // redisTest.stringOperations();
+
+    // list 类型操作
+    // redisTest.listOperations();
+
+    // hash 类型操作
+    // redisTest.hashOperations();
+
+    // set 类型操作
+    // redisTest.setOperations();
+
+    // 使用时发现连接断开则自动重连
+    // redisTest.reconnectOnUse();
 }
 
 // MySQL测试
@@ -175,6 +199,9 @@ int main(int argc, char** argv) {
 
     // 告警测试
     alertTest();
+
+    // Redis测试
+    redisTest();
 
     // MySQL测试
     mysqlTest();
