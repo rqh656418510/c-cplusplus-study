@@ -6,9 +6,9 @@
 
 class MATX {
 public:
-    // 默认构造函数
+    // 自定义的默认构造函数（非平凡）
     MATX() {
-        std::cout << "MATX::MATX() called" << std::endl;
+        
     }
 };
 
@@ -20,7 +20,7 @@ public:
 
 public:
     int m_i;      // 基本类型成员变量
-    MATX m_matx;  // 类类型成员变量
+    MATX m_matx;  // 类类型成员变量（非平凡）
 };
 
 int main() {
