@@ -1,5 +1,7 @@
 /**
  * 拷贝构造函数语义续
+ * 
+ * 类中包含带有 “非平凡（Non-trivial）” 拷贝构造函数的成员对象（如果成员的拷贝构造函数是 “平凡（Trivial）” 的，编译器不会触发合成 “非平凡” 拷贝构造函数的动作）。
  */
 
 #include <iostream>
@@ -27,6 +29,6 @@ public:
 
 int main() {
     MBTX b;
-    MBTX b2 = b;  // 调用 MBTX 的拷贝构造函数
+    MBTX b2 = b;  // 真正调用 MBTX 的拷贝构造函数
     return 0;
 }
